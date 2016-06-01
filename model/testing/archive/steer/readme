@@ -1,0 +1,3 @@
+Uruchom gazebo z rotatoverse.world
+
+Użyj rotator/build/steer z argumentem siły, aby zmienić prędkość sześcianu w symulatorze.
