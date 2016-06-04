@@ -1,0 +1,14 @@
+  ___                  _           _                 
+ / _ \ _ __ ___  _ __ (_)_   _____| |_ __ ___   __ _ 
+| | | | '_ ` _ \| '_ \| \ \ / / _ \ | '_ ` _ \ / _` |
+| |_| | | | | | | | | | |\ V /  __/ | | | | | | (_| |
+ \___/|_| |_| |_|_| |_|_| \_/ \___|_|_| |_| |_|\__,_|
+                                                     
+Podstawa jezdna dla robota Velma.
+
+Jeżdżąca na 4 kołach szwedzkich podstawa ma za zadanie nosić ciężkiego robota manipulacyjnego Velma.
+
+Jest to temat pracy inżynierskiej na WEiTI na PW.
+
+Należy zbudować odpowiedni model i oprogramować go do wykonywania zadanych czynności.
+Model powinien służyć do testowania na nim programu sterującego.
