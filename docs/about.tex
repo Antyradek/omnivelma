@@ -1,53 +1,80 @@
 \chapter{Opis problemu}
 \section{Cel}
-Celami tej pracy inżynierskiej są budowa modelu podstawy jezdnej, zaprogramowanie go i symulacja w środowisku komputerowym.
-W ten sposób powstanie wirtualna kopia prawdziwej podstawy, aby dało się bezproblemowo zaprogramować i przetestować do niej zewnętrzny program sterujący.
-Testowanie programu na prawdziwym obiekcie może prowadzić do jego uszkodzeń w czasie testów, a także nie pozwala na przeprowadzanie dowolnego scenariusza i ustawień środowiska testowego, 
-co jest łatwiejsze do przeprowadzenia wirtualnie.
+Celem tej pracy inżynierskiej jest budowa narzędzi do symulacji robota w środowisku wirtualnym.
+Za zadanie jest sterować wirtualną podstawą jezdną, która się porusza za pomocą kół szwedzkich.
+Powinna ona być dokładną kopią prawdziwego robota wydziałowego.
+Ten robot będzie używany jako podstawa do przemieszczania innego robota manipulującego Velma.
 
-Po stworzeniu odpowiedniego modelu i programu sterującego, można w łatwy sposób zamienić model na rzeczywistego robota z zachowaniem tego samego programu i ustawień.
+Należy tak zaprogramować model, aby reagował na siły podobnie do prawdziwej wersji i przyjmował to samo sterowanie z zewnątrz.
+To spowoduje, że można będzie napisać wspólną logikę aplikacji sterowania i użyć jej zarówno w wirtualnej wersji, jak i fizycznej.
+
+Testowanie niedoskonałego programu na prawdziwym obiekcie może prowadzić do jego uszkodzeń. 
+Nie pozwala także na przeprowadzanie dowolnego scenariusza i ustawień środowiska testowego.
+Szybciej i taniej jest stworzyć wirtualne środowisko, niż fizyczne, w dodatku porażka przy symulacji nie wpływa na zniszczenie robota w rzeczywistości.
+Dopiero przy sukcesywnej symulacji wirtualnej można zbudować i przetestować obiekt w prawdziwym życiu.
+
+Do obsługi są także odpowiednie czujniki, za pomocą których program orientuje się w przestrzeni i generuje sterowanie.
+Symulacja czujników polega na generowaniu danych na podstawie symulacji i dodaniu szumu, oraz błędów dla przybliżenia prawdziwego zachowania.
 
 \section{Podstawa jezdna}
-Jest to duża podstawa dookólna jeżdżąca na czterech kołach szwedzkich (Mecanum).
-Są to specjalne koła z dodatkowymi rolkami ustawionymi pod kątem $45^\circ$ pozwalające na ruch platformy w dowolnym kierunku niezależnie od kąta obrotu robota.
-Za ich pomocą da się także obracać całością w czasie jazdy.
-
-Koła są stałe, obracają się tylko w jednej osi.
-Każde koło jest sterowane osobno przez serwomotor.
+Jest to duża, prostokątna podstawa dookólna jeżdżąca na czterech kołach szwedzkich (Mecanum).
+Koła są stałe, obracają się tylko w jednej osi, parami przyczepione do dwóch osi.
+Każde koło jest sterowane osobno przez serwomotor, może mieć prędkość i kierunek niezależny od reszty kół i kierunku poruszania się robota.
 Każdy z serwomotorów ma także wbudowany enkoder do sprawdzania rzeczywistego kąta obrotu.
 
+Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$.
+Rolki nie mają silników i obracają się niezależnie.
+Ich osie ustawione są tak, że osie rolek z tej samej strony robota są pod kątem prostym i przecinają się pośrodku.
+Innymi słowy, robot ma tak samo ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X}.
+
+Odpowiedni obrót kół względem siebie pozwala na ruch platformy w dowolnym kierunku niezależnie od kąta obrotu robota.
+Za ich pomocą da się także obracać całością w czasie jazdy.
+Jeśli na przykład obracać tylko przeciwległymi kołami, system zacznie się poruszać po skosie.
+
 Podstawa ma za zadanie wozić wydziałowego robota manipulującego Velma.
-Duża masa i wysokość konstrukcji powoduje, że sama podstawa potrzebuje mieć sporą nośność i szerokość, aby się nie przewrócić.
+Jest to wysoki i bardzo ciężki robot wyposażony w dwa chwytaki na ramionach o licznych przegubach.
+Konstrukcja powoduje, że sama podstawa potrzebuje mieć sporą nośność i szerokość, aby się nie przewrócić.
 Jeżdżąc na tej podstawie robot może się przemieszczać i obracać w dowolnym kierunku, aby uzyskać lepszy dostęp do manipulowanych przedmiotów.
 
-Z jednej strony platformy znajduje się zawias pozwalający na niezależny obrót osi względem siebie.
+Z jednej strony platformy znajduje się zawias oddzielający główną część od nieco mniejszej.
+Na każdej z tych części jest osobna oś, wygląda to tak, jakby przeciąć podstawę w poprzek i połączyć obie części przegubem na środku.
+
 Ma to za zadanie zapewnić, aby każde koło dociskało do podłoża z taką samą siłą, jak to po drugiej stronie osi.
 Pozwala to także na pokonywanie drobnych nierówności terenu.
 Bez tego zawiasu nierówna podłoga spowodowała by, że na przykład tylko trzy koła dotykałyby podłoża w danym momencie uniemożliwiając sprawne sterowanie.
+Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, więc należy się go jak najwięcej pozbyć.
 
 \section{Składniki systemu}
 Symulacja składa się z kilku odrębnych składników, które komunikują się ze sobą poprzez specjalne interfejsy oparte o kolejki wiadomości.
-To pozwala wymieniać elementy zachowując tę samą komunikację między sobą.
+To pozwala zamieniać elementy zachowując tę samą komunikację między składnikami.
 
 \subsection{Model}
- Odpowiednio opisany równaniami ma być jak najdokładniejszą kopią fizycznego robota.
+ Odpowiednio opisany równaniami powinien być jak najdokładniejszą kopią fizycznego robota.
  Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także możliwe tarcia.
  Model posiada także więzy na ruchome elementy, jak koła i rolki.
+ 
+ Ta część oddziałuje bezpośrednio z silnikiem fizycznym. 
+ To kształt, masy i momenty bezwładności są argumentami funkcji liczących.
+ Także silnik manipuluje z powrotem podanymi obiektami nadając im odpowiednie prędkości.
+ 
+ Do modelu doczepia się wirtualne czujniki generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
+ Nie są to pełne dane o stanie modelu, gdyż w rzeczywistości również nigdy nie mamy pełnej informacji o stanie urządzenia.
  
  Dla ozdoby można mu nadać wygląd zbliżony do prawdziwego robota poprzez wymodelowanie siatki w programie graficznym.
 
  \subsection{Sterownik silników}
  Ma taką samą funkcjonalność, jak pokładowy sterownik niskopoziomowy na robocie.
+ W rzeczywistości najczęściej implementowany w formie mikrokontrolera, lub podobnego systemu o czasie rzeczywistym.
  Zadaniem pokładowego sterownika jest przyjęcie wartości sterowania od zewnętrznego programu i podanie odpowiednich wartości napięcia na silniki kół.
  Może także wprowadzać niezależne zabezpieczenia przed zniszczeniem urządzenia przez nieprawidłowe sterowanie.
- Dobrze jest, jeśli program działa w czasie rzeczywistym na mikrokontrolerze.
  Taki program jest najczęściej dostarczony przez producenta robota.
+ Zależy ściśle od budowy urządzenia i nie może być prosto wymienialny z innym.
  
  Symulacja polega na stworzeniu alternatywnego programu pobierającego podobne do fizycznej wersji dane i obracającego kołami w odpowiedni sposób.
- Silnik fizyczny symulatora przekłada ten ruch na odpowiednie prędkości w przestrzeni wirtualnej.
+ Polega to na wywoływaniu funkcji silnika fizycznego z odpowiednio przygotowanymi argumentami.
+ Silnik fizyczny symulatora przekłada ten ruch na odpowiednie prędkości w przestrzeni wirtualnej biorąc pod uwagę model.
  
- 
- \subsection{Sterownik czujników}
+ \subsection{Sterownik czujników} %%%
  Normalny sterownik pobiera surowe dane i zamienia je na format możliwy do odczytania przez program.
  Najczęściej polega to na próbkowaniu sygnału i wysyłaniu go dalej.
  Ten program może także robić wstępne obrabianie danych w celach usuwania szumów, korekcji błędów stałych, albo szybkiej obróbki na wyższy format, jak ma to miejsce choćby w Kinectcie.
