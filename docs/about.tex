@@ -16,54 +16,68 @@ Dopiero przy osiągnięciu satysfakcjonującej jakości sterowania w symulacji w
 Należy także móc obsługiwać czujniki, za pomocą których oprogramowanie orientuje się w przestrzeni i generuje sterowanie.
 Wirtualizacja czujników polega na generowaniu danych na podstawie symulacji.
 W celu przybliżenia wyjścia takiego programu do rzeczywistego urządzenia, do generowanych danych zwykle dodaje się szum, oraz błędy.
-%%%
+
 \section{Wielokierunkowa platforma mobilna}
-\begin{figure}
+
+\begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/base_photo.png}
-\caption{Fotografia platformy z perspektywy. Niebieskie urządzenia na szczycie to czujniki laserowe.}
+\caption{Fotografia platformy z perspektywy. Niebieskie urządzenia na szczycie to czujniki laserowe. Na obecny stan koła są nieprawidłowo ustawione.}
 \end{figure} 
-Jest to duża, prostokątna podstawa dookólna jeżdżąca na czterech kołach szwedzkich.
+
+Jest to duża, prostokątna baza dookólna poruszająca się na czterech kołach szwedzkich.
 Koła są stałe, parami przyczepione do dwóch osi.
-Każde koło jest sterowane osobno przez serwomotor, może mieć prędkość i kierunek niezależny od reszty kół i kierunku poruszania się robota.
-Każdy z serwomotorów ma także wbudowany enkoder do sprawdzania rzeczywistego kąta obrotu.
+Każde koło jest sterowane osobno przez podłączony bezpośrednio serwomotor, zatem może mieć prędkość i kierunek niezależny od pozostałych kół i kierunku poruszania się robota, oraz jego obrotu.
+Każdy z serwomotorów ma także wbudowany enkoder umożliwiający pomiar rzeczywistego kąta obrotu koła.
 
-Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
-Rolki nie mają silników i obracają się niezależnie od siebie.
-Ich osie ustawione są tak, że osie rolek dwóch kół z tej samej strony robota są pod kątem prostym i przecinają się pośrodku urządzenia.
-Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X}.
+Koła szwedzkie, zwane także kołami mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
+Rolki są pasywne i obracają się niezależnie od siebie. Każde koło posiada 12 takich rolek.
+Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
+Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
+Na obecny stan robot i jego trójwymiarowe modele mają nieprawidłowo ustawione koła.
 
-Odpowiedni obrót kół względem siebie pozwala na ruch platformy w dowolnym kierunku niezależnie od kąta obrotu robota.
-Za ich pomocą da się także obracać całością w czasie jazdy.
-Jeśli na przykład obracać tylko przeciwległymi kołami po przekątnej, system zacznie się poruszać po skosie.
-A jeśli do tego dodamy obrót kół drugiej przekątnej w odwrotnym kierunku, wtedy pojazd pojedzie w bok pomimo faktu, że koła nie zmieniły swojej osi i się nie przekręciły.
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.8\textwidth]{graphics/kuka_youbot.png}
+\caption{Przykład prawidłowej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół względem siebie.}
+\end{figure} 
 
-Podstawa ma za zadanie wozić wydziałowego robota manipulującego Velma.
-Jest to wysoki i bardzo ciężki robot wyposażony w dwa chwytaki na ramionach o licznych przegubach.
-Konstrukcja powoduje, że sama podstawa potrzebuje mieć sporą nośność i szerokość, aby zachować środek ciężkości bezpiecznie nisko.
+Odpowiedni obrót kół względem bazy pozwala na jej ruch w dowolnym kierunku niezależnie od kąta obrotu robota.
+Za ich pomocą da się także obracać bazą stojąc w miejscu, lub w trakcie ruchu po prostej.
+Na przykład, jeśli obracać tylko przeciwległymi kołami po przekątnej, system zacznie się poruszać po skosie bez zmiany kąta obrotu.
+A jeśli do tego dodamy obrót kół drugiej przekątnej w odwrotnym kierunku, wtedy pojazd zacznie się poruszać w bok pomimo faktu, że koła nie są skrętne i nie mogą ustawić się prosto do kierunku jazdy.
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.8\textwidth]{graphics/mecanum_dirs.pdf}
+\caption{Podstawowe ruchy, jakie może wykonywać robot o napędzie wielokierunkowym.}
+\end{figure} 
+
+Podstawa ma za zadanie transportować wydziałowego robota manipulującego Velma tworząc razem uniwersalny manipulator mobilny.
+Velma to wysoki i bardzo ciężki robot wyposażony w dwa chwytaki na ramionach o licznych przegubach.
+Taka budowa wymaga szerokiej podstawy, aby zachować środek ciężkości całości odpowiednio nisko.
 Jeżdżąc na tej podstawie robot może się przemieszczać i obracać w dowolnym kierunku, aby uzyskać lepszy dostęp do manipulowanych przedmiotów.
+Dodatkowe czujniki laserowe umieszczone tuż nad postawą odpowiadają za wykrywanie kolizji.
 
-Z jednej strony platformy znajduje się zawias oddzielający główną część od drugiej nieco mniejszej.
-Części łączy wspólna oś, wygląda to tak, jakby przeciąć podstawę w poprzek i połączyć obie części przegubem na środku.
+Platforma jest niesymetrycznie podzielona w poprzek na dwie niezależne części.
+Przegub o jednym stopniu swobody (tzw. zawias) jest jedynym łącznikiem pomiędzy tymi dwoma fragmentami.
+Zadaniem tego przegubu jest niwelować niedoskonałości terenu, aby każde koło dociskało do podłoża z taką samą siłą, jak po drugiej stronie osi.
+Bez tego zawiasu nierówny teren uniemożliwiałby sprawne sterowanie platformą na skutek nierównego tarcia kół tej samej osi i nieplanowany skręt.
+Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, więc należy je wyeliminować na przykład za pomocą takiego przegubu.
 
-Ma to za zadanie zapewnić, aby każde koło dociskało do podłoża z taką samą siłą, jak to po drugiej stronie osi.
-Pozwala to także na pokonywanie drobnych nierówności terenu.
-Bez tego zawiasu nierówna podłoga spowodowała by, że na przykład tylko trzy koła dotykałyby podłoża w danym momencie uniemożliwiając sprawne sterowanie.
-Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, więc należy je wyeliminować w jeden z tych sposobów.
-
-\begin{figure}
+\begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_top.pdf}
-\caption{Platforma mobilna widziana od góry.}
+\caption{Platforma mobilna widziana od góry. Przegub zawiasowy łączy dwie części.}
 \end{figure} 
 
-\begin{figure}
+\begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_side.pdf}
 \caption{Platforma mobilna widziana od prawej strony.}
 \end{figure} 
 
-\begin{figure}
+\begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_front.pdf}
 \caption{Platforma mobilna widziana od tyłu.}
@@ -72,9 +86,10 @@ Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, wię
 
 
 \section{Składniki systemu}
-Symulacja składa się z kilku odrębnych składników, które komunikują się ze sobą poprzez specjalne interfejsy oparte o kolejki wiadomości.
-To pozwala zamieniać i przepisywać elementy zachowując tę samą komunikację między składnikami i nie tracąc kompatybilności.
+Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
+Taka implementacja komunikacji pozwala zamieniać i przepisywać kod źródłowy elementów, używać różnych języków programowania zachowując tę samą komunikację między składnikami i nie tracąc kompatybilności między sobą.
 
+%%%
 \subsection{Model}
  Odpowiednio opisany równaniami powinien być jak najdokładniejszą kopią fizycznego robota.
  Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także możliwe tarcia.
