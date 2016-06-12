@@ -1,22 +1,28 @@
-\chapter{Opis problemu}
+\chapter{Wstęp}
 \section{Cel}
-Celem tej pracy inżynierskiej jest budowa narzędzi do symulacji robota mobilnego w środowisku wirtualnym.
-Za zadanie jest stworzyć drivery i sterowniki do zwirtualizowanej podstawy jezdnej, poruszającej się za pomocą czterech kół szwedzkich.
-Powinna ona być dokładną kopią prawdziwego robota, aby zachowanie modelu w symulacji było jak najbardziej zbliżone do zachowania fizycznej formy.
-Ten robot będzie używany jako podstawa do przemieszczania innego robota manipulującego Velma.
+Celem tej pracy inżynierskiej jest budowa środowiska robota mobilnego w przestrzeni wirtualnej.
+Za zadanie jest stworzyć oprogramowanie modelu 3D, oraz modelu dynamiki wielokierunkowej platformy mobilnej z kołami szwedzkimi. 
+Wymaga się, aby model i obsługujące go oprogramowanie było dokładną kopią prawdziwego robota, dzięki czemu zachowanie symulacji będzie jak najbardziej zbliżone do zachowania fizycznego obiektu.
+Opisywana platforma będzie używana jako baza wielokierunkowa do przemieszczania dwuramiennego robota manipulującego Velma.
 
-Należy tak zaprogramować model, aby reagował na siły podobnie do prawdziwej wersji i przyjmował to samo sterowanie z zewnątrz, co prawdziwy obiekt.
-To spowoduje, że można będzie napisać wspólną logikę aplikacji sterowania i użyć jej zarówno w wirtualnej wersji, jak i fizycznej.
+Należy tak opisać model, aby reagował na siły podobnie do rzeczywistej wersji i przyjmował to samo sterowanie z zewnątrz, co rzeczywisty obiekt.
+To spowoduje, że możliwe będzie stworzenie jednego wspólnego programu sterującego do użycia zarówno w wirtualnej wersji, jak i fizycznej.
 
-Testowanie niedoskonałego programu na prawdziwym obiekcie może prowadzić do jego uszkodzeń, dlatego wpierw trzeba się upewnić o poprawności rozwiązań na bezpiecznej kopii wirtualnej.
-Prawdziwy świat nie pozwala także na przeprowadzanie zaawansowanych scenariuszy i dowolnych ustawień środowiska testowego.
-Szybciej i taniej jest stworzyć wirtualne środowisko, niż fizyczne, w dodatku porażka przy symulacji nie wpływa na zniszczenie robota w rzeczywistości.
-Dopiero przy sukcesywnej symulacji wirtualnej można zastosować programy i przetestować obiekt w prawdziwym życiu.
+Testowanie oprogramowania na prawdziwym obiekcie może prowadzić do jego uszkodzeń, dlatego wpierw trzeba się upewnić o poprawności projektowanych rozwiązań na bezpiecznej kopii wirtualnej.
+Rzeczywistość nie pozwala także na przeprowadzanie zaawansowanych scenariuszy środowiska testowego.
+Szybciej i taniej jest stworzyć wirtualne środowisko testowe, niż fizyczne, w dodatku porażka sterowników przy symulacji nie wpływa na zniszczenie robota w rzeczywistości.
+Dopiero przy osiągnięciu satysfakcjonującej jakości sterowania w symulacji wirtualnej można zastosować algorytmy sterowania do oryginalnego obiektu bez ryzyka uszkodzeń urządzenia.
 
-Do obsługi są dane także odpowiednie czujniki, za pomocą których program orientuje się w przestrzeni i generuje sterowanie.
-Symulacja czujników polega na generowaniu danych na podstawie wirtualnej symulacji i dodaniu szumu, oraz celowych błędów dla przybliżenia prawdziwego zachowania czujnika.
-
-\section{Podstawa jezdna}
+Należy także móc obsługiwać czujniki, za pomocą których oprogramowanie orientuje się w przestrzeni i generuje sterowanie.
+Wirtualizacja czujników polega na generowaniu danych na podstawie symulacji.
+W celu przybliżenia wyjścia takiego programu do rzeczywistego urządzenia, do generowanych danych zwykle dodaje się szum, oraz błędy.
+%%%
+\section{Wielokierunkowa platforma mobilna}
+\begin{figure}
+\centering
+ \includegraphics[width=0.8\textwidth]{graphics/base_photo.png}
+\caption{Fotografia platformy z perspektywy. Niebieskie urządzenia na szczycie to czujniki laserowe.}
+\end{figure} 
 Jest to duża, prostokątna podstawa dookólna jeżdżąca na czterech kołach szwedzkich.
 Koła są stałe, parami przyczepione do dwóch osi.
 Każde koło jest sterowane osobno przez serwomotor, może mieć prędkość i kierunek niezależny od reszty kół i kierunku poruszania się robota.
@@ -48,20 +54,22 @@ Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, wię
 \begin{figure}
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_top.pdf}
-\caption{Baza jezdna widziana od góry.}
+\caption{Platforma mobilna widziana od góry.}
 \end{figure} 
 
 \begin{figure}
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_side.pdf}
-\caption{Baza jezdna widziana od prawej strony.}
+\caption{Platforma mobilna widziana od prawej strony.}
 \end{figure} 
 
 \begin{figure}
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_front.pdf}
-\caption{Baza jezdna widziana od tyłu.}
+\caption{Platforma mobilna widziana od tyłu.}
 \end{figure} 
+
+
 
 \section{Składniki systemu}
 Symulacja składa się z kilku odrębnych składników, które komunikują się ze sobą poprzez specjalne interfejsy oparte o kolejki wiadomości.
