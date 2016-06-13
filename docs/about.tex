@@ -102,7 +102,7 @@ Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytan
 \caption{Struktura agenta upostaciowionego.}
 \end{figure} 
 
-%%%
+
 \subsection{Model 3D}
  Odpowiednio opisany równaniami fizycznymi powinien mieć zachowanie zbliżone do oryginału w jak największym stopniu.
  Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także wszelkie tarcia.
@@ -117,26 +117,39 @@ Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytan
  
  Dla ozdoby można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota.
 
- \subsection{Driver silników}
- Ma taką samą funkcjonalność, jak pokładowy driver niskopoziomowy na robocie.
- W rzeczywistości najczęściej implementowany w formie mikrokontrolera, lub podobnego systemu czasu rzeczywistego.
- Zadaniem pokładowego sterownika jest przyjęcie wartości sterowania od zewnętrznego programu i podanie odpowiednich wartości napięcia na silniki kół.
- Może także wprowadzać niezależne zabezpieczenia przed zniszczeniem urządzenia przez nieprawidłowe wejście.
- Taki program jest najczęściej dostarczony przez producenta robota i nie znany użytkownikowi.
- Zależy ściśle od budowy urządzenia i nie może być prosto wymienialny z innym obiektem.
+ \subsection{Sterownik silników}
+Program sterujący generuje abstrakcyjne dane, na przykład liczbę zapisaną binarnie.
+Przykładowy silnik fizyczny nie jest w stanie działać na ich podstawie, on potrzebuje odpowiedniego napięcia na wejściu.
+Do tłumaczenia jednych danych na drugie potrzebny jest sterownik niskopoziomowy.
+Najczęściej implementowany jest w formie mikrokontrolera, lub podobnego systemu wbudowanego.
+
+Jego zadanie to odczytanie danych podanych przez program sterujący i na przykład generowanie na ich podstawie odpowiedniej fali PWC, lub obsługa przetwornika cyfrowo-analogowego.
+Do innych zadań może należeć kontrola, czy żądana wartość nie uszkodzi urządzenia.
+Zazwyczaj sterownik może komunikować się z powrotem z resztą systemu, aby zgłaszać ewentualne awarie.
+
+Taki program i powiązany z nim układ elektroniczny są najczęściej dostarczone przez producenta robota i są nieznany użytkownikowi.
+Dodatkowo tworzy kolejną warstwę abstrakcyjną dla sterownika głównego, który nie musi zważać na generowanie różnych danych dla różnych typów efektorów.
  
- Cel polega na stworzeniu alternatywnego programu pobierającego podobne, co w fizycznej wersji dane i obracającego kołami w odpowiedni sposób.
- Tutaj polega to na wywoływaniu funkcji silnika fizycznego z odpowiednio przygotowanymi argumentami.
- Silnik fizyczny symulatora przekłada te siły na odpowiednie prędkości w przestrzeni wirtualnej biorąc pod uwagę charakterystykę modelu i otoczenia.
+W środowisku wirtualnym należy stworzyć moduł o podobnym działaniu.
+Powinien przyjmować dane w dokładnie takim samym formacie, jak opisany wyżej układ, aby był łatwo wymienialny na sterownik fizycznego urządzenia bez ingerencji w główny program sterujący.
+Zamiast zamieniać odczytane dane na analogowe wartości, on wywołuje odpowiednie funkcje maszyny symulacyjnej, aby wywołać taki sam efekt, co na rzeczywistym efektorze, lecz w wirtualnej przestrzeni symulacji.
+Jako argumenty podaje parametry fizyczne symulowanego obiektu, oraz przyłożone siły.
  
- \subsection{Driver czujników}
- Normalny driver na urządzeniu pobiera surowe dane i zamienia je na format możliwy do odczytania przez zewnętrzny program.
- Najczęściej polega to na próbkowaniu sygnału i wysyłaniu go dalej.
- Driver może także robić wstępne obrabianie danych w celach usuwania szumów, korekcji błędów, albo szybkiej obróbki na wyższy format, jak ma to miejsce na przykład w kamerze Kinect.
+
+\subsection{Sterownik czujników}
+Implementowany podobnie do sterownika silników ma za zadanie konwertować surowe i obarczone błędami dane z czujników na format zrozumiały dla programu sterującego.
+W tym miejscu usuwa się błędy grube, niweluje stałe na podstawie kalibracji, wygładza szum i interpretuje dane, aby pozyskać wymagane przez wyższe warstwy informacje.
+
+Przykładowo czujniki laserowe zwracają jedynie ciąg pomiarów, ale to do tego programu należy interpretacja wykrytych kształtów, łączenie punktów i obróbka do formatu zrozumiałego dla wyższych podzespołów.
+Większość zaawansowanych receptorów posiada owe układy cyfrowe i programy, są wbudowane w urządzenie.
+Dostarczone przez producenta tak samo, jak sterowniki efektorów.
  
- Symulując ten element budujemy program generujący dane na podstawie aktualnego stanu symulacji. 
- W celu przybliżenia go do realizmu powinno także dodawać się do generowanych danych sztuczny szum i błędy, aby łatwiej można było go zamienić później na prawdziwy czujnik.
- 
+Symulując ten element budujemy program generujący dane na podstawie aktualnego stanu maszyny do symulacji w sposób, w jaki działa czujnik w rzeczywistości.
+Na przykład dla czujnika laserowego wypuszczamy setki promieni i obliczamy ich punkty przecięcia się z wirtualnymi modelami.
+Możemy renderować obraz, aby symulować kamerę.
+
+Ponieważ dane fizyczne nigdy nie są idealne, w celu przybliżenia wyjścia wirtualnego czujnika do oryginału, dodajemy szum o odpowiednim rozkładzie i błędy.
+%%%
 \subsection{Program sterujący}
  Cześć odpowiedzialna za logikę aplikacji. Tutaj podejmowane są decyzje, jakie wymusić prędkości kół, aby pojechać po wymaganej krzywej.
  Ten program także pobiera, obrabia i interpretuje przetworzone przez driver dane z czujników.
