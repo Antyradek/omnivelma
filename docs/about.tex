@@ -89,20 +89,33 @@ Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, wię
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
 Taka implementacja komunikacji pozwala zamieniać i przepisywać kod źródłowy elementów, używać różnych języków programowania zachowując tę samą komunikację między składnikami i nie tracąc kompatybilności między sobą.
 
+Efektor rzeczywisty, na przykład serwomotor jest sterowany za pomocą efektora wirtualnego, który zamienia wyjście głównego układu sterowania na zrozumiałe dla silnika wartości fizyczne. 
+Przykładowo zmienia podaną liczbę oznaczającą zadaną prędkość na odpowiednie napięcie na wyjściu. W przestrzeni symulacyjnej jedynie wywołuje odpowiednie funkcje maszyny do symulacji.
+
+Podobnie receptor wirtualny pobiera surowe dane z czujnika, przekształca na odpowiedni format, usuwa błędy i szum tak, aby program sterujący mógł wykorzystać te dane w prosty sposób. 
+Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytanie obrazu z kilku kamer i zamiana na mapę odległości, szkielety wykrytych osób, ich sylwetki i wiele innych gotowych danych.
+
+%TODO Zmienić na Tikz
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.5\textwidth]{graphics/agent.pdf}
+\caption{Struktura agenta upostaciowionego.}
+\end{figure} 
+
 %%%
-\subsection{Model}
- Odpowiednio opisany równaniami powinien być jak najdokładniejszą kopią fizycznego robota.
- Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także możliwe tarcia.
- Model posiada także więzy na ruchome elementy, jak koła i rolki, aby obracały się w określony sposób.
+\subsection{Model 3D}
+ Odpowiednio opisany równaniami fizycznymi powinien mieć zachowanie zbliżone do oryginału w jak największym stopniu.
+ Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także wszelkie tarcia.
+ Model posiada więzy na ruchome elementy, jak koła i rolki, aby symulować przeguby.
  
- Ta część systemu oddziałuje bezpośrednio z silnikiem fizycznym. 
+ Ta część środowiska oddziałuje bezpośrednio z maszyną do symulacji fizycznej. 
  To kształt, masy i momenty bezwładności brył są argumentami funkcji liczących.
- Także silnik manipuluje z powrotem podanymi obiektami nadając im odpowiednie prędkości w czasie.
+ Także maszyna manipuluje z powrotem podanymi obiektami nadając im wirtualnie odpowiednie prędkości w czasie.
  
  Do modelu doczepia się wirtualne czujniki generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
- Nie są to pełne dane o stanie modelu, jakie posiada silnik, gdyż w rzeczywistości również nigdy nie mamy pełnej informacji o stanie urządzenia.
+ Nie są to pełne dane o stanie modelu, jakie posiada maszyna do symulacji, gdyż czujniki fizyczne również nigdy nie mają pełnej informacji o stanie urządzenia.
  
- Dla ozdoby można mu nadać wygląd zbliżony do prawdziwego robota poprzez wymodelowanie siatki w programie graficznym i nałożeniu wymaganych materiałów.
+ Dla ozdoby można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota.
 
  \subsection{Driver silników}
  Ma taką samą funkcjonalność, jak pokładowy driver niskopoziomowy na robocie.
