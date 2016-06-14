@@ -149,17 +149,21 @@ Na przykład dla czujnika laserowego wypuszczamy setki promieni i obliczamy ich 
 Możemy renderować obraz, aby symulować kamerę.
 
 Ponieważ dane fizyczne nigdy nie są idealne, w celu przybliżenia wyjścia wirtualnego czujnika do oryginału, dodajemy szum o odpowiednim rozkładzie i błędy.
-%%%
+
 \subsection{Program sterujący}
- Cześć odpowiedzialna za logikę aplikacji. Tutaj podejmowane są decyzje, jakie wymusić prędkości kół, aby pojechać po wymaganej krzywej.
- Ten program także pobiera, obrabia i interpretuje przetworzone przez driver dane z czujników.
- 
- W tej części używanych jest wiele zaawansowanych algorytmów, jak budowanie mapy, szukanie ścieżki, unikanie kolizji, wyznaczanie obiektów na obrazie itp.
- Zwykle działa to na dużych, wielowątkowych maszynach ze względu na spore wymagania obliczeniowe.
- Jeśli robot komunikuje się z użytkownikiem, to ma to miejsce tutaj.
- 
- Sterownik składa się z wielu modułów, każdy odpowiedzialny za coś innego. Może być stworzony w językach wysokopoziomowych, a nawet po części skryptowych, gdyż nie ma wymagań czasowych.
- Zazwyczaj program ma wiele poziomów. Nadrzędne algorytmy decyzyjne wołają niższe funkcje odpowiedzialne np. za planowanie, a te z kolei jeszcze niższe od np. ruchu itp.
+Cześć odpowiedzialna za logikę aplikacji. Tutaj obliczane jest sterowanie na podstawie dostarczonych odczytów z czujników.
+Zazwyczaj wykorzystuje się tu dużą ilość bibliotek dostarczających zaawansowane algorytmy.
+Ich zadania mogą polegać na budowie wewnętrznej mapy, wyznaczaniu ścieżki, omijaniu przeszkód, odwrotnej kinematyce i tym podobnych.
+
+Taki program zwykle działa na mocniejszych układach, niż sterowniki ze względu na duże zapotrzebowania na moc obliczeniową.
+Jeśli robot komunikuje się z użytkownikiem, lub zwraca dane, to zachodzi to w tym module. 
+
+Programy sterujące mogą być implementowane w językach wysokopoziomowych, nawet skryptowych, gdyż wymagania czasowe nie są rygorystyczne.
+Co więcej, często się zdarza, że odpowiednie składowe programu bazują na różnych technologiach.
+
+Środowisko symulacyjne powinno zapewnić pełną abstrakcję komunikacji tego modułu.
+Oznacza to, że nie zależnie, czy program działa na rzeczywistym robocie, czy symulacji wirtualnej, zawsze powinien móc komunikować się i otrzymywać dane w tym samym formacie.
+W idealnym świecie program nie powinien mieć możliwości stwierdzić, czy steruje symulacją, czy oryginałem.
 
 \section{Technologie}
 Symulator daje użytkownikowi do dyspozycji odpowiedni silnik fizyczny w którym odbywa się symulacja modelu, oraz API do obsługi.
