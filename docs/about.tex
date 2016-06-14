@@ -166,54 +166,61 @@ Oznacza to, że nie zależnie, czy program działa na rzeczywistym robocie, czy 
 W idealnym świecie program nie powinien mieć możliwości stwierdzić, czy steruje symulacją, czy oryginałem.
 
 \section{Technologie}
-Symulator daje użytkownikowi do dyspozycji odpowiedni silnik fizyczny w którym odbywa się symulacja modelu, oraz API do obsługi.
-Zaawansowany silnik powinien obsługiwać odpowiednie tarcia, więzy, siły, materiały fizyczne i wszystko, co potrzebne do jak najwierniejszego odtworzenia prawdziwego zachowania obiektu.
-Na rynku jest wiele różnych silników zarówno do symulacji w czasie rzeczywistym, jak i do wyznaczania tras obiektów po długich obliczeniach.
-Jedne z technologii są otwartoźródłowe, inne mniej.
+Symulator daje użytkownikowi do dyspozycji odpowiednią maszynę symulacyjną odpowiedzialna za obliczenia fizyczne, a także API do obsługi całej symulacji.
+Zaawansowana maszyna symulacyjna powinna dobrze obsługiwać tarcia, więzy na ruch obiektów, przyłożone siły, materiały fizyczne dla określania tarcia i sprężystości, 
+oraz wszystko to, co potrzebne do jak najwierniejszego odtworzenia zachowania rzeczywistego obiektu.
+
+Na rynku jest wiele różnych maszyn zarówno do symulacji w czasie rzeczywistym, jak i do wyznaczania pozycji obiektów po długich obliczeniach.
+Jedne z technologii są otwartoźródłowe, inne nie. Mogą używać tylko procesora, lub też być wspomagane przez kartę graficzną.
+Niektóre prócz zderzeń obiektów potrafią także symulować rozpływ cieczy, dymy, płótna, ciała sprężyste i strukturę wewnętrzną obiektów, lecz te funkcjonalności nie są potrzebne dla naszej symulacji.
 
 \subsection{Gazebo}
-Ten silnik jest dość prosty w obsłudze i wydaje się mieć mało funkcji ze względu na prosty interfejs.
-Jednak jego potencjał tkwi w argumentach linii poleceń i w czytaniu podanych plików.
+Ten symulator graficzny jest dość prosty w obsłudze, skupia się na symulowaniu podanych danych, a mniej na możliwości ich łatwego przygotowania.
+Zazwyczaj używany w trybie wsadowym, uruchamiany z argumentami z linii poleceń i plikiem \emph{world} opisującym symulację.
+Plik ten zawiera nazwy i ścieżki innych umieszczanych modeli i wtyczek.
+Z tego powodu interfejs graficzny jest dość ubogi.
 
-Program symuluje podane obiekty używając jednego z czterech popularnych silników fizycznych: ODE, Bullet, Simbody lub DART.
-Wszystkie te silniki są wolnym oprogramowaniem i używane także w innych programach, jak na przykład Blender.
+Program przeprowadza symulację podanych modeli używając jednego z czterech popularnych maszyn symulacyjnych: ODE, Bullet, Simbody lub DART.
+Wszystkie te projekty są wolnym oprogramowaniem i używane są także w innych programach, jak Blender.
 
-Program oprócz symulatora ma wbudowany edytor modeli i budynków w którym możemy tworzyć nasze dzieła od razu w przestrzeni trójwymiarowej.
-Jakość wykonania tych składników jest bardzo słaba, brak jest tak podstawowych funkcjonalności, jak cofanie ruchu.
-Również tworząc modele w ten sposób nie mamy nad nimi pełnej kontroli i dokładności.
+Symulator oprócz tego ma wbudowany edytor modeli w którym możemy składać odpowiednie obiekty od razu w przestrzeni trójwymiarowej.
+Edytor budynków pozwala na stawianie wirtualnych ścian, korytarzy, drzwi i ogólnego otoczenia w którym roboty mogą pracować i być symulowane.
+Jakość wykonania tych składników pozostawia wiele do życzenia, brak jest tak podstawowych funkcji, jak cofanie ruchu.
+Dlatego lepiej jest definiować model we wczytywanym pliku tekstowym.
+Również tworząc modele "`offline"' w ten sposób mamy nad nimi pełną kontrolę, a parametry można ustawiać z dowolną dokładnością.
 
-Zatem najlepszym sposobem jest tworzenie modelu w specjalnym formacie SDF. Jest to ustandaryzowany zdefiniowany zewnętrznie format do opisywania składników robotów i czujników.
-Dzięki temu napisany w ten sposób model może być użyty także gdzie indziej, pod warunkiem przestrzegania standardu.
-Składnia jest zwykłym plikiem XML, co znaczy, że może być tworzony na każdym edytorze tekstowym.
+Gazebo przyjmuje modele w specjalnym formacie SDF. Jest to ustandaryzowany, zdefiniowany zewnętrznie format do opisywania składników robotów i czujników.
+Dzięki temu taki plik może być użyty także gdzie indziej, pod warunkiem przestrzegania standardu.
+Składnia jest zwykłym plikiem XML, co znaczy, że może być on tworzony na każdym edytorze tekstowym.
 
-Wtyczka do sterowania modelem jest zwyczajną biblioteką dołączaną w czasie symulacji. 
-Pisze się ją w C++ jako własna klasa dziedzicząca po klasie wtyczki Gazebo.
-Dodatkowo tym sposobem może się łączyć z programem sterującym poprzez kolejki wiadomości udostępnione przez Gazebo, lub inne mechanizmy, nawet systemowe, jak gniazda, czy pamięć współdzielona.
+Wtyczka do sterowania modelem jest skompilowaną biblioteką dołączaną na starcie programu.
+Tworzy się ją w C++ jako klasę dziedziczącą po abstrakcyjnej klasie dostarczonej przez Gazebo.
+Dzięki temu może się komunikować z innymi systemami poprzez dowolne mechanizmy, nawet systemowe, jak gniazda, czy pamięć współdzielona.
+Jednak Gazebo dostarcza także swój własny mechanizm kolejek wiadomości, który sprawdza się w jednolitej komunikacji z innymi programami.
 
-Program działa domyślnie na dystrybucji Ubuntu, ale bez problemu można go także skompilować pod inne systemy.
+Program jest wspierany na systemie Ubuntu ale bez problemu można go także skompilować pod inne systemy.
 Interfejs jest dopracowany i przestrzega wielu ustawień systemowych, jak DPI.
-Uruchamianie jest proste i nie wymaga dodatkowych ustawień, tworzenia odpowiednich katalogów, czy definiowania zmiennych systemowych.
-Podobnie do wszystkich tworzy ukryty katalog w katalogu domowym użytkownika, gdzie znajdują się wszystkie modele i logi.
+Uruchamianie jest proste i nie wymaga dodatkowych ustawień, uruchamiania skryptów inicjalizujących, tworzenia odpowiednich katalogów, czy definiowania zmiennych systemowych.
+Standardowo, jak inne programy tworzy ukryty katalog w katalogu domowym użytkownika, gdzie znajdują się wszystkie modele i logi.
+Czasami trzeba używać tego katalogu, aby umieścić tam swoje modele, które Gazebo będzie automatycznie umieszczał w symulacji.
 
 \subsection{V-Rep}
-Duży i skomplikowany silnik reklamujący się wieloma zaawansowanymi mechanizmami.
+Duże i skomplikowane środowisko reklamujące się wieloma zaawansowanymi mechanizmami i funkcjami.
+Pomimo otwartego kodu, użycie komercyjne jest płatne. Dla zastosowań akademickich program jest rozdawany bez opłat.
 Bogaty interfejs graficzny zakłada budowę i symulację wszystkiego w tym jednym programie.
 
-Używa dwóch z silników z Gazebo, czyli ODE i Bullet, oraz Vortex i Newton. Z tej czwórki tylko Vortex ma zamknięty kod.
-Podobno symulacja fizyczna jest gorszej jakości, niż w Gazebo.
+Używa dwóch z maszyn symulacyjnych, co Gazebo, czyli ODE i Bullet, oraz dodatkowo Vortex i Newton. Z tej czwórki tylko Vortex ma zamknięty kod.
 
-Problemem jest także zapisywanie utworzonych w programie modeli.
-Program zapisuje drzewiastą strukturę modelu w pliku binarnym własnego formatu, co uniemożliwia edycję i oglądanie modelu bez posiadania całego programu i wczytywania pliku.
-Brak przenośności, czy wsparcia kontroli wersji dla takich zbiorów bajtów także jest problemem.
+Problemem jest także zapisywanie utworzonych w systemie modeli.
+Program tworzy drzewiastą strukturę modelu w pliku binarnym własnego formatu, co uniemożliwia edycję i oglądanie modelu bez posiadania całego programu i importowania modelu do symulacji.
+Brak przenośności, czy wsparcia systemu kontroli wersji dla takich zbiorów bajtów także jest problemem.
 
-Pisanie wtyczek najczęściej odbywa się w C. Są też dostępne inne języki skryptowe, jak Lua, Matlab, Java itp.
-Komunikacja z innymi programami odbywa się poprzez specjalne mosty w formie dodatków.
-API pozwala nam stworzyć mały interfejs graficzny do sterownia symulacją poprzez przyciski i suwaki.
+Pisanie wtyczek najczęściej odbywa się w C. Są też jednak dostępne inne języki skryptowe, jak Lua, Matlab, Java itp.
+Komunikacja z innymi programami odbywa się poprzez specjalne dodatki do środowiska.
+API pozwala nam stworzyć mały, wbudowany interfejs graficzny do sterowania symulacją poprzez przyciski i suwaki.
 
 Ze strony producenta pobieramy gotowe archiwum z programem, który nie wymaga żadnej instalacji i posiada wszystkie potrzebne zasoby do pracy i nauki, jak przykładowe modele istniejących komercyjnych robotów.
-Program działa na trzech Najpopularniejszych systemach operacyjnych --- Windows, Linux i OS X.
-
-Lepiej jednak jest używać do symulacji Gazebo głównie ze względu na jego otwartość, prostotę i elastyczność.
+Program działa w trzech najpopularniejszych systemach operacyjnych --- Windows, Linux i OS X.
 
 \subsection{ROS}
 Najpopularniejsza biblioteka i gotowe algorytmy do budowania logiki sterowania.
@@ -232,6 +239,19 @@ Uruchomienie systemu wymaga wielu dodatkowych komend inicjalizujących, a także
 Używanie linii poleceń wymaga ustawienia kilku zmiennych systemowych.
 Użycie niektórych funkcji wymaga uruchomionego demona serwera w tle.
 Ogólnie instalacja i używanie ROS na systemie dużo śmieci, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego na maszynie wirtualnej, lub dysku.
+
+%TODO Dopisać maszyny z dokumentacji
+\subsection{Inne środowiska}
+Do tworzenia oprogramowania na systemach Unixowych można użyć dowolnych edytorów, gdyż standardowo wszystko jest potem kompilowane za pomocą narzędzi wiersza poleceń i skrypty.
+Do tworzen
+% Gazebo i ROS
+% Atom do uniwersalnej edycji
+% Cmake do oskryptowania
+% GCC do kompilacji
+% C::B, lub Eclipse do kodu kompilowanego
+% Bash do automatyzacji uruchamiania
+% GIT do kontroli wersji
+% Virtualbox do ROS, lub przyszła instalacja, lub dysk flash
 
 \section{Ogólny zarys pracy}
 \begin{enumerate}
