@@ -30,13 +30,6 @@ Koła są stałe, parami przyczepione do dwóch osi.
 Każde koło jest sterowane osobno przez podłączony bezpośrednio serwomotor, zatem może mieć prędkość i kierunek niezależny od pozostałych kół i kierunku poruszania się robota, oraz jego obrotu.
 Każdy z serwomotorów ma także wbudowany enkoder umożliwiający pomiar rzeczywistego kąta obrotu koła.
 
-%TODO dokładny model koła szwedzkiego, może render?
-Koła szwedzkie, zwane także kołami mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
-Rolki są pasywne i obracają się niezależnie od siebie. Każde koło posiada 12 takich rolek.
-Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
-Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
-Na obecny stan robot i jego trójwymiarowe modele mają nieprawidłowo ustawione koła.
-
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/kuka_youbot.png}
@@ -50,7 +43,7 @@ A jeśli do tego dodamy obrót kół drugiej przekątnej w odwrotnym kierunku, w
 
 \begin{figure}[H]
 \centering
- \includegraphics[width=0.8\textwidth]{graphics/mecanum_dirs.pdf}
+ \includegraphics[width=\textwidth]{graphics/mecanum_dirs.pdf}
 \caption{Podstawowe ruchy, jakie może wykonywać robot o napędzie wielokierunkowym.}
 \end{figure} 
 
@@ -84,7 +77,25 @@ Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, wię
 \caption{Platforma mobilna widziana od tyłu.}
 \end{figure} 
 
+\section{Koła szwedzkie}
 
+Koła szwedzkie, zwane także kołami mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
+Rolki są pasywne i obracają się niezależnie od siebie. Każde koło posiada 12 takich rolek.
+Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
+Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
+Na obecny stan robot i jego trójwymiarowe modele mają nieprawidłowo ustawione koła.
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{graphics/wheel.pdf}
+\caption{Dokładny widok 12 rolkowego koła szwedzkiego opisywanej platformy wielokierunkowej.}
+\end{figure} 
+
+Każde koło ma 3 stopnie swobody. Pierwszym jest obrót całego koła wzdłuż osi.
+Drugim są rotacje pojedynczych rolek, a trzecim poślizg obrotowy w miejscu styku rolki z podłożem \cite{kinematic_modeling}.
+
+Na podstawie rysunku widać, że krzywizna rolki jest tak ustawiona, aby punkt kontaktu rolki z podłożem płynnie przechodził na następną rolkę w trakcie obrotu.
+Nie powinno być efektu przeskoku z jednej rolki na drugą, gdyż to wprowadza nierówne tarcie i losowe poślizgi.
 
 \section{Składniki systemu}
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
@@ -99,7 +110,7 @@ Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytan
 %TODO Zmienić na Tikz
 \begin{figure}[H]
 \centering
- \includegraphics[width=0.5\textwidth]{graphics/agent.pdf}
+ \includegraphics[width=0.8\textwidth]{graphics/agent.pdf}
 \caption{Struktura agenta upostaciowionego.}
 \end{figure} 
 
@@ -176,7 +187,7 @@ Jedne z technologii są otwartoźródłowe, inne nie. Mogą używać tylko proce
 Niektóre prócz zderzeń obiektów potrafią także symulować rozpływ cieczy, dymy, płótna, ciała sprężyste i strukturę wewnętrzną obiektów, lecz te funkcjonalności nie są potrzebne dla naszej symulacji.
 
 \subsection{Gazebo}
-Ten symulator graficzny jest dość prosty w obsłudze, skupia się na symulowaniu podanych danych, a mniej na możliwości ich łatwego przygotowania.
+Program do pobrania z \cite{gazebo_website}. Ten symulator graficzny jest dość prosty w obsłudze, skupia się na symulowaniu podanych danych, a mniej na możliwości ich łatwego przygotowania.
 Zazwyczaj używany w trybie wsadowym, uruchamiany z argumentami z linii poleceń i plikiem \emph{world} opisującym symulację.
 Plik ten zawiera nazwy i ścieżki innych umieszczanych modeli i wtyczek.
 Z tego powodu interfejs graficzny jest dość ubogi.
@@ -206,7 +217,7 @@ Standardowo, jak inne programy tworzy ukryty katalog w katalogu domowym użytkow
 Czasami trzeba używać tego katalogu, aby umieścić tam swoje modele, które Gazebo będzie automatycznie umieszczał w symulacji.
 
 \subsection{V-Rep}
-Duże i skomplikowane środowisko reklamujące się wieloma zaawansowanymi mechanizmami i funkcjami.
+Program do pobrania z \cite{vrep_website}. Duże i skomplikowane środowisko reklamujące się wieloma zaawansowanymi mechanizmami i funkcjami.
 Pomimo otwartego kodu, użycie komercyjne jest płatne. Dla zastosowań akademickich program jest rozdawany bez opłat.
 Bogaty interfejs graficzny zakłada budowę i symulację wszystkiego w tym jednym programie.
 
@@ -224,25 +235,34 @@ Ze strony producenta pobieramy gotowe archiwum z programem, który nie wymaga ż
 Program działa w trzech najpopularniejszych systemach operacyjnych --- Windows, Linux i OS X.
 
 \subsection{ROS}
-Najpopularniejsza biblioteka i gotowe algorytmy do budowania logiki sterowania.
-Dostępne są tutaj programy do obróbki danych, wyznaczania ścieżek, tworzenia map itp.
+Platforma programistyczna do pobrania z \cite{ros_website}.
+ROS jest skrótem od \emph{Robot Operating System}, lecz jego nazwa jest bardzo myląca.
+Nie jest to żaden system operacyjny, a obszerna platforma programistyczna (framework) zawierająca odpowiednie biblioteki i narzędzia do tworzenia programów sterujących.
+ROS stara się w łatwy sposób dostarczyć wszystko, co potrzebne do budowy logiki aplikacji sterowania.
+Są tu algorytmy wyznaczania tras, budowy map, manipulowania itp. 
 
-Właściwie nie ma dobrej alternatywy do zbioru tych bibliotek, poza implementacją wszystkiego ręcznie na nowo i po swojemu.
-Programy dla ROS pisze się w C++ i integruje z robotem za pomocą kilku gotowych struktur.
+Twórcy zachęcają, aby uzupełniać brakujące moduły swoimi własnymi, a potem dzielić się nimi z resztą programistów, aby każdy mógł skorzystać, jeśli ma podobny problem.
 
-Instalacja programu na komputerze jest dużym problemem.
-Z wyjątkiem Ubuntu nie ma łatwego sposobu na wgranie go do innych systemów.
-Na przeszkodzie stoją błędy kompilacji dla nowszych wersji kompilatorów i inne problemy wykonania, jak naruszenie ochrony pamięci. 
-Niektórym studentom wydziału się udało tego z wielkim trudem dokonać, lecz dużo prościej jest użyć Ubuntu na maszynie wirtualnej, bądź dysku USB.
-Takie rozwiązanie także daje dostęp do najnowszej wersji \emph{Kinetic Kame} niedostępnej jeszcze na innych dystrybucjach.
+Programy dla ROS pisze się w C++ i integruje z robotem za pomocą kilku gotowych struktur kolejek wiadomości.
+Platforma ta także posiada moduły do wizualizacji odbieranych danych w formie graficznej.
+Nie jest to symulator, gdyż sam nie generuje żadnych danych, a jedynie prezentuje gotowe.
 
-Uruchomienie systemu wymaga wielu dodatkowych komend inicjalizujących, a także dopisywania wielu plików konfiguracyjnych za pomocą wielu skryptów do tworzonych projektów.
-Używanie linii poleceń wymaga ustawienia kilku zmiennych systemowych.
-Użycie niektórych funkcji wymaga uruchomionego demona serwera w tle.
-Ogólnie instalacja i używanie ROS na systemie dużo śmieci, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego na maszynie wirtualnej, lub dysku.
+Instalacja programu na systemie operacyjnym jest dużym problemem.
+Z wyjątkiem odpowiednich wersji Ubuntu nie ma łatwego sposobu na wgranie go do innych systemów.
+Na przeszkodzie stoją błędy kompilacji dla nowszych wersji kompilatorów i inne problemy w czasie wykonywania wykonania, jak naruszenie ochrony pamięci. 
+Instalacja alternatywnych pakietów i ręczna kompilacja niektórych części nie działa we wszystkich przypadkach.
 
-%TODO Dopisać maszyny z dokumentacji
-\subsection{Inne środowiska}
+Rozwiązaniem tego problemu jest instalacja tej platformy programistycznej na maszynie wirtualnej, lub na systemie uruchamianym z dysku zewnętrznego. 
+Takie rozwiązanie także daje dostęp do najnowszej wersji ROS \emph{Kinetic Kame} z końca maja 2016 roku, niedostępnej jeszcze na innych dystrybucjach.
+
+Uruchomienie platformy programistycznej na systemie wymaga wielu dodatkowych komend inicjalizujących, a także dopisywania do tworzonych projektów licznych plików konfiguracyjnych za pomocą dostarczonych skryptów.
+Używanie modułów z linii poleceń wymaga ustawienia kilku zmiennych systemowych poprzez wczytywania całościowych plików.
+Użycie niektórych funkcji ROS wymaga uruchomionego demona serwera w tle.
+
+Ogólnie instalacja i używanie ROS na systemie zostawia dużo śmieci, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego, na maszynie wirtualnej, lub dysku.
+Z drugiej jednak strony wirtualizacja systemu operacyjnego z ROS bardzo ogranicza dostępną moc obliczeniową potrzebną w dużych ilościach takim programom.
+
+\subsection{Narzędzia}
 Do tworzenia oprogramowania na systemach Unixowych można użyć dowolnych edytorów, gdyż standardowo wszystko jest potem kompilowane za pomocą narzędzi wiersza poleceń i skrypty.
 Do tworzen
 % Gazebo i ROS
