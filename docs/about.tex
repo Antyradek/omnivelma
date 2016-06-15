@@ -139,7 +139,7 @@ Jego zadanie to odczytanie danych podanych przez program sterujący i na przykł
 Do innych zadań może należeć kontrola, czy żądana wartość nie uszkodzi urządzenia.
 Zazwyczaj sterownik może komunikować się z powrotem z resztą systemu, aby zgłaszać ewentualne awarie.
 
-Taki program i powiązany z nim układ elektroniczny są najczęściej dostarczone przez producenta robota i są nieznany użytkownikowi.
+Taki program i powiązany z nim układ elektroniczny są najczęściej dostarczone przez producenta robota i nieznane użytkownikowi.
 Dodatkowo tworzy kolejną warstwę abstrakcyjną dla sterownika głównego, który nie musi zważać na generowanie różnych danych dla różnych typów efektorów.
  
 W środowisku wirtualnym należy stworzyć moduł o podobnym działaniu.
@@ -237,7 +237,7 @@ Program działa w trzech najpopularniejszych systemach operacyjnych --- Windows,
 \subsection{ROS}
 Platforma programistyczna do pobrania z \cite{ros_website}.
 ROS jest skrótem od \emph{Robot Operating System}, lecz jego nazwa jest bardzo myląca.
-Nie jest to żaden system operacyjny, a obszerna platforma programistyczna (framework) zawierająca odpowiednie biblioteki i narzędzia do tworzenia programów sterujących.
+Nie jest to żaden system operacyjny, lecz obszerna platforma programistyczna (framework) zawierająca odpowiednie biblioteki i narzędzia do tworzenia programów sterujących.
 ROS stara się w łatwy sposób dostarczyć wszystko, co potrzebne do budowy logiki aplikacji sterowania.
 Są tu algorytmy wyznaczania tras, budowy map, manipulowania itp. 
 
@@ -260,49 +260,74 @@ Używanie modułów z linii poleceń wymaga ustawienia kilku zmiennych systemowy
 Użycie niektórych funkcji ROS wymaga uruchomionego demona serwera w tle.
 
 Ogólnie instalacja i używanie ROS na systemie zostawia dużo śmieci, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego, na maszynie wirtualnej, lub dysku.
-Z drugiej jednak strony wirtualizacja systemu operacyjnego z ROS bardzo ogranicza dostępną moc obliczeniową potrzebną w dużych ilościach takim programom.
+Z drugiej jednak strony wirtualizacja systemu operacyjnego z ROS bardzo ogranicza dostępną moc obliczeniową potrzebną takim programom w dużych ilościach.
 
 \subsection{Narzędzia}
-Do tworzenia oprogramowania na systemach Unixowych można użyć dowolnych edytorów, gdyż standardowo wszystko jest potem kompilowane za pomocą narzędzi wiersza poleceń i skrypty.
-Do tworzen
-% Gazebo i ROS
-% Atom do uniwersalnej edycji
-% Cmake do oskryptowania
-% GCC do kompilacji
-% C::B, lub Eclipse do kodu kompilowanego
-% Bash do automatyzacji uruchamiania
-% GIT do kontroli wersji
-% Virtualbox do ROS, lub przyszła instalacja, lub dysk flash
+Do tworzenia oprogramowania na systemach Unixowych można użyć dowolnych edytorów, gdyż standardowo wszystko jest potem kompilowane za pomocą narzędzi wiersza poleceń i skryptów.
+Jednak warto sobie ułatwić pracę zaawansowanymi środowiskami graficznymi.
+\begin{description}
+ \item[Gazebo] będzie użyty do symulacji z jego domyślną maszyną ODE. Przełączenie maszyny symulacyjnej wiąże się z rekompilacją programu ze źródła, dlatego zostaną one sprawdzone po przetestowaniu domyślnej.
+ ODE jest szybkie, dobrze napisane i nie ma wielu zaawansowanych niepotrzebnych nam funkcji, jak Bullet.
+ \item[ROS] użyty zostanie jako gówna platforma programistyczna. Pod łatwą komunikację z jego modułami należy budować sterowniki wirtualne.
+ \item[Atom] jest popularnym uniwersalnym edytorem tekstowym. Dzięki rozszerzaniu przez wtyczki dobrze się sprawdza przy obróbce plików XML i skryptów.
+ Będzie użyty do konstrukcji modelu.
+ \item[CMake] to popularny i polecany przez ROS i Gazebo system budowy kodu. Program tworzy na podstawie swoich plików konfiguracyjnych plik \texttt{makefile} do kompilacji źródeł i łączenia bibliotek.
+ \item[GCC] będzie użyty do kompilacji, gdyż jest to najpopularniejszy tego typu program używany w GNU/Linux. Same symulatory zostały w nim skompilowane.
+ Razem z nim użyty zostanie debugger GDB. 
+ \item[Code::Blocks lub Eclipse] nadają się do pisania kompilowalnego kodu wtyczek. Można podłączyć je pod komendę \texttt{make} i korzystać z mechanizmów interpretacji błędnych wierszy, graficznego debugowania i podobnych.
+ \item[Bash] będący bardzo popularnym językiem skryptowym nadaje się do automatyzacji pracy i uruchamiania wielu programów w kontrolowany i szybki sposób.
+ Uniwersalne narzędzie pomagające w różnych miejscach.
+ \item[Git] --- program kontroli wersji jest podstawowym narzędziem programisty. Kod należy dla bezpieczeństwa umieszczać także w usłudze GitHub.
+ \item[Virtualbox] do ewentualnej wirtualizacji systemu operacyjnego z ROS, lub uruchomienie osobnego systemu z dysku zewnętrznego.
+\end{description}
 
-\section{Ogólny zarys pracy}
+\section{Plan pracy}
 \begin{enumerate}
- \item Należy stworzyć model w SDF zachowując wszystkie rozmiary i momenty prawdziwego robota.
-Należy ustawić bryły, aby przypominały kształtem podstawę i nadać im parametry fizyki.
+ \item Należy stworzyć model w SDF zachowując wszystkie rozmiary i momenty rzeczywistej wersji.
+Bryły składowe modelu muszą przypominać kształtem części z których składa się robot, należy im także ustawić parametry fizyczne, jak masę, moment bezwładności, materiał itp.
 
-\item Trzeba zdefiniować wszystkie więzy na koła i przegub i zamodelować je, aby silnik fizyczny dobrze współpracował.
-Taki model powinien na tym stanie reagować na zewnętrzne siły, ale nie ruszać się własnymi silnikami.
-Można go prosto przetestować działając siłą na elementy i patrząc, czy reaguje w poprawny sposób.
+\item Zamodelować wszystkie więzy na koła, rolki i przegub, aby maszyna symulacyjna poprawnie symulowała obiekt.
+Taki model powinien na tym stanie poprawnie reagować na wirtualne siły, lecz jego efektory nie będą jeszcze aktywne.
+Można go prosto pobieżnie przetestować działając siłą na elementy i patrząc, czy reagują w spodziewany sposób.
 
-\item Wtyczka sterująca w Gazebo odczytuje dane z zewnątrz i odpowiednio obraca kołami.
-Na tym poziomie można dobudować zamiennik programu sterującego jedynie do podawania prostego sterowania na koła, bez żadnej logiki.
-Do komunikacji użyć struktur Gazebo, a nie ROS.
-Model powinien poprawnie reagować na proste wejście, jak naprzemienne koła itp.
+\item Zapisanie wtyczki sterującej w Gazebo odczytującej odpowiednie dane z zewnątrz i wywołującej funkcje maszyny symulacyjnej, aby modyfikować ruch modelu.
+Na tym poziomie można dobudować zamiennik programu sterującego jedynie do podawania prostych wartości bez odczytywania pomiarów i sterowania.
 
-\item Wtyczki dla czujników, aby generowały dane z enkoderów, oraz ewentualnie innych urządzeń, dodawały błędy pomiarowe i wysyłały je na zewnątrz, aby program sterujący miał dane do działania.
-Taki model jest w tym momencie kopią prawdziwego robota.
+\item Zaprogramowanie wtyczki symulującej czujniki, aby generowały dane z enkoderów, oraz innych urządzeń, dodawały błędy pomiarowe, a następnie przekształcały dane na format zrozumiały dla programu sterującego.
+Na tym momencie program może je wyświetlić, ale nie wygeneruje na ich podstawie sterowania.
 
 \item Program sterujący w ROS. Największy i najbardziej skomplikowany element, na szczęście wspólny dla obu bytów --- wirtualnego i rzeczywistego.
 Zazwyczaj nie jest to praca jednego człowieka, a jego rozwój nie ustaje przez długi czas.
-Ten program dostarczy funkcji ruchów wywoływanych przez wyższy sterownik Velmy.
-
+Ten program dostarczy funkcji, aby wyższy sterownik robota mógł użyć tego modułu do sterowania jazdą i odczytywania danych.
 \end{enumerate}
 
-\section{Pomocne implementacje}
+\section{Istniejące implementacje}
 Istnieją już wcześniejsze modele jeżdżących robotów na kołach szwedzkich.
-Można z nich brać przykład i sugerować się źródłami kodu i modelów.
+Można z nich brać przykład i sugerować się źródłami kodu i modeli.
 
 Kuka Youbot jest popularnym robotem tego typu. Jego modele są domyślnie dostępne zarówno w Gazebo, jak i w V-Rep.
-Tylko w przypadku V-Rep mamy wstępny sterownik do którego kierujemy zadane prędkości kół za pomocą graficznego interfejsu.
-Wersja dla Gazebo symuluje kłodę drewna.
+Tylko w przypadku V-Rep mamy wstępny sterownik do którego wysyłamy odpowiednie wartości kierunku, a on obraca kołami w ten sposób, aby spełnić żądanie.
+Wersja dla Gazebo jest statycznym modelem, jego efektory nie są zaimplementowane.
 
-Te profesjonalne modele także pomogą przy wstępnej weryfikacji zachowania się naszego modelu, czy nie zachowuje się nadzwyczaj dziwnie.
+Te profesjonalne modele także pomogą przy wstępnej weryfikacji zachowania się naszego modelu, czy nie zachowuje się nadzwyczaj dziwnie w pierwszych fazach projektu.
+
+Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, prawdopodobnie trzeba będzie uprościć model poprzez zamianę niektórych składowych i dodanie sztucznych więzów.
+Całościowy model może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
+Taki model także jest znacznie trudniej poprawnie wymodelować ze względu na liczne tarcia i poślizgi rolek.
+
+\section{Podsumowanie}
+W ramach przygotowań do pracy udało się zainstalować, skonfigurować i przetestować wszystkie moduły środowiska.
+Została zdobyta wiedza na temat możliwych problemów z instalacją i używaniem ich w przyszłości.
+Jakie systemy operacyjne jak dobrze współpracują z systemem ROS i na czym nie da się go zainstalować.
+Testowanie odbyło się za pomocą budowy własnego, abstrakcyjnego modelu i zastosowania do niego zmodyfikowanych programów przykładowych.
+
+Udało się sprawdzić, jakie są możliwości stworzenia struktury projektu, aby nie umieszczać modeli i kodu osobno, aby zachować porządek.
+Ustawiono wszelkie systemy kontroli wersji użyte także do budowy tego dokumentu.
+
+Aby zabrać się do pracy, należy przejrzeć sporą ilość materiałów na temat budowy kół i modelowania ich wirtualnie, a także powodów nieścisłości obliczeń.
+Dobrze jest także obejrzeć dalsze dokumenty zawarte w bibliografiach materiałów.
+
+Należy eksperymentować z różnymi rozwiązaniami ewentualnych uproszczeń modelu, sprawdzić, jak rozwiązywali ten problem inni.
+Przetestować, czy wspomaganie symulacji za pomocą karty graficznej nie rozwiąże problemu nadmiernych obliczeń.
+
+
