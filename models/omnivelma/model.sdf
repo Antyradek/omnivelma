@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+    <model name="omnivelma">
+        <pose>0 0 0 0 0 0</pose>
+        <static>false</static>
+        <!--Baza całości-->
+        <link name="base">
+            <pose>0 -0.097 0.12 0 0 0</pose>
+            <collision name="base_collision">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/base_collider.dae</uri>
+                    </mesh>
+                </geometry>
+            </collision>
+            <visual name="base_visual">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/base_visual.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+        </link>
+    </model>
+    </sdf>

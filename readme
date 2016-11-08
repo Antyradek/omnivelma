@@ -12,3 +12,12 @@ Jest to temat pracy inżynierskiej na WEiTI na PW.
 
 Należy zbudować odpowiedni model i oprogramować go do wykonywania zadanych czynności.
 Model powinien służyć do testowania na nim programu sterującego.
+
+Uruchomienie zwyczajne:
+Przekopiować zawartość katalogu models do domyslnego w katalogu domowym ~/.gazebo/models.
+$ gazebo omnivelma.world
+
+Uruchomienie szybsze:
+$ ./start
+To ustawi katalog modeli na lokalne models/ i wczyta z niego model podstawy jezdnej.
+Modele podłoża i pozostałych nieistniejących lokalnie ściągnie i umieści w domyślnym w ~/.gazebo/models.
