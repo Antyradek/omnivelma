@@ -1,25 +1,62 @@
 <?xml version="1.0" ?>
 <sdf version="1.5">
     <model name="omnivelma">
-        <pose>0 0 0 0 0 0</pose>
+        <pose>0 0 0.101 0 0 0</pose>
         <static>false</static>
         <!--Baza całości-->
         <link name="base">
-            <pose>0 -0.097 0.12 0 0 0</pose>
+            <pose>0 -0.097 0.02 0 0 0</pose>
             <collision name="base_collision">
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/base_collider.dae</uri>
+                        <uri>model://omnivelma/meshes/collider/base.dae</uri>
                     </mesh>
                 </geometry>
             </collision>
             <visual name="base_visual">
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/base_visual.dae</uri>
+                        <uri>model://omnivelma/meshes/visual/base.dae</uri>
                     </mesh>
                 </geometry>
             </visual>
         </link>
+        <!-- Ruchomy przód -->
+        <link name="front">
+            <pose>0 0.367 0.02 0 0 0</pose>
+            <collision name="front_collision">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/collider/front.dae</uri>
+                    </mesh>
+                </geometry>
+            </collision>
+            <visual name="front_visual">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/visual/front.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+        </link>
+        <!-- Środkowy przegub (zawias) -->
+        <joint name="middle_joint" type="revolute">
+            <parent>base</parent>
+            <child>front</child>
+            <!-- Pozycja względem dziecka -->
+            <pose>0 -0.1 -0.02 0 0 0</pose>
+            <axis>
+                <xyz>0 1 0</xyz>
+                <dynamics>
+                    <damping>0</damping>
+                    <friction>0</friction>
+                </dynamics>
+                <limit>
+                    <effort>0</effort>
+                    <velocity>0</velocity>
+                </limit>
+                <use_parent_model_frame>true</use_parent_model_frame>
+            </axis>
+        </joint>
     </model>
     </sdf>
