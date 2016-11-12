@@ -39,6 +39,47 @@
                 </geometry>
             </visual>
         </link>
+        <!-- Koła wirtualne -->
+        <link name="virtual_wheel_rr">
+            <pose>0.38 -0.357 0 0 0 0</pose>
+            <visual name="virtual_wheel_rr_visual">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+        </link>
+        <link name="virtual_wheel_rl">
+            <pose>-0.38 -0.357 0 0 0 0</pose>
+            <visual name="virtual_wheel_rl_visual">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/visual/wheel_r.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+        </link>
+        <link name="virtual_wheel_fr">
+            <pose>0.38 0.362 0 0 0 0</pose>
+            <visual name="virtual_wheel_fr_visual">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/visual/wheel_r.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+        </link>
+        <link name="virtual_wheel_fl">
+            <pose>-0.38 0.362 0 0 0 0</pose>
+            <visual name="virtual_wheel_fl_visual">
+                <geometry>
+                    <mesh>
+                        <uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+        </link>
         <!-- Środkowy przegub (zawias) -->
         <joint name="middle_joint" type="revolute">
             <parent>base</parent>
