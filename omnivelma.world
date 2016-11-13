@@ -13,8 +13,12 @@
 		</include>
 		
 		<!-- Platforma -->
-		<include>
-			<uri>model://omnivelma</uri>
-		</include>
+		<model name="omnivelma">
+			<include>
+				<uri>model://omnivelma</uri>
+			</include>
+			<!-- Wtyczka sterująca -->
+			<plugin name="omnivelma" filename="libomnivelma.so"/>
+		</model>
 	</world>
 </sdf> 

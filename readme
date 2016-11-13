@@ -15,9 +15,13 @@ Model powinien służyć do testowania na nim programu sterującego.
 
 Uruchomienie zwyczajne:
 Przekopiować zawartość katalogu models do domyslnego w katalogu domowym ~/.gazebo/models.
+Skompilować wtyczkę plugins/omnivelma.cpp za pomocą cmake, powstanie biblioteka libomnivelma.so.
+$ export GAZEBO_PLUGIN_PATH=GAZEBO_PLUGIN_PATH:/ścieżka/do/katalogu/z/libomnivelma.so.
 $ gazebo omnivelma.world
 
 Uruchomienie szybsze:
+$ ./compile
 $ ./start
-To ustawi katalog modeli na lokalne models/ i wczyta z niego model podstawy jezdnej.
-Modele podłoża i pozostałych nieistniejących lokalnie ściągnie i umieści w domyślnym w ~/.gazebo/models.
+To stworzy katalog build i tam skompiluje wtyczkę, a potem ustawi na nią zmiene środowiskowe.
+Ustawi także katalog modeli na lokalne models/ i wczyta z niego model podstawy jezdnej.
+Modele słońca, podłoża i pozostałych nieistniejących lokalnie modeli ściągnie i umieści w domyślnym w ~/.gazebo/models.

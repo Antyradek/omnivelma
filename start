@@ -1,5 +1,6 @@
 #!/bin/bash
 export GAZEBO_MODEL_PATH=$(pwd)/models
+export GAZEBO_PLUGIN_PATH=GAZEBO_PLUGIN_PATH:$(pwd)/build
 # Opcja -u zatrzymuje symulację na starcie
 gazebo -u omnivelma.world
 

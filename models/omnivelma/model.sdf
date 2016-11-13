@@ -19,6 +19,12 @@
                         <uri>model://omnivelma/meshes/visual/base.dae</uri>
                     </mesh>
                 </geometry>
+                <material>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/base</name>
+                    </script>
+                </material>
             </visual>
         </link>
         <!-- Ruchomy przód -->
@@ -37,6 +43,12 @@
                         <uri>model://omnivelma/meshes/visual/front.dae</uri>
                     </mesh>
                 </geometry>
+                <material>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/base</name>
+                    </script>
+                </material>
             </visual>
         </link>
         <!-- Koła wirtualne -->
@@ -49,7 +61,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.91 0.29 0 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/wheels</name>
+                    </script>
                 </material>
             </visual>
             <visual name="virtual_wheel_rr_rollers">
@@ -59,7 +74,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.42 0.42 0.42 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/rollers</name>
+                    </script>
                 </material>
             </visual>
         </link>
@@ -72,7 +90,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.91 0.29 0 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/wheels</name>
+                    </script>
                 </material>
             </visual>
             <visual name="virtual_wheel_rl_rollers">
@@ -82,7 +103,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.42 0.42 0.42 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/rollers</name>
+                    </script>
                 </material>
             </visual>
         </link>
@@ -95,7 +119,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.91 0.29 0 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/wheels</name>
+                    </script>
                 </material>
             </visual>
             <visual name="virtual_wheel_fr_rollers">
@@ -105,7 +132,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.42 0.42 0.42 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/rollers</name>
+                    </script>
                 </material>
             </visual>
         </link>
@@ -118,7 +148,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.91 0.29 0 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/wheels</name>
+                    </script>
                 </material>
             </visual>
             <visual name="virtual_wheel_fl_rollers">
@@ -128,7 +161,10 @@
                     </mesh>
                 </geometry>
                 <material>
-                    <diffuse>0.42 0.42 0.42 1</diffuse>
+                    <script>
+                        <uri>model://omnivelma/materials/omnivelma.material</uri>
+                        <name>omnivelma/rollers</name>
+                    </script>
                 </material>
             </visual>
         </link>
