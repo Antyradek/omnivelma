@@ -132,6 +132,47 @@
                 </material>
             </visual>
         </link>
+        <!-- Koła skręcone o 45° -->
+        <link name="wheel_rr">
+            <pose>0.38 -0.357 0 0 0 0</pose>
+            <collision name="wheel_rr_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+            </collision>
+        </link>
+        <link name="wheel_rl">
+            <pose>-0.38 -0.357 0 0 0 0</pose>
+            <collision name="wheel_rl_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+            </collision>
+        </link>
+        <link name="wheel_fr">
+            <pose>0.38 0.362 0 0 0 0</pose>
+            <collision name="wheel_fr_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+            </collision>
+        </link>
+        <link name="wheel_fl">
+            <pose>-0.38 0.362 0 0 0 0</pose>
+            <collision name="wheel_fl_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+            </collision>
+        </link>
         <!-- Środkowy przegub (zawias) -->
         <joint name="middle_joint" type="revolute">
             <parent>base</parent>
