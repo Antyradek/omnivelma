@@ -184,7 +184,7 @@
                 <use_parent_model_frame>true</use_parent_model_frame>
             </axis>
         </joint>
-        <!-- Przeguby kół -->
+        <!-- Przeguby kół (motory) -->
         <joint name="motor_rr" type="revolute">
             <parent>base</parent>
             <child>virtual_wheel_rr</child>
@@ -218,6 +218,43 @@
             <pose>0.036 0 0 0 0 0</pose>
             <axis>
                 <xyz>-1 0 0</xyz>
+                <use_parent_model_frame>true</use_parent_model_frame>
+            </axis>
+        </joint>
+        <!-- Przeguby rolek -->
+        <joint name="roller_rr" type="revolute">
+            <parent>virtual_wheel_rr</parent>
+            <child>wheel_rr</child>
+            <pose>0 0 0 0 0 0</pose>
+            <axis>
+                <xyz>0.707 0.707 0</xyz>
+                <use_parent_model_frame>true</use_parent_model_frame>
+            </axis>
+        </joint>
+        <joint name="roller_rl" type="revolute">
+            <parent>virtual_wheel_rl</parent>
+            <child>wheel_rl</child>
+            <pose>0 0 0 0 0 0</pose>
+            <axis>
+                <xyz>-0.707 0.707 0</xyz>
+                <use_parent_model_frame>true</use_parent_model_frame>
+            </axis>
+        </joint>
+        <joint name="roller_fr" type="revolute">
+            <parent>virtual_wheel_fr</parent>
+            <child>wheel_fr</child>
+            <pose>0 0 0 0 0 0</pose>
+            <axis>
+                <xyz>0.707 -0.707 0</xyz>
+                <use_parent_model_frame>true</use_parent_model_frame>
+            </axis>
+        </joint>
+        <joint name="roller_fl" type="revolute">
+            <parent>virtual_wheel_fl</parent>
+            <child>wheel_fl</child>
+            <pose>0 0 0 0 0 0</pose>
+            <axis>
+                <xyz>-0.707 -0.707 0</xyz>
                 <use_parent_model_frame>true</use_parent_model_frame>
             </axis>
         </joint>
