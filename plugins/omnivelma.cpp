@@ -41,13 +41,34 @@ public:
 
     }
 
-public:
-    ///Funkcja podłączana do zdarzenia aktualizacji
-    void OnUpdate(const common::UpdateInfo& info)
-    {
+private:
+  void setRollAxis(std::string const& wheelLinkName, std::string const& rollerJointName, double rotationSide)
+  {
+    // Get the wheel's axis in the world frame.
+    math::Pose const& wheel_world_pose = model->GetLink(wheelLinkName.c_str())->GetWorldPose();
+    math::Matrix3 wheel_world_mat3 = wheel_world_pose.rot.GetAsMatrix3();
+    math::Vector3 wheel_world_y(wheel_world_mat3[0][1], wheel_world_mat3[1][1], wheel_world_mat3[2][1]);
+
+    // Compute the new roll axis (rotate the wheel axis 45° around the world Z).
+    math::Quaternion rot(math::Vector3(0.0, 0.0, 1.0), rotationSide * math::Angle::Pi.Radian() / 4.0);
+    math::Vector3 newAxis_world = rot.RotateVector(wheel_world_y);
+    math::Vector3 newAxis_local = wheel_world_pose.rot.RotateVectorReverse(newAxis_world);
+
+    // Set the new axis.
+    model->GetJoint(rollerJointName.c_str())->SetAxis(0, newAxis_local);
 
 
-    }
+  }
+
+private:
+  ///Funkcja podłączana do zdarzenia aktualizacji
+  void OnUpdate(const common::UpdateInfo& info)
+  {
+    setRollAxis(linkPrefix + "virtual_wheel_fl",  linkPrefix + "roller_fl",   1.0);
+    setRollAxis(linkPrefix + "virtual_wheel_rl",   linkPrefix + "roller_rl",   -1.0);
+    setRollAxis(linkPrefix + "virtual_wheel_rr",  linkPrefix + "roller_rr",   1.0);
+    setRollAxis(linkPrefix + "virtual_wheel_fr", linkPrefix + "roller_fr", -1.0);
+  }
 
 private:
     ///Wskaźnik na model
