@@ -22,7 +22,7 @@ public:
         this -> model = parent;
 
         //podłączenie do wydarznia aktualizacji
-        this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this, std::placeholders::_1));
+        this -> updateConnection = event::Events::ConnectStep(std::bind(&Omnivelma::OnUpdate, this));
 
         //common::Logger logger("Omnivelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
         //logger("Podłączono wtyczkę", 10);
@@ -42,30 +42,33 @@ public:
     }
 
 private:
-    void setRollAxis(std::string const& wheelLinkName, std::string const& rollerJointName, double rotationSide)
+    void setRollAxis(std::string const& virtualWheelLinkName, std::string const& rollerJointName, std::string const& wheelLinkName, double rotationSide)
     {
         physics::LinkPtr baseLink = model -> GetLink(linkPrefix + "base");
 
         math::Vector3 baseUp = baseLink -> GetWorldPose().rot.GetZAxis();
         math::Quaternion globalRollerRot = math::Quaternion(baseUp, rotationSide);
-        math::Vector3 wheelRight = model -> GetLink(wheelLinkName) -> GetWorldPose().rot.GetXAxis();
-        double wheelRoll = model -> GetLink(wheelLinkName) -> GetRelativePose().rot.GetRoll();
+        math::Vector3 wheelRight = model -> GetLink(virtualWheelLinkName) -> GetWorldPose().rot.GetXAxis();
+        double wheelRoll = model -> GetLink(virtualWheelLinkName) -> GetRelativePose().rot.GetRoll();
         math::Quaternion invWheelRot = math::Quaternion(wheelRight, -wheelRoll);
 
         math::Vector3 rollerVect = baseLink -> GetWorldPose().rot.GetYAxis();
         rollerVect = globalRollerRot.RotateVector(rollerVect);
         rollerVect = invWheelRot.RotateVector(rollerVect);
         model -> GetJoint(rollerJointName) -> SetAxis(0, rollerVect);
+
+        physics::LinkPtr wheelLink = model -> GetLink(wheelLinkName);
+        wheelLink -> MoveFrame(wheelLink -> GetWorldPose(), model -> GetLink(virtualWheelLinkName) -> GetWorldPose());
     }
 
 private:
     ///Funkcja podłączana do zdarzenia aktualizacji
-    void OnUpdate(const common::UpdateInfo& info)
+    void OnUpdate()
     {
-        setRollAxis(linkPrefix + "virtual_wheel_fl", linkPrefix + "roller_fl", math::Angle::Pi.Radian() * 0.75);
-        setRollAxis(linkPrefix + "virtual_wheel_rl", linkPrefix + "roller_rl", math::Angle::Pi.Radian() * 0.25);
-        setRollAxis(linkPrefix + "virtual_wheel_rr", linkPrefix + "roller_rr", -math::Angle::Pi.Radian() * 0.25);
-        setRollAxis(linkPrefix + "virtual_wheel_fr", linkPrefix + "roller_fr", -math::Angle::Pi.Radian() * 0.75);
+        setRollAxis(linkPrefix + "virtual_wheel_fl", linkPrefix + "roller_fl", linkPrefix + "wheel_fl", math::Angle::Pi.Radian() * 0.75);
+        setRollAxis(linkPrefix + "virtual_wheel_rl", linkPrefix + "roller_rl", linkPrefix + "wheel_fl", math::Angle::Pi.Radian() * 0.25);
+        setRollAxis(linkPrefix + "virtual_wheel_rr", linkPrefix + "roller_rr", linkPrefix + "wheel_fl", -math::Angle::Pi.Radian() * 0.25);
+        setRollAxis(linkPrefix + "virtual_wheel_fr", linkPrefix + "roller_fr", linkPrefix + "wheel_fl", -math::Angle::Pi.Radian() * 0.75);
     }
 
 private:
