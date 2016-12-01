@@ -6,12 +6,12 @@
 		<include>
 			<uri>model://sun</uri>
 		</include>
-		
+
 		<!-- Podłoga -->
-		<include> 
+		<include>
 			<uri>model://ground_plane</uri>
 		</include>
-		
+
 		<!-- Platforma -->
 		<model name="omnivelma">
 			<include>
@@ -20,5 +20,13 @@
 			<!-- Wtyczka sterująca -->
 			<plugin name="omnivelma" filename="libomnivelma.so"/>
 		</model>
+
+		<!-- Platforma kinematyczna -->
+		<model name="pseudovelma">
+			<include>
+				<uri>model://pseudovelma</uri>
+			</include>]
+			<plugin name="pseudovelma" filename="libpseudovelma.so"/>
+		</model>
 	</world>
-</sdf> 
+</sdf>

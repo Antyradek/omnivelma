@@ -1,0 +1,45 @@
+material omnivelma/wheels
+{
+  receive_shadows on
+  technique
+  {
+    pass
+    {
+      ambient 1.000 0.50 0.000 1.000
+      diffuse 1.000 0.50 0.000 1.000
+      specular 0.8 0.80 0.8 1.000
+      shading gouraud
+    }
+  }
+}
+
+material omnivelma/rollers
+{
+  receive_shadows on
+
+  technique
+  {
+    pass
+    {
+      ambient 0.5 0.5 0.5 1.0
+      diffuse 0.5 0.5 0.5 1.0
+      specular 0.8 0.8 0.8 1
+      shading gouraud
+    }
+  }
+}
+
+material omnivelma/base
+{
+  receive_shadows on
+
+  technique
+  {
+    pass
+    {
+      ambient 0.5 0.5 0.5 1.0
+      diffuse 1 0.95 0.9 1.0
+      specular 0.8 0.8 0.8 1
+    }
+  }
+}
