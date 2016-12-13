@@ -21,7 +21,6 @@ public:
     {
         this -> model = parent;
 
-        //podłączenie do wydarznia aktualizacji
         this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this, std::placeholders::_1));
 
 		//common::Logger logger("Omnivelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
@@ -33,11 +32,10 @@ public:
 		jointController = model -> GetJointController();
 		joints = jointController -> GetJoints();
 
-		std::cout << "Przeguby:" << std::endl;
-		for(auto& x : joints)
-        {
-            std:: cout << x.first << std::endl;
-        }
+        pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
+        pyramidRL = model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid();
+        pyramidFR = model -> GetLink(linkPrefix + "wheel_fr") -> GetCollision("wheel_fr_collision") -> GetSurface() -> FrictionPyramid();
+        pyramidFL = model -> GetLink(linkPrefix + "wheel_fl") -> GetCollision("wheel_fl_collision") -> GetSurface() -> FrictionPyramid();
 
     }
 
@@ -46,10 +44,10 @@ public:
     void OnUpdate(const common::UpdateInfo& info)
     {
         math::Quaternion modelRot = model -> GetWorldPose().rot;
-        model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, AXIS_LENGTH, 0));
-        model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, AXIS_LENGTH, 0));
-        model -> GetLink(linkPrefix + "wheel_fr") -> GetCollision("wheel_fr_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, -AXIS_LENGTH, 0));
-        model -> GetLink(linkPrefix + "wheel_fl") -> GetCollision("wheel_fl_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, -AXIS_LENGTH, 0));
+        pyramidRR -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, AXIS_LENGTH, 0));
+        pyramidRL -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, AXIS_LENGTH, 0));
+        pyramidFR -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, -AXIS_LENGTH, 0));
+        pyramidFL -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, -AXIS_LENGTH, 0));
     }
 
 private:
@@ -70,6 +68,12 @@ private:
 
     ///Kontroler
     physics::JointControllerPtr jointController;
+
+    ///Piramidy tarcia
+    physics::FrictionPyramidPtr pyramidRR;
+    physics::FrictionPyramidPtr pyramidRL;
+    physics::FrictionPyramidPtr pyramidFR;
+    physics::FrictionPyramidPtr pyramidFL;
 };
 
 //zarejestruj wtyczkę
