@@ -55,13 +55,28 @@
         <link name="wheel_rr">
             <pose>0.38 -0.357 0 0 0 0</pose>
             <collision name="wheel_rr_collision">
-                <pose>0 0 0 0 1.5707963267949 0</pose>
                 <geometry>
-                    <cylinder>
+                    <sphere>
                         <radius>0.103</radius>
-                        <length>0.08</length>
-                    </cylinder>
+                    </sphere>
                 </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1</mu>
+                            <mu2>0</mu2>
+                            <fdir1>0.707106781186548 0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>0.707106781186548 0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
             </collision>
             <visual name="wheel_rr_middle">
                 <geometry>
@@ -92,14 +107,29 @@
         </link>
         <link name="wheel_rl">
             <pose>-0.38 -0.357 0 0 0 0</pose>
-            <collision name="wheel_rr_collision">
-                <pose>0 0 0 0 1.5707963267949 0</pose>
+            <collision name="wheel_rl_collision">
                 <geometry>
-                    <cylinder>
+                    <sphere>
                         <radius>0.103</radius>
-                        <length>0.08</length>
-                    </cylinder>
+                    </sphere>
                 </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1</mu>
+                            <mu2>0</mu2>
+                            <fdir1>-0.707106781186548 0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>-0.707106781186548 0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
             </collision>
             <visual name="wheel_rl_middle">
                 <geometry>
@@ -130,14 +160,29 @@
         </link>
         <link name="wheel_fr">
             <pose>0.38 0.362 0 0 0 0</pose>
-            <collision name="wheel_rr_collision">
-                <pose>0 0 0 0 1.5707963267949 0</pose>
+            <collision name="wheel_fr_collision">
                 <geometry>
-                    <cylinder>
+                    <sphere>
                         <radius>0.103</radius>
-                        <length>0.08</length>
-                    </cylinder>
+                    </sphere>
                 </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1</mu>
+                            <mu2>0</mu2>
+                            <fdir1>0.707106781186548 -0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>0.707106781186548 -0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
             </collision>
             <visual name="wheel_fr_middle">
                 <geometry>
@@ -168,14 +213,29 @@
         </link>
         <link name="wheel_fl">
             <pose>-0.38 0.362 0 0 0 0</pose>
-            <collision name="wheel_rr_collision">
-                <pose>0 0 0 0 1.5707963267949 0</pose>
+            <collision name="wheel_fl_collision">
                 <geometry>
-                    <cylinder>
+                    <sphere>
                         <radius>0.103</radius>
-                        <length>0.08</length>
-                    </cylinder>
+                    </sphere>
                 </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>1</mu>
+                            <mu2>0</mu2>
+                            <fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
             </collision>
             <visual name="wheel_fl_middle">
                 <geometry>
