@@ -21,12 +21,12 @@
 			<plugin name="omnivelma" filename="libomnivelma.so"/>
 		</model>
 
-		<!-- Platforma kinematyczna -->
+		<!-- Platforma kinematyczna 
 		<model name="pseudovelma">
 			<include>
 				<uri>model://pseudovelma</uri>
 			</include>]
 			<plugin name="pseudovelma" filename="libpseudovelma.so"/>
-		</model>
+		</model> -->
 	</world>
 </sdf>
