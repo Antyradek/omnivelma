@@ -8,7 +8,7 @@
 
 #define MODEL_NAME std::string("omnivelma")
 ///Długość jest równa sqrt(2)/2 aby tworzyć kąt 45°
-#define AXIS_LENGTH 0.707
+#define AXIS_LENGTH 0.707106781186548
 
 namespace gazebo
 {
@@ -45,8 +45,11 @@ public:
     ///Funkcja podłączana do zdarzenia aktualizacji
     void OnUpdate(const common::UpdateInfo& info)
     {
-
-
+        math::Quaternion modelRot = model -> GetWorldPose().rot;
+        model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, AXIS_LENGTH, 0));
+        model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, AXIS_LENGTH, 0));
+        model -> GetLink(linkPrefix + "wheel_fr") -> GetCollision("wheel_fr_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, -AXIS_LENGTH, 0));
+        model -> GetLink(linkPrefix + "wheel_fl") -> GetCollision("wheel_fl_collision") -> GetSurface() -> FrictionPyramid() -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, -AXIS_LENGTH, 0));
     }
 
 private:
