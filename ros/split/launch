@@ -1,0 +1,4 @@
+#!/bin/bash
+source devel/setup.bash
+export GAZEBO_MODEL_PATH=GAZEBO_MODEL_PATH:$(pwd)/src
+roslaunch velmaverse velmaverse.launch

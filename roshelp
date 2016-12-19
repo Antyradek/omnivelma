@@ -1,0 +1,26 @@
+Pomoc w komendach ROSa
+
+- Stworzyć omnivelma/src
+$ catkin_init_workspace
+- Wejść do omnivelma
+$ catkin_make
+
+rospack find <package>
+roscd
+rosls
+catkin_create_pkg <name> <dependencies...>
+roscore		#główny system
+
+rosnode list
+rosnode ping <node>
+rosrun <package> <node>
+rosrun rqt_graph rqt_graph
+rostopic echo <topic>
+rostopic list
+rostopic pub -<ilość> <topic> <typ> -- <wartości>
+
+rosservice list
+rosservice type <service> | rossrv show
+rosservice call <service> <arguments...>
+
+rosparam list

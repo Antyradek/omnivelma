@@ -1,0 +1,16 @@
+Uruchomienie:
+
+Stórz jakiś katalog i zainicjuj w standardowy sposób.
+$ catkin_init_workspace
+
+Jeśli chcesz oddzielić świat od modelu, umieść katalogi omnivelma/ i velmaverse/ z split/ w src/
+Jeśli chcesz wszystko razem, umieść omnivelma/ z single/ w /src
+
+Umieść odpowiedni plik launch/ w głównym katalogu (równolegle do src/).
+
+Skompiluj paczki ROSa
+$ catkin_make
+
+Uruchom Gazebo, ustaw katalog modeli i zaimportuj model
+$ ./launch
+

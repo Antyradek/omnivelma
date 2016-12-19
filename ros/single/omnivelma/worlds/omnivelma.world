@@ -29,14 +29,13 @@
 			<uri>model://ground_plane</uri>
 		</include>
 
-		<!-- Platforma -->
+
 		<model name="omnivelma">
 			<include>
 				<uri>model://omnivelma</uri>
 			</include>
-			<!-- Wtyczka sterująca -->
 			<plugin name="omnivelma" filename="libomnivelma.so"/>
-		</model>
+			</model>
 
 		<!-- Platforma kinematyczna 
 		<model name="pseudovelma">
