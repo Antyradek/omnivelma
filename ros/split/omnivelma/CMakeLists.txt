@@ -4,6 +4,8 @@ project(omnivelma)
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   roscpp
+  std_msgs
+  message_generation
 )
 
 find_package(gazebo REQUIRED)
@@ -16,9 +18,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 add_library(${PROJECT_NAME} src/omnivelma.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
 
+add_message_files(
+	FILES
+	Vels.msg
+)
+
+generate_messages(
+	DEPENDENCIES
+	std_msgs
+)
+
 
 catkin_package(
 	DEPENDS 
 	roscpp 
 	gazebo_ros 
+	message_runtime
 )
