@@ -47,7 +47,6 @@ public:
         std::cout << "Podłączono wtyczkę do " << model -> GetName() << std::endl;
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
-       
         //inicjalizacja ROSa
         if (!ros::isInitialized())
         {
@@ -89,15 +88,18 @@ public:
         model -> SetAngularVel(math::Vector3(0,0,rot));
         model -> SetLinearVel(transVect);
 
-        //TODO obracanie kołami dla ozdoby
+        //obracanie kołami dla ozdoby
+
     }
 
     ///Pobierz wiadomość od ROSa
 public:
     void OnRosMsg(const pseudovelma::VelsConstPtr &msg)
     {
-        //TODO ustaw prędkości
-        std::cout << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg ->rr << std::endl;
+        flVel = msg -> fl;
+        frVel = msg -> fr;
+        rlVel = msg -> rl;
+        rrVel = msg -> rr;
     }
 
     ///Wątek odbioru wiadomości

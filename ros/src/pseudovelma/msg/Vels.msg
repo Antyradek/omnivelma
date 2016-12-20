@@ -1,4 +1,4 @@
-float32 fl
-float32 fr
-float32 rl
-float32 rr
+float64 fl
+float64 fr
+float64 rl
+float64 rr
