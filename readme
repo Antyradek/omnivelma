@@ -14,6 +14,9 @@ Należy zbudować odpowiedni model i oprogramować go do wykonywania zadanych cz
 Model powinien służyć do testowania na nim programu sterującego.
 
 Wszystko zostało przerobione na pakiety ROS. Stare wersje uruchamiane bezpośrednio w Gazebo są w poprzednich commitach.
+Velmaverse - Świat do symulacji, który importuje roboty z paczek.
+Omnivelma - Platforma symulowana fizycznie.
+Pseudovelma - Platforma symulowana kinematycznie.
 
 Uruchomienie w ROS:
 Stórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt.
@@ -21,18 +24,20 @@ Przenieś tam zawartość ros/.
 $ ./init
 To zainicjuje katalog roboczy i skompiluje projekt.
 $ ./launch
-Uruchomi Gazebo z platformą.
+Uruchomi Gazebo z platformami.
 
 Potem dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
 
 Sterowanie:
 Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który skłaza się z 4 floatów dla każdego koła.
+Dla platformy kinematycznej alternatywnie /pseudovelma/vels o typie pseudovelma/Vels
 
 Wczytaj typ wiadomości do basha:
 $ source setup
 
 Wyślij wiadomość ustawiając wartości kół np.:
 $ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 10 20 30 40
+(program, komenda, ilość, topic, typ, oddzielacz argumentów, wartości struktry)
 
 Gazebo nie wymaga działającego w tle roscore, ponieważ uruchamia wewnętrznie swój własny.

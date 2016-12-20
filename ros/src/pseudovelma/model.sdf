@@ -12,13 +12,13 @@
                 <pose>0 -0.097 0.02 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/base.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/base.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/base</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/base</name>
                     </script>
                 </material>
             </visual>
@@ -27,13 +27,13 @@
                 <pose>0 0.367 0.02 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/front.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/front.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/base</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/base</name>
                     </script>
                 </material>
             </visual>
@@ -42,13 +42,13 @@
                 <pose>0.38 -0.357 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/wheels</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/wheels</name>
                     </script>
                 </material>
             </visual>
@@ -56,13 +56,13 @@
                 <pose>0.38 -0.357 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel_l.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/rollers</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/rollers</name>
                     </script>
                 </material>
             </visual>
@@ -71,13 +71,13 @@
                 <pose>-0.38 -0.357 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/wheels</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/wheels</name>
                     </script>
                 </material>
             </visual>
@@ -85,13 +85,13 @@
                 <pose>-0.38 -0.357 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel_r.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel_r.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/rollers</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/rollers</name>
                     </script>
                 </material>
             </visual>
@@ -100,13 +100,13 @@
                 <pose>0.38 0.362 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/wheels</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/wheels</name>
                     </script>
                 </material>
             </visual>
@@ -114,13 +114,13 @@
                 <pose>0.38 0.362 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel_r.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel_r.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/rollers</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/rollers</name>
                     </script>
                 </material>
             </visual>
@@ -129,13 +129,13 @@
                 <pose>-0.38 0.362 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/wheels</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/wheels</name>
                     </script>
                 </material>
             </visual>
@@ -143,13 +143,13 @@
                 <pose>-0.38 0.362 0 0 0 0</pose>
                 <geometry>
                     <mesh>
-                        <uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
+                        <uri>model://pseudovelma/meshes/visual/wheel_l.dae</uri>
                     </mesh>
                 </geometry>
                 <material>
                     <script>
-                        <uri>model://omnivelma/materials/omnivelma.material</uri>
-                        <name>omnivelma/rollers</name>
+                        <uri>model://pseudovelma/materials/pseudovelma.material</uri>
+                        <name>pseudovelma/rollers</name>
                     </script>
                 </material>
             </visual>

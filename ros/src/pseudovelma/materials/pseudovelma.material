@@ -1,4 +1,4 @@
-material omnivelma/wheels
+material pseudovelma/wheels
 {
   receive_shadows on
   technique
@@ -13,7 +13,7 @@ material omnivelma/wheels
   }
 }
 
-material omnivelma/rollers
+material pseudovelma/rollers
 {
   receive_shadows on
 
@@ -29,7 +29,7 @@ material omnivelma/rollers
   }
 }
 
-material omnivelma/base
+material pseudovelma/base
 {
   receive_shadows on
 

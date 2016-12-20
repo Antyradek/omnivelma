@@ -26,7 +26,7 @@ public:
     {
         this -> model = parent;
 
-        this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this, std::placeholders::_1));
+        this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
 
         //common::Logger logger("Omnivelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
         //logger("Podłączono wtyczkę", 10);
@@ -64,7 +64,7 @@ public:
 
 public:
     ///Funkcja podłączana do zdarzenia aktualizacji
-    void OnUpdate(const common::UpdateInfo& info)
+    void OnUpdate()
     {
         math::Quaternion modelRot = model -> GetWorldPose().rot;
         pyramidRR -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, AXIS_LENGTH, 0));
