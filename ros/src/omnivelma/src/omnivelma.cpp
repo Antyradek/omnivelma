@@ -5,6 +5,11 @@
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
+#include <thread>
+#include "ros/ros.h"
+#include "ros/callback_queue.h"
+#include "ros/subscribe_options.h"
+#include <omnivelma/Vels.h>
 
 #define MODEL_NAME std::string("omnivelma")
 ///Długość jest równa sqrt(2)/2 aby tworzyć kąt 45°
@@ -23,19 +28,37 @@ public:
 
         this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this, std::placeholders::_1));
 
-		//common::Logger logger("Omnivelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
-		//logger("Podłączono wtyczkę", 10);
+        //common::Logger logger("Omnivelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
+        //logger("Podłączono wtyczkę", 10);
 
-		std::cout << "Podłączono wtyczkę do " << model -> GetName() << std::endl;
-		linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
+        std::cout << "Podłączono wtyczkę do " << model -> GetName() << std::endl;
+        linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
-		jointController = model -> GetJointController();
-		joints = jointController -> GetJoints();
+        jointController = model -> GetJointController();
+        joints = jointController -> GetJoints();
 
         pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
         pyramidRL = model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid();
         pyramidFR = model -> GetLink(linkPrefix + "wheel_fr") -> GetCollision("wheel_fr_collision") -> GetSurface() -> FrictionPyramid();
         pyramidFL = model -> GetLink(linkPrefix + "wheel_fl") -> GetCollision("wheel_fl_collision") -> GetSurface() -> FrictionPyramid();
+
+        //inicjalizacja ROSa
+        if (!ros::isInitialized())
+        {
+            int argc = 0;
+            char **argv = NULL;
+            ros::init(argc, argv, "gazebo_client", ros::init_options::NoSigintHandler);
+        }
+
+        //stwórz Node dla ROSa
+        this -> rosNode.reset(new ros::NodeHandle("gazebo_client"));
+
+        //Stwórz topic do odbierania wiadomości
+        ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/" + model -> GetName() + "/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
+        this -> rosSub = this -> rosNode -> subscribe(so);
+
+        //Uruchom wątek odbierania
+        this -> rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
 
     }
 
@@ -50,6 +73,25 @@ public:
         pyramidFL -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, -AXIS_LENGTH, 0));
     }
 
+    ///Pobierz wiadomość od ROSa
+public:
+    void OnRosMsg(const omnivelma::VelsConstPtr &msg)
+    {
+        //TODO ustaw prędkości
+        std::cout << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg ->rr << std::endl;
+    }
+
+    ///Wątek odbioru wiadomości
+private:
+    void QueueThread()
+    {
+        static const double timeout = 0.01;
+        while (this -> rosNode -> ok())
+        {
+            this -> rosQueue.callAvailable(ros::WallDuration(timeout));
+        }
+    }
+
 private:
     ///Wskaźnik na model
     physics::ModelPtr model;
@@ -59,9 +101,6 @@ private:
 
     ///Przedrostek modelu
     std::string linkPrefix;
-
-    ///Mapa kół do wspaźników na rolki
-    //std::map<std::string, physics::JointPtr> rollers;
 
     ///Mapa przegubów
     std::map<std::string, physics::JointPtr> joints;
@@ -74,6 +113,19 @@ private:
     physics::FrictionPyramidPtr pyramidRL;
     physics::FrictionPyramidPtr pyramidFR;
     physics::FrictionPyramidPtr pyramidFL;
+
+    ///Node dla ROSa
+    std::unique_ptr<ros::NodeHandle> rosNode;
+
+    ///Nadajnik ROSa
+    ros::Subscriber rosSub;
+
+    ///Kolejka wiadomości
+    ros::CallbackQueue rosQueue;
+
+    ///Wątek kolejki
+    std::thread rosQueueThread;
+
 };
 
 //zarejestruj wtyczkę

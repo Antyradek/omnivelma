@@ -13,15 +13,26 @@ Jest to temat pracy inżynierskiej na WEiTI na PW.
 Należy zbudować odpowiedni model i oprogramować go do wykonywania zadanych czynności.
 Model powinien służyć do testowania na nim programu sterującego.
 
-Uruchomienie zwyczajne:
-Przekopiować zawartość katalogu models do domyslnego w katalogu domowym ~/.gazebo/models.
-Skompilować wtyczkę plugins/omnivelma.cpp za pomocą cmake, powstanie biblioteka libomnivelma.so.
-$ export GAZEBO_PLUGIN_PATH=GAZEBO_PLUGIN_PATH:/ścieżka/do/katalogu/z/libomnivelma.so.
-$ gazebo omnivelma.world
+Wszystko zostało przerobione na pakiety ROS. Stare wersje uruchamiane bezpośrednio w Gazebo są w poprzednich commitach.
 
-Uruchomienie szybsze:
-$ ./compile
-$ ./start
-To stworzy katalog build i tam skompiluje wtyczkę, a potem ustawi na nią zmiene środowiskowe.
-Ustawi także katalog modeli na lokalne models/ i wczyta z niego model podstawy jezdnej.
-Modele słońca, podłoża i pozostałych nieistniejących lokalnie modeli ściągnie i umieści w domyślnym w ~/.gazebo/models.
+Uruchomienie w ROS:
+Stórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt.
+Przenieś tam zawartość ros/.
+$ ./init
+To zainicjuje katalog roboczy i skompiluje projekt.
+$ ./launch
+Uruchomi Gazebo z platformą.
+
+Potem dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
+$ source setup
+
+Sterowanie:
+Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który skłaza się z 4 floatów dla każdego koła.
+
+Wczytaj typ wiadomości do basha:
+$ source setup
+
+Wyślij wiadomość ustawiając wartości kół np.:
+$ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 10 20 30 40
+
+Gazebo nie wymaga działającego w tle roscore, ponieważ uruchamia wewnętrznie swój własny.
