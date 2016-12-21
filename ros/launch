@@ -1,4 +1,6 @@
 #!/bin/bash
+# Uruchom Gazebo wraz z modelami
+
 source ./setup
 export GAZEBO_MODEL_PATH=GAZEBO_MODEL_PATH:$(pwd)/src
 roslaunch velmaverse velmaverse.launch

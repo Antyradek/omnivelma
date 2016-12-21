@@ -34,13 +34,15 @@ public:
         std::cout << "Podłączono wtyczkę do " << model -> GetName() << std::endl;
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
-        jointController = model -> GetJointController();
-        joints = jointController -> GetJoints();
-
         pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
         pyramidRL = model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid();
         pyramidFR = model -> GetLink(linkPrefix + "wheel_fr") -> GetCollision("wheel_fr_collision") -> GetSurface() -> FrictionPyramid();
         pyramidFL = model -> GetLink(linkPrefix + "wheel_fl") -> GetCollision("wheel_fl_collision") -> GetSurface() -> FrictionPyramid();
+
+        motorRR = model -> GetJoint(linkPrefix + "motor_rr");
+        motorRL = model -> GetJoint(linkPrefix + "motor_rl");
+        motorFR = model -> GetJoint(linkPrefix + "motor_fr");
+        motorFL = model -> GetJoint(linkPrefix + "motor_fl");
 
         //inicjalizacja ROSa
         if (!ros::isInitialized())
@@ -77,8 +79,11 @@ public:
 public:
     void OnRosMsg(const omnivelma::VelsConstPtr &msg)
     {
-        //TODO ustaw prędkości
-        std::cout << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg ->rr << std::endl;
+        std::cout << "Wiadomość: " << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg -> rr << std::endl;
+        motorRR -> SetVelocity(0, msg -> rr);
+        motorRL -> SetVelocity(0, msg -> rl);
+        motorFR -> SetVelocity(0, msg -> fr);
+        motorFL -> SetVelocity(0, msg -> fl);
     }
 
     ///Wątek odbioru wiadomości
@@ -102,17 +107,17 @@ private:
     ///Przedrostek modelu
     std::string linkPrefix;
 
-    ///Mapa przegubów
-    std::map<std::string, physics::JointPtr> joints;
-
-    ///Kontroler
-    physics::JointControllerPtr jointController;
-
     ///Piramidy tarcia
     physics::FrictionPyramidPtr pyramidRR;
     physics::FrictionPyramidPtr pyramidRL;
     physics::FrictionPyramidPtr pyramidFR;
     physics::FrictionPyramidPtr pyramidFL;
+
+    ///Motory kół
+    physics::JointPtr motorRR;
+    physics::JointPtr motorRL;
+    physics::JointPtr motorFR;
+    physics::JointPtr motorFL;
 
     ///Node dla ROSa
     std::unique_ptr<ros::NodeHandle> rosNode;

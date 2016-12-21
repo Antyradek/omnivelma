@@ -100,6 +100,7 @@ public:
         frVel = msg -> fr;
         rlVel = msg -> rl;
         rrVel = msg -> rr;
+		std::cout << "Wiadomość: " << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg -> rr << std::endl;
     }
 
     ///Wątek odbioru wiadomości
