@@ -8,19 +8,19 @@ Podstawa jezdna dla robota Velma.
 
 Jeżdżąca na 4 kołach szwedzkich podstawa ma za zadanie nosić ciężkiego robota manipulacyjnego Velma.
 
-Jest to temat pracy inżynierskiej na WEiTI na PW.
+Jest to temat pracy inżynierskiej dla WEiTI na PW.
 
 Należy zbudować odpowiedni model i oprogramować go do wykonywania zadanych czynności.
 Model powinien służyć do testowania na nim programu sterującego.
 
-Wszystko zostało przerobione na pakiety ROS. Stare wersje uruchamiane bezpośrednio w Gazebo są w poprzednich commitach.
+Wszystko zostało przerobione na pakiety ROS. Stare wersje uruchamiane bezpośrednio w Gazebo są w gdzieś poprzednich commitach.
 Velmaverse - Świat do symulacji, który importuje roboty z paczek.
 Omnivelma - Platforma symulowana fizycznie.
 Pseudovelma - Platforma symulowana kinematycznie.
 
 Uruchomienie w ROS:
-Stórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt.
-Przenieś tam zawartość ros/.
+Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to katalog roboczy.
+Przenieś tam zawartość katalogu ros/.
 $ ./init
 To zainicjuje katalog roboczy i skompiluje projekt.
 $ ./launch
@@ -28,16 +28,26 @@ Uruchomi Gazebo z platformami.
 
 Potem dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
+To ustawi odpowiednie zmienne systemowe, aby komendy wykrywały pakiety i typy.
 
 Sterowanie:
-Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który skłaza się z 4 floatów dla każdego koła.
-Dla platformy kinematycznej alternatywnie /pseudovelma/vels o typie pseudovelma/Vels
+Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który składa się z 4 floatów dla każdego koła.
+Dla platformy kinematycznej alternatywnie /pseudovelma/vels o typie pseudovelma/Vels.
+Argumenty w kolejności: Przedni Lewy, Przedni Prawy, Tylny Lewy, Tylny Prawy.
 
-Wczytaj typ wiadomości do basha:
-$ source setup
+Aby wysłać wiadomość, aby ustawić prędkość kół np.:
+$ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 1 -1 -1 1
+(program, komenda, ilość wiadomości, topic, typ, oddzielacz argumentów, wartości struktry)
 
-Wyślij wiadomość ustawiając wartości kół np.:
-$ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 10 20 30 40
-(program, komenda, ilość, topic, typ, oddzielacz argumentów, wartości struktry)
+Program helper pomaga wysyłać wiadomości powyższą komendą:
+./helper -o 1 -1 1 -1
+Ustawienie prędkości kół (obrót w prawo) dla Omnivelmy (dynamicznej).
+./helper -b 1 -1 -1 1
+Ustawienie prędkości kół (jazda w prawo) dla obu platform na raz.
+./helper -p 1 0 0 1
+Ustawienie prędkości kół (jazda na skos prosto w prawo) dla Pseudovelmy (kinematycznej).
 
 Gazebo nie wymaga działającego w tle roscore, ponieważ uruchamia wewnętrznie swój własny.
+
+Aby uruchomić jedynie jedną platformę można zmodyfikować plik src/velmaverse/worlds/omnivelma.world.
+Platforma dynamiczna zadziała jedynie przy odpowiednich ustawieniach silnika ODE!
