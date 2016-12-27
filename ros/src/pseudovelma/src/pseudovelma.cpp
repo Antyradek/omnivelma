@@ -7,10 +7,11 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/math/gzmath.hh>
 #include <thread>
-#include "ros/ros.h"
-#include "ros/callback_queue.h"
-#include "ros/subscribe_options.h"
+#include <ros/ros.h>
+#include <ros/callback_queue.h>
+#include <ros/subscribe_options.h>
 #include <pseudovelma/Vels.h>
+#include <geometry_msgs/Pose.h>
 
 #define MODEL_NAME std::string("pseudovelma")
 
@@ -65,6 +66,10 @@ public:
         //Uruchom wątek odbierania
         this -> rosQueueThread = std::thread(std::bind(&Pseudovelma::QueueThread, this));
 
+        //stwórz topic do nadawania wiadomości
+        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/" + model -> GetName() + "/pose", 1000);
+
+
     }
 
 public:
@@ -88,8 +93,19 @@ public:
         model -> SetAngularVel(math::Vector3(0,0,rot));
         model -> SetLinearVel(transVect);
 
-        //obracanie kołami dla ozdoby
+        //TODO obracanie kołami dla ozdoby
 
+        //wyślij pozycję
+        const math::Pose& pose = model -> GetWorldPose();
+        geometry_msgs::Pose msg;
+        msg.position.x = pose.pos.x;
+        msg.position.y = pose.pos.y;
+        msg.position.z = pose.pos.z;
+        msg.orientation.x = pose.rot.x;
+        msg.orientation.y = pose.rot.y;
+        msg.orientation.z = pose.rot.z;
+        msg.orientation.w = pose.rot.w;
+        rosPub.publish(msg);
     }
 
     ///Pobierz wiadomość od ROSa
@@ -142,8 +158,11 @@ private:
     ///Node dla ROSa
     std::unique_ptr<ros::NodeHandle> rosNode;
 
-    ///Nadajnik ROSa
+    ///Odbiornik ROSa
     ros::Subscriber rosSub;
+
+    ///Nadajnik pozycji
+    ros::Publisher rosPub;
 
     ///Kolejka wiadomości
     ros::CallbackQueue rosQueue;
