@@ -6,14 +6,16 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <thread>
-#include "ros/ros.h"
-#include "ros/callback_queue.h"
-#include "ros/subscribe_options.h"
+#include <ros/ros.h>
+#include <ros/callback_queue.h>
+#include <ros/subscribe_options.h>
 #include <omnivelma/Vels.h>
+#include <geometry_msgs/Pose.h>
 
 #define MODEL_NAME std::string("omnivelma")
 ///Długość jest równa sqrt(2)/2 aby tworzyć kąt 45°
 #define AXIS_LENGTH 0.707106781186548
+#define CLIENT_NAME "gazebo_client"
 
 namespace gazebo
 {
@@ -49,30 +51,45 @@ public:
         {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "gazebo_client", ros::init_options::NoSigintHandler);
+            ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
         }
 
         //stwórz Node dla ROSa
-        this -> rosNode.reset(new ros::NodeHandle("gazebo_client"));
+        this -> rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
 
-        //Stwórz topic do odbierania wiadomości
+        //stwórz topic do odbierania wiadomości
         ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/" + model -> GetName() + "/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSub = this -> rosNode -> subscribe(so);
 
-        //Uruchom wątek odbierania
+        //sruchom wątek odbierania
         this -> rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
 
+        //stwórz topic do nadawania wiadomości
+        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/" + model -> GetName() + "/pose", 1000);
     }
 
 public:
     ///Funkcja podłączana do zdarzenia aktualizacji
     void OnUpdate()
     {
+        //ustaw kierunek wektorów tarcia
         math::Quaternion modelRot = model -> GetWorldPose().rot;
         pyramidRR -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, AXIS_LENGTH, 0));
         pyramidRL -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, AXIS_LENGTH, 0));
         pyramidFR -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, -AXIS_LENGTH, 0));
         pyramidFL -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, -AXIS_LENGTH, 0));
+
+        //wyślij pozycję
+        const math::Pose& pose = model -> GetWorldPose();
+        geometry_msgs::Pose msg;
+        msg.position.x = pose.pos.x;
+        msg.position.y = pose.pos.y;
+        msg.position.z = pose.pos.z;
+        msg.orientation.x = pose.rot.x;
+        msg.orientation.y = pose.rot.y;
+        msg.orientation.z = pose.rot.z;
+        msg.orientation.w = pose.rot.w;
+        rosPub.publish(msg);
     }
 
     ///Pobierz wiadomość od ROSa
@@ -122,8 +139,11 @@ private:
     ///Node dla ROSa
     std::unique_ptr<ros::NodeHandle> rosNode;
 
-    ///Nadajnik ROSa
+    ///Odbiornik prędkości kół
     ros::Subscriber rosSub;
+
+    ///Nadajnik pozycji
+    ros::Publisher rosPub;
 
     ///Kolejka wiadomości
     ros::CallbackQueue rosQueue;

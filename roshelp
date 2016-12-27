@@ -1,9 +1,7 @@
-Pomoc w komendach ROSa
+Pomoc ogólna:
+common_msgs -> pozycja
 
-- Stworzyć omnivelma/src
-$ catkin_init_workspace
-- Wejść do omnivelma
-$ catkin_make
+Pomoc w komendach ROSa:
 
 rospack find <package>
 roscd
