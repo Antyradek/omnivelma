@@ -25,6 +25,7 @@ SDF jest formatem XML pozwalającym na określenie elementów i zależności pom
 Powstał jako zamiennik URDF ze względu na jego skomplikowaną semantykę i brak możliwości określania ważnych cech, jak rozmieszczenia elementów na symulowanej scenie, określania materiałów itp.
 
 W przeciwieństwie do poprzednika zapisującego model w przestrzeni drzewiastej, SDF równolegle określa wszystkie składowe modelu, oraz zależności między nimi, jak więzy i względne pozycje.
+Standard jest dobrze opisany na ich stronie internetowej \cite{sdf_website}.
 
 Na szczycie wszystkich elementów znajduje się \texttt{world} zawierający w sobie wszystkie modele na symulowanej scenie.
 Mogą być to roboty, a także przeszkody, źródła światła, elementy animowane i tym podobne.
@@ -72,4 +73,29 @@ Ponieważ sterowanie pozycją modelu kinematycznego odbywa się wyłącznie popr
 Taki model nie reaguje na kolizje z innymi obiektami, nie reaguje na różnicę terenu i nie używa informacji o współczynnikach tarcia materiałów.
 
 \subsection{Problemy implementacji}
-Pomimo, że model jest znacznie prostszy od wersji kinematycznej, także tutaj pojawiły się problemy.
+Gazebo nie ma zaimplementowanego pełnego wsparcia dla standardu SDF.
+W szczególności nie działa struktura elementów \texttt{frame} odpowiadająca za transformacje obiektów względem innych obiektów.
+
+Oznacza to, że wszystkie elementy typu \texttt{link} będąc dziećmi \texttt{model} nie przestrzegają jego pozycji.
+Powoduje to, że nadając prędkość kątową modelowi za pomocą funkcji nadajemy ją każdemu obiektowi osobno.
+Każde z kół i dwie części bazy obracają się zgodnie z zadanymi wartościami, ale ich środki pozostają w miejscu w którym rozpoczęły symulację ignorując kompletnie pozycję w elemencie rodzica \texttt{model}.
+
+Aby to naprawić, należy przenieść zawartość elementów \texttt{link} i ustawić je jako \texttt{visual} tagu \texttt{model}.
+W ten sposób traktowane są jako część renderowana modelu, a nie osobne składowe.
+
+Powstała niedogodność jest taka, że ciężej jest sterować obrotem elementów \texttt{visual} i nie można sterować obrotem kół.
+Oczywiście ma to znaczenie jedynie kosmetyczne, gdyż w żaden sposób nie wpływa na ruch modelu bazy.
+
+\subsection{Komunikacja}
+Komunikacja programu sterującego platformą odbywa się przez wbudowane z ROSa narzędzie \emph{topic}.
+
+Wiadomość o nowych zadanych prędkościach kół nie mieści się w standardzie, zatem został stworzony własny typ \texttt{pseudovelma::Vels}.
+Zawiera cztery wartości zmiennoprzecinkowe podwójnej precyzji.
+Wartości oznaczają prędkości w rad/s.
+
+Program posiada komunikację:
+\begin{itemize}
+ \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs::Pose} z aktualną pozycją platformy.
+ \item Odbiór wiadomości własnego typu \texttt{pseudovelma::Vels} z zadanymi prędkościami kół.
+\end{itemize}
+
