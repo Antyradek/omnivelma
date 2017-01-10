@@ -10,6 +10,7 @@
 #include <ros/callback_queue.h>
 #include <ros/subscribe_options.h>
 #include <omnivelma/Vels.h>
+#include <omnivelma/SetFriction.h>
 #include <geometry_msgs/Pose.h>
 
 #define MODEL_NAME std::string("omnivelma")
@@ -60,12 +61,14 @@ public:
         //stwórz topic do odbierania wiadomości
         ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/" + model -> GetName() + "/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSub = this -> rosNode -> subscribe(so);
-
-        //sruchom wątek odbierania
         this -> rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
 
         //stwórz topic do nadawania wiadomości
         this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/" + model -> GetName() + "/pose", 1000);
+
+        //stwórz serwer do ustawiania tarcia
+        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/" + model -> GetName() + "/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
+        this -> rosSrv = this -> rosNode -> advertiseService(aso);
     }
 
 public:
@@ -91,9 +94,23 @@ public:
         msg.orientation.w = pose.rot.w;
         rosPub.publish(msg);
     }
+private:
+    bool SetFriction(omnivelma::SetFriction::Request  &req, omnivelma::SetFriction::Response &res)
+    {
+        pyramidRR -> SetMuPrimary(req.mu1);
+        pyramidRR -> SetMuSecondary(req.mu2);
+        pyramidRL -> SetMuPrimary(req.mu1);
+        pyramidRL -> SetMuSecondary(req.mu2);
+        pyramidFR -> SetMuPrimary(req.mu1);
+        pyramidFR -> SetMuSecondary(req.mu2);
+        pyramidFL -> SetMuPrimary(req.mu1);
+        pyramidFL -> SetMuSecondary(req.mu2);
+        std::cout << "Ustawiono tarcia: " << req.mu1 << " " << req.mu2 << std::endl;
+        return true;
+    }
 
     ///Pobierz wiadomość od ROSa
-public:
+private:
     void OnRosMsg(const omnivelma::VelsConstPtr &msg)
     {
         std::cout << "Wiadomość: " << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg -> rr << std::endl;
@@ -144,6 +161,9 @@ private:
 
     ///Nadajnik pozycji
     ros::Publisher rosPub;
+
+    ///Serwer ustawiania tarcia
+    ros::ServiceServer rosSrv;
 
     ///Kolejka wiadomości
     ros::CallbackQueue rosQueue;

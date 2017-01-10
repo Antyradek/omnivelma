@@ -13,6 +13,11 @@ add_message_files(
 	Vels.msg
 )
 
+add_service_files(
+	FILES
+	SetFriction.srv
+)
+
 generate_messages(
 	DEPENDENCIES
 	std_msgs

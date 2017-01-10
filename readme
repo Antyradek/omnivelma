@@ -51,3 +51,13 @@ Gazebo nie wymaga działającego w tle roscore, ponieważ uruchamia wewnętrznie
 
 Aby uruchomić jedynie jedną platformę można zmodyfikować plik src/velmaverse/worlds/omnivelma.world.
 Platforma dynamiczna zadziała jedynie przy odpowiednich ustawieniach silnika ODE!
+
+Komunikacja:
+Pseudovelma:
+	pseudovelma/Vels		wejście prędkości kół
+	geometry_msgs/Pose		wyjście pozycji
+Omnivelma:
+	omnivelma/Vels			wejście prędkości kół
+	geometry_msgs/Pose		wyjście pozycji
+	omnivelma/SetFriction	ustawienie wartości tarcia rolek
+	
