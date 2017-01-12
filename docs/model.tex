@@ -77,6 +77,7 @@ W kodzie nadano mu nazwę \texttt{pseudovelma} co odnosi się do tego, że jest 
 \subsection{Problemy implementacji}
 Gazebo nie ma zaimplementowanego pełnego wsparcia dla standardu SDF.
 W szczególności nie działa struktura elementów \texttt{frame} odpowiadająca za transformacje obiektów względem innych obiektów.
+Nie jest to zapisane w dokumentacji, a jedynie zgłoszone od kilku lat w systemie kontroli wersji jako błędy.
 
 Oznacza to, że wszystkie elementy typu \texttt{link} będąc dziećmi \texttt{model} nie przestrzegają jego pozycji.
 Powoduje to, że nadając prędkość kątową modelowi za pomocą funkcji nadajemy ją każdemu obiektowi osobno.
@@ -110,6 +111,8 @@ Cały czas zwraca aktualną pozycję i rotację działając jak układ całkują
 \section{Model dynamiczny}
 Wykorzystując maszynę do symulacji fizyki możemy umieścić w niej model określający kształty, masy i zależności obiektów, potem nadać elementom wirtualny ruch i otrzymać przybliżone wyniki do tego, jak zachowywałaby się rzeczywista platforma.
 
+Wszystkie elementy związane z tym modelem noszą nazwę \texttt{omnivelma}, co nawiązuje do wielokierunkowości ruchów robota manipulującego którego podstawa ma transportować.
+
 Robot jest bryłą na którą składają się następujące części składowe:
 \begin{itemize}
  \item Główna część trzonu.
@@ -139,6 +142,32 @@ Taki model naturalnie podskakiwałby przy ruchu zwiększając tym samym i tak du
 Przybliżenie rolki siatką jedynie zmniejsza powyższy efekt, gdyż sama siatka zbudowana jest z prostych odcinków.
 Zwiększając jej gęstość zwiększamy jakość symulacji, ale narażamy się na olbrzymi skok ilości obliczeń.
 Kalkulowanie kolizji z siatką jest najdroższe z możliwych.
+
+\subsection{Resetowanie pozycji koła}
+Ten sposób został użyty w modelach w symulatorze V-Rep.
+
+Polega on na tym, że koło podłączone do bazy posiada przegub zawiasowy obrócony pod kątem 45\textdegree, tak aby był równolegle do dolnej rolki.
+Do tego przegubu podłączona jest kula reagująca z podłożem, którą to w każdej iteracji symulacji resetujemy do pozycji wyjściowej razem z przegubem.
+
+\begin{easylist}[itemize]
+\ListProperties(Style*=--- )
+& Trzon całego robota.
+& Przegub zawiasowy z silnikiem, któremu nadajemy odpowiednią prędkość.
+&& Wirtualne koło łączące ze sobą dwa przeguby. Obraca się tak samo, jak obracało by się rzeczywiste koło.
+&&& Siatka powodująca ładny wygląd koła i pozwalająca na łatwe stwierdzenie jego rotacji.
+&&& Wewnętrzny przegub zawiasowy obrócony o 45\textdegree w stosunku do osi koła. Pozycja i rotacja tego przegubu jest resetowana do pozycji początkowej względem trzonu po każdej iteracji maszyny symulacji.
+&&&& Kolizja koła w formie kuli. Jego pozycja i rotacja są resetowane po każdej iteracji do pozycji początkowej względem trzonu podstawy.
+\end{easylist}
+
+Wywołuje to takie działanie, jak gdyby na kole istniała jedynie dolna rolka. Przez krótką chwilę model zachowuje się poprawnie, aż obrót drugiej osi zacznie wpływać na symulację.
+Zanim to jednak nastąpi, jego rotacja jest przywracana do pozycji początkowej.
+Ponieważ robimy to natychmiast, maszyna symulacyjna nie bierze pod uwagę tarcia i ruchu w takim przypadku.
+
+Niestety nie jest możliwe uzyskanie tego rozwiązania w Gazebo, gdyż struktura drzewiasta obiektów nie jest zaimplementowana.
+Metody zmieniające pozycję obiektu nie działają.
+W dodatku potrzebna jest także możliwość ustawiania rotacji i pozycji przegubu, elementu \texttt{joint}, co nie jest możliwe.
+
+Bardzo skomplikowany sposób działania kół skłania do szukania innych rozwiązań.
 
 \section{Podsumowanie}
 W kolejnych przygotowaniach do pracy udało się przetestować różne sposoby modelowania bazy, znaleźć najlepszy działający i stworzyć modele.
