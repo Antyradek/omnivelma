@@ -241,23 +241,36 @@ Są tu algorytmy wyznaczania tras, budowy map, manipulowania itp.
 
 Twórcy zachęcają, aby uzupełniać brakujące moduły swoimi własnymi, a potem dzielić się nimi z resztą programistów, aby każdy mógł skorzystać, jeśli ma podobny problem.
 
-Programy dla ROS pisze się w C++ i integruje z robotem za pomocą kilku gotowych struktur kolejek wiadomości.
+Programy dla ROS pisze się w C++, lub Pythonie i integruje z robotem za pomocą kilku gotowych struktur kolejek wiadomości.
 Platforma ta także posiada moduły do wizualizacji odbieranych danych w formie graficznej.
 Nie jest to symulator, gdyż sam nie generuje żadnych danych, a jedynie prezentuje gotowe.
+
+Działanie systemu jest oparte o pakiety. Każdy pakiet jest katalogiem zawierającym w sobie pliki opisujące jego parametry i skrypty używane w kompilacji.
+Pakietem może być wszystko, od modelu do programu pomocniczego.
+Pakiety mogą być zależne od siebie, ale nigdy nie wskazują nawzajem swoich bezpośrednich ścieżek.
+
+Na przykład jeden pakiet wymaga pliku nagłówkowego generowanego przez kompilację drugiego pakietu, ale załącza go w kodzie tak, jakby był systemowy.
+Globalny skrypt kompilacji ROSa dba o odpowiednie podawanie ścieżek, kolejność kompilacji programów i załączanie nazw.
+
+Komunikacja między programami odbywa się w sposób ciągły przez kolejki wiadomości, lub pojedyncze asynchroniczne wywołania zwracające wynik.
+Program może nadawać strumień wiadomości, ale nie koniecznie musi istnieć w tym czasie odbiornik.
+Można buforować wiadomości, podglądać strumienie, tworzyć wykresy z danych, podłączać nadajnik do kilku odbiorników, podglądać graf zależności itp.
+Do wszystkiego służy bogaty zestaw komend.
 
 Instalacja programu na systemie operacyjnym jest dużym problemem.
 Z wyjątkiem odpowiednich wersji Ubuntu nie ma łatwego sposobu na wgranie go do innych systemów.
 Na przeszkodzie stoją błędy kompilacji dla nowszych wersji kompilatorów i inne problemy w czasie wykonywania wykonania, jak naruszenie ochrony pamięci. 
 Instalacja alternatywnych pakietów i ręczna kompilacja niektórych części nie działa we wszystkich przypadkach.
+Głównym problemem jest niezgodność wersji zewnętrznych bibliotek.
 
 Rozwiązaniem tego problemu jest instalacja tej platformy programistycznej na maszynie wirtualnej, lub na systemie uruchamianym z dysku zewnętrznego. 
-Takie rozwiązanie także daje dostęp do najnowszej wersji ROS \emph{Kinetic Kame} z końca maja 2016 roku, niedostępnej jeszcze na innych dystrybucjach.
+Takie rozwiązanie także daje dostęp do najnowszej wersji ROS \emph{Kinetic Kame} z końca maja 2016 roku.
 
 Uruchomienie platformy programistycznej na systemie wymaga wielu dodatkowych komend inicjalizujących, a także dopisywania do tworzonych projektów licznych plików konfiguracyjnych za pomocą dostarczonych skryptów.
 Używanie modułów z linii poleceń wymaga ustawienia kilku zmiennych systemowych poprzez wczytywania całościowych plików.
 Użycie niektórych funkcji ROS wymaga uruchomionego demona serwera w tle.
 
-Ogólnie instalacja i używanie ROS na systemie zostawia dużo śmieci, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego, na maszynie wirtualnej, lub dysku.
+Ogólnie instalacja i używanie ROS na systemie zostawia dużo różnorodnych plików, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego, na maszynie wirtualnej, lub dysku.
 Z drugiej jednak strony wirtualizacja systemu operacyjnego z ROS bardzo ogranicza dostępną moc obliczeniową potrzebną takim programom w dużych ilościach.
 
 \subsection{Narzędzia}
@@ -295,6 +308,10 @@ Na tym poziomie można dobudować zamiennik programu sterującego jedynie do pod
 Czujniki nie muszą być istniejące, mogą generować dane, jak pozycja i rotacja bardzo trudne do uzyskania rzeczywistymi czujnikami.
 
 \item Wystawienie do zmiany w czasie rzeczywistym masy, momentu bezwładności, współczynników tarcia, aby pozwolić na proste testowanie działania systemu z różnymi współczynnikami.
+
+\item Elementy pomagające w symulacji, jak model kinematyczny sterowany funkcją matematyczną i podłoże ze zmiennym współczynnikiem tarcia.
+
+\item Programy pomocnicze zbierające i wyświetlające dane, interfejs graficzny.
 
 \item Program sterujący w ROS. Największy i najbardziej skomplikowany element, na szczęście wspólny dla obu bytów --- wirtualnego i rzeczywistego.
 Zazwyczaj nie jest to praca jednego człowieka, a jego rozwój nie ustaje przez długi czas.

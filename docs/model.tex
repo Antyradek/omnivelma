@@ -72,6 +72,8 @@ Uzyskane wartości należy przemnożyć przez odpowiednie wektory jednostkowe, o
 Ponieważ sterowanie pozycją modelu kinematycznego odbywa się wyłącznie poprzez wzory matematyczne, w jego symulacji nie uczestniczy maszyna symulacyjna.
 Taki model nie reaguje na kolizje z innymi obiektami, nie reaguje na różnicę terenu i nie używa informacji o współczynnikach tarcia materiałów.
 
+W kodzie nadano mu nazwę \texttt{pseudovelma} co odnosi się do tego, że jest to nieprawdziwy ruch sterowany z zewnątrz, a nie prawdziwa symulacja.
+
 \subsection{Problemy implementacji}
 Gazebo nie ma zaimplementowanego pełnego wsparcia dla standardu SDF.
 W szczególności nie działa struktura elementów \texttt{frame} odpowiadająca za transformacje obiektów względem innych obiektów.
@@ -89,16 +91,54 @@ Oczywiście ma to znaczenie jedynie kosmetyczne, gdyż w żaden sposób nie wpł
 \subsection{Komunikacja}
 Komunikacja programu sterującego platformą odbywa się przez wbudowane z ROSa narzędzie \emph{topic}.
 
-Wiadomość o nowych zadanych prędkościach kół nie mieści się w standardzie, zatem został stworzony własny typ \texttt{pseudovelma::Vels}.
+Wiadomość o nowych zadanych prędkościach kół nie mieści się w standardzie, zatem został stworzony własny typ \texttt{pseudovelma/Vels}.
 Zawiera cztery wartości zmiennoprzecinkowe podwójnej precyzji.
 Wartości oznaczają prędkości w rad/s.
 
 Program posiada komunikację:
 \begin{itemize}
- \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs::Pose} z aktualną pozycją i rotacją platformy.
- \item Odbiór wiadomości własnego typu \texttt{pseudovelma::Vels} z zadanymi prędkościami kół.
+ \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs/Pose} z aktualną pozycją i rotacją platformy.
+ \item Odbiór wiadomości własnego typu \texttt{pseudovelma/Vels} z zadanymi prędkościami kół.
 \end{itemize}
 
+\subsection{Zachowanie}
+Platforma ignoruje kompletnie otoczenie poruszając się przez inne obiekty.
+Po nadaniu stałych prędkości kół następuje ruch po okręgach zgodnie z przewidywaniami.
+
+Cały czas zwraca aktualną pozycję i rotację działając jak układ całkujący funkcje ruchu z powyższej macierzy.
+
+\section{Model dynamiczny}
+Wykorzystując maszynę do symulacji fizyki możemy umieścić w niej model określający kształty, masy i zależności obiektów, potem nadać elementom wirtualny ruch i otrzymać przybliżone wyniki do tego, jak zachowywałaby się rzeczywista platforma.
+
+Robot jest bryłą na którą składają się następujące części składowe:
+\begin{itemize}
+ \item Główna część trzonu.
+ \item Ruchoma, mniejsza część trzonu z przodu robota.
+ \item 4 koła, 2 podłączone do głównej części, a 2 do przedniej.
+ \item Po 12 rolek na każdym kole.
+ \item Przegub zawiasowy łączący dwie części podstawy.
+ \item 4 przeguby zawiasowe z silnikami łączące części bazy z kołami.
+ \item 12 przegubów zawiasowych na każdym kole łączących koła z rolkami.
+\end{itemize}
+
+Jak widać jest dość skomplikowany obiekt do symulacji, dlatego bezpośrednie podejście poprzez budowę modelu jak najdoskonalszego oryginałowi można wykluczyć.
+Powodowałaby olbrzymią ilość obliczeń maszyny symulacyjnej, każde obarczone błędem.
+
+Istnieją różne podejścia do stworzenia odpowiedniego modelu.
+
+\subsection{Jak największe zbliżenie do oryginału}
+Wspomniany wyżej sposób jest najbardziej wymagającym obliczeniowo, ale także najprostszym z możliwych.
+Wystarczy stworzyć elementy i nadać im fizyczny kształt za pomocą odpowiedniej siatki trójkątnej.
+Kształt może być także nadany poprzez przybliżenie jedną z podstawowych brył, jak sześcian, kula, łamana, walec i płaszczyzna.
+Takie przybliżenie znacznie przyspiesza obliczenia, gdyż może być specjalnie traktowane przez algorytmy.
+
+Słabym punktem tego rozwiązania jest fakt, że rolki są niestandardowym kształtem, którego dokładność jest bardzo wysoce wymagana.
+Przybliżenie jej walcem powoduje problemy przy przenoszeniu ciężaru na kolejną rolkę, gdyż koło będzie musiało przez chwilę oprzeć się o krawędź.
+Taki model naturalnie podskakiwałby przy ruchu zwiększając tym samym i tak duże niedokładności.
+
+Przybliżenie rolki siatką jedynie zmniejsza powyższy efekt, gdyż sama siatka zbudowana jest z prostych odcinków.
+Zwiększając jej gęstość zwiększamy jakość symulacji, ale narażamy się na olbrzymi skok ilości obliczeń.
+Kalkulowanie kolizji z siatką jest najdroższe z możliwych.
 
 \section{Podsumowanie}
 W kolejnych przygotowaniach do pracy udało się przetestować różne sposoby modelowania bazy, znaleźć najlepszy działający i stworzyć modele.
@@ -108,7 +148,7 @@ Nie jest to nigdzie dobrze opisane, więc błędy zdarzały się w zupełnie nie
 Należało nauczyć się działania architektury systemu ROS, aby poznać działanie jego składowych i obsługę standardowych programów.
 Udało się uzyskać standardowe pakiety systemu ROS kompilowane przez jego systemy, komunikujące się w standardowy sposób i przenośne na inne komputery.
 
-Należy teraz stworzyć identyczny model w programie V-Rep, a dokładniej zmodyfikować istniejący pod kątem rozmiarów bazy.
+Należy teraz stworzyć identyczny model w programie V-Rep, a dokładniej zmodyfikować istniejący Kuka Youbot pod kątem rozmiarów bazy.
 Trzeba go podłączyć do systemu ROS w taki sam sposób, jak poprzednie, aby dało się nim równie łatwo sterować.
 
 Do zrobienia jest system ułatwiający manualne sterowanie bazą za pomocą interfejsu graficznego i zbierający informacje do porównania z ruchami prawdziwego robota.
