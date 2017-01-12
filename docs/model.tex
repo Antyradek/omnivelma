@@ -95,7 +95,24 @@ Wartości oznaczają prędkości w rad/s.
 
 Program posiada komunikację:
 \begin{itemize}
- \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs::Pose} z aktualną pozycją platformy.
+ \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs::Pose} z aktualną pozycją i rotacją platformy.
  \item Odbiór wiadomości własnego typu \texttt{pseudovelma::Vels} z zadanymi prędkościami kół.
 \end{itemize}
 
+
+\section{Podsumowanie}
+W kolejnych przygotowaniach do pracy udało się przetestować różne sposoby modelowania bazy, znaleźć najlepszy działający i stworzyć modele.
+Została zdobyta wiedza na temat problemów obsługi programu Gazebo, jakie funkcjonalności nie są zaimplementowane i jakie nie działają.
+Nie jest to nigdzie dobrze opisane, więc błędy zdarzały się w zupełnie nieprzewidzianych okolicznościach.
+
+Należało nauczyć się działania architektury systemu ROS, aby poznać działanie jego składowych i obsługę standardowych programów.
+Udało się uzyskać standardowe pakiety systemu ROS kompilowane przez jego systemy, komunikujące się w standardowy sposób i przenośne na inne komputery.
+
+Należy teraz stworzyć identyczny model w programie V-Rep, a dokładniej zmodyfikować istniejący pod kątem rozmiarów bazy.
+Trzeba go podłączyć do systemu ROS w taki sam sposób, jak poprzednie, aby dało się nim równie łatwo sterować.
+
+Do zrobienia jest system ułatwiający manualne sterowanie bazą za pomocą interfejsu graficznego i zbierający informacje do porównania z ruchami prawdziwego robota.
+Należy stworzyć także elementy pomocnicze, jak interaktywny model podłogi ze zmiennym współczynnikiem tarcia.
+Interfejs graficzny będzie wtyczką w QT tworzącą kolejny panel w ROSowym programie \emph{rqt}.
+
+Na koniec używając wystawionego interfejsu metodą prób i błędów należy znaleźć takie ustawienia (np. masa, tarcie), które produkują rezultat najbardziej zbliżony do działania rzeczywistego modelu.

@@ -22,7 +22,7 @@ W celu przybliżenia wyjścia takiego programu do rzeczywistego urządzenia, do 
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/base_photo.png}
-\caption{Fotografia platformy z perspektywy. Niebieskie urządzenia na szczycie to czujniki laserowe. Na obecny stan koła są nieprawidłowo ustawione.}
+\caption{Fotografia platformy z perspektywy.}
 \end{figure} 
 
 Jest to duża, prostokątna baza dookólna poruszająca się na czterech kołach szwedzkich.
@@ -33,7 +33,7 @@ Każdy z serwomotorów ma także wbudowany enkoder umożliwiający pomiar rzeczy
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/kuka_youbot.png}
-\caption{Przykład prawidłowej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół względem siebie.}
+\caption{Przykład innej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół, identyczne jak w opisywanej wyżej platformie.}
 \end{figure} 
 
 Odpowiedni obrót kół względem bazy pozwala na jej ruch w dowolnym kierunku niezależnie od kąta obrotu robota.
@@ -49,20 +49,20 @@ A jeśli do tego dodamy obrót kół drugiej przekątnej w odwrotnym kierunku, w
 
 Podstawa ma za zadanie transportować wydziałowego robota manipulującego Velma tworząc razem uniwersalny manipulator mobilny.
 Velma to wysoki i bardzo ciężki robot wyposażony w dwa chwytaki na ramionach o licznych przegubach.
-Taka budowa wymaga szerokiej podstawy, aby zachować środek ciężkości całości odpowiednio nisko.
+Taka budowa wymaga szerokiej podstawy, aby zachować wystarczająco dużą równowagę.
 Jeżdżąc na tej podstawie robot może się przemieszczać i obracać w dowolnym kierunku, aby uzyskać lepszy dostęp do manipulowanych przedmiotów.
 Dodatkowe czujniki laserowe umieszczone tuż nad postawą odpowiadają za wykrywanie kolizji.
 
 Platforma jest niesymetrycznie podzielona w poprzek na dwie niezależne części.
 Przegub o jednym stopniu swobody (tzw. zawias) jest jedynym łącznikiem pomiędzy tymi dwoma fragmentami.
 Zadaniem tego przegubu jest niwelować niedoskonałości terenu, aby każde koło dociskało do podłoża z taką samą siłą, jak po drugiej stronie osi.
-Bez tego zawiasu nierówny teren uniemożliwiałby sprawne sterowanie platformą na skutek nierównego tarcia kół tej samej osi i nieplanowany skręt.
+Bez tego zawiasu nierówny teren uniemożliwiałby sprawne sterowanie platformą na skutek nierównego tarcia kół tej samej osi, powodując nieplanowany skręt.
 Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, więc należy je wyeliminować na przykład za pomocą takiego przegubu.
 
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_top.pdf}
-\caption{Platforma mobilna widziana od góry. Przegub zawiasowy łączy dwie części.}
+\caption{Platforma mobilna widziana od góry. Przegub zawiasowy łączy dwie części. Należy zwrócić uwagę na nieprawidłowy układ kół.}
 \end{figure} 
 
 \begin{figure}[H]
@@ -78,12 +78,10 @@ Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, wię
 \end{figure} 
 
 \section{Koła szwedzkie}
-
 Koła szwedzkie, zwane także kołami mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
 Rolki są pasywne i obracają się niezależnie od siebie. Każde koło posiada 12 takich rolek.
 Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
 Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
-Na obecny stan robot i jego trójwymiarowe modele mają nieprawidłowo ustawione koła.
 
 \begin{figure}[H]
 \centering
@@ -96,6 +94,7 @@ Drugim są rotacje pojedynczych rolek, a trzecim poślizg obrotowy w miejscu sty
 
 Na podstawie rysunku widać, że krzywizna rolki jest tak ustawiona, aby punkt kontaktu rolki z podłożem płynnie przechodził na następną rolkę w trakcie obrotu.
 Nie powinno być efektu przeskoku z jednej rolki na drugą, gdyż to wprowadza nierówne tarcie i losowe poślizgi.
+Koło można wpisać w kulę i każda rolka będzie dotykać jej sfery na całej swojej długości.
 
 \section{Składniki systemu}
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
@@ -105,7 +104,7 @@ Efektor rzeczywisty, na przykład serwomotor jest sterowany za pomocą efektora 
 Przykładowo zmienia podaną liczbę oznaczającą zadaną prędkość na odpowiednie napięcie na wyjściu. W przestrzeni symulacyjnej jedynie wywołuje odpowiednie funkcje maszyny do symulacji.
 
 Podobnie receptor wirtualny pobiera surowe dane z czujnika, przekształca na odpowiedni format, usuwa błędy i szum tak, aby program sterujący mógł wykorzystać te dane w prosty sposób. 
-Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytanie obrazu z kilku kamer i zamiana na mapę odległości, szkielety wykrytych osób, ich sylwetki i wiele innych gotowych danych.
+Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytanie obrazu z kilku kamer, usunięcie błędów wbudowanym układem i zamiana na mapę odległości, szkielety wykrytych osób, ich sylwetki i wiele innych gotowych danych.
 
 %TODO Zmienić na Tikz
 \begin{figure}[H]
@@ -114,20 +113,19 @@ Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytan
 \caption{Struktura agenta upostaciowionego.}
 \end{figure} 
 
-
 \subsection{Model 3D}
- Odpowiednio opisany równaniami fizycznymi powinien mieć zachowanie zbliżone do oryginału w jak największym stopniu.
- Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także wszelkie tarcia.
- Model posiada więzy na ruchome elementy, jak koła i rolki, aby symulować przeguby.
- 
- Ta część środowiska oddziałuje bezpośrednio z maszyną do symulacji fizycznej. 
- To kształt, masy i momenty bezwładności brył są argumentami funkcji liczących.
- Także maszyna manipuluje z powrotem podanymi obiektami nadając im wirtualnie odpowiednie prędkości w czasie.
- 
- Do modelu doczepia się wirtualne czujniki generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
- Nie są to pełne dane o stanie modelu, jakie posiada maszyna do symulacji, gdyż czujniki fizyczne również nigdy nie mają pełnej informacji o stanie urządzenia.
- 
- Dla ozdoby można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota.
+Odpowiednio opisany równaniami fizycznymi powinien mieć zachowanie zbliżone do oryginału w jak największym stopniu.
+Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także wszelkie tarcia.
+Model posiada więzy na ruchome elementy, jak koła i rolki, aby symulować przeguby.
+
+Ta część środowiska oddziałuje bezpośrednio z maszyną do symulacji fizycznej. 
+To kształt, masy i momenty bezwładności brył są argumentami funkcji liczących.
+Także maszyna manipuluje z powrotem podanymi obiektami nadając im wirtualnie odpowiednie prędkości w czasie.
+
+Do modelu doczepia się wirtualne czujniki generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
+Nie są to pełne dane o stanie modelu, jakie posiada maszyna do symulacji, gdyż czujniki fizyczne również nigdy nie mają pełnej informacji o stanie urządzenia.
+
+Dla ozdoby można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota.
 
  \subsection{Sterownik silników}
 Program sterujący generuje abstrakcyjne dane, na przykład liczbę zapisaną binarnie.
@@ -140,7 +138,7 @@ Do innych zadań może należeć kontrola, czy żądana wartość nie uszkodzi u
 Zazwyczaj sterownik może komunikować się z powrotem z resztą systemu, aby zgłaszać ewentualne awarie.
 
 Taki program i powiązany z nim układ elektroniczny są najczęściej dostarczone przez producenta robota i nieznane użytkownikowi.
-Dodatkowo tworzy kolejną warstwę abstrakcyjną dla sterownika głównego, który nie musi zważać na generowanie różnych danych dla różnych typów efektorów.
+Dodatkowo tworzy kolejną warstwę abstrakcyjną dla sterownika głównego, który nie musi zważać na generowanie różnych danych dla różnych modeli tych samych efektorów.
  
 W środowisku wirtualnym należy stworzyć moduł o podobnym działaniu.
 Powinien przyjmować dane w dokładnie takim samym formacie, jak opisany wyżej układ, aby był łatwo wymienialny na sterownik fizycznego urządzenia bez ingerencji w główny program sterujący.
@@ -294,7 +292,9 @@ Można go prosto pobieżnie przetestować działając siłą na elementy i patrz
 Na tym poziomie można dobudować zamiennik programu sterującego jedynie do podawania prostych wartości bez odczytywania pomiarów i sterowania.
 
 \item Zaprogramowanie wtyczki symulującej czujniki, aby generowały dane z enkoderów, oraz innych urządzeń, dodawały błędy pomiarowe, a następnie przekształcały dane na format zrozumiały dla programu sterującego.
-Na tym momencie program może je wyświetlić, ale nie wygeneruje na ich podstawie sterowania.
+Czujniki nie muszą być istniejące, mogą generować dane, jak pozycja i rotacja bardzo trudne do uzyskania rzeczywistymi czujnikami.
+
+\item Wystawienie do zmiany w czasie rzeczywistym masy, momentu bezwładności, współczynników tarcia, aby pozwolić na proste testowanie działania systemu z różnymi współczynnikami.
 
 \item Program sterujący w ROS. Największy i najbardziej skomplikowany element, na szczęście wspólny dla obu bytów --- wirtualnego i rzeczywistego.
 Zazwyczaj nie jest to praca jednego człowieka, a jego rozwój nie ustaje przez długi czas.
@@ -314,20 +314,3 @@ Te profesjonalne modele także pomogą przy wstępnej weryfikacji zachowania si�
 Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, prawdopodobnie trzeba będzie uprościć model poprzez zamianę niektórych składowych i dodanie sztucznych więzów.
 Całościowy model może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
 Taki model także jest znacznie trudniej poprawnie wymodelować ze względu na liczne tarcia i poślizgi rolek.
-
-\section{Podsumowanie}
-W ramach przygotowań do pracy udało się zainstalować, skonfigurować i przetestować wszystkie moduły środowiska.
-Została zdobyta wiedza na temat możliwych problemów z instalacją i używaniem ich w przyszłości.
-Jakie systemy operacyjne jak dobrze współpracują z systemem ROS i na czym nie da się go zainstalować.
-Testowanie odbyło się za pomocą budowy własnego, abstrakcyjnego modelu i zastosowania do niego zmodyfikowanych programów przykładowych.
-
-Udało się sprawdzić, jakie są możliwości stworzenia struktury projektu, aby nie umieszczać modeli i kodu osobno, aby zachować porządek.
-Ustawiono wszelkie systemy kontroli wersji użyte także do budowy tego dokumentu.
-
-Aby zabrać się do pracy, należy przejrzeć sporą ilość materiałów na temat budowy kół i modelowania ich wirtualnie, a także powodów nieścisłości obliczeń.
-Dobrze jest także obejrzeć dalsze dokumenty zawarte w bibliografiach materiałów.
-
-Należy eksperymentować z różnymi rozwiązaniami ewentualnych uproszczeń modelu, sprawdzić, jak rozwiązywali ten problem inni.
-Przetestować, czy wspomaganie symulacji za pomocą karty graficznej nie rozwiąże problemu nadmiernych obliczeń.
-
-
