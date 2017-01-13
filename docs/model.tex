@@ -127,7 +127,9 @@ Robot jest bryłą na którą składają się następujące części składowe:
 Jak widać jest dość skomplikowany obiekt do symulacji, dlatego bezpośrednie podejście poprzez budowę modelu jak najdoskonalszego oryginałowi można wykluczyć.
 Powodowałaby olbrzymią ilość obliczeń maszyny symulacyjnej, każde obarczone błędem.
 
-Istnieją różne podejścia do stworzenia odpowiedniego modelu.
+Istnieją różne podejścia do stworzenia odpowiedniego modelu. Każde z nich było proponowane na różnorakich forach przez osoby symulujące podobne bazy.
+Jednak rozwiązanie nigdy nie zostało znalezione.
+Działający w naszym przypadku sposób także nie został wcześniej sprawdzony.
 
 \subsection{Jak największe zbliżenie do oryginału}
 Wspomniany wyżej sposób jest najbardziej wymagającym obliczeniowo, ale także najprostszym z możliwych.
@@ -156,7 +158,7 @@ Do tego przegubu podłączona jest kula reagująca z podłożem, którą to w ka
 && Wirtualne koło łączące ze sobą dwa przeguby. Obraca się tak samo, jak obracało by się rzeczywiste koło.
 &&& Siatka powodująca ładny wygląd koła i pozwalająca na łatwe stwierdzenie jego rotacji.
 &&& Wewnętrzny przegub zawiasowy obrócony o 45\textdegree w stosunku do osi koła. Pozycja i rotacja tego przegubu jest resetowana do pozycji początkowej względem trzonu po każdej iteracji maszyny symulacji.
-&&&& Kolizja koła w formie kuli. Jego pozycja i rotacja są resetowane po każdej iteracji do pozycji początkowej względem trzonu podstawy.
+&&&& Kolizja koła w formie kuli, symuluje aktualnie najniższą rolkę u podłoża. Jego pozycja i rotacja są resetowane po każdej iteracji do pozycji początkowej względem trzonu podstawy.
 \end{easylist}
 
 Wywołuje to takie działanie, jak gdyby na kole istniała jedynie dolna rolka. Przez krótką chwilę model zachowuje się poprawnie, aż obrót drugiej osi zacznie wpływać na symulację.
@@ -168,6 +170,32 @@ Metody zmieniające pozycję obiektu nie działają.
 W dodatku potrzebna jest także możliwość ustawiania rotacji i pozycji przegubu, elementu \texttt{joint}, co nie jest możliwe.
 
 Bardzo skomplikowany sposób działania kół skłania do szukania innych rozwiązań.
+
+\subsection{Zmiana osi rolki}
+Poprzedni przypadek można zmodyfikować poprzez wyznaczanie nowej osi przegubu łączącego wirtualne koło z rolką.
+
+Oś wewnętrzna podłączone jest do koła wirtualnego i obraca się razem z nim.
+W każdym cyklu należy zamienić obróconą już nieco oś na kierunek pierwotny względem postawy platformy.
+Spowoduje to, że kolejna iteracja fizyki będzie mogła obracać kulą reprezentującą rolkę pod odpowiednim kątem.
+
+Należało obliczyć kierunek w przestrzeni globalnej biorąc pod uwagę aktualną pozycję platformy i obrót kół.
+Fakt, że program wymagał wektora relatywnie do pozycji koła wirtualnego bardzo komplikował obliczenia.
+
+Trzeba było jeszcze wybrać moment wyznaczenia nowego kierunku osi, bowiem maszyna symulacyjna wywołuje wiele różnych funkcji w jednym cyklu symulacyjnym.
+Można wywołać kod w różnych momentach z teoretycznie różnym efektem. 
+
+Implementacja tego rozwiązania niestety nie stworzyła działającego modelu.
+Wykonywanie kodu w różnych momentach symulacji nie wpływało na efekt.
+Platforma poprawnie poruszała się do przodu i do tyłu. 
+Pierwszy problem pojawiał się gdy w czasie ruchu na bok, prędkość malała, aby zmienić zwrot pomimo niezmiennej prędkości kół.
+Po kilku sekundach problem się powtarzał.
+
+Drugim problemem był ruch po krzywej w której model nieregularnie podskakiwał w końcu nawet obracając się w pionie.
+Takie zachowanie oczywiście dalekie jest od oryginału.
+
+Wygląda na to, że problemem było wewnętrzne traktowanie przegubów przez maszynę symulacyjną.
+Takie nienaturalne zachowanie jak nagła zmiana osi przegubu musiała wprowadzać nieprawdopodobne wartości do zmiennych stanu, co w rezultacie powodowało po pewnym czasie chaotyczny ruch.
+
 
 \section{Podsumowanie}
 W kolejnych przygotowaniach do pracy udało się przetestować różne sposoby modelowania bazy, znaleźć najlepszy działający i stworzyć modele.
