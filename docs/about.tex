@@ -29,6 +29,7 @@ Jest to duża, prostokątna baza dookólna poruszająca się na czterech kołach
 Koła są stałe, parami przyczepione do dwóch osi.
 Każde koło jest sterowane osobno przez podłączony bezpośrednio serwomotor, zatem może mieć prędkość i kierunek niezależny od pozostałych kół i kierunku poruszania się robota, oraz jego obrotu.
 Każdy z serwomotorów ma także wbudowany enkoder umożliwiający pomiar rzeczywistego kąta obrotu koła.
+Enkoder zwraca aktualny kąt i prędkość obrotu.
 
 \begin{figure}[H]
 \centering
@@ -82,6 +83,7 @@ Koła szwedzkie, zwane także kołami mecanum, to specjalne koła z dodatkowymi 
 Rolki są pasywne i obracają się niezależnie od siebie. Każde koło posiada 12 takich rolek.
 Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
 Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
+Warto pamiętać, że oś aktualnie dolnej rolki jest prostopadła do osi górnej rolki.
 
 \begin{figure}[H]
 \centering

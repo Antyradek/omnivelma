@@ -1,5 +1,5 @@
 INKSCAPE=inkscape
-PDFS=base_dims
+PDFS=base_dims friction base_vects
 
 all: $(PDFS)
 
