@@ -1,0 +1,10 @@
+Ocznica - model obserwujący i porównywujący otoczenie
+
+Komunikacja programu w formie:
+nazwa
+typ
+opis
+
+/ocznica/relative
+ocznica/Relative
+Zwraca odległości od robotów i kąt

@@ -1,6 +1,8 @@
 <?xml version="1.0" ?>
 	<sdf version="1.5">
 	<world name="velmaverse">
+		<plugin name="ocznica" filename="libocznica.so"/>
+		
 		<!-- Słońce -->
 		<include>
 			<uri>model://sun</uri>
@@ -17,7 +19,7 @@
 				<uri>model://omnivelma</uri>
 			</include>
 			<plugin name="omnivelma" filename="libomnivelma.so"/>
-			</model>
+		</model>
 
 
 		<model name="pseudovelma">
