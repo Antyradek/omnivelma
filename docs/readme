@@ -1,13 +1,13 @@
 Do poruszenia:
 Opis platformy (wymiary itp)
-Porównanie ruchów
 
 Do zrobienia:
 Enkodery omnivelmy.
 Masa omnivelmy.
 Masa kół.
-I omnivelmy i kół.
+Moment obrotowy (tensor) omnivelmy i kół.
 Tarcie podłoża nazwane Flooria
-Porównanie ruchów nadawane przez program, nazwane ocznica.
+Przestawienie środka ciężkości i porównanie wyników
+Masa transportowana i intefejs jej zmiany
 
 Przetestować Vrepowy sposób jeśli joint będzie miał własnego linka, którego pozycję już można resetować.

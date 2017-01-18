@@ -6,6 +6,7 @@ Dodatkowo stworzenie platformy kinematycznej pozwalało na porównanie szybkie o
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/base_dims.pdf}
+ \label{graphics:base_dims}
 \caption{Wielkości używane we wzorach.}
 \end{figure} 
 \begin{tabular}{l c l}
@@ -243,21 +244,65 @@ Takie rozwiązanie wiąże się z pewnym ryzykiem.
 Wymaga, aby symulator używał maszyny ODE, co zmniejsza przenośność modelu. ODE jest domyślnym symulatorem w Gazebo.
 Maszyna Bullet również liczy kolizje w ten sposób i ma modyfikowalne wektory, lecz nie daje podobnych wyników. Być może jest to spowodowane brakiem odpowiedniej konfiguracji.
 
-%TODO porównanie modelu z kinematycznym
+\section{Porównanie modeli}
+Posiadając model kinematyczny, którego ruch jest sterowany wzorami możemy porównać jego pozycję i rotację z modelem dynamicznym.
+Należy w tym samym momencie nadać bazom identyczne prędkości kół i zbierać dane dotyczące wzajemnej pozycji.
+Nadano kołom kolejne prędkości zgodnie z numeracją w rysunku \ref{graphics:base_dims}, $(-2 , 1 , 0 , -3)$.
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{graphics/test1.png}
+\caption{Odległość i kąt pomiędzy platformami w czasie.}
+\end{figure} 
+
+Takie ustawienie spowodowało ruch po okręgu o okresie ok. 32 s.
+Modele początkowo posiadały zbliżoną pozycję i rotację, ale w miarę upływu czasu opóźnienia modelu dynamicznego stały się zauważalne.
+Także kąt między nimi zaczął się zmieniać, lecz w znacznie większym stopniu, niż wynikałoby to z opóźnienia pozycji.
+Przez cały czas trwania eksperymentu model dynamiczny zrobił kąt pełny w stosunku do kinematycznego, a jego odległość zmieniała się sinusoidalnie.
+Oba modele wykonały tę samą ilość obiegów.
+
+Po pierwsze widać, że już na samym początku pomiarów odległość nagle wzrosła, co jest spowodowane poślizgiem platformy przy nadaniu kołom prędkości.
+Model kinematyczny rozpoczyna jazdę natychmiastowo.
+Dzieje się tak pomimo doskonałym współczynnikom tarcia, w dodatku masa platformy nie jest dobrana zgodnie z rzeczywistością.
+Ten efekt może być zmniejszony za pomocą ustawiania współczynnika tarcia podłoża, ale nie jest możliwe jego całkowite wyeliminowanie, gdyż jest to cecha maszyn symulacji fizyki.
+
+Drugą zauważalną cechą wykresu są małe oscylacje o okresie jednego obiegu.
+Ma to efekt taki sam, jak gdyby obie platformy wystartowały z różnych pozycji, których odległość jest mniejsza od średnicy trasy.
+To powodowałby, że odległość między ich pozycjami oscylowałaby w właśnie taki sposób.
+Modele wystartowały z tego samego punktu w tym samym czasie, jednakże środek ciężkości modelu dynamicznego nie pokrywał się ze środkiem platformy względem którego obliczano pozycję.
+W związku z tym jej ruch odbywa się wokół środka ciężkości masy, ale pozycja jest liczona względem geometrycznego środka.
+To pokazuje, że należy bardzo dokładnie ustawić masy elementów składowych w stosunku do rzeczywistego modelu, gdyż w przeciwnym wypadku symulacja obarczona będzie właśnie takimi oscylacjami.
+Co więcej, ruchome elementy transportowanego robota manipulującego będą miały wpływ na pozycję środka ciężkości i ruch podstawy.
+Dlatego należy wprowadzić element transportowanej masy, którego środek ciężkości powinien być modyfikowalny.
+
+Trzecią cechą są duże oscylacje, rosnące w czasie.
+Na razie nie jest dokładnie wiadome, dlaczego powstają.
+Warto jednak zauważyć, że nie są zbieżne w czasie z kątem obrotu, gdyż jego wartość ma mniejszy okres.
+
+Opóźnienia powstałe na modelu dynamicznym są cechą dokładności maszyny symulacyjnej fizyki i nie da się ich całkowicie wyeliminować.
+Jednakże ich wartość jest znacznie mniejsza od niedokładności wprowadzonej przez niedoskonałość rzeczywistego obiektu.
+To oznacza, że model ma rzeczywistą wartość pod kątem pomocy w symulacji robota.
 
 \section{Podsumowanie}
 W kolejnych przygotowaniach do pracy udało się przetestować różne sposoby modelowania bazy, znaleźć najlepszy działający i stworzyć modele.
-Została zdobyta wiedza na temat problemów obsługi programu Gazebo, jakie funkcjonalności nie są zaimplementowane i jakie nie działają.
+Porównanie działania modelu z wartościami obliczonymi matematycznie pozwoliło zobaczyć możliwe problemy, które pojawią się we współpracy z rzeczywistą platformą.
+
+Została zdobyta wiedza na temat problemów obsługi programu Gazebo, oraz jego integracji z ROSem, jakie funkcjonalności nie są zaimplementowane i jakie nie działają.
 Nie jest to nigdzie dobrze opisane, więc błędy zdarzały się w zupełnie nieprzewidzianych okolicznościach.
 
 Należało nauczyć się działania architektury systemu ROS, aby poznać działanie jego składowych i obsługę standardowych programów.
 Udało się uzyskać standardowe pakiety systemu ROS kompilowane przez jego systemy, komunikujące się w standardowy sposób i przenośne na inne komputery.
+Tutaj również pojawiły się niestandardowe problemy z kompilacją, na przykład zła kolejność generacji plików rozwiązywalna przez zresetowanie systemu operacyjnego.
 
 Należy teraz stworzyć identyczny model w programie V-Rep, a dokładniej zmodyfikować istniejący Kuka Youbot pod kątem rozmiarów bazy.
 Trzeba go podłączyć do systemu ROS w taki sam sposób, jak poprzednie, aby dało się nim równie łatwo sterować.
 
-Do zrobienia jest system ułatwiający manualne sterowanie bazą za pomocą interfejsu graficznego i zbierający informacje do porównania z ruchami prawdziwego robota.
-Należy stworzyć także elementy pomocnicze, jak interaktywny model podłogi ze zmiennym współczynnikiem tarcia.
+Należy dodać dużą ilość interfejsów do zmiany różnych parametrów modelu, między innymi masy, moment obrotowy, transponowana masa i jej środek ciężkości.
+Platforma musi zwracać wartości enkodera jak pozycja i prędkość.
+Warto dodać elementy dodatkowe, jak model interaktywnego podłoża ze zmiennym współczynnikiem tarcia.
+
+Do zrobienia jest także system ułatwiający manualne sterowanie bazą za pomocą interfejsu graficznego i zbierający informacje do porównania z ruchami prawdziwego robota.
 Interfejs graficzny będzie wtyczką w QT tworzącą kolejny panel w ROSowym programie \emph{rqt}.
 
 Na koniec używając wystawionego interfejsu metodą prób i błędów należy znaleźć takie ustawienia (np. masa, tarcie), które produkują rezultat najbardziej zbliżony do działania rzeczywistego modelu.
+Ten zabieg może trwać nieokreśloną ilość czasu, a wpływ na niego będzie miał stan model robota manipulującego i pozostałe elementy składowe.

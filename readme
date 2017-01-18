@@ -33,7 +33,7 @@ To ustawi odpowiednie zmienne systemowe, aby komendy wykrywały pakiety i typy.
 Sterowanie:
 Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który składa się z 4 floatów dla każdego koła.
 Dla platformy kinematycznej alternatywnie /pseudovelma/vels o typie pseudovelma/Vels.
-Argumenty w kolejności: Przedni Lewy, Przedni Prawy, Tylny Lewy, Tylny Prawy.
+Argumenty w kolejności: Przedni Prawy, Przedni Lewy, Tylny Lewy, Tylny Prawy.
 
 Aby wysłać wiadomość, aby ustawić prędkość kół np.:
 $ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 1 -1 -1 1
@@ -50,14 +50,15 @@ Ustawienie prędkości kół (jazda na skos prosto w prawo) dla Pseudovelmy (kin
 Gazebo nie wymaga działającego w tle roscore, ponieważ uruchamia wewnętrznie swój własny.
 
 Aby uruchomić jedynie jedną platformę można zmodyfikować plik src/velmaverse/worlds/omnivelma.world.
-Platforma dynamiczna zadziała jedynie przy odpowiednich ustawieniach silnika ODE!
 
 Komunikacja:
 Pseudovelma:
-	pseudovelma/Vels		wejście prędkości kół
-	geometry_msgs/Pose		wyjście pozycji
+	/pseudovelma/vels			wejście prędkości kół
+	/pseudovelma/pose			wyjście pozycji
 Omnivelma:
-	omnivelma/Vels			wejście prędkości kół
-	geometry_msgs/Pose		wyjście pozycji
-	omnivelma/SetFriction	ustawienie wartości tarcia rolek
+	/omnivelma/vels				wejście prędkości kół
+	/omnivelma/pose				wyjście pozycji
+	/omnivelma/set_friction		ustawienie wartości tarcia rolek
+Ocznica:
+	/ocznica/relative			wyjście odległości i kąta między platformami
 	
