@@ -1,5 +1,6 @@
 Do poruszenia:
 Opis platformy (wymiary itp)
+Zdjęcie Velmy.
 
 Do zrobienia:
 Enkodery omnivelmy.
@@ -7,7 +8,9 @@ Masa omnivelmy.
 Masa kół.
 Moment obrotowy (tensor) omnivelmy i kół.
 Tarcie podłoża nazwane Flooria
-Przestawienie środka ciężkości i porównanie wyników
+Przestawienie środka ciężkości na środki elemektów i porównanie wyników
 Masa transportowana i intefejs jej zmiany
+Zmiana nazwy nodów i topiców z generowanych na statyczne.
+Ustawienie domyślnych momentów obrotowych obliczonych z zewnątrz.
 
 Przetestować Vrepowy sposób jeśli joint będzie miał własnego linka, którego pozycję już można resetować.

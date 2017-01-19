@@ -16,8 +16,8 @@ $r$ & 0,1 m & Promień koła w najszerszym miejscu na środku. \\
 $a$ & 0,76 m & Szerokość platformy między środkami kół tej samej osi. \\
 $b$ & 0,72 m & Długość platformy między środkami kół tego samego boku. \\
 $\omega_i$ & & Prędkość kątowa każdego z kół. \\
-$V_x$ & & Prędkość transwersalna w osi X. \\
-$V_y$ & & Prędkość transwersalna w osi Y. \\
+$v_x$ & & Prędkość transwersalna w osi X. \\
+$v_y$ & & Prędkość transwersalna w osi Y. \\
 $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 \end{tabular}
 
@@ -28,29 +28,29 @@ Powstał jako zamiennik URDF ze względu na jego skomplikowaną semantykę i bra
 W przeciwieństwie do poprzednika zapisującego model w przestrzeni drzewiastej, SDF równolegle określa wszystkie składowe modelu, oraz zależności między nimi, jak więzy i względne pozycje.
 Standard jest dobrze opisany na ich stronie internetowej \cite{sdf_website}.
 
-Na szczycie wszystkich elementów znajduje się \texttt{world} zawierający w sobie wszystkie modele na symulowanej scenie.
+Na szczycie wszystkich elementów znajduje się element \texttt{world} zawierający w sobie wszystkie modele na symulowanej scenie.
 Mogą być to roboty, a także przeszkody, źródła światła, elementy animowane i tym podobne.
 Dodatkowo można dodać informację o ustawieniach maszyny symulującej fizykę, wyglądzie sceny, wietrze, grawitacji, polu magnetycznym i tym podobnych.
 
 W każdym z modeli oznaczonych tagiem \texttt{model} zawiera się nazwa, domyślna pozycja, sposób traktowania przez symulator i wtyczki programów obsługujących zaawansowane zachowanie modelu.
-Można przenieść zawartość do innego pliku i określić ścieżkę.
+Można przenieść zawartość elementu do innego pliku i określić ścieżkę do importu.
 
 Model ma w sobie równolegle wszystkie elementy oznaczone jako \texttt{link}, każdy z nich jest osobną, kompletną częścią robota, na przykład kołem, fragmentem ramienia chwytaka, trzonem.
 Zawiera w sobie informacje o pozycji względem innych obiektów, masie, kształcie, kolizjach, materiale fizycznym i wyglądzie.
 Pozwala na dodanie do siebie źródeł dźwięku, czujników, baterii itp.
 
 Same elementy zawierają jedynie informacje o swoim początkowym umiejscowieniu w modelu, ale nie o sposobie poruszania się i nałożonych więzach.
-Do tego potrzebne są równoległe typy \texttt{joint} określające typ więzów, osie, współczynniki sprężystości, wytrzymałość, siłę silników.
+Do tego potrzebne są równoległe do elementów modelu typy \texttt{joint} określające typ więzów, osie, współczynniki sprężystości, wytrzymałość, siłę silników.
 Każde połączenie określa między jakimi obiektami się łączy.
 
 \section{Model kinematyczny}
-Model jest sterowany funkcjami matematycznymi zamieniającymi prędkość ruchu kół platformy na prędkości środka ciężkości platformy w układzie współrzędnych oraz prędkość kątową.
+Model jest sterowany funkcjami matematycznymi zamieniającymi prędkość ruchu kół platformy na prędkości geometrycznego środka platformy w układzie współrzędnych lokalnych oraz prędkość kątową.
 Te funkcje najwygodniej zapisać w postaci macierzowej tak, jak w \cite{wheels}. Wzór powtarza się w wielu innych pracach naukowych, a jego dokładny kształt zależy od kolejności numerowania kół i interpretacji wymiarów.
 Dla naszego przypadku:
 \[
  \begin{bmatrix}
-  V_x \\
-  V_y \\
+  v_x \\
+  v_y \\
   \omega_z \\
  \end{bmatrix}
  =
@@ -134,7 +134,7 @@ Działający w naszym przypadku sposób także nie został wcześniej sprawdzony
 
 \subsection{Jak największe zbliżenie do oryginału}
 Wspomniany wyżej sposób jest najbardziej wymagającym obliczeniowo, ale także najprostszym z możliwych.
-Wystarczy stworzyć elementy i nadać im fizyczny kształt za pomocą odpowiedniej siatki trójkątnej.
+Wystarczy stworzyć elementy i nadać im fizyczny kształt za pomocą odpowiedniej siatki trójkątów.
 Kształt może być także nadany poprzez przybliżenie jedną z podstawowych brył, jak sześcian, kula, łamana, walec i płaszczyzna.
 Takie przybliżenie znacznie przyspiesza obliczenia, gdyż może być specjalnie traktowane przez algorytmy.
 
@@ -168,14 +168,14 @@ Ponieważ robimy to natychmiast, maszyna symulacyjna nie bierze pod uwagę tarci
 
 Niestety nie jest możliwe uzyskanie tego rozwiązania w Gazebo, gdyż struktura drzewiasta obiektów nie jest zaimplementowana.
 Metody zmieniające pozycję obiektu nie działają.
-W dodatku potrzebna jest także możliwość ustawiania rotacji i pozycji przegubu, elementu \texttt{joint}, co nie jest możliwe.
+W dodatku potrzebna jest także możliwość ustawiania rotacji i pozycji przegubu, elementu \texttt{joint}, co nie jest wystawione do modyfikacji w API.
 
 Bardzo skomplikowany sposób działania kół skłania do szukania innych rozwiązań.
 
 \subsection{Zmiana osi rolki}
-Poprzedni przypadek można zmodyfikować poprzez wyznaczanie nowej osi przegubu łączącego wirtualne koło z rolką.
+Poprzedni przypadek można zmodyfikować poprzez wyznaczanie nowej osi przegubu łączącego wirtualne koło z kulą symulującą rolkę.
 
-Oś wewnętrzna podłączone jest do koła wirtualnego i obraca się razem z nim.
+Oś wewnętrzna podłączona jest do koła wirtualnego i obraca się razem z nim.
 W każdym cyklu należy zamienić obróconą już nieco oś na kierunek pierwotny względem postawy platformy.
 Spowoduje to, że kolejna iteracja fizyki będzie mogła obracać kulą reprezentującą rolkę pod odpowiednim kątem.
 
@@ -216,7 +216,6 @@ Jednakże modyfikując je statycznie, lub dynamicznie można uzyskać bardzo cie
 Instrukcja podaje przykład w którym, aby zamodelować tarcie opon samochodu prostopadle do kierunku jazdy, należy dynamicznie zmieniać współczynnik tarcia dla wektora $F_1$, lub $F_2$ w tym kierunku.
 Współczynnik tarcia prostopadle do kierunku jazdy może być liniowo zależny od prędkości.
 Spowoduje to, że im większa prędkość samochodu, tym boczna siła łatwiej zmieni tor jego jazdy, co ma odwzorowanie w rzeczywistości.
-
 Więcej informacji można znaleźć na stronie instrukcji maszyny symulacyjnej ODE \cite{ode_contact}.
 
 W naszym modelu modyfikujemy kierunek wektora $F_1$, oraz współczynniki tarcia w obu kierunkach, aby przybliżyć zachowanie się rolki.
@@ -227,7 +226,7 @@ Można więc ustawić zerowy współczynnik tarcia w kierunku prostopadłym do o
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/base_vects.pdf}
-\caption{Kierunki wektorów dla których należy nadać współczynniki tarcia przy symulacji platformy. Tarcie w kierunku $F_1$ powinien być nieskończone, a w $F_2$ zerowe.}
+\caption{Kierunki wektorów dla których należy nadać współczynniki tarcia przy symulacji platformy. Tarcie w kierunku $F_1$ powinno być nieskończone, a w $F_2$ zerowe.}
 \end{figure} 
 
 Niestety w rzeczywistości rolki wykonane są ze śliskiego plastiku, który pozwala na mały ruch wzdłuż ich osi.
@@ -236,13 +235,24 @@ Każda rolka w dodatku obraca się z innym tarciem wprowadzając kolejne zakłó
 Podłoże także nie jest tu bez znaczenia.
 Należy zatem wystawić interfejs do łatwej zmiany współczynników tarcia, aby później dobierać odpowiednie wartości na podstawie zachowania rzeczywistego robota.
 
-Podobnie, jak w poprzednich przypadkach modelujemy tylko najniższą, dotykającą podłoża rolkę przybliżając ją kulą.
-Mamy zatem w miejscu każdego koła po jednej kuli z dynamicznie modyfikowanym tarciem, oraz przegub z motorem łączący odpowiednią część bazy z kołem.
+Podobnie, jak w poprzednich przypadkach modelujemy tylko najniższą, dotykającą podłoża rolkę.
+Jak wcześniej wspomniano, ma ona bardzo skomplikowany kształt, lecz można przybliżyć całe koło kulą.
+Mamy zatem w miejscu każdego koła po jednej kuli z dynamicznie modyfikowanym tarciem i ładną siatką w kształcie koła, oraz przegub z motorem łączący odpowiednią część bazy z kołem.
 To najprostsza budowa modelu (a zatem najszybsza) z poprzednich.
 
 Takie rozwiązanie wiąże się z pewnym ryzykiem.
 Wymaga, aby symulator używał maszyny ODE, co zmniejsza przenośność modelu. ODE jest domyślnym symulatorem w Gazebo.
 Maszyna Bullet również liczy kolizje w ten sposób i ma modyfikowalne wektory, lecz nie daje podobnych wyników. Być może jest to spowodowane brakiem odpowiedniej konfiguracji.
+
+\subsection{Komunikacja}
+Ze względu na wiele ustawień elementów bazy, należy stworzyć bogaty interfejs.
+\begin{itemize}
+ \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs/Pose} z aktualną pozycją i rotacją platformy.
+ \item Odbiór wiadomości własnego typu \texttt{pseudovelma/Vels} z zadanymi prędkościami kół.
+ \item Odbiór wywołań ustawiających współczynniki tarcia wzdłuż wektorów $F_1$ i $F_2$.
+ \item Symulator enkodera nadający aktualną pozycję i rotację obiektu.
+ \item Odbiór wywołań ustawiających masy i momenty obrotowe niektórych elementów składowych konstrukcji, oraz masy transportowanego robota.
+\end{itemize}
 
 \section{Porównanie modeli}
 Posiadając model kinematyczny, którego ruch jest sterowany wzorami możemy porównać jego pozycję i rotację z modelem dynamicznym.
@@ -305,4 +315,4 @@ Do zrobienia jest także system ułatwiający manualne sterowanie bazą za pomoc
 Interfejs graficzny będzie wtyczką w QT tworzącą kolejny panel w ROSowym programie \emph{rqt}.
 
 Na koniec używając wystawionego interfejsu metodą prób i błędów należy znaleźć takie ustawienia (np. masa, tarcie), które produkują rezultat najbardziej zbliżony do działania rzeczywistego modelu.
-Ten zabieg może trwać nieokreśloną ilość czasu, a wpływ na niego będzie miał stan model robota manipulującego i pozostałe elementy składowe.
+Ten zabieg może trwać nieokreśloną ilość czasu, a wpływ na niego będzie miał stan modelu robota manipulującego i pozostałe elementy składowe.
