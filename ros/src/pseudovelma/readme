@@ -1,0 +1,19 @@
+Pseudovelma - platforma kinematyczna
+
+Komunikacja programu w formie:
+nazwa
+typ
+opis
+
+/pseudovelma/vels
+pseudovelma/Vels
+Przyjmuje prędkości kół w kolejności:
+przednie prawe
+przednie lewe
+tylne lewe
+tylne prawe
+
+/pseudovelma/pose
+geometry_msgs/Pose
+Zwraca aktualną pozycję
+http://docs.ros.org/api/geometry_msgs/html/msg/Pose.html

@@ -1,0 +1,25 @@
+Omnivelma - platforma dynamiczna
+
+Komunikacja programu w formie:
+nazwa
+typ
+opis
+
+/omnivelma/vels
+omnivelma/Vels
+Przyjmuje prędkości kół w kolejności:
+przednie prawe
+przednie lewe
+tylne lewe
+tylne prawe
+
+/omnivelma/pose
+geometry_msgs/Pose
+Zwraca aktualną pozycję
+http://docs.ros.org/api/geometry_msgs/html/msg/Pose.html
+
+/omnivelma/set_friction
+omnivelma/SetFriction
+Ustawia wektory tarć.
+mu1 to wektor równoległy do osi rolki, domyślnie 1, rolka nie może się obracać na tej osi.
+mu2 to wektor prostopadły do osi rolki, domyślnie 0, rolka obraca się na tej osi.

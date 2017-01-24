@@ -9,7 +9,7 @@ Należy tak opisać model, aby reagował na siły podobnie do rzeczywistej wersj
 To spowoduje, że możliwe będzie stworzenie jednego wspólnego programu sterującego do użycia zarówno w wirtualnej wersji, jak i fizycznej.
 
 Testowanie oprogramowania na prawdziwym obiekcie może prowadzić do jego uszkodzeń, dlatego wpierw trzeba się upewnić o poprawności projektowanych rozwiązań na bezpiecznej kopii wirtualnej.
-Rzeczywistość nie pozwala także na przeprowadzanie zaawansowanych scenariuszy środowiska testowego.
+Rzeczywistość nie pozwala także na przeprowadzanie zaawansowanych scenariuszy środowiska testowego, lub koszty jego wykonania są wysokie.
 Szybciej i taniej jest stworzyć wirtualne środowisko testowe, niż fizyczne, w dodatku porażka sterowników przy symulacji nie wpływa na zniszczenie robota w rzeczywistości.
 Dopiero przy osiągnięciu satysfakcjonującej jakości sterowania w symulacji wirtualnej można zastosować algorytmy sterowania do oryginalnego obiektu bez ryzyka uszkodzeń urządzenia.
 
@@ -18,28 +18,30 @@ Wirtualizacja czujników polega na generowaniu danych na podstawie symulacji.
 W celu przybliżenia wyjścia takiego programu do rzeczywistego urządzenia, do generowanych danych zwykle dodaje się szum, oraz błędy.
 
 \section{Wielokierunkowa platforma mobilna}
-
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/base_photo.png}
-\caption{Fotografia platformy z perspektywy. Niebieskie urządzenia na szczycie to czujniki laserowe. Na obecny stan koła są nieprawidłowo ustawione.}
+\caption{Fotografia platformy z perspektywy.}
 \end{figure} 
 
 Jest to duża, prostokątna baza dookólna poruszająca się na czterech kołach szwedzkich.
 Koła są stałe, parami przyczepione do dwóch osi.
-Każde koło jest sterowane osobno przez podłączony bezpośrednio serwomotor, zatem może mieć prędkość i kierunek niezależny od pozostałych kół i kierunku poruszania się robota, oraz jego obrotu.
-Każdy z serwomotorów ma także wbudowany enkoder umożliwiający pomiar rzeczywistego kąta obrotu koła.
+Każde koło jest sterowane osobno przez podłączony bezpośrednio serwomotor, zatem może mieć prędkość i kierunek niezależny od pozostałych kół, kierunku poruszania się robota, oraz jego obrotu.
+Każdy z serwomotorów ma także wbudowany enkoder.
+Sterownik enkodera zwraca aktualny kąt i prędkość obrotu.
 
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/kuka_youbot.png}
-\caption{Przykład prawidłowej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół względem siebie.}
+\caption{Przykład innej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół, identyczne jak w opisywanej wyżej platformie.}
 \end{figure} 
 
 Odpowiedni obrót kół względem bazy pozwala na jej ruch w dowolnym kierunku niezależnie od kąta obrotu robota.
 Za ich pomocą da się także obracać bazą stojąc w miejscu, lub w trakcie ruchu po prostej.
 Na przykład, jeśli obracać tylko przeciwległymi kołami po przekątnej, system zacznie się poruszać po skosie bez zmiany kąta obrotu.
 A jeśli do tego dodamy obrót kół drugiej przekątnej w odwrotnym kierunku, wtedy pojazd zacznie się poruszać w bok pomimo faktu, że koła nie są skrętne i nie mogą ustawić się prosto do kierunku jazdy.
+Trasa po której porusza się obiekt przy stałej prędkości kół zawsze jest okręgiem, możemy uznać prostą za okrąg o nieskończonym promieniu, a punkt za okręg o zerowym.
+Wynika to z tego, że każdy obiekt, który ma jednostajną prędkość o kierunku w lokalnym układzie współrzędnych, oraz prędkość kątową będzie się poruszał po takiej krzywej.
 
 \begin{figure}[H]
 \centering
@@ -49,20 +51,30 @@ A jeśli do tego dodamy obrót kół drugiej przekątnej w odwrotnym kierunku, w
 
 Podstawa ma za zadanie transportować wydziałowego robota manipulującego Velma tworząc razem uniwersalny manipulator mobilny.
 Velma to wysoki i bardzo ciężki robot wyposażony w dwa chwytaki na ramionach o licznych przegubach.
-Taka budowa wymaga szerokiej podstawy, aby zachować środek ciężkości całości odpowiednio nisko.
+Taka budowa wymaga szerokiej podstawy, aby zachować wystarczająco dużą równowagę.
 Jeżdżąc na tej podstawie robot może się przemieszczać i obracać w dowolnym kierunku, aby uzyskać lepszy dostęp do manipulowanych przedmiotów.
-Dodatkowe czujniki laserowe umieszczone tuż nad postawą odpowiadają za wykrywanie kolizji.
+Dodatkowe czujniki laserowe umieszczone tuż nad postawą odpowiadają za wykrywanie kolizji i lokalizację.
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.5\textwidth]{graphics/velma.png}
+\caption{Robot manipulacyjny Velma.}
+\end{figure} 
 
 Platforma jest niesymetrycznie podzielona w poprzek na dwie niezależne części.
 Przegub o jednym stopniu swobody (tzw. zawias) jest jedynym łącznikiem pomiędzy tymi dwoma fragmentami.
 Zadaniem tego przegubu jest niwelować niedoskonałości terenu, aby każde koło dociskało do podłoża z taką samą siłą, jak po drugiej stronie osi.
-Bez tego zawiasu nierówny teren uniemożliwiałby sprawne sterowanie platformą na skutek nierównego tarcia kół tej samej osi i nieplanowany skręt.
+Bez tego zawiasu nierówny teren uniemożliwiałby sprawne sterowanie platformą na skutek nierównego tarcia kół tej samej osi, powodując nieplanowany skręt.
 Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, więc należy je wyeliminować na przykład za pomocą takiego przegubu.
+
+Platforma podatna jest na losowy ruch przy rozpoczynaniu jazdy i hamowaniu.
+Jest to spowodowane tym, że asymetria rolek będzie nadawać kołom różne siły, a w związku z tym różne prędkości, co w efekcie może powodować niedeterministyczny ruch.
+Należy także wziąć tutaj pod uwagę nieprzewidywalne opory, jak nierówne tarcie rolek o powierzchnię \cite{braking}.
 
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_top.pdf}
-\caption{Platforma mobilna widziana od góry. Przegub zawiasowy łączy dwie części.}
+\caption{Platforma mobilna widziana od góry. Przegub zawiasowy łączy dwie części. Należy zwrócić uwagę na nieprawidłowy układ kół.}
 \end{figure} 
 
 \begin{figure}[H]
@@ -77,13 +89,18 @@ Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, wię
 \caption{Platforma mobilna widziana od tyłu.}
 \end{figure} 
 
-\section{Koła szwedzkie}
+Platforma posiada 3 stopnie swobody. Pierwszym i drugim jest ruch bez obrotu w osiach X i Y.
+Trzecim stopniem jest dowolny obrót po płaszczyźnie podłoża.
 
-Koła szwedzkie, zwane także kołami mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
+\section{Koła szwedzkie}
+Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
 Rolki są pasywne i obracają się niezależnie od siebie. Każde koło posiada 12 takich rolek.
 Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
 Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
-Na obecny stan robot i jego trójwymiarowe modele mają nieprawidłowo ustawione koła.
+Warto pamiętać, że oś aktualnie dolnej rolki jest prostopadła do osi górnej rolki.
+
+Istnieje również odwrotna odmiana ustawienia kół, w której rolki tworzą literę \emph{O}, czyli oś przednia jest zamieniona z tylną, lub jakby cała platforma była odwrócona do góry nogami.
+Ten drugi sposób także pozwala na ruch wielokierunkowy, ale nie jest tak często stosowany \cite{paletobot}.
 
 \begin{figure}[H]
 \centering
@@ -95,7 +112,20 @@ Każde koło ma 3 stopnie swobody. Pierwszym jest obrót całego koła wzdłuż 
 Drugim są rotacje pojedynczych rolek, a trzecim poślizg obrotowy w miejscu styku rolki z podłożem \cite{kinematic_modeling}.
 
 Na podstawie rysunku widać, że krzywizna rolki jest tak ustawiona, aby punkt kontaktu rolki z podłożem płynnie przechodził na następną rolkę w trakcie obrotu.
+Celem jest utrzymanie równej odległości osi od płaszczyzny podłoża.
 Nie powinno być efektu przeskoku z jednej rolki na drugą, gdyż to wprowadza nierówne tarcie i losowe poślizgi.
+Pojedyncza rolka zawiera się w paraboloidzie, jest tworzona przez skomplikowane wzory.
+Zazwyczaj przybliża się ją torusem w celu uproszczenia produkcji \cite{rollers}.
+
+Istnieją także inne budowy kół, złożone z wielu małych rolek tak, aby w każdym momencie kilka rolek dotykało podłoża.
+Można także przystawić kilka powyższych kół do siebie w jednym kole.
+Przydatne jest to dla robotów transportujących duże masy, gdyż zmniejsza to obciążenie pojedynczych rolek.
+Niestety taka budowa jest chroniona patentem, więc pojedyncze koło z wygasłym patentem jest jedynym popularnie używanym \cite{paletobot}.
+
+Podstawowym problemem technologii jest skomplikowana budowa, ale także ślizganie się kół po powierzchni.
+Odległość osi od płaszczyzny nieznacznie zmienia się przy przenoszeniu ciężaru z rolki na rolkę, co przy dużych prędkościach powoduje drgania i jeszcze większe błędy pomiarów.
+Środkowy przegub zmniejsza ich przenoszenie na resztę platformy.
+Poślizg kół powoduje, że enkodery nie mogą być jedynymi czujnikami wyznaczającymi pozycję bazy, gdyż są na to za mało dokładne \cite{heavy}.
 
 \section{Składniki systemu}
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
@@ -105,7 +135,7 @@ Efektor rzeczywisty, na przykład serwomotor jest sterowany za pomocą efektora 
 Przykładowo zmienia podaną liczbę oznaczającą zadaną prędkość na odpowiednie napięcie na wyjściu. W przestrzeni symulacyjnej jedynie wywołuje odpowiednie funkcje maszyny do symulacji.
 
 Podobnie receptor wirtualny pobiera surowe dane z czujnika, przekształca na odpowiedni format, usuwa błędy i szum tak, aby program sterujący mógł wykorzystać te dane w prosty sposób. 
-Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytanie obrazu z kilku kamer i zamiana na mapę odległości, szkielety wykrytych osób, ich sylwetki i wiele innych gotowych danych.
+Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytanie obrazu z kilku kamer, usunięcie błędów wbudowanym układem i zamiana na mapę odległości, szkielety wykrytych osób, ich sylwetki i wiele innych gotowych danych.
 
 %TODO Zmienić na Tikz
 \begin{figure}[H]
@@ -114,20 +144,19 @@ Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytan
 \caption{Struktura agenta upostaciowionego.}
 \end{figure} 
 
-
 \subsection{Model 3D}
- Odpowiednio opisany równaniami fizycznymi powinien mieć zachowanie zbliżone do oryginału w jak największym stopniu.
- Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także wszelkie tarcia.
- Model posiada więzy na ruchome elementy, jak koła i rolki, aby symulować przeguby.
- 
- Ta część środowiska oddziałuje bezpośrednio z maszyną do symulacji fizycznej. 
- To kształt, masy i momenty bezwładności brył są argumentami funkcji liczących.
- Także maszyna manipuluje z powrotem podanymi obiektami nadając im wirtualnie odpowiednie prędkości w czasie.
- 
- Do modelu doczepia się wirtualne czujniki generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
- Nie są to pełne dane o stanie modelu, jakie posiada maszyna do symulacji, gdyż czujniki fizyczne również nigdy nie mają pełnej informacji o stanie urządzenia.
- 
- Dla ozdoby można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota.
+Odpowiednio opisany równaniami fizycznymi powinien mieć zachowanie zbliżone do oryginału w jak największym stopniu.
+Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także wszelkie tarcia.
+Model posiada więzy na ruchome elementy, jak koła i rolki, aby symulować przeguby.
+
+Ta część środowiska oddziałuje bezpośrednio z maszyną do symulacji fizycznej. 
+To kształt, masy i momenty bezwładności brył są argumentami funkcji liczących.
+Także maszyna manipuluje z powrotem podanymi obiektami nadając im wirtualnie odpowiednie prędkości w czasie.
+
+Do modelu doczepia się wirtualne czujniki generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
+Nie są to pełne dane o stanie modelu, jakie posiada maszyna do symulacji, gdyż czujniki fizyczne również nigdy nie mają pełnej informacji o stanie urządzenia.
+
+Dla ozdoby można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota.
 
  \subsection{Sterownik silników}
 Program sterujący generuje abstrakcyjne dane, na przykład liczbę zapisaną binarnie.
@@ -140,7 +169,7 @@ Do innych zadań może należeć kontrola, czy żądana wartość nie uszkodzi u
 Zazwyczaj sterownik może komunikować się z powrotem z resztą systemu, aby zgłaszać ewentualne awarie.
 
 Taki program i powiązany z nim układ elektroniczny są najczęściej dostarczone przez producenta robota i nieznane użytkownikowi.
-Dodatkowo tworzy kolejną warstwę abstrakcyjną dla sterownika głównego, który nie musi zważać na generowanie różnych danych dla różnych typów efektorów.
+Dodatkowo tworzy kolejną warstwę abstrakcyjną dla sterownika głównego, który nie musi zważać na generowanie różnych danych dla różnych modeli tych samych efektorów.
  
 W środowisku wirtualnym należy stworzyć moduł o podobnym działaniu.
 Powinien przyjmować dane w dokładnie takim samym formacie, jak opisany wyżej układ, aby był łatwo wymienialny na sterownik fizycznego urządzenia bez ingerencji w główny program sterujący.
@@ -153,7 +182,7 @@ Implementowany podobnie do sterownika silników ma za zadanie konwertować surow
 W tym miejscu usuwa się błędy grube, niweluje stałe na podstawie kalibracji, wygładza szum i interpretuje dane, aby pozyskać wymagane przez wyższe warstwy informacje.
 
 Przykładowo czujniki laserowe zwracają jedynie ciąg pomiarów, ale to do tego programu należy interpretacja wykrytych kształtów, łączenie punktów i obróbka do formatu zrozumiałego dla wyższych podzespołów.
-Większość zaawansowanych receptorów posiada owe układy cyfrowe i programy, są wbudowane w urządzenie.
+Większość zaawansowanych receptorów posiada owe układy cyfrowe i programy wbudowane w urządzenie.
 Dostarczone przez producenta tak samo, jak sterowniki efektorów.
  
 Symulując ten element budujemy program generujący dane na podstawie aktualnego stanu maszyny do symulacji w sposób, w jaki działa czujnik w rzeczywistości.
@@ -174,7 +203,7 @@ Programy sterujące mogą być implementowane w językach wysokopoziomowych, naw
 Co więcej, często się zdarza, że odpowiednie składowe programu bazują na różnych technologiach.
 
 Środowisko symulacyjne powinno zapewnić pełną abstrakcję komunikacji tego modułu.
-Oznacza to, że nie zależnie, czy program działa na rzeczywistym robocie, czy symulacji wirtualnej, zawsze powinien móc komunikować się i otrzymywać dane w tym samym formacie.
+Oznacza to, że niezależnie, czy program działa na rzeczywistym robocie, czy symulacji wirtualnej, zawsze powinien móc komunikować się i otrzymywać dane w tym samym formacie.
 W idealnym świecie program nie powinien mieć możliwości stwierdzić, czy steruje symulacją, czy oryginałem.
 
 \section{Technologie}
@@ -199,7 +228,7 @@ Symulator oprócz tego ma wbudowany edytor modeli w którym możemy składać od
 Edytor budynków pozwala na stawianie wirtualnych ścian, korytarzy, drzwi i ogólnego otoczenia w którym roboty mogą pracować i być symulowane.
 Jakość wykonania tych składników pozostawia wiele do życzenia, brak jest tak podstawowych funkcji, jak cofanie ruchu.
 Dlatego lepiej jest definiować model we wczytywanym pliku tekstowym.
-Również tworząc modele "`offline"' w ten sposób mamy nad nimi pełną kontrolę, a parametry można ustawiać z dowolną dokładnością.
+Również tworząc modele poza edytorem w ten sposób mamy nad nimi pełną kontrolę, a parametry można ustawiać z dowolną dokładnością.
 
 Gazebo przyjmuje modele w specjalnym formacie SDF. Jest to ustandaryzowany, zdefiniowany zewnętrznie format do opisywania składników robotów i czujników.
 Dzięki temu taki plik może być użyty także gdzie indziej, pod warunkiem przestrzegania standardu.
@@ -215,6 +244,10 @@ Interfejs jest dopracowany i przestrzega wielu ustawień systemowych, jak DPI.
 Uruchamianie jest proste i nie wymaga dodatkowych ustawień, uruchamiania skryptów inicjalizujących, tworzenia odpowiednich katalogów, czy definiowania zmiennych systemowych.
 Standardowo, jak inne programy tworzy ukryty katalog w katalogu domowym użytkownika, gdzie znajdują się wszystkie modele i logi.
 Czasami trzeba używać tego katalogu, aby umieścić tam swoje modele, które Gazebo będzie automatycznie umieszczał w symulacji.
+
+Gazebo jest składnikiem systemu ROS, kod źródłowy jest dzielony w ramach wspólnej organizacji, chociaż różne osoby odpowiadają za rozwój tych oprogramowań.
+Kolejne wersje Gazebo są powiązane z wersjami ROSa, nie można użyć przestarzałej wersji Gazebo z nowszym ROSem i odwrotnie.
+Symulator można zainstalować osobno, lub jako jeden z pakietów ROSa.
 
 \subsection{V-Rep}
 Program do pobrania z \cite{vrep_website}. Duże i skomplikowane środowisko reklamujące się wieloma zaawansowanymi mechanizmami i funkcjami.
@@ -243,31 +276,43 @@ Są tu algorytmy wyznaczania tras, budowy map, manipulowania itp.
 
 Twórcy zachęcają, aby uzupełniać brakujące moduły swoimi własnymi, a potem dzielić się nimi z resztą programistów, aby każdy mógł skorzystać, jeśli ma podobny problem.
 
-Programy dla ROS pisze się w C++ i integruje z robotem za pomocą kilku gotowych struktur kolejek wiadomości.
+Programy dla ROS pisze się w C++, lub Pythonie i integruje z robotem za pomocą kilku gotowych struktur kolejek wiadomości.
 Platforma ta także posiada moduły do wizualizacji odbieranych danych w formie graficznej.
 Nie jest to symulator, gdyż sam nie generuje żadnych danych, a jedynie prezentuje gotowe.
+
+Działanie systemu jest oparte o pakiety. Każdy pakiet jest katalogiem zawierającym w sobie pliki opisujące jego parametry i skrypty używane w kompilacji.
+Pakietem może być wszystko, od modelu do programu pomocniczego.
+Pakiety mogą być zależne od siebie, ale nigdy nie wskazują nawzajem swoich bezpośrednich ścieżek.
+
+Na przykład jeden pakiet wymaga pliku nagłówkowego generowanego przez kompilację drugiego pakietu, ale załącza go w kodzie tak, jakby był systemowy.
+Globalny skrypt kompilacji ROSa dba o odpowiednie podawanie ścieżek, kolejność kompilacji programów i załączanie nazw.
+
+Komunikacja między programami odbywa się w sposób ciągły przez kolejki wiadomości, lub pojedyncze asynchroniczne wywołania zwracające wynik.
+Program może nadawać strumień wiadomości, ale nie koniecznie musi istnieć w tym czasie odbiornik.
+Można buforować wiadomości, podglądać strumienie, tworzyć wykresy z danych, podłączać nadajnik do kilku odbiorników, podglądać graf zależności itp.
+Do wszystkiego służy bogaty zestaw komend.
 
 Instalacja programu na systemie operacyjnym jest dużym problemem.
 Z wyjątkiem odpowiednich wersji Ubuntu nie ma łatwego sposobu na wgranie go do innych systemów.
 Na przeszkodzie stoją błędy kompilacji dla nowszych wersji kompilatorów i inne problemy w czasie wykonywania wykonania, jak naruszenie ochrony pamięci. 
 Instalacja alternatywnych pakietów i ręczna kompilacja niektórych części nie działa we wszystkich przypadkach.
+Głównym problemem jest niezgodność wersji zewnętrznych bibliotek.
 
 Rozwiązaniem tego problemu jest instalacja tej platformy programistycznej na maszynie wirtualnej, lub na systemie uruchamianym z dysku zewnętrznego. 
-Takie rozwiązanie także daje dostęp do najnowszej wersji ROS \emph{Kinetic Kame} z końca maja 2016 roku, niedostępnej jeszcze na innych dystrybucjach.
+Takie rozwiązanie także daje dostęp do najnowszej wersji ROS \emph{Kinetic Kame} z końca maja 2016 roku.
 
 Uruchomienie platformy programistycznej na systemie wymaga wielu dodatkowych komend inicjalizujących, a także dopisywania do tworzonych projektów licznych plików konfiguracyjnych za pomocą dostarczonych skryptów.
 Używanie modułów z linii poleceń wymaga ustawienia kilku zmiennych systemowych poprzez wczytywania całościowych plików.
 Użycie niektórych funkcji ROS wymaga uruchomionego demona serwera w tle.
 
-Ogólnie instalacja i używanie ROS na systemie zostawia dużo śmieci, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego, na maszynie wirtualnej, lub dysku.
+Ogólnie instalacja i używanie ROS na systemie zostawia dużo różnorodnych plików, dlatego lepiej jest trzymać ją z dala od codziennego systemu operacyjnego, na maszynie wirtualnej, lub dysku.
 Z drugiej jednak strony wirtualizacja systemu operacyjnego z ROS bardzo ogranicza dostępną moc obliczeniową potrzebną takim programom w dużych ilościach.
 
 \subsection{Narzędzia}
 Do tworzenia oprogramowania na systemach Unixowych można użyć dowolnych edytorów, gdyż standardowo wszystko jest potem kompilowane za pomocą narzędzi wiersza poleceń i skryptów.
 Jednak warto sobie ułatwić pracę zaawansowanymi środowiskami graficznymi.
 \begin{description}
- \item[Gazebo] będzie użyty do symulacji z jego domyślną maszyną ODE. Przełączenie maszyny symulacyjnej wiąże się z rekompilacją programu ze źródła, dlatego zostaną one sprawdzone po przetestowaniu domyślnej.
- ODE jest szybkie, dobrze napisane i nie ma wielu zaawansowanych niepotrzebnych nam funkcji, jak Bullet.
+ \item[Gazebo] będzie użyty do symulacji z jego domyślną maszyną symulacji fizyki ODE.
  \item[ROS] użyty zostanie jako gówna platforma programistyczna. Pod łatwą komunikację z jego modułami należy budować sterowniki wirtualne.
  \item[Atom] jest popularnym uniwersalnym edytorem tekstowym. Dzięki rozszerzaniu przez wtyczki dobrze się sprawdza przy obróbce plików XML i skryptów.
  Będzie użyty do konstrukcji modelu.
@@ -277,7 +322,7 @@ Jednak warto sobie ułatwić pracę zaawansowanymi środowiskami graficznymi.
  \item[Code::Blocks lub Eclipse] nadają się do pisania kompilowalnego kodu wtyczek. Można podłączyć je pod komendę \texttt{make} i korzystać z mechanizmów interpretacji błędnych wierszy, graficznego debugowania i podobnych.
  \item[Bash] będący bardzo popularnym językiem skryptowym nadaje się do automatyzacji pracy i uruchamiania wielu programów w kontrolowany i szybki sposób.
  Uniwersalne narzędzie pomagające w różnych miejscach.
- \item[Git] --- program kontroli wersji jest podstawowym narzędziem programisty. Kod należy dla bezpieczeństwa umieszczać także w usłudze GitHub.
+ \item[Git] jest narzędziem kontroli wersji, które jest wskazane w każdym projekcie informatycznym. Kod należy dla bezpieczeństwa umieszczać także w usłudze GitHub.
  \item[Virtualbox] do ewentualnej wirtualizacji systemu operacyjnego z ROS, lub uruchomienie osobnego systemu z dysku zewnętrznego.
 \end{description}
 
@@ -294,7 +339,13 @@ Można go prosto pobieżnie przetestować działając siłą na elementy i patrz
 Na tym poziomie można dobudować zamiennik programu sterującego jedynie do podawania prostych wartości bez odczytywania pomiarów i sterowania.
 
 \item Zaprogramowanie wtyczki symulującej czujniki, aby generowały dane z enkoderów, oraz innych urządzeń, dodawały błędy pomiarowe, a następnie przekształcały dane na format zrozumiały dla programu sterującego.
-Na tym momencie program może je wyświetlić, ale nie wygeneruje na ich podstawie sterowania.
+Czujniki nie muszą być istniejące, mogą generować dane, jak pozycja i rotacja bardzo trudne do uzyskania rzeczywistymi czujnikami.
+
+\item Wystawienie do zmiany w czasie rzeczywistym masy, momentu bezwładności, współczynników tarcia, aby pozwolić na proste testowanie działania systemu z różnymi współczynnikami.
+
+\item Elementy pomagające w symulacji, jak model kinematyczny sterowany funkcją matematyczną i podłoże ze zmiennym współczynnikiem tarcia.
+
+\item Programy pomocnicze zbierające i wyświetlające dane, interfejs graficzny.
 
 \item Program sterujący w ROS. Największy i najbardziej skomplikowany element, na szczęście wspólny dla obu bytów --- wirtualnego i rzeczywistego.
 Zazwyczaj nie jest to praca jednego człowieka, a jego rozwój nie ustaje przez długi czas.
@@ -305,29 +356,12 @@ Ten program dostarczy funkcji, aby wyższy sterownik robota mógł użyć tego m
 Istnieją już wcześniejsze modele jeżdżących robotów na kołach szwedzkich.
 Można z nich brać przykład i sugerować się źródłami kodu i modeli.
 
-Kuka Youbot jest popularnym robotem tego typu. Jego modele są domyślnie dostępne zarówno w Gazebo, jak i w V-Rep.
-Tylko w przypadku V-Rep mamy wstępny sterownik do którego wysyłamy odpowiednie wartości kierunku, a on obraca kołami w ten sposób, aby spełnić żądanie.
-Wersja dla Gazebo jest statycznym modelem, jego efektory nie są zaimplementowane.
+Kuka Youbot jest popularnym robotem wielokierunkowym. Jego modele są domyślnie dostępne zarówno w Gazebo, jak i w V-Rep.
+Tylko w przypadku V-Rep mamy wstępny sterownik do którego wysyłamy odpowiednie wartości kierunku, a on nadaje takie prędkości kołom, aby poruszać się w zadanym kierunku.
+Wersja dla Gazebo jest statycznym modelem z błędnie ustanowionymi przegubami, jego efektory nie są zaimplementowane.
 
 Te profesjonalne modele także pomogą przy wstępnej weryfikacji zachowania się naszego modelu, czy nie zachowuje się nadzwyczaj dziwnie w pierwszych fazach projektu.
 
 Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, prawdopodobnie trzeba będzie uprościć model poprzez zamianę niektórych składowych i dodanie sztucznych więzów.
 Całościowy model może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
 Taki model także jest znacznie trudniej poprawnie wymodelować ze względu na liczne tarcia i poślizgi rolek.
-
-\section{Podsumowanie}
-W ramach przygotowań do pracy udało się zainstalować, skonfigurować i przetestować wszystkie moduły środowiska.
-Została zdobyta wiedza na temat możliwych problemów z instalacją i używaniem ich w przyszłości.
-Jakie systemy operacyjne jak dobrze współpracują z systemem ROS i na czym nie da się go zainstalować.
-Testowanie odbyło się za pomocą budowy własnego, abstrakcyjnego modelu i zastosowania do niego zmodyfikowanych programów przykładowych.
-
-Udało się sprawdzić, jakie są możliwości stworzenia struktury projektu, aby nie umieszczać modeli i kodu osobno, aby zachować porządek.
-Ustawiono wszelkie systemy kontroli wersji użyte także do budowy tego dokumentu.
-
-Aby zabrać się do pracy, należy przejrzeć sporą ilość materiałów na temat budowy kół i modelowania ich wirtualnie, a także powodów nieścisłości obliczeń.
-Dobrze jest także obejrzeć dalsze dokumenty zawarte w bibliografiach materiałów.
-
-Należy eksperymentować z różnymi rozwiązaniami ewentualnych uproszczeń modelu, sprawdzić, jak rozwiązywali ten problem inni.
-Przetestować, czy wspomaganie symulacji za pomocą karty graficznej nie rozwiąże problemu nadmiernych obliczeń.
-
-

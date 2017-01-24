@@ -52,9 +52,33 @@
             </visual>
         </link>
         <!-- Koła wirtualne -->
-        <link name="virtual_wheel_rr">
+        <link name="wheel_rr">
             <pose>0.38 -0.357 0 0 0 0</pose>
-            <visual name="virtual_wheel_rr_middle">
+            <collision name="wheel_rr_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>infinity</mu>
+                            <mu2>0</mu2>
+                            <fdir1>0.707106781186548 0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>0.707106781186548 0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name="wheel_rr_middle">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
@@ -67,7 +91,7 @@
                     </script>
                 </material>
             </visual>
-            <visual name="virtual_wheel_rr_rollers">
+            <visual name="wheel_rr_rollers">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
@@ -88,9 +112,33 @@
                 </geometry>
             </collision>
         </link>
-        <link name="virtual_wheel_rl">
+        <link name="wheel_rl">
             <pose>-0.38 -0.357 0 0 0 0</pose>
-            <visual name="virtual_wheel_rl_middle">
+            <collision name="wheel_rl_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>infinity</mu>
+                            <mu2>0</mu2>
+                            <fdir1>-0.707106781186548 0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>-0.707106781186548 0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name="wheel_rl_middle">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
@@ -103,7 +151,7 @@
                     </script>
                 </material>
             </visual>
-            <visual name="virtual_wheel_rl_rollers">
+            <visual name="wheel_rl_rollers">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel_r.dae</uri>
@@ -124,9 +172,33 @@
                 </geometry>
             </collision>
         </link>
-        <link name="virtual_wheel_fr">
+        <link name="wheel_fr">
             <pose>0.38 0.362 0 0 0 0</pose>
-            <visual name="virtual_wheel_fr_middle">
+            <collision name="wheel_fr_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>infinity</mu>
+                            <mu2>0</mu2>
+                            <fdir1>0.707106781186548 -0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>0.707106781186548 -0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name="wheel_fr_middle">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
@@ -139,7 +211,7 @@
                     </script>
                 </material>
             </visual>
-            <visual name="virtual_wheel_fr_rollers">
+            <visual name="wheel_fr_rollers">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel_r.dae</uri>
@@ -160,9 +232,33 @@
                 </geometry>
             </collision>
         </link>
-        <link name="virtual_wheel_fl">
+        <link name="wheel_fl">
             <pose>-0.38 0.362 0 0 0 0</pose>
-            <visual name="virtual_wheel_fl_middle">
+            <collision name="wheel_fl_collision">
+                <geometry>
+                    <sphere>
+                        <radius>0.103</radius>
+                    </sphere>
+                </geometry>
+                <surface>
+                    <friction>
+                        <ode>
+                            <mu>infinity</mu>
+                            <mu2>0</mu2>
+                            <fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
+                            <slip1>0</slip1>
+                            <slip2>0</slip2>
+                        </ode>
+                        <bullet>
+                            <friction>1</friction>
+                            <friction2>0</friction2>
+                            <fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
+                            <rolling_friction>0</rolling_friction>
+                        </bullet>
+                    </friction>
+                </surface>
+            </collision>
+            <visual name="wheel_fl_middle">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel.dae</uri>
@@ -175,7 +271,7 @@
                     </script>
                 </material>
             </visual>
-            <visual name="virtual_wheel_fl_rollers">
+            <visual name="wheel_fl_rollers">
                 <geometry>
                     <mesh>
                         <uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
@@ -189,47 +285,6 @@
                 </material>
             </visual>
             <collision name="virtual_wheel_fl_collision">
-                <geometry>
-                    <sphere>
-                        <radius>0.103</radius>
-                    </sphere>
-                </geometry>
-            </collision>
-        </link>
-        <!-- Koła skręcone o 45° -->
-        <link name="wheel_rr">
-            <pose>0.38 -0.357 0 0 0 0</pose>
-            <collision name="wheel_rr_collision">
-                <geometry>
-                    <sphere>
-                        <radius>0.103</radius>
-                    </sphere>
-                </geometry>
-            </collision>
-        </link>
-        <link name="wheel_rl">
-            <pose>-0.38 -0.357 0 0 0 0</pose>
-            <collision name="wheel_rl_collision">
-                <geometry>
-                    <sphere>
-                        <radius>0.103</radius>
-                    </sphere>
-                </geometry>
-            </collision>
-        </link>
-        <link name="wheel_fr">
-            <pose>0.38 0.362 0 0 0 0</pose>
-            <collision name="wheel_fr_collision">
-                <geometry>
-                    <sphere>
-                        <radius>0.103</radius>
-                    </sphere>
-                </geometry>
-            </collision>
-        </link>
-        <link name="wheel_fl">
-            <pose>-0.38 0.362 0 0 0 0</pose>
-            <collision name="wheel_fl_collision">
                 <geometry>
                     <sphere>
                         <radius>0.103</radius>
@@ -251,7 +306,7 @@
         <!-- Przeguby kół (motory) -->
         <joint name="motor_rr" type="revolute">
             <parent>base</parent>
-            <child>virtual_wheel_rr</child>
+            <child>wheel_rr</child>
             <pose>-0.036 0 0 0 0 0</pose>
             <axis>
                 <xyz>-1 0 0</xyz>
@@ -260,7 +315,7 @@
         </joint>
         <joint name="motor_rl" type="revolute">
             <parent>base</parent>
-            <child>virtual_wheel_rl</child>
+            <child>wheel_rl</child>
             <pose>0.036 0 0 0 0 0</pose>
             <axis>
                 <xyz>-1 0 0</xyz>
@@ -269,7 +324,7 @@
         </joint>
         <joint name="motor_fr" type="revolute">
             <parent>front</parent>
-            <child>virtual_wheel_fr</child>
+            <child>wheel_fr</child>
             <pose>-0.036 0 0 0 0 0</pose>
             <axis>
                 <xyz>-1 0 0</xyz>
@@ -278,47 +333,10 @@
         </joint>
         <joint name="motor_fl" type="revolute">
             <parent>front</parent>
-            <child>virtual_wheel_fl</child>
+            <child>wheel_fl</child>
             <pose>0.036 0 0 0 0 0</pose>
             <axis>
                 <xyz>-1 0 0</xyz>
-                <use_parent_model_frame>true</use_parent_model_frame>
-            </axis>
-        </joint>
-        <!-- Przeguby rolek -->
-        <joint name="roller_rr" type="revolute">
-            <parent>virtual_wheel_rr</parent>
-            <child>wheel_rr</child>
-            <pose>0 0 0 0 0 0</pose>
-            <axis>
-                <xyz>0.707 0.707 0</xyz>
-                <use_parent_model_frame>true</use_parent_model_frame>
-            </axis>
-        </joint>
-        <joint name="roller_rl" type="revolute">
-            <parent>virtual_wheel_rl</parent>
-            <child>wheel_rl</child>
-            <pose>0 0 0 0 0 0</pose>
-            <axis>
-                <xyz>-0.707 0.707 0</xyz>
-                <use_parent_model_frame>true</use_parent_model_frame>
-            </axis>
-        </joint>
-        <joint name="roller_fr" type="revolute">
-            <parent>virtual_wheel_fr</parent>
-            <child>wheel_fr</child>
-            <pose>0 0 0 0 0 0</pose>
-            <axis>
-                <xyz>0.707 -0.707 0</xyz>
-                <use_parent_model_frame>true</use_parent_model_frame>
-            </axis>
-        </joint>
-        <joint name="roller_fl" type="revolute">
-            <parent>virtual_wheel_fl</parent>
-            <child>wheel_fl</child>
-            <pose>0 0 0 0 0 0</pose>
-            <axis>
-                <xyz>-0.707 -0.707 0</xyz>
                 <use_parent_model_frame>true</use_parent_model_frame>
             </axis>
         </joint>

@@ -1,24 +1,32 @@
 <?xml version="1.0" ?>
 	<sdf version="1.5">
-	<world name="default">
-
+	<world name="velmaverse">
+		<plugin name="ocznica" filename="libocznica.so"/>
+		
 		<!-- Słońce -->
 		<include>
 			<uri>model://sun</uri>
 		</include>
-		
+
 		<!-- Podłoga -->
-		<include> 
+		<include>
 			<uri>model://ground_plane</uri>
 		</include>
-		
-		<!-- Platforma -->
+
+
 		<model name="omnivelma">
 			<include>
 				<uri>model://omnivelma</uri>
 			</include>
-			<!-- Wtyczka sterująca -->
 			<plugin name="omnivelma" filename="libomnivelma.so"/>
 		</model>
+
+
+		<model name="pseudovelma">
+			<include>
+				<uri>model://pseudovelma</uri>
+			</include>
+			<plugin name="pseudovelma" filename="libpseudovelma.so"/>
+		</model>
 	</world>
-</sdf> 
+</sdf>

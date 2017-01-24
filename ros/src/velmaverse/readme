@@ -1,0 +1,4 @@
+Velmaverse - świat symulacji
+
+Zawiera ustawienia silnika ODE bez których system nie zadziała.
+Umieszcza na scenie platformy dynamiczną i kinematyczną w punkcie (0,0).
