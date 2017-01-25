@@ -30,14 +30,14 @@ public:
         {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "gazebo_client", ros::init_options::NoSigintHandler);
+            ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
         }
 
         //stwórz Node dla ROSa
-        this -> rosNode.reset(new ros::NodeHandle("gazebo_client"));
+        this -> rosNode.reset(new ros::NodeHandle("ocznica"));
 
         //stwórz topic do nadawania wiadomości
-        this -> rosPub = this -> rosNode -> advertise<ocznica::Relative>("ocznica/relative", 1000);
+        this -> rosPub = this -> rosNode -> advertise<ocznica::Relative>("/ocznica/relative", 1000);
 
         //znajdź modele
         this -> omnivelma = world -> GetModel("omnivelma");

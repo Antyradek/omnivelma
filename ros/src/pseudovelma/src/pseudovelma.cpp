@@ -45,7 +45,7 @@ public:
 		//common::Logger logger("Pseudovelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
 		//logger("Podłączono wtyczkę", 10);
 
-        std::cout << "Podłączono wtyczkę do " << model -> GetName() << std::endl;
+        std::cout << "Podłączono Pseudovelmę " << std::endl;
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
         //inicjalizacja ROSa
@@ -53,21 +53,21 @@ public:
         {
             int argc = 0;
             char **argv = NULL;
-            ros::init(argc, argv, "gazebo_client", ros::init_options::NoSigintHandler);
+            ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
         }
 
         //stwórz Node dla ROSa
-        this -> rosNode.reset(new ros::NodeHandle("gazebo_client"));
+        this -> rosNode.reset(new ros::NodeHandle("pseudovelma"));
 
         //Stwórz topic do odbierania wiadomości
-        ros::SubscribeOptions so = ros::SubscribeOptions::create<pseudovelma::Vels>("/" + model -> GetName() + "/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
+        ros::SubscribeOptions so = ros::SubscribeOptions::create<pseudovelma::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSub = this -> rosNode -> subscribe(so);
 
         //Uruchom wątek odbierania
         this -> rosQueueThread = std::thread(std::bind(&Pseudovelma::QueueThread, this));
 
         //stwórz topic do nadawania wiadomości
-        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/" + model -> GetName() + "/pose", 1000);
+        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
 
 
     }

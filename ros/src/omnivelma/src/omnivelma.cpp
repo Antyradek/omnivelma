@@ -16,7 +16,7 @@
 #define MODEL_NAME std::string("omnivelma")
 ///Długość jest równa sqrt(2)/2 aby tworzyć kąt 45°
 #define AXIS_LENGTH 0.707106781186548
-#define CLIENT_NAME "gazebo_client"
+#define CLIENT_NAME "gazebo_ros"
 
 namespace gazebo
 {
@@ -34,7 +34,7 @@ public:
         //common::Logger logger("Omnivelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
         //logger("Podłączono wtyczkę", 10);
 
-        std::cout << "Podłączono wtyczkę do " << model -> GetName() << std::endl;
+        std::cout << "Podłączono Omnivelmę " << std::endl;
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
         pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
@@ -59,15 +59,15 @@ public:
         this -> rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
 
         //stwórz topic do odbierania wiadomości
-        ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/" + model -> GetName() + "/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
+        ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSub = this -> rosNode -> subscribe(so);
         this -> rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
 
         //stwórz topic do nadawania wiadomości
-        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/" + model -> GetName() + "/pose", 1000);
+        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
 
         //stwórz serwer do ustawiania tarcia
-        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/" + model -> GetName() + "/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
+        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSrv = this -> rosNode -> advertiseService(aso);
     }
 
