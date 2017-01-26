@@ -17,28 +17,33 @@ Oprócz modelu bazy jezdnej, środowisko symulacyjne musi również udostępnia�
 Odczyty z symulatorów czujników są następnie wykorzystywane w układzie sterowania do generacji odpowiednich sygnałów sterujących.
 W celu możliwie wiernej symulacji działania czujników do wartości pomiarów dodaje się szum pomiarowy i zakłócenia.
 
-\section{Wielokierunkowa platforma mobilna}
+
+\section{Dookólna platforma mobilna}
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/base_photo.png}
-\label{graphics:base_photo}
-\caption{Fotografia platformy z perspektywy.}
+\caption{Dookólna baza mobilna na kołach szwedzkich.}
+\label{fig:base_photo}
 \end{figure} 
 
-Jest to duża, prostokątna baza dookólna poruszająca się na czterech kołach szwedzkich.
-Koła są stałe, parami przyczepione do dwóch osi.
+Jest to duża, prostokątna baza dookólna poruszająca się na czterech kołach szwedzkich, patrz fotografia \ref{fig:base_photo}.
+Koła są stałe, parami przytwierdzone do dwóch osi.
 Każde koło jest sterowane osobno przez podłączony bezpośrednio serwomotor, zatem może mieć prędkość i kierunek niezależny od pozostałych kół, kierunku poruszania się robota, oraz jego obrotu.
 Każdy z serwomotorów ma także wbudowany enkoder.
 Sterownik enkodera zwraca aktualny kąt i prędkość obrotu.
 
+Jest to najpopularniejsza budowa dookólnych platform mobilnych, mająca zastosowanie także w innych robotach, jak na przykład Kuka Youbot \ref{fig:kuka_youbot}.
+Pomimo, że robot o trzech kołach szwedzkich i prostszej budowie ma taką samą ilość stopni swobody, to jego stabilność jest gorsza od czterokołowych wersji \cite{extra_axis}.
+Ponieważ jest to robot transportowy, to stabilność odgrywa tu ważną rolę i czterokołowa budowa jest wskazana.
+
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/kuka_youbot.png}
-\label{graphics:kuka_youbot}
-\caption{Przykład innej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół, identyczne jak w opisywanej wyżej platformie.}
+\caption{Przykład innej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół, identyczne jak w opisywanej platformie \ref{fig:base_photo}.}
+\label{fig:kuka_youbot}
 \end{figure} 
 
-Odpowiedni obrót kół względem bazy pozwala na jej ruch w dowolnym kierunku niezależnie od kąta obrotu robota.
+Odpowiedni obrót kół względem bazy pozwala na jej ruch w dowolnym kierunku niezależnie od kąta obrotu robota, patrz rysunek \ref{fig:mecanum_dirs}.
 Za ich pomocą da się także obracać bazą stojąc w miejscu, lub w trakcie ruchu po prostej.
 Na przykład, jeśli obracać tylko przeciwległymi kołami po przekątnej, system zacznie się poruszać po skosie bez zmiany kąta obrotu.
 A jeśli do tego dodamy obrót kół drugiej przekątnej w odwrotnym kierunku, wtedy pojazd zacznie się poruszać w bok pomimo faktu, że koła nie są skrętne i nie mogą ustawić się prosto do kierunku jazdy.
@@ -48,28 +53,32 @@ Wynika to z tego, że każdy obiekt, który ma jednostajną prędkość o kierun
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/mecanum_dirs.pdf}
-\label{graphics:mecanum_dirs}
 \caption{Podstawowe ruchy, jakie może wykonywać robot o napędzie wielokierunkowym.}
+\label{fig:mecanum_dirs}
 \end{figure} 
 
-Podstawa ma za zadanie transportować wydziałowego robota manipulującego Velma tworząc razem uniwersalny manipulator mobilny.
-Velma to wysoki i bardzo ciężki robot wyposażony w dwa chwytaki na ramionach o licznych przegubach.
-Taka budowa wymaga szerokiej podstawy, aby zachować wystarczająco dużą równowagę.
+Podstawa ma za zadanie transportować robota manipulującego Velma tworząc razem manipulator mobilny.
+Velma to wysoki i bardzo ciężki robot wyposażony w dwa chwytaki na ramionach o wielu przegubach, patrz fotografia \ref{fig:velma}.
+Taka budowa wymaga szerokiej podstawy, aby zachować dużą równowagę.
 Jeżdżąc na tej podstawie robot może się przemieszczać i obracać w dowolnym kierunku, aby uzyskać lepszy dostęp do manipulowanych przedmiotów.
 Dodatkowe czujniki laserowe umieszczone tuż nad postawą odpowiadają za wykrywanie kolizji i lokalizację.
 
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/velma.png}
-\label{graphics:velma}
 \caption{Robot manipulacyjny Velma.}
+\label{fig:velma}
 \end{figure} 
 
-Platforma jest niesymetrycznie podzielona w poprzek na dwie niezależne części.
+Platforma jest niesymetrycznie podzielona na dwie niezależne części, przednią i tylną w sposób pokazany na rysunku \ref{fig:base_top}.
 Przegub o jednym stopniu swobody (tzw. zawias) jest jedynym łącznikiem pomiędzy tymi dwoma fragmentami.
-Zadaniem tego przegubu jest niwelować niedoskonałości terenu, aby każde koło dociskało do podłoża z taką samą siłą, jak po drugiej stronie osi.
-Bez tego zawiasu nierówny teren uniemożliwiałby sprawne sterowanie platformą na skutek nierównego tarcia kół tej samej osi, powodując nieplanowany skręt.
+Zadaniem tego przegubu jest zmniejszanie wpływu nierówności podłoża na ruch bazy, aby każde koło dociskało do podłoża z taką samą siłą, jak po drugiej stronie osi.
+Bez tego zawiasu nierówny teren uniemożliwiałby sprawne sterowanie platformą na skutek niedeterministycznego tarcia kół tej samej osi, powodując nieplanowany skręt.
 Niedeterministyczne tarcie kół jest niewykrywalne w bezpośredni sposób, więc należy je wyeliminować na przykład za pomocą takiego przegubu.
+
+Środki kół nie są rozmieszczone na wierzchołkach kwadratu. Jest 4 cm różnicy między szerokością, a długością.
+Szerokość jest większa, co można zobaczyć porównując widok z prawej strony \ref{fig:base_side} z widokiem z tyłu \ref{fig:base_front}.
+Dokładne wymiary są podane na rysunku \ref{fig:base_dims} i tabeli \ref{tab:dims}.
 
 Platforma podatna jest na losowy ruch przy rozpoczynaniu jazdy i hamowaniu.
 Jest to spowodowane tym, że asymetria rolek będzie nadawać kołom różne siły, a w związku z tym różne prędkości, co w efekcie może powodować niedeterministyczny ruch.
@@ -78,19 +87,22 @@ Należy także wziąć tutaj pod uwagę nieprzewidywalne opory, jak nierówne ta
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_top.pdf}
-\caption{Platforma mobilna widziana od góry. Przegub zawiasowy łączy dwie części. Należy zwrócić uwagę na nieprawidłowy układ kół.}
+\caption{Platforma mobilna --- widok od góry. Przegub zawiasowy łączy dwie części.}
+\label{fig:base_top}
 \end{figure} 
 
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_side.pdf}
-\caption{Platforma mobilna widziana od prawej strony.}
+\caption{Platforma mobilna --- widok z prawej strony.}
+\label{fig:base_side}
 \end{figure} 
 
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/base_front.pdf}
-\caption{Platforma mobilna widziana od tyłu.}
+\caption{Platforma mobilna --- widok z tyłu.}
+\label{fig:base_front}
 \end{figure} 
 
 Platforma posiada 3 stopnie swobody. Pierwszym i drugim jest ruch bez obrotu w osiach X i Y.
