@@ -110,7 +110,7 @@ Trzecim stopniem jest dowolny obrót po płaszczyźnie podłoża.
 
 \section{Koła szwedzkie}
 Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie ustawionymi pod kątem $45^\circ$ do osi koła.
-Rolki są pasywne i obracają się niezależnie od siebie. Każde koło posiada 12 takich rolek.
+Rolki są pasywne i obracają się niezależnie od siebie. Każde koło ma 12 takich rolek, patrz rysunek \ref{fig:wheel}.
 Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
 Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
 Warto pamiętać, że oś aktualnie dolnej rolki jest prostopadła do osi górnej rolki.
@@ -121,27 +121,28 @@ Ten drugi sposób także pozwala na ruch wielokierunkowy, ale nie jest tak częs
 \begin{figure}[H]
 \centering
  \includegraphics[width=\textwidth]{graphics/wheel.pdf}
-\caption{Dokładny widok 12 rolkowego koła szwedzkiego opisywanej platformy wielokierunkowej.}
+\caption{Widok 12 rolkowego koła szwedzkiego opisywanej platformy wielokierunkowej.}
+\label{fig:wheel}
 \end{figure} 
 
 Każde koło ma 3 stopnie swobody. Pierwszym jest obrót całego koła wzdłuż osi.
 Drugim są rotacje pojedynczych rolek, a trzecim poślizg obrotowy w miejscu styku rolki z podłożem \cite{kinematic_modeling}.
 
-Na podstawie rysunku widać, że krzywizna rolki jest tak ustawiona, aby punkt kontaktu rolki z podłożem płynnie przechodził na następną rolkę w trakcie obrotu.
+Na podstawie rysunku \ref{fig:wheel} widać, że krzywizna rolki jest tak ustawiona, aby punkt kontaktu rolki z podłożem płynnie przechodził na następną rolkę w trakcie obrotu.
 Celem jest utrzymanie równej odległości osi od płaszczyzny podłoża.
-Nie powinno być efektu przeskoku z jednej rolki na drugą, gdyż to wprowadza nierówne tarcie i losowe poślizgi.
-Pojedyncza rolka zawiera się w paraboloidzie, jest tworzona przez skomplikowane wzory.
+Nie powinno być efektu przeskoku z jednej rolki na drugą, gdyż to wprowadza nierówne tarcie, losowe poślizgi i nadmierne zużycie elementów wykonawczych.
+Pojedyncza rolka zawiera się w paraboloidzie, wzory opisujące kształt rolki są złożone.
 Zazwyczaj przybliża się ją torusem w celu uproszczenia produkcji \cite{rollers}.
 
 Istnieją także inne budowy kół, złożone z wielu małych rolek tak, aby w każdym momencie kilka rolek dotykało podłoża.
-Można także przystawić kilka powyższych kół do siebie w jednym kole.
+Można także złożyć kilka powyższych kół obok siebie w jednym kole.
 Przydatne jest to dla robotów transportujących duże masy, gdyż zmniejsza to obciążenie pojedynczych rolek.
-Niestety taka budowa jest chroniona patentem, więc pojedyncze koło z wygasłym patentem jest jedynym popularnie używanym \cite{paletobot}.
+Niestety taka budowa jest chroniona aktywnym patentem, więc pojedyncze koło, na które patent już wygasł z jest jedynym popularnie używanym \cite{paletobot}.
 
-Podstawowym problemem technologii jest skomplikowana budowa, ale także ślizganie się kół po powierzchni.
+Podstawowym problemem technologicznym koła jest skomplikowana budowa, ale także ślizganie się rolek po powierzchni.
 Odległość osi od płaszczyzny nieznacznie zmienia się przy przenoszeniu ciężaru z rolki na rolkę, co przy dużych prędkościach powoduje drgania i jeszcze większe błędy pomiarów.
-Środkowy przegub zmniejsza ich przenoszenie na resztę platformy.
-Poślizg kół powoduje, że enkodery nie mogą być jedynymi czujnikami wyznaczającymi pozycję bazy, gdyż są na to za mało dokładne \cite{heavy}.
+Środkowy przegub zmniejsza ich przenoszenie na drugą część platformy.
+Poślizg kół powoduje, że enkodery nie mogą być jedynymi czujnikami służącymi do wyznaczania pozycji bazy, gdyż są zbyt mało dokładne \cite{heavy}.
 
 \section{Składniki systemu}
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
