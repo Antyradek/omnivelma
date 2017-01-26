@@ -1,26 +1,27 @@
 \chapter{Wstęp}
 \section{Cel}
-Celem tej pracy inżynierskiej jest budowa środowiska robota mobilnego w przestrzeni wirtualnej.
-Za zadanie jest stworzyć oprogramowanie modelu 3D, oraz modelu dynamiki wielokierunkowej platformy mobilnej z kołami szwedzkimi. 
-Wymaga się, aby model i obsługujące go oprogramowanie było dokładną kopią prawdziwego robota, dzięki czemu zachowanie symulacji będzie jak najbardziej zbliżone do zachowania fizycznego obiektu.
-Opisywana platforma będzie używana jako baza wielokierunkowa do przemieszczania dwuramiennego robota manipulującego Velma.
+Celem pracy inżynierskiej jest budowa środowiska symulacyjnego robota mobilnego z kołami szwedzkimi.
+Dla realizacji tego celu należy opracować model 3D, oraz model dynamiki dookólnej bazy jezdnej z 4 kołami szwedzkimi.
+Jednym z przyjętych założeń jest wymaganie, aby opracowany model był możliwie dokładny i jego działanie było zbliżone do rzeczywistego robota.
+Opisywana platforma będzie używana jako baza wielokierunkowa do przemieszczania dwuramiennego robota manipulacyjnego Velma.
 
-Należy tak opisać model, aby reagował na siły podobnie do rzeczywistej wersji i przyjmował to samo sterowanie z zewnątrz, co rzeczywisty obiekt.
-To spowoduje, że możliwe będzie stworzenie jednego wspólnego programu sterującego do użycia zarówno w wirtualnej wersji, jak i fizycznej.
+Celem jest stworzenie modelu, który będzie reagował na siły podobnie do rzeczywistego robota i był sterowany tak samo, jak rzeczywisty robot.
+To spowoduje, że możliwe będzie stworzenie jednego wspólnego programu sterującego do użycia zarówno w symulacji, jak i rzeczywistym robocie.
 
-Testowanie oprogramowania na prawdziwym obiekcie może prowadzić do jego uszkodzeń, dlatego wpierw trzeba się upewnić o poprawności projektowanych rozwiązań na bezpiecznej kopii wirtualnej.
-Rzeczywistość nie pozwala także na przeprowadzanie zaawansowanych scenariuszy środowiska testowego, lub koszty jego wykonania są wysokie.
-Szybciej i taniej jest stworzyć wirtualne środowisko testowe, niż fizyczne, w dodatku porażka sterowników przy symulacji nie wpływa na zniszczenie robota w rzeczywistości.
-Dopiero przy osiągnięciu satysfakcjonującej jakości sterowania w symulacji wirtualnej można zastosować algorytmy sterowania do oryginalnego obiektu bez ryzyka uszkodzeń urządzenia.
+Testowanie oprogramowania sterującego na rzeczywistym obiekcie może prowadzić do jego uszkodzeń, dlatego wpierw należy się upewnić o poprawności projektowanych rozwiązań na bezpiecznym modelu wirtualnym.
+Rzeczywistość nie pozwala także na skomplikowane scenariusze testów, które w rzeczywistości mogłyby być niemożliwe do wykonania lub koszty jego wykonania byłyby zbyt wysokie.
+Szybciej i taniej jest stworzyć symulacyjne środowisko testowe, niż fizyczne, w dodatku błąd sterowników przy symulacji nie grozi zniszczeniem rzeczywistego robota.
+Dopiero przy osiągnięciu satysfakcjonującej jakości sterowania w symulacji wirtualnej można zastosować algorytmy sterowania do rzeczywistego obiektu bez ryzyka uszkodzeń urządzenia.
 
-Należy także móc obsługiwać czujniki, za pomocą których oprogramowanie orientuje się w przestrzeni i generuje sterowanie.
-Wirtualizacja czujników polega na generowaniu danych na podstawie symulacji.
-W celu przybliżenia wyjścia takiego programu do rzeczywistego urządzenia, do generowanych danych zwykle dodaje się szum, oraz błędy.
+Oprócz modelu bazy jezdnej, środowisko symulacyjne musi również udostępniać modele czujników, w które wyposażony jest robot. 
+Odczyty z symulatorów czujników są następnie wykorzystywane w układzie sterowania do generacji odpowiednich sygnałów sterujących.
+W celu możliwie wiernej symulacji działania czujników do wartości pomiarów dodaje się szum pomiarowy i zakłócenia.
 
 \section{Wielokierunkowa platforma mobilna}
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/base_photo.png}
+\label{graphics:base_photo}
 \caption{Fotografia platformy z perspektywy.}
 \end{figure} 
 
@@ -33,6 +34,7 @@ Sterownik enkodera zwraca aktualny kąt i prędkość obrotu.
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/kuka_youbot.png}
+\label{graphics:kuka_youbot}
 \caption{Przykład innej platformy wielokierunkowej na podstawie fragmentu komercyjnego robota Kuka Youbot. Należy zwrócić uwagę na charakterystyczne ustawienie kół, identyczne jak w opisywanej wyżej platformie.}
 \end{figure} 
 
@@ -46,6 +48,7 @@ Wynika to z tego, że każdy obiekt, który ma jednostajną prędkość o kierun
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.8\textwidth]{graphics/mecanum_dirs.pdf}
+\label{graphics:mecanum_dirs}
 \caption{Podstawowe ruchy, jakie może wykonywać robot o napędzie wielokierunkowym.}
 \end{figure} 
 
@@ -58,6 +61,7 @@ Dodatkowe czujniki laserowe umieszczone tuż nad postawą odpowiadają za wykryw
 \begin{figure}[H]
 \centering
  \includegraphics[width=0.5\textwidth]{graphics/velma.png}
+\label{graphics:velma}
 \caption{Robot manipulacyjny Velma.}
 \end{figure} 
 
