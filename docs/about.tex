@@ -146,32 +146,56 @@ Poślizg kół powoduje, że enkodery nie mogą być jedynymi czujnikami służ�
 
 \section{Składniki systemu}
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
-Taka implementacja komunikacji pozwala zamieniać i przepisywać kod źródłowy elementów, używać różnych języków programowania zachowując tę samą komunikację między składnikami i nie tracąc kompatybilności między sobą.
-
-Efektor rzeczywisty, na przykład serwomotor jest sterowany za pomocą efektora wirtualnego, który zamienia wyjście głównego układu sterowania na zrozumiałe dla silnika wartości fizyczne. 
-Przykładowo zmienia podaną liczbę oznaczającą zadaną prędkość na odpowiednie napięcie na wyjściu. W przestrzeni symulacyjnej jedynie wywołuje odpowiednie funkcje maszyny do symulacji.
-
-Podobnie receptor wirtualny pobiera surowe dane z czujnika, przekształca na odpowiedni format, usuwa błędy i szum tak, aby program sterujący mógł wykorzystać te dane w prosty sposób. 
-Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytanie obrazu z kilku kamer, usunięcie błędów wbudowanym układem i zamiana na mapę odległości, szkielety wykrytych osób, ich sylwetki i wiele innych gotowych danych.
+Taka implementacja komunikacji pozwala zmieniać i reimplementować poszczególne elementy i używać różnych języków programowania zachowując tę samą komunikację między składnikami nie tracąc kompatybilności między sobą.
+Możliwe jest także przesyłanie wiadomości przez sieć, co pozwala na rozproszenie systemu.
 
 %TODO Zmienić na Tikz
 \begin{figure}[H]
 \centering
- \includegraphics[width=0.5\textwidth]{graphics/agent.pdf}
+ \includegraphics[width=0.8\textwidth]{graphics/agent.pdf}
 \caption{Struktura agenta upostaciowionego.}
+\label{fig:agent}
 \end{figure} 
 
-\subsection{Model 3D}
-Odpowiednio opisany równaniami fizycznymi powinien mieć zachowanie zbliżone do oryginału w jak największym stopniu.
-Musi brać pod uwagę masy i momenty bezwładności elementów składowych, a także wszelkie tarcia.
-Model posiada więzy na ruchome elementy, jak koła i rolki, aby symulować przeguby.
+Można to przedstawić za pomocą zapisu agentowego, jak na rysunku \ref{fig:agent}.
+Agent upostaciowiony składa się wilku modułów komunikujących się ze sobą za pomocą różnych systemów.
 
-Ta część środowiska oddziałuje bezpośrednio z maszyną do symulacji fizycznej. 
+Nadrzędnym modułem jest układ sterowania, który na podstawie odczytów z czujników generuje sterowanie dla efektorów.
+Ważne jest, aby komunikacja z rzeczywistymi urządzeniami była identyczna, jak z ich modelami, dzięki czemu taki system będzie przenośny i niezależny.
+
+Efektor rzeczywisty, na przykład serwomotor, jest sterowany za pomocą efektora wirtualnego, który zamienia wyjście układu sterowania na sygnały sterujące dla silnika napędowego.
+Przykładowo zmienia podaną liczbę oznaczającą zadaną prędkość na odpowiednie napięcie na wyjściu.
+
+Zamodelowany efektor symulowany również przyjmuje te same sygnały do układu sterowania, lecz nie zamienia ich na sygnały sterujące, a wywołuje odpowiednie funkcje maszyny symulacyjnej nadające siły i prędkości obiektom w przestrzeni wirtualnej.
+
+Receptor wirtualny pobiera surowe dane z czujnika, przekształca na odpowiedni format, usuwa błędy i szum tak, aby program sterujący mógł wykorzystać te dane w prosty sposób. 
+Doskonałym przykładem jest tutaj kamera Kinect, w której to zachodzi odczytanie obrazu z kilku kamer.
+Następnie obraz przesyłany jest do komputera w którym sterowniki interpretują dane usuwając błędy, tworzą mapę głębokości, wykrywają szkielety i sylwetki osób.
+Te dane mogą być wykorzystane łatwo w grach i programach sterujących.
+
+Modelowanie receptora, tak jak w przypadku efektora polega na wygenerowaniu odpowiednich danych używając odpowiednich funkcji w przestrzeni wirtualnej.
+Mogą one polegać na puszczaniu promieni symulujących laser, lub wręcz renderowaniu obiektów, aby uzyskać obraz z wirtualnej kamery.
+Receptor symulowany ma pełną wiedzę o symulowanym świecie, dokładne pozycje i prędkości wszystkich obiektów, dane o kolizjach itp. 
+Pozwala to na łatwe symulowanie receptorów nie mogących mieć odwzorowania w rzeczywistości, co przydatne jest w pierwszych stadiach testowania i wyznaczaniu statystyk.
+
+\subsection{Model 3D}
+Model 3D bazy mobilnej opisany równaniami matematycznymi powinien mieć zachowanie najbardziej jak to tylko możliwe zbliżone do oryginału.
+Musi uwzględniać masy i momenty bezwładności elementów składowych, a także wszystkie tarcia.
+Model obejmuje więzy na ruchome elementy, takie jak koła i rolki, aby umożliwić symulację przegubów.
+
+Model składa się z elementów odwzorowujących rzeczywiste części składowe bazy mobilnej.
+Elementy posiadają takie cechy, jak pozycja w modelu, masa, moment bezwładności, kształt, materiał fizyczny i wygląd.
+Dodatkowo należy uwzględnić więzy tych składowych w postaci symulowanych przegubów.
+W przypadku tej bazy istnieje jeden typ więzów o jednym stopniu swobody (zawias).
+Więzy mogą oddziaływać siłą na elementy do których są podłączone symulując silniki.
+
+Elementy składowe i symulowane przeguby oddziałują bezpośrednio z maszyną do symulacji fizycznej. 
 To kształt, masy i momenty bezwładności brył są argumentami funkcji liczących.
-Także maszyna manipuluje z powrotem podanymi obiektami nadając im wirtualnie odpowiednie prędkości w czasie.
+Maszyna symulacyjna oblicza odpowiednie prędkości i nadaje podanym obiektom w podobny sposób, jak ma to miejsce w rzeczywistości.
 
 Do modelu doczepia się wirtualne czujniki generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
 Nie są to pełne dane o stanie modelu, jakie posiada maszyna do symulacji, gdyż czujniki fizyczne również nigdy nie mają pełnej informacji o stanie urządzenia.
+Należy dodać losowy szum i błędy, aby przybliżyć ich zachowanie do rzeczywistych czujników.
 
 Dla ozdoby można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota.
 
