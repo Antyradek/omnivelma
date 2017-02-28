@@ -1,5 +1,4 @@
 #include <functional>
-#include <map>
 #include <string>
 #include <iostream>
 #include <gazebo/gazebo.hh>
@@ -30,11 +29,7 @@ public:
         this -> model = parent;
 
         this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
-
-        //common::Logger logger("Omnivelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
-        //logger("Podłączono wtyczkę", 10);
-
-        std::cout << "Podłączono Omnivelmę " << std::endl;
+        
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
         pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
@@ -69,6 +64,8 @@ public:
         //stwórz serwer do ustawiania tarcia
         ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSrv = this -> rosNode -> advertiseService(aso);
+		
+		std::cout << "Podłączono Omnivelmę " << std::endl;
     }
 
 public:

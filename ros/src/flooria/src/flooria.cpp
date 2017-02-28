@@ -1,5 +1,4 @@
 #include <functional>
-#include <map>
 #include <string>
 #include <iostream>
 #include <gazebo/gazebo.hh>

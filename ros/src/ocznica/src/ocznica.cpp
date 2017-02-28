@@ -23,8 +23,6 @@ public:
         //podłączenie do wydarznia aktualizacji
         this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
 
-        std::cout << "Ocznica obserwuje" << std::endl;
-
         //inicjalizacja ROSa
         if (!ros::isInitialized())
         {
@@ -42,6 +40,8 @@ public:
         //znajdź modele
         this -> omnivelma = world -> GetModel("omnivelma");
         this -> pseudovelma = world -> GetModel("pseudovelma");
+		
+		std::cout << "Ocznica obserwuje" << std::endl;
     }
 
 public:

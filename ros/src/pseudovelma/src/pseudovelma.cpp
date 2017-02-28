@@ -1,5 +1,4 @@
 #include <functional>
-#include <map>
 #include <string>
 #include <iostream>
 #include <gazebo/gazebo.hh>
@@ -42,10 +41,6 @@ public:
         //podłączenie do wydarznia aktualizacji
         this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Pseudovelma::OnUpdate, this));
 
-		//common::Logger logger("Pseudovelma", common::Color::Purple.GetAsARGB(), common::Logger::LogType::STDOUT);
-		//logger("Podłączono wtyczkę", 10);
-
-        std::cout << "Podłączono Pseudovelmę " << std::endl;
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
         //inicjalizacja ROSa
@@ -69,7 +64,7 @@ public:
         //stwórz topic do nadawania wiadomości
         this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
 
-
+		std::cout << "Podłączono Pseudovelmę " << std::endl;
     }
 
 public:
