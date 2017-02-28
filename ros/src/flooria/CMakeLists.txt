@@ -10,7 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_service_files(
 	FILES
-	Friction.srv
+	SetFriction.srv
 )
 
 generate_messages(
