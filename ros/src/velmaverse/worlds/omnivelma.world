@@ -9,9 +9,12 @@
 		</include>
 
 		<!-- Podłoga -->
-		<include>
-			<uri>model://ground_plane</uri>
-		</include>
+		<model name="flooria">
+			<include>
+				<uri>model://flooria</uri>
+			</include>
+			<plugin name="flooria" filename="libflooria.so"/>
+		</model>
 
 
 		<model name="omnivelma">

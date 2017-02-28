@@ -1,0 +1,10 @@
+Flooria - podłoga ze zmiennym współczynnikiem tarcia
+
+Komunikacja programu w formie:
+nazwa
+typ
+opis
+
+/flooria/set_friction
+std_msgs/Float64
+Przyjmuje nowy współczynnik tarcia.

@@ -1,21 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(omnivelma)
+project(flooria)
 
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
+  message_generation
   roscpp
   std_msgs
-  message_generation
-)
-
-add_message_files(
-	FILES
-	Vels.msg
 )
 
 add_service_files(
 	FILES
-	SetFriction.srv
+	Friction.srv
 )
 
 generate_messages(
@@ -26,8 +21,8 @@ generate_messages(
 
 catkin_package(
 	CATKIN_DEPENDS 
-	message_runtime
 	std_msgs
+	message_runtime
 	gazebo_ros
 	roscpp 
 )
@@ -43,6 +38,7 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
-add_library(${PROJECT_NAME} src/omnivelma.cpp)
+add_library(${PROJECT_NAME} src/flooria.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+

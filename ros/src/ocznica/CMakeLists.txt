@@ -20,10 +20,11 @@ generate_messages(
 
 
 catkin_package(
-	DEPENDS 
-	roscpp 
-	gazebo_ros 
+	CATKIN_DEPENDS 
+	std_msgs
 	message_runtime
+	gazebo_ros
+	roscpp 
 )
 
 find_package(gazebo REQUIRED)
@@ -39,4 +40,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 add_library(${PROJECT_NAME} src/ocznica.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
-
+add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS})
