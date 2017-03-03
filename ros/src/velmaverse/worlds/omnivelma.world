@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-	<sdf version="1.5">
+	<sdf version="1.6">
 	<world name="velmaverse">
 		<plugin name="ocznica" filename="libocznica.so"/>
 		
@@ -16,7 +16,7 @@
 			<plugin name="flooria" filename="libflooria.so"/>
 		</model>
 
-
+		<!-- Platforma dynamiczna -->
 		<model name="omnivelma">
 			<include>
 				<uri>model://omnivelma</uri>
@@ -24,7 +24,7 @@
 			<plugin name="omnivelma" filename="libomnivelma.so"/>
 		</model>
 
-
+		<!-- Platforma kinematyczna -->
 		<model name="pseudovelma">
 			<include>
 				<uri>model://pseudovelma</uri>
