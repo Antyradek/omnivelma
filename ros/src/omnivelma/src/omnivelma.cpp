@@ -10,6 +10,7 @@
 #include <ros/subscribe_options.h>
 #include <omnivelma/Vels.h>
 #include <omnivelma/SetFriction.h>
+#include <omnivelma/Encoders.h>
 #include <geometry_msgs/Pose.h>
 
 #define MODEL_NAME std::string("omnivelma")
@@ -29,7 +30,7 @@ public:
         this -> model = parent;
 
         this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
-        
+
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
         pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
@@ -53,18 +54,21 @@ public:
         //stwórz Node dla ROSa
         this -> rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
 
-        //stwórz topic do odbierania wiadomości
+        //stwórz topic do odbierania terć
         ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSub = this -> rosNode -> subscribe(so);
         this -> rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
 
-        //stwórz topic do nadawania wiadomości
+        //stwórz topic do nadawania pozycji
         this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
+
+        //stwórz topic do nadawania enkoderów
+        this -> rosEnc = this -> rosNode -> advertise<omnivelma::Encoders>("/omnivelma/encoders", 1000);
 
         //stwórz serwer do ustawiania tarcia
         ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
         this -> rosSrv = this -> rosNode -> advertiseService(aso);
-		
+
 		std::cout << "Podłączono Omnivelmę " << std::endl;
     }
 
@@ -90,6 +94,18 @@ public:
         msg.orientation.z = pose.rot.z;
         msg.orientation.w = pose.rot.w;
         rosPub.publish(msg);
+
+        //wyślij enkodery
+        omnivelma::Encoders encMsg;
+        encMsg.vel_rr = motorRR -> GetVelocity(0);
+        encMsg.angle_rr = motorRR -> GetAngle(0).Radian();
+        encMsg.vel_rl = motorRL -> GetVelocity(0);
+        encMsg.angle_rl = motorRL -> GetAngle(0).Radian();
+        encMsg.vel_fr = motorFR -> GetVelocity(0);
+        encMsg.angle_fr = motorFR -> GetAngle(0).Radian();
+        encMsg.vel_fl = motorFL -> GetVelocity(0);
+        encMsg.angle_fl = motorFL -> GetAngle(0).Radian();
+        rosEnc.publish(encMsg);
     }
 private:
     bool SetFriction(omnivelma::SetFriction::Request  &req, omnivelma::SetFriction::Response &res)
@@ -158,6 +174,9 @@ private:
 
     ///Nadajnik pozycji
     ros::Publisher rosPub;
+
+    ///Nadajnik enkodera
+    ros::Publisher rosEnc;
 
     ///Serwer ustawiania tarcia
     ros::ServiceServer rosSrv;
