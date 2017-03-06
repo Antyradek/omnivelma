@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   roscpp
   std_msgs
+  geometry_msgs
   message_generation
 )
 
@@ -17,11 +18,13 @@ add_message_files(
 add_service_files(
 	FILES
 	SetFriction.srv
+	SetInertia.srv
 )
 
 generate_messages(
 	DEPENDENCIES
 	std_msgs
+	geometry_msgs
 )
 
 
@@ -29,6 +32,7 @@ catkin_package(
 	CATKIN_DEPENDS 
 	message_runtime
 	std_msgs
+	geometry_msgs
 	gazebo_ros
 	roscpp 
 )

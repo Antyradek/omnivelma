@@ -1,13 +1,9 @@
 Do poruszenia:
 Info, że przesunięcie środka ciężkości nie zmieniło eksperymantów.
 Naprawić model widoku z góry (wyrenderować na nowo)
+Napisać o tum, że zakładamy bezoporowy obrót kół, a przy wymuszonym są niespodziewane błędy, jak w rzeczywistości.
 
 Do zrobienia:
-Enkodery omnivelmy.
-Masa omnivelmy.
-Masa kół.
-Moment obrotowy (tensor) omnivelmy i kół.
-Masa transportowana i intefejs jej zmiany
-Ustawienie domyślnych momentów obrotowych obliczonych z zewnątrz.
+Masa transportowana i intefejs jej zmiany. (może być i tak za mało dokładne, żeby był sens)
 Interfejs GUI.
 Powtórka w V-REPie.

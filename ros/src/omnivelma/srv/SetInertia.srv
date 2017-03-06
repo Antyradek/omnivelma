@@ -1,0 +1,4 @@
+geometry_msgs/Inertia base
+geometry_msgs/Inertia front
+geometry_msgs/Inertia wheel
+---

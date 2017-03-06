@@ -12,6 +12,7 @@
 #include <omnivelma/SetFriction.h>
 #include <omnivelma/Encoders.h>
 #include <geometry_msgs/Pose.h>
+#include <omnivelma/SetInertia.h>
 
 #define MODEL_NAME std::string("omnivelma")
 ///Długość jest równa sqrt(2)/2 aby tworzyć kąt 45°
@@ -27,9 +28,9 @@ public:
     ///Uruchamiane na inicjalizację
     void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
     {
-        this -> model = parent;
+        model = parent;
 
-        this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
+        updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
 
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
@@ -52,24 +53,28 @@ public:
         }
 
         //stwórz Node dla ROSa
-        this -> rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
+        rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
 
-        //stwórz topic do odbierania terć
+        //stwórz topic do odbierania prędkości
         ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
-        this -> rosSub = this -> rosNode -> subscribe(so);
-        this -> rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
+        rosSub = rosNode -> subscribe(so);
+        rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
 
         //stwórz topic do nadawania pozycji
-        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
+        rosPub = rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
 
         //stwórz topic do nadawania enkoderów
-        this -> rosEnc = this -> rosNode -> advertise<omnivelma::Encoders>("/omnivelma/encoders", 1000);
+        rosEnc = rosNode -> advertise<omnivelma::Encoders>("/omnivelma/encoders", 1000);
 
-        //stwórz serwer do ustawiania tarcia
+        //stwórz serwer do odbierania tarcia
         ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
-        this -> rosSrv = this -> rosNode -> advertiseService(aso);
+        rosSrv = rosNode -> advertiseService(aso);
 
-		std::cout << "Podłączono Omnivelmę " << std::endl;
+        //stwórz serwer do odbierania inercji
+        aso = ros::AdvertiseServiceOptions::create<omnivelma::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
+        rosIne = rosNode -> advertiseService(aso);
+
+        std::cout << "Podłączono Omnivelmę " << std::endl;
     }
 
 public:
@@ -108,7 +113,8 @@ public:
         rosEnc.publish(encMsg);
     }
 private:
-    bool SetFriction(omnivelma::SetFriction::Request  &req, omnivelma::SetFriction::Response &res)
+    ///Ustaw tarcia dla kół
+    bool SetFriction(const omnivelma::SetFriction::Request& req, omnivelma::SetFriction::Response& res)
     {
         pyramidRR -> SetMuPrimary(req.mu1);
         pyramidRR -> SetMuSecondary(req.mu2);
@@ -121,10 +127,69 @@ private:
         std::cout << "Ustawiono tarcia: " << req.mu1 << " " << req.mu2 << std::endl;
         return true;
     }
+    ///Ustaw masy, środki mas i tensor inercji.
+    bool SetInertia(const omnivelma::SetInertia::Request& req, omnivelma::SetInertia::Response& res)
+    {
+        physics::LinkPtr basePtr = model -> GetLink(linkPrefix + "base");
+        physics::LinkPtr frontPtr = model -> GetLink(linkPrefix + "front");
+        physics::LinkPtr wheelRRPtr = model -> GetLink(linkPrefix + "wheel_rr");
+        physics::LinkPtr wheelRLPtr = model -> GetLink(linkPrefix + "wheel_rl");
+        physics::LinkPtr wheelFRPtr = model -> GetLink(linkPrefix + "wheel_fr");
+        physics::LinkPtr wheelFLPtr = model -> GetLink(linkPrefix + "wheel_fl");
+
+        physics::InertialPtr baseIne = basePtr -> GetInertial();
+        physics::InertialPtr frontIne = frontPtr -> GetInertial();
+        physics::InertialPtr wheelRRIne = wheelRRPtr -> GetInertial();
+        physics::InertialPtr wheelRLIne = wheelRLPtr -> GetInertial();
+        physics::InertialPtr wheelFRIne = wheelFRPtr -> GetInertial();
+        physics::InertialPtr wheelFLIne = wheelFLPtr -> GetInertial();
+
+        baseIne -> SetMass(req.base.m);
+        baseIne -> SetInertiaMatrix(req.base.ixx, req.base.iyy, req.base.izz, req.base.ixy, req.base.ixz, req.base.iyz);
+        baseIne -> SetCoG(req.base.com.x, req.base.com.y, req.base.com.z);
+
+
+        frontIne -> SetMass(req.front.m);
+        frontIne -> SetInertiaMatrix(req.front.ixx, req.front.iyy, req.front.izz, req.front.ixy, req.front.ixz, req.front.iyz);
+        frontIne -> SetCoG(req.front.com.x, req.front.com.y, req.front.com.z);
+
+
+        wheelRRIne -> SetMass(req.wheel.m);
+        wheelRRIne -> SetInertiaMatrix(req.wheel.ixx, req.wheel.iyy, req.wheel.izz, req.wheel.ixy, req.wheel.ixz, req.wheel.iyz);
+        wheelRRIne -> SetCoG(req.wheel.com.x, req.wheel.com.y, req.wheel.com.z);
+        wheelRLIne -> SetMass(req.wheel.m);
+        wheelRLIne -> SetInertiaMatrix(req.wheel.ixx, req.wheel.iyy, req.wheel.izz, req.wheel.ixy, req.wheel.ixz, req.wheel.iyz);
+        wheelRLIne -> SetCoG(req.wheel.com.x, req.wheel.com.y, req.wheel.com.z);
+        wheelFRIne -> SetMass(req.wheel.m);
+        wheelFRIne -> SetInertiaMatrix(req.wheel.ixx, req.wheel.iyy, req.wheel.izz, req.wheel.ixy, req.wheel.ixz, req.wheel.iyz);
+        wheelFRIne -> SetCoG(req.wheel.com.x, req.wheel.com.y, req.wheel.com.z);
+        wheelFLIne -> SetMass(req.wheel.m);
+        wheelFLIne -> SetInertiaMatrix(req.wheel.ixx, req.wheel.iyy, req.wheel.izz, req.wheel.ixy, req.wheel.ixz, req.wheel.iyz);
+        wheelFLIne -> SetCoG(req.wheel.com.x, req.wheel.com.y, req.wheel.com.z);
+
+        //Liczenie masy z nowych macierzy może wywołać błędy, np. gdy masa jest zerowa
+        try
+        {
+            frontPtr -> UpdateMass();
+            basePtr -> UpdateMass();
+            wheelRRPtr -> UpdateMass();
+            wheelRLPtr -> UpdateMass();
+            wheelFRPtr -> UpdateMass();
+            wheelFLPtr -> UpdateMass();
+        }
+        catch(common::Exception err)
+        {
+            std::cerr << "Nie udało się ustawić inercji: " << err.GetErrorStr() << std::endl;
+            return false;
+        }
+
+        std::cout << "Ustawiono inercje: " << req.base.m << " " << req.front.m << " " << req.wheel.m << std::endl;
+        return true;
+    }
 
     ///Pobierz wiadomość od ROSa
 private:
-    void OnRosMsg(const omnivelma::VelsConstPtr &msg)
+    void OnRosMsg(const omnivelma::VelsConstPtr& msg)
     {
         std::cout << "Wiadomość: " << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg -> rr << std::endl;
         motorRR -> SetVelocity(0, msg -> rr);
@@ -138,9 +203,9 @@ private:
     void QueueThread()
     {
         static const double timeout = 0.01;
-        while (this -> rosNode -> ok())
+        while (rosNode -> ok())
         {
-            this -> rosQueue.callAvailable(ros::WallDuration(timeout));
+            rosQueue.callAvailable(ros::WallDuration(timeout));
         }
     }
 
@@ -180,6 +245,9 @@ private:
 
     ///Serwer ustawiania tarcia
     ros::ServiceServer rosSrv;
+
+    ///Serwer ustawiania inercji
+    ros::ServiceServer rosIne;
 
     ///Kolejka wiadomości
     ros::CallbackQueue rosQueue;
