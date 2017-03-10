@@ -4,10 +4,7 @@
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
-#include <thread>
 #include <ros/ros.h>
-#include <ros/callback_queue.h>
-#include <ros/subscribe_options.h>
 #include <omnivelma/Vels.h>
 #include <omnivelma/SetFriction.h>
 #include <omnivelma/Encoders.h>
@@ -57,9 +54,7 @@ public:
         rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
 
         //stwórz topic do odbierania prędkości
-        ros::SubscribeOptions so = ros::SubscribeOptions::create<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
-        rosSub = rosNode -> subscribe(so);
-        rosQueueThread = std::thread(std::bind(&Omnivelma::QueueThread, this));
+		rosSub = rosNode -> subscribe<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
 
         //stwórz topic do nadawania pozycji
         rosPub = rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
@@ -68,12 +63,12 @@ public:
         rosEnc = rosNode -> advertise<omnivelma::Encoders>("/omnivelma/encoders", 1000);
 
         //stwórz serwer do odbierania tarcia
-        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
+		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosSrv = rosNode -> advertiseService(aso);
 
         //stwórz serwer do odbierania inercji
-        aso = ros::AdvertiseServiceOptions::create<omnivelma::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
-        rosIne = rosNode -> advertiseService(aso);
+		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+        rosIne = rosNode -> advertiseService(asi);
 
         std::cout << "Podłączono Omnivelmę " << std::endl;
     }
@@ -192,22 +187,10 @@ private:
 private:
     void OnRosMsg(const omnivelma::Vels::ConstPtr& msg)
     {
-        std::cout << "Wiadomość: " << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg -> rr << std::endl;
         motorRR -> SetVelocity(0, msg -> rr);
         motorRL -> SetVelocity(0, msg -> rl);
         motorFR -> SetVelocity(0, msg -> fr);
         motorFL -> SetVelocity(0, msg -> fl);
-    }
-
-    ///Wątek odbioru wiadomości
-private:
-    void QueueThread()
-    {
-        static const double timeout = 0.01;
-        while (rosNode -> ok())
-        {
-            rosQueue.callAvailable(ros::WallDuration(timeout));
-        }
     }
 
 private:
@@ -249,12 +232,6 @@ private:
 
     ///Serwer ustawiania inercji
     ros::ServiceServer rosIne;
-
-    ///Kolejka wiadomości
-    ros::CallbackQueue rosQueue;
-
-    ///Wątek kolejki
-    std::thread rosQueueThread;
 
 };
 

@@ -21,7 +21,7 @@ public:
     {
 
         //podłączenie do wydarznia aktualizacji
-        this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
+        updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
 
         //inicjalizacja ROSa
         if (!ros::isInitialized())
@@ -29,17 +29,18 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
+			std::cout << "Initializacja ROSa w Ocznicy" << std::endl;
         }
 
         //stwórz Node dla ROSa
-        this -> rosNode.reset(new ros::NodeHandle("ocznica"));
+        rosNode.reset(new ros::NodeHandle("ocznica"));
 
         //stwórz topic do nadawania wiadomości
-        this -> rosPub = this -> rosNode -> advertise<ocznica::Relative>("/ocznica/relative", 1000);
+        rosPub = rosNode -> advertise<ocznica::Relative>("/ocznica/relative", 1000);
 
         //znajdź modele
-        this -> omnivelma = world -> GetModel("omnivelma");
-        this -> pseudovelma = world -> GetModel("pseudovelma");
+        omnivelma = world -> GetModel("omnivelma");
+        pseudovelma = world -> GetModel("pseudovelma");
 		
 		std::cout << "Ocznica obserwuje" << std::endl;
     }

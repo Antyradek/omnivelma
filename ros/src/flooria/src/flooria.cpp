@@ -4,10 +4,7 @@
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
-#include <thread>
 #include <ros/ros.h>
-#include <ros/callback_queue.h>
-#include <ros/subscribe_options.h>
 #include <flooria/SetFriction.h>
 
 #define MODEL_NAME std::string("flooria")
@@ -22,7 +19,7 @@ public:
     ///Uruchamiane na inicjalizację
     void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
     {
-        this -> model = parent;
+        model = parent;
 
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
@@ -34,39 +31,26 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
+			std::cout << "Initializacja ROSa we Floorii" << std::endl;
         }
 
         //stwórz Node dla ROSa
-        this -> rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
-
-        //stwórz kolejkę wiadomości
-        this -> rosQueueThread = std::thread(std::bind(&Flooria::QueueThread, this));
+        rosNode.reset(new ros::NodeHandle());
 
         //stwórz serwer do ustawiania tarcia
-        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<flooria::SetFriction>("/flooria/set_friction", std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), ros::VoidPtr(), &this -> rosQueue);
-        this -> rosSrv = this -> rosNode -> advertiseService(aso);
+		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<flooria::SetFriction>("/flooria/set_friction", std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+        rosSrv = rosNode -> advertiseService(aso);
 
         std::cout << "Podłączono Floorię " << std::endl;
     }
 
 private:
-    bool SetFriction(flooria::SetFriction::Request  &req, flooria::SetFriction::Response &res)
+    bool SetFriction(flooria::SetFriction::Request& req, flooria::SetFriction::Response& res)
     {
         pyramid -> SetMuPrimary(req.mu1);
         pyramid -> SetMuSecondary(req.mu2);
         std::cout << "Ustawiono tarcia podłoża: " << req.mu1 << " " << req.mu2 << std::endl;
         return true;
-    }
-
-    ///Wątek odbioru wiadomości
-private:
-    void QueueThread()
-    {
-        static const double timeout = 0.01;
-        while (this -> rosNode -> ok())
-        {
-            this -> rosQueue.callAvailable(ros::WallDuration(timeout));
-        }
     }
 
 private:
@@ -84,12 +68,6 @@ private:
 
     ///Serwer ustawiania tarcia
     ros::ServiceServer rosSrv;
-
-    ///Kolejka wiadomości
-    ros::CallbackQueue rosQueue;
-
-    ///Wątek kolejki
-    std::thread rosQueueThread;
 
 };
 

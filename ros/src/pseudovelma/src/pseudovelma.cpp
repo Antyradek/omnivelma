@@ -5,10 +5,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <gazebo/math/gzmath.hh>
-#include <thread>
 #include <ros/ros.h>
-#include <ros/callback_queue.h>
-#include <ros/subscribe_options.h>
 #include <pseudovelma/Vels.h>
 #include <geometry_msgs/Pose.h>
 
@@ -36,10 +33,10 @@ public:
     ///Uruchamiane na inicjalizację
     void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
     {
-        this -> model = parent;
+        model = parent;
 
         //podłączenie do wydarznia aktualizacji
-        this -> updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Pseudovelma::OnUpdate, this));
+        updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Pseudovelma::OnUpdate, this));
 
         linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
 
@@ -49,20 +46,17 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
+			std::cout << "Initializacja ROSa w Pseudovelmie" << std::endl;
         }
 
         //stwórz Node dla ROSa
-        this -> rosNode.reset(new ros::NodeHandle("pseudovelma"));
+        rosNode.reset(new ros::NodeHandle("pseudovelma"));
 
         //Stwórz topic do odbierania wiadomości
-        ros::SubscribeOptions so = ros::SubscribeOptions::create<pseudovelma::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1), ros::VoidPtr(), &this -> rosQueue);
-        this -> rosSub = this -> rosNode -> subscribe(so);
-
-        //Uruchom wątek odbierania
-        this -> rosQueueThread = std::thread(std::bind(&Pseudovelma::QueueThread, this));
+        rosSub = rosNode -> subscribe<pseudovelma::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
 
         //stwórz topic do nadawania wiadomości
-        this -> rosPub = this -> rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
+        rosPub = rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
 
 		std::cout << "Podłączono Pseudovelmę " << std::endl;
     }
@@ -111,18 +105,6 @@ public:
         frVel = msg -> fr;
         rlVel = msg -> rl;
         rrVel = msg -> rr;
-		std::cout << "Wiadomość: " << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg -> rr << std::endl;
-    }
-
-    ///Wątek odbioru wiadomości
-private:
-    void QueueThread()
-    {
-        static const double timeout = 0.01;
-        while (this -> rosNode -> ok())
-        {
-            this -> rosQueue.callAvailable(ros::WallDuration(timeout));
-        }
     }
 
 private:
@@ -158,12 +140,6 @@ private:
 
     ///Nadajnik pozycji
     ros::Publisher rosPub;
-
-    ///Kolejka wiadomości
-    ros::CallbackQueue rosQueue;
-
-    ///Wątek kolejki
-    std::thread rosQueueThread;
 
 };
 
