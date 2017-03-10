@@ -2,8 +2,10 @@ Do poruszenia:
 Info, że przesunięcie środka ciężkości nie zmieniło eksperymantów.
 Naprawić model widoku z góry (wyrenderować na nowo)
 Napisać o tum, że zakładamy bezoporowy obrót kół, a przy wymuszonym są niespodziewane błędy, jak w rzeczywistości.
+Napisać, że przód jest nieokreślony, dlatego został zbudowany tlanslator
 
 Do zrobienia:
 Masa transportowana i intefejs jej zmiany. (może być i tak za mało dokładne, żeby był sens)
+Translator kierunków
 Interfejs GUI.
 Powtórka w V-REPie.
