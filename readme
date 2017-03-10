@@ -17,6 +17,10 @@ Wszystko zostało przerobione na pakiety ROS. Stare wersje uruchamiane bezpośre
 Velmaverse - Świat do symulacji, który importuje roboty z paczek.
 Omnivelma - Platforma symulowana fizycznie.
 Pseudovelma - Platforma symulowana kinematycznie.
+Flooria - Podłoga ze zmiennym współczynnikiem tarcia.
+Ocznica - Obserwator liczący odległości od platform.
+Transmutator - Translator geometry_msgs/Twist na osobne prędkości kół.
+
 
 Uruchomienie w ROS:
 Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to katalog roboczy.
@@ -24,16 +28,16 @@ Przenieś tam zawartość katalogu ros/.
 $ ./init
 To zainicjuje katalog roboczy i skompiluje projekt.
 $ ./launch
-Uruchomi Gazebo z platformami.
+Uruchomi Gazebo z platformami, oraz Transmutator.
 
 Potem dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
 To ustawi odpowiednie zmienne systemowe, aby komendy wykrywały pakiety i typy.
 
 Sterowanie:
-Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który składa się z 4 floatów dla każdego koła.
-Dla platformy kinematycznej alternatywnie /pseudovelma/vels o typie pseudovelma/Vels.
+Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który składa się z 4 double dla każdego koła.
 Argumenty w kolejności: Przedni Prawy, Przedni Lewy, Tylny Lewy, Tylny Prawy.
+Można łatwo (acz niepełnie) sterować za pomocą wtyczki RQT podłączonej do transmutatora.
 
 Aby wysłać wiadomość, aby ustawić prędkość kół np.:
 $ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 1 -1 -1 1
@@ -58,7 +62,16 @@ Pseudovelma:
 Omnivelma:
 	/omnivelma/vels				wejście prędkości kół
 	/omnivelma/pose				wyjście pozycji
+	/omnivelma/encoders			dane enkoderów ze wszystkich kół
 	/omnivelma/set_friction		ustawienie wartości tarcia rolek
+	/omnivelma/set_inertia		ustawienie masy i tensoru dla wszystkich składowych modelu
 Ocznica:
 	/ocznica/relative			wyjście odległości i kąta między platformami
+Flooria:
+	/flooria/set_friction		ustaw współczynniki tarcia podłoża
+Transmutator:
+	/transmutator/twist			wejście do łatwego sterowania
+	/omnivelma/vels				prędkości kół wysyłane do Omnivelmy
+	/pseudovelma/vels			prędkości kłó wysyłane do Pseudovelmy
+
 	

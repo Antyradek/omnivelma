@@ -47,14 +47,14 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
-			std::cout << "ROS initializowany w Omnivelmie" << std::endl;
+            std::cout << "ROS initializowany w Omnivelmie" << std::endl;
         }
 
         //stwórz Node dla ROSa
         rosNode.reset(new ros::NodeHandle());
 
         //stwórz topic do odbierania prędkości
-		rosSub = rosNode -> subscribe<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
+        rosSub = rosNode -> subscribe<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
 
         //stwórz topic do nadawania pozycji
         rosPub = rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
@@ -63,11 +63,11 @@ public:
         rosEnc = rosNode -> advertise<omnivelma::Encoders>("/omnivelma/encoders", 1000);
 
         //stwórz serwer do odbierania tarcia
-		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosSrv = rosNode -> advertiseService(aso);
 
         //stwórz serwer do odbierania inercji
-		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+        ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosIne = rosNode -> advertiseService(asi);
 
         std::cout << "Podłączono Omnivelmę " << std::endl;
