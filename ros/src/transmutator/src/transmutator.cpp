@@ -4,21 +4,26 @@
 #include <geometry_msgs/Twist.h>
 
 ros::Publisher publisher;
+const double wheelRadius = 0.1;
+const double modelWidth = 0.76;
+const double modelLength = 0.72;
 
 void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
 {
+	const double velForw = msg -> linear.y;
+	const double velRight = msg -> linear.x;
+	const double rotLeft = msg -> angular.z;
+	
     omnivelma::Vels vels;
-	//TODO zmienić
-    vels.rr = -1;
-    vels.rl = 1;
-    vels.fr = -1;
-    vels.fl = 1;
+    vels.rr = (velForw + velRight + (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
+    vels.rl = (velForw - velRight - (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
+    vels.fr = (velForw - velRight + (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
+    vels.fl = (velForw + velRight - (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
     publisher.publish(vels);
 }
 
 int main(int argc, char **argv)
 {
-	std::cout << "Transmutator włączony" << std::endl;
     if (!ros::isInitialized())
     {
 		ros::init(argc, argv, "transmutator");
@@ -27,9 +32,7 @@ int main(int argc, char **argv)
 
     ros::NodeHandle handle;
     ros::Subscriber sub = handle.subscribe<geometry_msgs::Twist>("/transmutator/twist", 1, twistCallback);
-	std::cout << "Zarejestorwano odbiór" << std::endl;
     publisher = handle.advertise<omnivelma::Vels>("/omnivelma/vels", 1);
-	std::cout << "Zarejestorwano nadawanie" << std::endl;
 
     std::cout << "Transmutowanie do Omnivelmy... " << std::endl;
     ros::spin();

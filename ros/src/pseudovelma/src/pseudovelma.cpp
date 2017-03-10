@@ -105,7 +105,7 @@ public:
 
     ///Pobierz wiadomość od ROSa
 public:
-    void OnRosMsg(const pseudovelma::VelsConstPtr &msg)
+    void OnRosMsg(const pseudovelma::Vels::ConstPtr &msg)
     {
         flVel = msg -> fl;
         frVel = msg -> fr;

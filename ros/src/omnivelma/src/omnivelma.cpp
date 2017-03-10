@@ -190,7 +190,7 @@ private:
 
     ///Pobierz wiadomość od ROSa
 private:
-    void OnRosMsg(const omnivelma::VelsConstPtr& msg)
+    void OnRosMsg(const omnivelma::Vels::ConstPtr& msg)
     {
         std::cout << "Wiadomość: " << msg -> fl << " " << msg -> fr << " " << msg -> rl << " " << msg -> rr << std::endl;
         motorRR -> SetVelocity(0, msg -> rr);
