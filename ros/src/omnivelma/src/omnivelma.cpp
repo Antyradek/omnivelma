@@ -50,6 +50,7 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
+			std::cout << "ROS initializowany w Omnivelmie" << std::endl;
         }
 
         //stwórz Node dla ROSa

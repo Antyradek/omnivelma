@@ -1,0 +1,16 @@
+Transmutator - transmutacja geometry_msgs/Twist na omnivelma/Vels
+geometry_msgs/Twist jest generowane przez moduł RQT, oraz pr2_teleop, można używać różnorodnych urządzeń sterujących.
+
+Komunikacja programu w formie:
+nazwa
+typ
+opis
+
+???
+omnivelma/Vels
+Zwraca prędkości kół do podanego rostopic.
+
+/transmutator/twist
+geometry_msgs/Twist
+Przyjmuje wiadomości twist z dowolnego innego modułu.
+

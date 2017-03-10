@@ -1,6 +1,18 @@
 #!/bin/bash
 # Uruchom Gazebo wraz z modelami
 
-source ./setup
+source setup
 export GAZEBO_MODEL_PATH=GAZEBO_MODEL_PATH:$(pwd)/src
-roslaunch velmaverse velmaverse.launch
+roscore &
+export PIDROS=$!
+sleep 2
+roslaunch velmaverse velmaverse.launch &
+export PIDOV=$!
+rosrun transmutator transmutator &
+export PIDTR=$!
+
+# Na ^C wyłącz oba procesy
+trap "kill $PIDTR; kill $PIDOV; kill $PIDROS" SIGINT 
+
+echo "^C, aby wyłączyć procesy"
+sleep infinity
