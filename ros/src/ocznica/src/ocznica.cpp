@@ -33,7 +33,7 @@ public:
         }
 
         //stwórz Node dla ROSa
-        rosNode.reset(new ros::NodeHandle("ocznica"));
+        rosNode.reset(new ros::NodeHandle());
 
         //stwórz topic do nadawania wiadomości
         rosPub = rosNode -> advertise<ocznica::Relative>("/ocznica/relative", 1000);

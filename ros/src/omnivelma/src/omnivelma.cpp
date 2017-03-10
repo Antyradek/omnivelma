@@ -51,7 +51,7 @@ public:
         }
 
         //stwórz Node dla ROSa
-        rosNode.reset(new ros::NodeHandle(CLIENT_NAME));
+        rosNode.reset(new ros::NodeHandle());
 
         //stwórz topic do odbierania prędkości
 		rosSub = rosNode -> subscribe<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));

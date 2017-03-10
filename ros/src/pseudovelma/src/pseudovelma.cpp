@@ -6,7 +6,7 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/math/gzmath.hh>
 #include <ros/ros.h>
-#include <pseudovelma/Vels.h>
+#include <omnivelma/Vels.h>
 #include <geometry_msgs/Pose.h>
 
 #define MODEL_NAME std::string("pseudovelma")
@@ -50,10 +50,10 @@ public:
         }
 
         //stwórz Node dla ROSa
-        rosNode.reset(new ros::NodeHandle("pseudovelma"));
+        rosNode.reset(new ros::NodeHandle());
 
         //Stwórz topic do odbierania wiadomości
-        rosSub = rosNode -> subscribe<pseudovelma::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
+        rosSub = rosNode -> subscribe<omnivelma::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
 
         //stwórz topic do nadawania wiadomości
         rosPub = rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
@@ -99,7 +99,7 @@ public:
 
     ///Pobierz wiadomość od ROSa
 public:
-    void OnRosMsg(const pseudovelma::Vels::ConstPtr &msg)
+    void OnRosMsg(const omnivelma::Vels::ConstPtr &msg)
     {
         flVel = msg -> fl;
         frVel = msg -> fr;
