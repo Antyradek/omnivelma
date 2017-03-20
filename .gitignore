@@ -1,6 +1,8 @@
-docs/*.aux
-docs/*.log
-docs/*.out
-docs/*.toc
-docs/*.backup
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+*.backup
 build
