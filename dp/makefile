@@ -1,4 +1,3 @@
-CHAPTERS_DIR=chapters
 
-main.pdf: main.tex $(CHAPTERS_DIR)/*.tex
+main.pdf: main.tex
 	pdflatex -halt-on-error main.tex
