@@ -31,6 +31,7 @@
 		\begin{description}
 			\item[Autor] Radosław Świątkiewicz
 			\item[Promotor] dr hab. inż. Wojciech Szynkiewicz \\ Zespół Programowania Robotów i Systemów Rozpoznających \\ Instytut Automatyki i Informatyki Stosowanej
+			\item[Projekt] \url{https://github.com/Antyradek/omnivelma}
 		\end{description}
 	\end{frame}
 	
@@ -39,9 +40,11 @@
 		\frametitle{Co kryje się w P109}
 		\begin{columns}[c]
 			\column{0.5\textwidth}
+			\centering
 			\includegraphics[width=0.8\textwidth]{graphics/velma.png} \\
 			Robot manipulacyjny Velma
 			\column{0.5\textwidth}
+			\centering
 			\includegraphics[width=\textwidth]{graphics/omnivelma.png} \\
 			Platforma na kołach Mecanum
 		\end{columns}
@@ -66,10 +69,62 @@
 	\section{Platforma}
 	\begin{frame}
 		\frametitle{Koła Szwedzkie (Mecanum)}
+		\centering
 		\includegraphics[width=\textwidth]{graphics/wheel.pdf}
 	\end{frame}
 	\begin{frame}
+		\frametitle{Na co pozwalają}
+		\begin{block}{Wynalezione w 1973}
+			Przez szwedzkiego inżyniera Beng Ilona zatrudnionego w firmie Mecanum.\footnotemark
+		\end{block}
+		\begin{itemize}
+			\item Rolka obrócona względem osi o 45\textdegree.
+			\item Każde koło ma 12 pasywnych rolek.
+			\item Koła posiadają po 3 stopnie swobody.
+			\item Punkt kontaktu powinien płynnie przechodzić z rolki na rolkę.
+		\end{itemize}
+	\footnotetext{Wikipedia}
+	\end{frame}
+	\begin{frame}
+		\frametitle{Podobne koła}
+		\begin{columns}[c]
+			\column{0.5\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{graphics/omni.png} \\
+			Koło wielokierunkowe.\footnotemark[2]
+			\column{0.5\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{graphics/heavy.png} \\
+			Bardziej wytrzymałe koło.\footnotemark[3]
+		\end{columns}
+	\footnotetext[2]{http://www.robotshop.com}
+	\footnotetext[3]{“Mechanical development of an automated guided vehicle”, Master of Science Thesis MMK 2016:153 MKN 171}
+	\end{frame}
+	\begin{frame}
+		\frametitle{Podobne mechanizmy}
+		\begin{columns}[c]
+			\column{0.5\textwidth}
+			\centering
+			\includegraphics[width=0.8\textwidth]{graphics/youbot.png} \\
+			Fragment robota Kuka Youbot.
+			\column{0.5\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{graphics/agv.png} \\
+			Inny robot AGV\footnotemark
+		\end{columns}
+		\footnotetext{International Journal Of Precision Engineering And Manufacturing Vol. 13, No. 3, pp. 379-386, DOI: 10.1007/s12541-012-0048-9}
+	\end{frame}
+	\begin{frame}
+		\frametitle{Model CAD}
+		\centering
+		\includegraphics[width=0.4\textwidth]{graphics/base_top.pdf} \\
+		Podstawa jezdna posiada przegub w przedniej części.
+	\end{frame}
+
+
+	\begin{frame}
 		\frametitle{Kierunki ruchu}
+		\centering
 		\includegraphics[width=\textwidth]{graphics/dirs.pdf}
 	\end{frame}
 	\begin{frame}
@@ -115,6 +170,7 @@
 		\frametitle{Robot Operating System}
 		\begin{columns}[c]
 			\column{0.3\textwidth}
+			\centering
 			\includegraphics[width=\textwidth]{graphics/ros_logo.png} \\
 			Logo ROS\footnotemark
 			\column{0.7\textwidth}
@@ -132,6 +188,7 @@
 		\frametitle{Gazebo}
 		\begin{columns}[c]
 			\column{0.3\textwidth}
+			\centering
 			\includegraphics[width=\textwidth]{graphics/gazebo_logo.png} \\
 			Logo Gazebo\footnotemark
 			\column{0.7\textwidth}
@@ -164,6 +221,7 @@
 		\frametitle{Stworzenie modelu}
 		\begin{columns}[c]
 			\column{0.4\textwidth}
+			\centering
 			\includegraphics[width=\textwidth]{graphics/model.png} \\
 			Dynamiczny model platformy.
 			\column{0.6\textwidth}
@@ -201,9 +259,11 @@
 		\frametitle{Modyfikacja wektorów tarcia}
 		\begin{columns}[c]
 			\column{0.5\textwidth}
+			\centering
 			\includegraphics[width=0.8\textwidth]{graphics/friction.pdf} \\
 			Wektory tarcia w symulatorach fizyki.\footnotemark
 			\column{0.5\textwidth}
+			\centering
 			\includegraphics[width=0.8\textwidth]{graphics/base_vects.pdf} \\
 			Ustawienie wektorów tarcia w modelu. Ruch w kierunku F1 jest ograniczony, w F2 nieograniczony.
 		\end{columns}
@@ -211,8 +271,31 @@
 	\end{frame}
 	
 	\section{Komunikacja}
-	% Wykres komunikacji
-	
+	\begin{frame}
+		\frametitle{Wszystkie składowe}
+		\begin{description}
+			\item[Omnivelma] Model dynamiczny reagujący na siły.
+			\item[Pseudovelma] Model kinematyczny, sterowany wzorem.
+			\item[Velmaverse] Skrypt uruchamiający Gazebo z definicją symulacji.
+			\item[Transmutator] Program tłumaczący zadany ruch na prędkości kół.
+			\item[Ocznica] Skrypt obserwujący scenę i produkujący informacje.
+			\item[Flooria] Podłoże ze zmiennym współczynnikiem tarcia.
+		\end{description}
+	\end{frame}
+	\begin{frame}
+		\frametitle{Komunikacja wewnętrzna i zewnętrzna}
+		\centering
+		\includegraphics[width=\textwidth]{graphics/comm.pdf}
+	\end{frame}
+ 
 	\section{Przyszłość}
-	% Co jesszcze do zrobienia (testowanie na robocie, powtórka w V-Repie)
+	\begin{frame}
+		\frametitle{Ku przyszłości}
+		\begin{itemize}
+			\item Moduł do łatwego sterowania z klawiatury, lub kontrolera.
+			\item Ustawienie odpowiednich współczynników modelu w celu uzyskania zadowalającej jakości symulacji.
+			\item Testowanie tego samego sterowania, co w symulacji na rzeczywistym robocie i zebranie wyników.
+			\item Implementacja modelu w V-REPie. 
+		\end{itemize}
+	\end{frame}
 \end{document}
