@@ -26,8 +26,8 @@ include_directories(${std_msgs_INCLUDE_DIRS})
 include_directories(${geometry_msgs_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 
-set(CMAKE_CXX_FLAGS "-Wall")
+set(CMAKE_CXX_FLAGS "-Wall --std=c++14")
 add_executable(${PROJECT_NAME} src/transmutator.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS} omnivelma)
