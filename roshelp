@@ -22,3 +22,6 @@ rosservice type <service> | rossrv show
 rosservice call <service> <arguments...>
 
 rosparam list
+
+Podobny robot:
+PR2
