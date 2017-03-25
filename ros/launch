@@ -5,11 +5,11 @@ source setup
 export GAZEBO_MODEL_PATH=GAZEBO_MODEL_PATH:$(pwd)/src
 roslaunch velmaverse velmaverse.launch &
 export PIDOV=$!
-rosrun transmutator transmutator &
+rosrun transmutator transmutator $1 &
 export PIDTR=$!
 
 # Na ^C wyłącz oba procesy
 trap "kill $PIDTR; kill $PIDOV;" SIGINT 
 
-echo "^C, aby wyłączyć procesy"
+echo "Wciśnij ^C, aby wyłączyć procesy"
 sleep infinity

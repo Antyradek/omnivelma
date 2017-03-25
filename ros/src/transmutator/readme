@@ -1,5 +1,12 @@
-Transmutator - transmutacja geometry_msgs/Twist na omnivelma/Vels
+Transmutator - transmutacja (z obrotem) geometry_msgs/Twist na omnivelma/Vels
 geometry_msgs/Twist jest generowane przez moduł RQT, oraz pr2_teleop, można używać różnorodnych urządzeń sterujących.
+
+Przyjmuje opcjonalnie jeden z argumentów:
+-90 -180 -270
+To oznacza, ile stopni w lewo obrócić wejście typu geometry_msgs/Twist (minus nie jest minusem, tylko rozpoczęciem argumentu).
+Przydatne, jeśli program do sterowania robota ma inaczej zdefiniowany przód, niż Omnivelma.
+Na przykład sterowanie RobotSteering z RQT, albo rp2_teleop zakłada, że przód jest w kierunku X+, a Omnivelma ma przód w kierunku Y+.
+Należy uruchomić więc Transmutator z argumentem -90, żeby łatwo z nich sterować Omnivelmą.
 
 Komunikacja programu w formie:
 nazwa
@@ -8,9 +15,9 @@ opis
 
 omnivelma/vels i pseudovelma/vels
 omnivelma/Vels
-Zwraca prędkości kół do podanego rostopic.
+Zwraca prędkości kół do powyższych rostopic.
 
 /transmutator/twist
 geometry_msgs/Twist
-Przyjmuje wiadomości twist z dowolnego innego modułu.
+Przyjmuje wiadomości twist z dowolnego innego modułu i opcjonalnie obraca przed zamianą.
 

@@ -27,8 +27,9 @@ Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to 
 Przenieś tam zawartość katalogu ros/.
 $ ./init
 To zainicjuje katalog roboczy i skompiluje projekt.
-$ ./launch
-Uruchomi Gazebo z platformami, oraz Transmutator.
+$ ./launch <obrót>
+Uruchomi Gazebo z platformami, oraz Transmutator. Opcjonalny argument -90, -180, -270 mówi o ile stopni obrócić wejście Twist w lewo.
+Przydatne, jeśli przód programu sterującego nie jest w kierunku Y+, jak w Omnivelmie.
 
 Potem dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
@@ -37,7 +38,7 @@ To ustawi odpowiednie zmienne systemowe, aby komendy wykrywały pakiety i typy.
 Sterowanie:
 Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który składa się z 4 double dla każdego koła.
 Argumenty w kolejności: Przedni Prawy, Przedni Lewy, Tylny Lewy, Tylny Prawy.
-Można łatwo (acz niepełnie) sterować za pomocą wtyczki RQT podłączonej do transmutatora.
+Można łatwo (acz niepełnie) sterować za pomocą wtyczki RQT podłączonej do transmutatora z obrotem 90° w lewo (argument -90).
 
 Aby wysłać wiadomość, aby ustawić prędkość kół np.:
 $ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 1 -1 -1 1
@@ -72,6 +73,6 @@ Flooria:
 Transmutator:
 	/transmutator/twist			wejście do łatwego sterowania
 	/omnivelma/vels				prędkości kół wysyłane do Omnivelmy
-	/pseudovelma/vels			prędkości kłó wysyłane do Pseudovelmy
+	/pseudovelma/vels			prędkości kół wysyłane do Pseudovelmy
 
 	
