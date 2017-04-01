@@ -1,6 +1,7 @@
 #include <functional>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
@@ -187,10 +188,14 @@ private:
 private:
     void OnRosMsg(const omnivelma::Vels::ConstPtr& msg)
     {
-        motorRR -> SetVelocity(0, msg -> rr);
-        motorRL -> SetVelocity(0, msg -> rl);
-        motorFR -> SetVelocity(0, msg -> fr);
-        motorFL -> SetVelocity(0, msg -> fl);
+		if(!std::isnan(msg -> rr))
+			motorRR -> SetVelocity(0, msg -> rr);
+		if(!std::isnan(msg -> rl))
+			motorRL -> SetVelocity(0, msg -> rl);
+		if(!std::isnan(msg -> fr))
+			motorFR -> SetVelocity(0, msg -> fr);
+		if(!std::isnan(msg -> fl))
+			motorFL -> SetVelocity(0, msg -> fl);
     }
 
 private:

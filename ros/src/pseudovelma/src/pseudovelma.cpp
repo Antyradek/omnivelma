@@ -1,6 +1,7 @@
 #include <functional>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
@@ -101,10 +102,14 @@ public:
 public:
     void OnRosMsg(const omnivelma::Vels::ConstPtr &msg)
     {
-        flVel = msg -> fl;
-        frVel = msg -> fr;
-        rlVel = msg -> rl;
-        rrVel = msg -> rr;
+		if(!std::isnan(msg -> fl))
+			flVel = msg -> fl;
+		if(!std::isnan(msg -> fr))
+			frVel = msg -> fr;
+		if(!std::isnan(msg -> rl))
+			rlVel = msg -> rl;
+		if(!std::isnan(msg -> rr))
+			rrVel = msg -> rr;
     }
 
 private:

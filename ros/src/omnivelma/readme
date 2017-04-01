@@ -12,6 +12,7 @@ przednie prawe
 przednie lewe
 tylne lewe
 tylne prawe
+Wysłanie NaN nie modyfikuje poprzedniej prędkości.
 
 /omnivelma/encoders
 omnivelma/Encoders

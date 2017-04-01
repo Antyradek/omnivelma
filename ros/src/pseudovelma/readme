@@ -12,6 +12,7 @@ przednie prawe
 przednie lewe
 tylne lewe
 tylne prawe
+Wysłanie NaN zachowuje poprzednią prędkość koła.
 
 /pseudovelma/pose
 geometry_msgs/Pose
