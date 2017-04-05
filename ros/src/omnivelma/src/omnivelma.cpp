@@ -6,11 +6,11 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <ros/ros.h>
-#include <omnivelma/Vels.h>
-#include <omnivelma/SetFriction.h>
-#include <omnivelma/Encoders.h>
+#include <omnivelma_msgs/Vels.h>
+#include <omnivelma_msgs/SetFriction.h>
+#include <omnivelma_msgs/Encoders.h>
 #include <geometry_msgs/Pose.h>
-#include <omnivelma/SetInertia.h>
+#include <omnivelma_msgs/SetInertia.h>
 
 #define MODEL_NAME std::string("omnivelma")
 ///Długość jest równa sqrt(2)/2 aby tworzyć kąt 45°
@@ -55,20 +55,20 @@ public:
         rosNode.reset(new ros::NodeHandle());
 
         //stwórz topic do odbierania prędkości
-        rosSub = rosNode -> subscribe<omnivelma::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
+        rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
 
         //stwórz topic do nadawania pozycji
         rosPub = rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
 
         //stwórz topic do nadawania enkoderów
-        rosEnc = rosNode -> advertise<omnivelma::Encoders>("/omnivelma/encoders", 1000);
+        rosEnc = rosNode -> advertise<omnivelma_msgs::Encoders>("/omnivelma/encoders", 1000);
 
         //stwórz serwer do odbierania tarcia
-        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+        ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosSrv = rosNode -> advertiseService(aso);
 
         //stwórz serwer do odbierania inercji
-        ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+        ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosIne = rosNode -> advertiseService(asi);
 
         std::cout << "Podłączono Omnivelmę " << std::endl;
@@ -98,7 +98,7 @@ public:
         rosPub.publish(msg);
 
         //wyślij enkodery
-        omnivelma::Encoders encMsg;
+        omnivelma_msgs::Encoders encMsg;
         encMsg.vel_rr = motorRR -> GetVelocity(0);
         encMsg.angle_rr = motorRR -> GetAngle(0).Radian();
         encMsg.vel_rl = motorRL -> GetVelocity(0);
@@ -111,7 +111,7 @@ public:
     }
 private:
     ///Ustaw tarcia dla kół
-    bool SetFriction(const omnivelma::SetFriction::Request& req, omnivelma::SetFriction::Response& res)
+    bool SetFriction(const omnivelma_msgs::SetFriction::Request& req, omnivelma_msgs::SetFriction::Response& res)
     {
         pyramidRR -> SetMuPrimary(req.mu1);
         pyramidRR -> SetMuSecondary(req.mu2);
@@ -125,7 +125,7 @@ private:
         return true;
     }
     ///Ustaw masy, środki mas i tensor inercji.
-    bool SetInertia(const omnivelma::SetInertia::Request& req, omnivelma::SetInertia::Response& res)
+    bool SetInertia(const omnivelma_msgs::SetInertia::Request& req, omnivelma_msgs::SetInertia::Response& res)
     {
         physics::LinkPtr basePtr = model -> GetLink(linkPrefix + "base");
         physics::LinkPtr frontPtr = model -> GetLink(linkPrefix + "front");
@@ -145,11 +145,9 @@ private:
         baseIne -> SetInertiaMatrix(req.base.ixx, req.base.iyy, req.base.izz, req.base.ixy, req.base.ixz, req.base.iyz);
         baseIne -> SetCoG(req.base.com.x, req.base.com.y, req.base.com.z);
 
-
         frontIne -> SetMass(req.front.m);
         frontIne -> SetInertiaMatrix(req.front.ixx, req.front.iyy, req.front.izz, req.front.ixy, req.front.ixz, req.front.iyz);
         frontIne -> SetCoG(req.front.com.x, req.front.com.y, req.front.com.z);
-
 
         wheelRRIne -> SetMass(req.wheel.m);
         wheelRRIne -> SetInertiaMatrix(req.wheel.ixx, req.wheel.iyy, req.wheel.izz, req.wheel.ixy, req.wheel.ixz, req.wheel.iyz);
@@ -186,7 +184,7 @@ private:
 
     ///Pobierz wiadomość od ROSa
 private:
-    void OnRosMsg(const omnivelma::Vels::ConstPtr& msg)
+    void OnRosMsg(const omnivelma_msgs::Vels::ConstPtr& msg)
     {
 		if(!std::isnan(msg -> rr))
 			motorRR -> SetVelocity(0, msg -> rr);

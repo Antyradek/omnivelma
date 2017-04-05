@@ -14,7 +14,7 @@ typ
 opis
 
 omnivelma/vels i pseudovelma/vels
-omnivelma/Vels
+omnivelma_msgs/Vels
 Zwraca prędkości kół do powyższych rostopic.
 
 /transmutator/twist

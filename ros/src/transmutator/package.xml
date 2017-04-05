@@ -9,8 +9,7 @@
 	
 	<buildtool_depend>catkin</buildtool_depend>
 	
-	<depend>std_msgs</depend>
     <depend>roscpp</depend>
 	<depend>geometry_msgs</depend>
-	<depend>omnivelma</depend>
+	<depend>omnivelma_msgs</depend>
 </package>

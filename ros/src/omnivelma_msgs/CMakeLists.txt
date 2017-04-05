@@ -11,6 +11,7 @@ add_message_files(
 	FILES
 	Vels.msg
 	Encoders.msg
+	Relative.msg
 )
 
 add_service_files(

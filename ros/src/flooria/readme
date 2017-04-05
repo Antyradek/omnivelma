@@ -6,5 +6,5 @@ typ
 opis
 
 /flooria/set_friction
-std_msgs/Float64
+omnivelma_msgs/SetFriction
 Przyjmuje nowy współczynnik tarcia.

@@ -6,7 +6,7 @@ typ
 opis
 
 /pseudovelma/vels
-pseudovelma/Vels
+omnivelma_msgs/Vels
 Przyjmuje prędkości kół w kolejności:
 przednie prawe
 przednie lewe

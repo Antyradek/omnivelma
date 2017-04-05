@@ -10,6 +10,10 @@
 	<buildtool_depend>catkin</buildtool_depend>
 	
 	<depend>gazebo_ros</depend>
+	<depend>omnivelma</depend>
+	<depend>pseudovelma</depend>
+	<depend>ocznica</depend>
+	<depend>flooria</depend>
 	
 	<export>
 		<gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" />

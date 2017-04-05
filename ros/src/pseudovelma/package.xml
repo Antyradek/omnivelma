@@ -10,13 +10,9 @@
 	<buildtool_depend>catkin</buildtool_depend>
 	
 	<depend>gazebo_ros</depend>
-	<depend>std_msgs</depend>
+	<depend>geometry_msgs</depend>
     <depend>roscpp</depend>
-	<depend>omnivelma</depend>
-	
-	<build_depend>message_generation</build_depend>
-	
-	<exec_depend>message_runtime</exec_depend>
+	<depend>omnivelma_msgs</depend>
 	
 	<export>
 		<gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}" />

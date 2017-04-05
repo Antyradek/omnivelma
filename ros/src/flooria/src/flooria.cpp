@@ -5,7 +5,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <ros/ros.h>
-#include <flooria/SetFriction.h>
+#include <omnivelma_msgs/SetFriction.h>
 
 #define MODEL_NAME std::string("flooria")
 #define CLIENT_NAME "gazebo_ros"
@@ -38,14 +38,14 @@ public:
         rosNode.reset(new ros::NodeHandle());
 
         //stwórz serwer do ustawiania tarcia
-		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<flooria::SetFriction>("/flooria/set_friction", std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>("/flooria/set_friction", std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosSrv = rosNode -> advertiseService(aso);
 
         std::cout << "Podłączono Floorię " << std::endl;
     }
 
 private:
-    bool SetFriction(flooria::SetFriction::Request& req, flooria::SetFriction::Response& res)
+    bool SetFriction(omnivelma_msgs::SetFriction::Request& req, omnivelma_msgs::SetFriction::Response& res)
     {
         pyramid -> SetMuPrimary(req.mu1);
         pyramid -> SetMuSecondary(req.mu2);

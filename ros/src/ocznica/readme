@@ -6,5 +6,5 @@ typ
 opis
 
 /ocznica/relative
-ocznica/Relative
+omnivelma_msgs/Relative
 Zwraca odległości od robotów i kąt

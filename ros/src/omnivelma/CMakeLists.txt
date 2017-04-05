@@ -4,51 +4,29 @@ project(omnivelma)
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   roscpp
-  std_msgs
   geometry_msgs
-  message_generation
+  omnivelma_msgs
 )
-
-add_message_files(
-	FILES
-	Vels.msg
-	Encoders.msg
-)
-
-add_service_files(
-	FILES
-	SetFriction.srv
-	SetInertia.srv
-)
-
-generate_messages(
-	DEPENDENCIES
-	std_msgs
-	geometry_msgs
-)
-
 
 catkin_package(
 	CATKIN_DEPENDS 
-	message_runtime
-	std_msgs
 	geometry_msgs
 	gazebo_ros
 	roscpp 
+	omnivelma_msgs
 )
 
 find_package(gazebo REQUIRED)
 find_package(roscpp REQUIRED)
-find_package(std_msgs REQUIRED)
-include_directories(${roscpp_INCLUDE_DIRS})
-include_directories(${std_msgs_INCLUDE_DIRS})
+find_package(omnivelma_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
-set(CMAKE_CXX_FLAGS   "-Wall")
+set(CMAKE_CXX_FLAGS   "-Wall --std=c++14")
 link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 add_library(${PROJECT_NAME} src/omnivelma.cpp)
-add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${roscpp_LIBRARIES})
 

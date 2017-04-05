@@ -20,7 +20,7 @@ Pseudovelma - Platforma symulowana kinematycznie.
 Flooria - Podłoga ze zmiennym współczynnikiem tarcia.
 Ocznica - Obserwator liczący odległości od platform.
 Transmutator - Translator geometry_msgs/Twist na osobne prędkości kół.
-
+omnivelma_msgs - Wiadomości i wywołania dla pozostałych modułów.
 
 Uruchomienie w ROS:
 Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to katalog roboczy.
@@ -36,12 +36,12 @@ $ source setup
 To ustawi odpowiednie zmienne systemowe, aby komendy wykrywały pakiety i typy.
 
 Sterowanie:
-Program wystawi interfejs /omnivelma/vels o typie omnivelma/Vels, który składa się z 4 double dla każdego koła.
+Program wystawi interfejs /omnivelma/vels o typie omnivelma_msgs/Vels, który składa się z 4 double dla każdego koła.
 Argumenty w kolejności: Przedni Prawy, Przedni Lewy, Tylny Lewy, Tylny Prawy.
 Można łatwo (acz niepełnie) sterować za pomocą wtyczki RQT podłączonej do transmutatora z obrotem 90° w lewo (argument -90).
 
 Aby wysłać wiadomość, aby ustawić prędkość kół np.:
-$ rostopic pub -1 /omnivelma/vels omnivelma/Vels -- 1 -1 -1 1
+$ rostopic pub -1 /omnivelma/vels omnivelma_msgs/Vels -- 1 -1 -1 1
 (program, komenda, ilość wiadomości, topic, typ, oddzielacz argumentów, wartości struktry)
 
 Program helper pomaga wysyłać wiadomości powyższą komendą:

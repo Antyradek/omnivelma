@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <ros/ros.h>
-#include <omnivelma/Vels.h>
+#include <omnivelma_msgs/Vels.h>
 #include <geometry_msgs/Twist.h>
 
 /// Nadajnik do Omnivelmy
@@ -50,7 +50,7 @@ void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
         break;
     }
 
-    omnivelma::Vels vels;
+    omnivelma_msgs::Vels vels;
     vels.rr = (velForw + velRight + (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
     vels.rl = (velForw - velRight - (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
     vels.fr = (velForw - velRight + (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
@@ -92,8 +92,8 @@ int main(int argc, char **argv)
 
     ros::NodeHandle handle;
     ros::Subscriber sub = handle.subscribe<geometry_msgs::Twist>("/transmutator/twist", 1, twistCallback);
-    omniPublisher = handle.advertise<omnivelma::Vels>("/omnivelma/vels", 1);
-    pseudoPublisher = handle.advertise<omnivelma::Vels>("/pseudovelma/vels", 1);
+    omniPublisher = handle.advertise<omnivelma_msgs::Vels>("/omnivelma/vels", 1);
+    pseudoPublisher = handle.advertise<omnivelma_msgs::Vels>("/pseudovelma/vels", 1);
 
     std::cout << "Transmutowanie do Omnivelmy... " << std::endl;
     ros::spin();

@@ -6,7 +6,7 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/math/gzmath.hh>
 #include <ros/ros.h>
-#include <ocznica/Relative.h>
+#include <omnivelma_msgs/Relative.h>
 #include <cmath>
 
 namespace gazebo
@@ -36,7 +36,7 @@ public:
         rosNode.reset(new ros::NodeHandle());
 
         //stwórz topic do nadawania wiadomości
-        rosPub = rosNode -> advertise<ocznica::Relative>("/ocznica/relative", 1000);
+        rosPub = rosNode -> advertise<omnivelma_msgs::Relative>("/ocznica/relative", 1000);
 
         //znajdź modele
         omnivelma = world -> GetModel("omnivelma");
@@ -55,7 +55,7 @@ public:
         //to działa jedynie dla małych kątów!
         double angle = sqrt(pow(omniPose.rot.x - pseudoPose.rot.x,2) + pow(omniPose.rot.y - pseudoPose.rot.y,2) + pow(omniPose.rot.z - pseudoPose.rot.z,2) + pow(omniPose.rot.w - pseudoPose.rot.w,2));
 
-        ocznica::Relative msg;
+        omnivelma_msgs::Relative msg;
         msg.distance = dist;
         msg.angle = angle;
         rosPub.publish(msg);
