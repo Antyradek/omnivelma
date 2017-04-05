@@ -1,0 +1,16 @@
+<package format="2">
+	<name>omnivelma_msgs</name>
+	<version>1.0.0</version>
+	<description>Model postawy jezdnej dla robota Velma</description>
+	
+	<maintainer email="antyradek@protonmail.com">Antyradek</maintainer>
+	
+	<license>GPLv3</license>
+	
+	<buildtool_depend>catkin</buildtool_depend>
+	
+	<depend>std_msgs</depend>
+	<depend>geometry_msgs</depend>
+		
+	<build_depend>message_generation</build_depend>
+</package>

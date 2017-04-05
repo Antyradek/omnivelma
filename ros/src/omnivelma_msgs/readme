@@ -1,0 +1,24 @@
+omnivelma_msgs - Wiadomości używane w różnych miejscach
+
+omnivelma_msgs/Vels
+Przyjmuje prędkości kół w kolejności:
+przednie prawe
+przednie lewe
+tylne lewe
+tylne prawe
+Wysłanie NaN nie modyfikuje poprzedniej prędkości.
+
+omnivelma_msgs/Encoders
+Kąt i prędkość dla każdego koła.
+
+omnivelma_msgs/SetFriction
+Ustawia wektory tarć.
+mu1 to wektor równoległy do osi rolki, domyślnie 1, rolka nie może się obracać na tej osi.
+mu2 to wektor prostopadły do osi rolki, domyślnie 0, rolka obraca się na tej osi.
+
+omnivelma_msgs/SetInertia
+Ustawia masę, środek ciężkości i moment bezwładności dla części składowych modelu.
+Każda składowa ma lokalny środek ciężkości w przybliżonym punkcie ciężkości.
+
+
+
