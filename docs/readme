@@ -6,6 +6,7 @@ Napisać, że przód jest nieokreślony, dlatego został zbudowany tlanslator
 
 Do zrobienia:
 Masa transportowana i intefejs jej zmiany. (może być i tak za mało dokładne, żeby był sens)
-Translator kierunków
+Przerobić komendy transfomorphera na -r 90 zamiast -90
+Przerobić package.xml na drugi format
 Interfejs GUI.
 Powtórka w V-REPie.
