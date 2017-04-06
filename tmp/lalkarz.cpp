@@ -1,14 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <thread>
-#include <atomic>
-#include <chrono>
-#include <cstring>
-#include <iostream>
-#include <exception>
 #include "lalkarz.hpp"
-#include "font.hpp"
 
 ///Czas między kolejnymi wysłaniami wiadomości ROS
 double sendWaitTime;
@@ -36,9 +26,39 @@ std::wstring modeNames[MODE_COUNT];
 bool sendsTwist;
 ///Wysyła wiadomości Vels
 bool sendsVels;
+///Pokazuje interfejs joysticka
+bool showsJoystick;
+///Tryb binarnego wejścia
+bool binaryInput;
+///Tryb sterowania kołami z klawiatury
+bool keyWheelInput;
 
 ///Font tekstu
 sf::Font font;
+
+///Dane stanu
+typedef struct
+{
+	int wheel1step;
+	int wheel2step;
+	int wheel3step;
+	int wheel4step;
+	double wheel1;
+	double wheel2;
+	double wheel3;
+	double wheel4;
+	int xStep;
+	int yStep;
+	int zStep;
+	double x;
+	double y;
+	double z;
+} StateData;
+
+StateData stateData;
+StateData dirtyData;
+///Sesja krytyczna między ustawianiem wartości, a wysyłaniem
+std::mutex stateMutex;
 
 ///Pętla drugiego wątku do wysyłania wiadomości ROSa
 void sendLoop()
@@ -55,6 +75,13 @@ void sendLoop()
 ///Narysuj GUI
 void drawGUI()
 {
+	//pomocnicze
+	sf::Text helperText("", font);
+	helperText.setCharacterSize(screenSize * CHAR_SIZE);
+	helperText.setFillColor(sf::Color(100,100,100,255));
+	helperText.setOutlineColor(sf::Color::White);
+	helperText.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
+	
 	//platforma
 	sf::RectangleShape wheel(sf::Vector2f(screenSize * WHEEL_WIDTH, screenSize * WHEEL_HEIGHT));
 	wheel.setFillColor(modeColor[mode] * sf::Color(100, 100, 100, 255));
@@ -81,7 +108,7 @@ void drawGUI()
 	window.draw(body);
 	
 	sf::Text defaultText("", font);
-	defaultText.setCharacterSize(screenSize * FONT_SIZE);
+	defaultText.setCharacterSize(screenSize * CHAR_SIZE);
 	
 	//lista trybów
 	for(int i = 0; i < MODE_COUNT; i++)
@@ -104,12 +131,52 @@ void drawGUI()
 		window.draw(modeDigit);
 	}
 	
-	//tryb
+	//wskazówka do sterowania
+	sf::Text modeHelpText(helperText);
+	modeHelpText.setString(KEY_TEXT_NEXT_MODE);
+	if(showsJoystick)
+	{
+		modeHelpText.setString(JS_BUTTON_TEXT_NEXT_MODE);
+	}
+	modeHelpText.setPosition(screenSize - modeHelpText.getGlobalBounds().width, 0);
+	window.draw(modeHelpText);
+	
+	//opis trybu
 	sf::Text modeText(defaultText);
 	modeText.setString(modeNames[mode]);
 	modeText.setFillColor(modeColor[mode]);
 	modeText.setPosition(0, screenSize * FONT_SIZE);
 	window.draw(modeText);
+	
+	//Wskazówki do sterowania kołami
+	if(keyWheelInput)
+	{
+		sf::Text wheelHelper(helperText);
+		wheelHelper.setString(KEY_TEXT_WHEEL_2_UP);
+		wheelHelper.setPosition(screenSize * 0.25, screenSize * (0.25 - FONT_SIZE));
+		window.draw(wheelHelper);
+		wheelHelper.setString(KEY_TEXT_WHEEL_2_DOWN);
+		wheelHelper.setPosition(screenSize * 0.25, screenSize * (0.25 + WHEEL_HEIGHT));
+		window.draw(wheelHelper);
+		wheelHelper.setString(KEY_TEXT_WHEEL_1_UP);
+		wheelHelper.setPosition(screenSize * 0.75 - wheelHelper.getGlobalBounds().width, screenSize * (0.25 - FONT_SIZE));
+		window.draw(wheelHelper);
+		wheelHelper.setString(KEY_TEXT_WHEEL_1_DOWN);
+		wheelHelper.setPosition(screenSize * 0.75 - wheelHelper.getGlobalBounds().width, screenSize * (0.25 + WHEEL_HEIGHT));
+		window.draw(wheelHelper);
+		wheelHelper.setString(KEY_TEXT_WHEEL_3_UP);
+		wheelHelper.setPosition(screenSize * 0.25, screenSize * (0.75 - WHEEL_HEIGHT - FONT_SIZE));
+		window.draw(wheelHelper);
+		wheelHelper.setString(KEY_TEXT_WHEEL_3_DOWN);
+		wheelHelper.setPosition(screenSize * 0.25, screenSize * 0.75);
+		window.draw(wheelHelper);
+		wheelHelper.setString(KEY_TEXT_WHEEL_4_UP);
+		wheelHelper.setPosition(screenSize * 0.75 - wheelHelper.getGlobalBounds().width, screenSize * (0.75 - WHEEL_HEIGHT - FONT_SIZE));
+		window.draw(wheelHelper);
+		wheelHelper.setString(KEY_TEXT_WHEEL_4_DOWN);
+		wheelHelper.setPosition(screenSize * 0.75 - wheelHelper.getGlobalBounds().width, screenSize * 0.75);
+		window.draw(wheelHelper);
+	}
 }
 
 ///Ustaw następny możliwy tryb
@@ -119,14 +186,16 @@ void switchNextMode()
 	{
 		mode = (mode + 1) % MODE_COUNT;
 	}while(!enabledModes[mode]);
+
+	showsJoystick = (mode == 5 || mode == 9);
+	binaryInput = (mode == 0 || mode == 1 || mode == 6);
+	keyWheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4);
 }
 
 ///Wypisz pomoc 
 void printHelp()
 {
 	std::cout << "Lalkarz - program do ręcznego sterowania robotami poprzez kierunek lub prędkości kół za pomocą klawiatury lub kontrolera. Podłącz kontroler, żeby aktywować sterowanie.\n";
-	std::cout << "STEROWANIE:\nZ\tPrzełącz tryb\n";
-	std::cout << "ARGUMENTY:\n";
 	std::cout << "-t <topic>\t\tWysyłaj zadane prędkości do topica typu geometry_msgs/Twist\n";
 	std::cout << "-v <topic>\t\tWysyłaj prędkości kół do topica typu omnivelma/Vels\n";
 	std::cout << "-f <częstotliwość>\tCzęstotoliwość wysyłania wiadomości w Hz, domyślnie " << DEFAULT_FREQ << "\n";
@@ -146,6 +215,10 @@ int main(int args, char** argv)
 	currGear = 1;
 	sendsTwist = false;
 	sendsVels = false;
+	memset(&stateData, 0, sizeof(StateData));
+	memset(&dirtyData, 0, sizeof(StateData));
+	binaryInput = true;
+	keyWheelInput = true;
 	
 	for(int i = 0; i < MODE_COUNT; i++)
 	{
@@ -156,7 +229,7 @@ int main(int args, char** argv)
 	modeColor[2] = sf::Color::Red;
 	modeColor[3] = sf::Color::Green;
 	modeColor[4] = sf::Color(0, 150, 0, 255);
-	modeColor[5] = sf::Color(100, 100, 100, 255);
+	modeColor[5] = sf::Color(0, 100, 100, 255);
 	modeColor[6] = sf::Color::Blue;
 	modeColor[7] = sf::Color(100, 0, 255, 255);
 	modeColor[8] = sf::Color(200, 0, 255, 255);
@@ -307,6 +380,7 @@ int main(int args, char** argv)
 		arg++;
 	}
 	//sprawdź podłączenie joysticka
+	sf::Joystick::update();
 	if(sf::Joystick::isConnected(0))
 	{
 		if(sendsTwist)
@@ -353,18 +427,98 @@ int main(int args, char** argv)
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if(event.type == sf::Event::Closed)
 			{
 				window.close();
 			}
-			if(event.type == sf::Event::KeyPressed)
+			else if(event.type == sf::Event::KeyPressed)
 			{
+				if(binaryInput)
+				{
+					switch(event.key.code)
+					{
+						case KEY_WHEEL_1_UP:
+							dirtyData.wheel1 = INPUT_STEP_COUNT;
+							break;
+						case KEY_WHEEL_1_DOWN:
+							dirtyData.wheel1 = -INPUT_STEP_COUNT;
+							break;
+						case KEY_WHEEL_2_UP:
+							dirtyData.wheel2 = INPUT_STEP_COUNT;
+							break;
+						case KEY_WHEEL_2_DOWN:
+							dirtyData.wheel2 = -INPUT_STEP_COUNT;
+							break;
+						case KEY_WHEEL_3_UP:
+							dirtyData.wheel3 = INPUT_STEP_COUNT;
+							break;
+						case KEY_WHEEL_3_DOWN:
+							dirtyData.wheel3 = -INPUT_STEP_COUNT;
+							break;
+						case KEY_WHEEL_4_UP:
+							dirtyData.wheel4 = INPUT_STEP_COUNT;
+							break;
+						case KEY_WHEEL_4_DOWN:
+							dirtyData.wheel4 = -INPUT_STEP_COUNT;
+							break;
+						default:
+							break;
+					}
+				}
+				
 				if(event.key.code == KEY_NEXT_MODE)
+				{
+					switchNextMode();
+				}
+
+			}
+			else if(event.type == sf::Event::KeyReleased)
+			{
+				if(binaryInput)
+				{
+					switch(event.key.code)
+					{
+						case KEY_WHEEL_1_UP:
+							dirtyData.wheel1 = 0;
+							break;
+						case KEY_WHEEL_1_DOWN:
+							dirtyData.wheel1 = 0;
+							break;
+						case KEY_WHEEL_2_UP:
+							dirtyData.wheel2 = 0;
+							break;
+						case KEY_WHEEL_2_DOWN:
+							dirtyData.wheel2 = 0;
+							break;
+						case KEY_WHEEL_3_UP:
+							dirtyData.wheel3 = 0;
+							break;
+						case KEY_WHEEL_3_DOWN:
+							dirtyData.wheel3 = 0;
+							break;
+						case KEY_WHEEL_4_UP:
+							dirtyData.wheel4 = 0;
+							break;
+						case KEY_WHEEL_4_DOWN:
+							dirtyData.wheel4 = 0;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			else if(event.type == sf::Event::JoystickButtonPressed)
+			{
+				if(event.joystickButton.button == JS_BUTTON_NEXT_MODE)
 				{
 					switchNextMode();
 				}
 			}
         }
+        
+        stateMutex.lock();
+		stateData = dirtyData;
+		stateMutex.unlock();
 
         window.clear();
         drawGUI();
