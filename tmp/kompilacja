@@ -1,2 +1,2 @@
 #! /bin/zsh
-g++ lalkarz.cpp -o lalkarz --std=c++14 -lsfml-graphics -lsfml-window -lsfml-system -lpthread -Wall -g
+g++ lalkarz.cpp state.cpp bin_vels_state.cpp -o lalkarz --std=c++14 -lsfml-graphics -lsfml-window -lsfml-system -lpthread -Wall -g

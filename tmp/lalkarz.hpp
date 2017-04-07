@@ -9,15 +9,28 @@
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include <exception>
-#include "font.hpp"
+#include <memory>
 
+///Domyślna wielkość okna
 #define WINDOW_SIZE 				512 
+///Szerokość rysunku koła
 #define WHEEL_WIDTH 				0.05
+///Wysokość ryskunku koła
 #define WHEEL_HEIGHT				0.1
+///Odległość wartości od koła
+#define VALUE_WHEEL_DIST			0.1
+///Wielkość linii
 #define FONT_SIZE 					0.03
+///Wielkość znaków
 #define CHAR_SIZE					0.025
+///Precyzja drukowanych wartości
+#define VALUE_PRECISION				2
+///Odstęp między elementami listy
 #define LIST_WIDTH 					0.05
+///Szerokość otoczki tekstu
 #define HELPER_TEXT_OUTLINE 		0.001
 
 #define MODE_COUNT 					11
@@ -33,6 +46,9 @@
 #define KEY_TEXT_NEXT_MODE 			"Z"
 #define JS_BUTTON_NEXT_MODE 		6
 #define JS_BUTTON_TEXT_NEXT_MODE 	"SELECT"
+
+//stop
+#define KEY_STOP					sf::Keyboard::Key::Space
 
 //sterowanie wejściem prędkości kół
 #define KEY_WHEEL_1_UP 				sf::Keyboard::Key::Multiply

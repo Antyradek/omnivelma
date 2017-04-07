@@ -1,4 +1,8 @@
 #include "lalkarz.hpp"
+#include "state.hpp"
+#include "bin_vels_state.hpp"
+#include "font.hpp"
+#include "mono_font.hpp"
 
 ///Czas między kolejnymi wysłaniami wiadomości ROS
 double sendWaitTime;
@@ -35,30 +39,10 @@ bool keyWheelInput;
 
 ///Font tekstu
 sf::Font font;
+sf::Font monoFont;
 
-///Dane stanu
-typedef struct
-{
-	int wheel1step;
-	int wheel2step;
-	int wheel3step;
-	int wheel4step;
-	double wheel1;
-	double wheel2;
-	double wheel3;
-	double wheel4;
-	int xStep;
-	int yStep;
-	int zStep;
-	double x;
-	double y;
-	double z;
-} StateData;
-
-StateData stateData;
-StateData dirtyData;
-///Sesja krytyczna między ustawianiem wartości, a wysyłaniem
-std::mutex stateMutex;
+///Stan robota
+std::unique_ptr<VelsState> velsState;
 
 ///Pętla drugiego wątku do wysyłania wiadomości ROSa
 void sendLoop()
@@ -81,6 +65,12 @@ void drawGUI()
 	helperText.setFillColor(sf::Color(100,100,100,255));
 	helperText.setOutlineColor(sf::Color::White);
 	helperText.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
+	sf::Text defaultText("", font);
+	defaultText.setFillColor(sf::Color::White);
+	defaultText.setCharacterSize(screenSize * CHAR_SIZE);
+	sf::Text valueText("", monoFont);
+	valueText.setFillColor(sf::Color::White);
+	valueText.setCharacterSize(screenSize * CHAR_SIZE);
 	
 	//platforma
 	sf::RectangleShape wheel(sf::Vector2f(screenSize * WHEEL_WIDTH, screenSize * WHEEL_HEIGHT));
@@ -106,9 +96,6 @@ void drawGUI()
 	body.setFillColor(modeColor[mode]);
 	body.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * 0.25);
 	window.draw(body);
-	
-	sf::Text defaultText("", font);
-	defaultText.setCharacterSize(screenSize * CHAR_SIZE);
 	
 	//lista trybów
 	for(int i = 0; i < MODE_COUNT; i++)
@@ -177,6 +164,19 @@ void drawGUI()
 		wheelHelper.setPosition(screenSize * 0.75 - wheelHelper.getGlobalBounds().width, screenSize * 0.75);
 		window.draw(wheelHelper);
 	}
+	
+	//Wartości prędkości
+	if(sendsVels)
+	{
+		sf::Text wheelValue(defaultText);
+		
+		std::stringstream ss;
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(2);
+		wheelValue.setString(ss.str());
+		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
+		window.draw(wheelValue);
+		
+	}
 }
 
 ///Ustaw następny możliwy tryb
@@ -190,6 +190,13 @@ void switchNextMode()
 	showsJoystick = (mode == 5 || mode == 9);
 	binaryInput = (mode == 0 || mode == 1 || mode == 6);
 	keyWheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4);
+	
+	switch(mode)
+	{
+		case 0:
+			velsState.reset(new BinVelsState());
+			break;
+	}
 }
 
 ///Wypisz pomoc 
@@ -213,12 +220,9 @@ int main(int args, char** argv)
 	screenSize = WINDOW_SIZE;
 	mode = 0;
 	currGear = 1;
-	sendsTwist = false;
-	sendsVels = false;
-	memset(&stateData, 0, sizeof(StateData));
-	memset(&dirtyData, 0, sizeof(StateData));
 	binaryInput = true;
 	keyWheelInput = true;
+	velsState.reset(new BinVelsState());
 	
 	for(int i = 0; i < MODE_COUNT; i++)
 	{
@@ -250,8 +254,8 @@ int main(int args, char** argv)
 	
 	//odczytywanie argumentów
 	int arg = 1;
-	bool sendsTwist = false;
-	bool sendsVels = false;
+	sendsTwist = false;
+	sendsVels = false;
 	bool setMode = false;
 	while(arg < args)
 	{
@@ -412,8 +416,9 @@ int main(int args, char** argv)
 	{
 		switchNextMode();
 	}
-	//wczytaj czcionkę
+	//wczytaj czcionki
 	font.loadFromMemory(fontData, fontDataSize);
+	monoFont.loadFromMemory(monoFontData, monoFontDataSize);
 	
 	//uruchom program
 	std::thread sendThread(sendLoop);
@@ -431,94 +436,20 @@ int main(int args, char** argv)
 			{
 				window.close();
 			}
-			else if(event.type == sf::Event::KeyPressed)
+			else if((event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_NEXT_MODE) || (event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE))
 			{
-				if(binaryInput)
-				{
-					switch(event.key.code)
-					{
-						case KEY_WHEEL_1_UP:
-							dirtyData.wheel1 = INPUT_STEP_COUNT;
-							break;
-						case KEY_WHEEL_1_DOWN:
-							dirtyData.wheel1 = -INPUT_STEP_COUNT;
-							break;
-						case KEY_WHEEL_2_UP:
-							dirtyData.wheel2 = INPUT_STEP_COUNT;
-							break;
-						case KEY_WHEEL_2_DOWN:
-							dirtyData.wheel2 = -INPUT_STEP_COUNT;
-							break;
-						case KEY_WHEEL_3_UP:
-							dirtyData.wheel3 = INPUT_STEP_COUNT;
-							break;
-						case KEY_WHEEL_3_DOWN:
-							dirtyData.wheel3 = -INPUT_STEP_COUNT;
-							break;
-						case KEY_WHEEL_4_UP:
-							dirtyData.wheel4 = INPUT_STEP_COUNT;
-							break;
-						case KEY_WHEEL_4_DOWN:
-							dirtyData.wheel4 = -INPUT_STEP_COUNT;
-							break;
-						default:
-							break;
-					}
-				}
-				
-				if(event.key.code == KEY_NEXT_MODE)
-				{
-					switchNextMode();
-				}
-
+				switchNextMode();
 			}
-			else if(event.type == sf::Event::KeyReleased)
+			else if(event.type == sf::Event::KeyPressed && event.key.code == KEY_STOP)
 			{
-				if(binaryInput)
-				{
-					switch(event.key.code)
-					{
-						case KEY_WHEEL_1_UP:
-							dirtyData.wheel1 = 0;
-							break;
-						case KEY_WHEEL_1_DOWN:
-							dirtyData.wheel1 = 0;
-							break;
-						case KEY_WHEEL_2_UP:
-							dirtyData.wheel2 = 0;
-							break;
-						case KEY_WHEEL_2_DOWN:
-							dirtyData.wheel2 = 0;
-							break;
-						case KEY_WHEEL_3_UP:
-							dirtyData.wheel3 = 0;
-							break;
-						case KEY_WHEEL_3_DOWN:
-							dirtyData.wheel3 = 0;
-							break;
-						case KEY_WHEEL_4_UP:
-							dirtyData.wheel4 = 0;
-							break;
-						case KEY_WHEEL_4_DOWN:
-							dirtyData.wheel4 = 0;
-							break;
-						default:
-							break;
-					}
-				}
+				velsState -> reset();
 			}
-			else if(event.type == sf::Event::JoystickButtonPressed)
+			else if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
 			{
-				if(event.joystickButton.button == JS_BUTTON_NEXT_MODE)
-				{
-					switchNextMode();
-				}
+				velsState -> set(event.key.code, (event.type == sf::Event::KeyPressed));
 			}
-        }
-        
-        stateMutex.lock();
-		stateData = dirtyData;
-		stateMutex.unlock();
+			
+		}
 
         window.clear();
         drawGUI();
