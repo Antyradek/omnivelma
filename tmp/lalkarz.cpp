@@ -176,6 +176,24 @@ void drawGUI()
 		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
 		
+		ss.str(std::string());
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(3);
+		wheelValue.setString(ss.str());
+		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
+		window.draw(wheelValue);
+		
+		ss.str(std::string());
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(1);
+		wheelValue.setString(ss.str());
+		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
+		window.draw(wheelValue);
+		
+		ss.str(std::string());
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(4);
+		wheelValue.setString(ss.str());
+		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
+		window.draw(wheelValue);
+		
 	}
 }
 
