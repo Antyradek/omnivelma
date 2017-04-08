@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <exception>
 #include <memory>
+#include <cmath>
 
 ///Domyślna wielkość okna
 #define WINDOW_SIZE 				512 

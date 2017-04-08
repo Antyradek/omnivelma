@@ -258,6 +258,11 @@ void switchNextMode()
 		case 0:
 			velsState.reset(new BinVelsState());
 			break;
+		case 1:
+			velsState.reset(new BinVelsStateHold());
+			break;
+		default:
+			break;
 	}
 }
 

@@ -90,3 +90,20 @@ void BinVelsState::resetDef()
 	w1 = w2 = w3 = w4 = 0;
 }
 
+double BinVelsStateHold::getDef(int wheel)
+{
+	switch(wheel)
+	{
+		case 1:
+			return (w1 == 0) ? std::nan("") : w1;
+		case 2:
+			return (w2 == 0) ? std::nan("") : w2;
+		case 3:
+			return (w3 == 0) ? std::nan("") : w3;
+		case 4:
+			return (w4 == 0) ? std::nan("") : w4;
+		default:
+			return 0;
+	}
+}
+
