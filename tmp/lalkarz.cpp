@@ -1,6 +1,7 @@
 #include "lalkarz.hpp"
 #include "state.hpp"
 #include "bin_vels_state.hpp"
+#include "cont_vels_state.hpp"
 #include "font.hpp"
 #include "mono_font.hpp"
 
@@ -241,14 +242,9 @@ void drawGUI()
 	}
 }
 
-///Ustaw następny możliwy tryb
-void switchNextMode()
+///Ustaw dane powiązane z trybem
+void setModeData()
 {
-	do
-	{
-		mode = (mode + 1) % MODE_COUNT;
-	}while(!enabledModes[mode]);
-
 	showsJoystick = (mode == 5 || mode == 9);
 	binaryInput = (mode == 0 || mode == 1 || mode == 6);
 	keyWheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4);
@@ -261,9 +257,22 @@ void switchNextMode()
 		case 1:
 			velsState.reset(new BinVelsStateHold());
 			break;
+		case 2:
+			velsState.reset(new ContVelsState());
 		default:
 			break;
 	}
+}
+
+///Przestaw na następny możliwy tryb
+void switchNextMode()
+{
+	do
+	{
+		mode = (mode + 1) % MODE_COUNT;
+	}while(!enabledModes[mode]);
+	
+	setModeData();
 }
 
 ///Wypisz pomoc 
@@ -397,6 +406,7 @@ int main(int args, char** argv)
 					exit(EXIT_ARG_ERROR);
 				}
 				mode = mod - 1;
+				setModeData();
 			}
 			catch(std::exception err)
 			{
@@ -493,6 +503,7 @@ int main(int args, char** argv)
     window.create(sf::VideoMode(screenSize, screenSize), "Lalkarz", sf::Style::Close);
 	///window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
+	window.setKeyRepeatEnabled(false);
 
     while (window.isOpen())
     {
@@ -515,8 +526,8 @@ int main(int args, char** argv)
 			{
 				velsState -> set(event.key.code, (event.type == sf::Event::KeyPressed));
 			}
-			
 		}
+		velsState -> update();
 
         window.clear();
         drawGUI();

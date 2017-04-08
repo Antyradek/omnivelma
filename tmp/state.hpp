@@ -10,6 +10,8 @@ public:
 	
 	void reset();
 	
+	void update();
+	
 private:
 	std::mutex mainMutex;
 	
@@ -18,4 +20,6 @@ private:
 	virtual double getDef(int wheel) = 0;
 	
 	virtual void resetDef() = 0;
+	
+	virtual void updateDef() = 0;
 };

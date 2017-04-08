@@ -21,3 +21,10 @@ void VelsState::reset()
 	resetDef();
 	mainMutex.unlock();
 }
+
+void VelsState::update()
+{
+	mainMutex.lock();
+	updateDef();
+	mainMutex.unlock();
+}

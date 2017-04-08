@@ -90,6 +90,11 @@ void BinVelsState::resetDef()
 	w1 = w2 = w3 = w4 = 0;
 }
 
+void BinVelsState::updateDef()
+{
+	
+}
+
 double BinVelsStateHold::getDef(int wheel)
 {
 	switch(wheel)

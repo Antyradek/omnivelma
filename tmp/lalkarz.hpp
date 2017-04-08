@@ -12,6 +12,7 @@
 #include <sstream>
 #include <iomanip>
 #include <exception>
+#include <algorithm>
 #include <memory>
 #include <cmath>
 
@@ -27,6 +28,8 @@
 #define METER_WIDTH					0.05
 ///Wysokość miernika
 #define METER_HEIGHT				0.18
+///Prędkość zmiany miernika
+#define METER_CHANGE_SPEED			0.8
 ///Odległość miernika od koła
 #define METER_WHEEL_DIST			0.01
 ///Wielkość linii
