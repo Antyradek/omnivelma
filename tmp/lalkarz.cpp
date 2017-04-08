@@ -193,7 +193,51 @@ void drawGUI()
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
+	}
+	
+	//Markery
+	if(sendsVels)
+	{
+		sf::RectangleShape meter(sf::Vector2f(0,0));
+		sf::RectangleShape maxMeter1(sf::Vector2f(0,0));
+		maxMeter1.setFillColor(sf::Color::Transparent);
+		maxMeter1.setOutlineColor(sf::Color::White);
+		maxMeter1.setOutlineThickness(HELPER_TEXT_OUTLINE * screenSize);
+		sf::RectangleShape maxMeter2(maxMeter1);
+		maxMeter1.setSize(sf::Vector2f(METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
+		maxMeter2.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
 		
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(2) * screenSize));
+		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
+		
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(3) * screenSize));
+		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
+		
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(1) * screenSize));
+		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
+		
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(4) * screenSize));
+		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
 	}
 }
 
@@ -259,7 +303,7 @@ int main(int args, char** argv)
 	modeColor[10] = sf::Color(255, 0, 255, 255);
 	
 	modeNames[0] = L"Binarne prędkości kół \nsterowane klawiaturą numeryczną.";
-	modeNames[1] = L"Binarne prędkości kół \nz podtrzymaniem \nsterowane klawiaturą numeryczną.";
+	modeNames[1] = L"Binarne prędkości kół z podtrzymaniem \nsterowane klawiaturą numeryczną.";
 	modeNames[2] = L"Przyrostowe prędkości kół \nsterowane klawiaturą numeryczną.";
 	modeNames[3] = L"Przyrostowe schodkowe prędkości kół \nsterowane klawiaturą numeryczną.";
 	modeNames[4] = L"Przyrostowe schodkowe prędkości kół z podtrzymaniem \nsterowane klawiaturą numeryczną.";

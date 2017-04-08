@@ -22,6 +22,12 @@
 #define WHEEL_HEIGHT				0.1
 ///Odległość wartości od koła
 #define VALUE_WHEEL_DIST			0.1
+///Szerokość miernika
+#define METER_WIDTH					0.05
+///Wysokość miernika
+#define METER_HEIGHT				0.18
+///Odległość miernika od koła
+#define METER_WHEEL_DIST			0.01
 ///Wielkość linii
 #define FONT_SIZE 					0.03
 ///Wielkość znaków
