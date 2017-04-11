@@ -4,22 +4,13 @@
 class VelsState
 {
 public:
-	void set(sf::Keyboard::Key key, bool pressed);
+	virtual void set(sf::Keyboard::Key key, bool pressed) = 0;
 	
-	double get(int wheel);
+	virtual double get(int wheel) = 0;
 	
-	void reset();
+	virtual void reset() = 0;
 	
-	void update();
+	virtual void update() = 0;
 	
-private:
-	std::mutex mainMutex;
-	
-	virtual void setDef(sf::Keyboard::Key key, bool pressed) = 0;
-	
-	virtual double getDef(int wheel) = 0;
-	
-	virtual void resetDef() = 0;
-	
-	virtual void updateDef() = 0;
+	Vels getVels();
 };

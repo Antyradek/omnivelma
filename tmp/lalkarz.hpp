@@ -46,6 +46,7 @@
 #define MODE_COUNT 					11
 #define GEAR_COUNT 					5
 #define DEFAULT_FREQ 				10
+///Ilość stopni w sterowaniu schodkowym
 #define INPUT_STEP_COUNT			10
 
 #define EXIT_ARG_ERROR 				-1
@@ -81,3 +82,11 @@
 #define KEY_WHEEL_4_DOWN			sf::Keyboard::Key::Numpad3
 #define KEY_TEXT_WHEEL_4_DOWN		"3"
 
+///Prędkości kół
+typedef struct 
+{
+	double w1;
+	double w2;
+	double w3;
+	double w4;
+} Vels;

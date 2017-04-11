@@ -13,14 +13,14 @@ protected:
 	int w3;
 	int w4;
 
-	void setDef(sf::Keyboard::Key key, bool pressed) override;
-	double getDef(int wheel) override;
-	void resetDef() override;
-	void updateDef() override;
+	void set(sf::Keyboard::Key key, bool pressed) override;
+	double get(int wheel) override;
+	void reset() override;
+	void update() override;
 };
 
 ///Binarne wejście z podtrzymaniem na zero
 class BinVelsStateHold : public BinVelsState
 {
-	double getDef(int wheel) override;
+	double get(int wheel) override;
 };

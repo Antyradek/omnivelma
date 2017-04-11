@@ -2,6 +2,7 @@
 #include "state.hpp"
 #include "bin_vels_state.hpp"
 #include "cont_vels_state.hpp"
+#include "steps_vels_state.hpp"
 #include "font.hpp"
 #include "mono_font.hpp"
 
@@ -37,6 +38,10 @@ bool showsJoystick;
 bool binaryInput;
 ///Tryb sterowania kołami z klawiatury
 bool keyWheelInput;
+///Sekcja krytyczna na prędkościach kół
+std::mutex mainMutex;
+///Dane synchronizowane między wątkami
+Vels vels;
 
 ///Font tekstu
 sf::Font font;
@@ -51,7 +56,9 @@ void sendLoop()
 	//inicjalizuj ROSa
 	while(isActive)
 	{
-		//zbierz dane i wyślij ROSa
+		mainMutex.lock();
+			//wyślij
+		mainMutex.unlock();
 		std::this_thread::sleep_for (std::chrono::milliseconds((int)(sendWaitTime * 1000)));
 	}
 	//kończ ROSa
@@ -259,6 +266,14 @@ void setModeData()
 			break;
 		case 2:
 			velsState.reset(new ContVelsState());
+			break;
+		case 3:
+			velsState.reset(new StepsVelsState());
+			break;
+		case 4:
+			velsState.reset(new StepsVelsStateHold());
+			break;
+			
 		default:
 			break;
 	}
@@ -503,7 +518,7 @@ int main(int args, char** argv)
     window.create(sf::VideoMode(screenSize, screenSize), "Lalkarz", sf::Style::Close);
 	///window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
-	window.setKeyRepeatEnabled(false);
+	//window.setKeyRepeatEnabled(false);
 
     while (window.isOpen())
     {
@@ -532,6 +547,10 @@ int main(int args, char** argv)
         window.clear();
         drawGUI();
         window.display();
+		
+		mainMutex.lock();
+		vels = velsState -> getVels();
+		mainMutex.unlock();
     }
     
     isActive = false;

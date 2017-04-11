@@ -1,30 +1,11 @@
 #include "state.hpp" 
-void VelsState::set(sf::Keyboard::Key key, bool pressed)
-{
-	mainMutex.lock();
-	setDef(key, pressed);
-	mainMutex.unlock();
-}
 
-double VelsState::get(int wheel)
+Vels VelsState::getVels()
 {
-	double ret;
-	mainMutex.lock();
-	ret = getDef(wheel);
-	mainMutex.unlock();
-	return ret;
-}
-
-void VelsState::reset()
-{
-	mainMutex.lock();
-	resetDef();
-	mainMutex.unlock();
-}
-
-void VelsState::update()
-{
-	mainMutex.lock();
-	updateDef();
-	mainMutex.unlock();
+	Vels out;
+	out.w1 = get(1);
+	out.w2 = get(2);
+	out.w3 = get(3);
+	out.w4 = get(4);
+	return out;
 }

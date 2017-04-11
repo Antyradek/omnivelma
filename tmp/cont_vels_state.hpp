@@ -21,10 +21,10 @@ protected:
 	double w3;
 	double w4;
 	
-	void updateDef() override;
-	void setDef(sf::Keyboard::Key key, bool pressed) override;
-	double getDef(int wheel) override;
-	void resetDef() override;
+	void update() override;
+	void set(sf::Keyboard::Key key, bool pressed) override;
+	double get(int wheel) override;
+	void reset() override;
 	
 	double clamp(double value) const;
 };

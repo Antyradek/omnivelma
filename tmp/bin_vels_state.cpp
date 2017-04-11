@@ -8,7 +8,7 @@ BinVelsState::BinVelsState()
 	w4 = 0;
 }
 
-void BinVelsState::setDef(sf::Keyboard::Key key, bool pressed)
+void BinVelsState::set(sf::Keyboard::Key key, bool pressed)
 {
 	if(pressed)
 	{
@@ -68,7 +68,7 @@ void BinVelsState::setDef(sf::Keyboard::Key key, bool pressed)
 	}
 }
 
-double BinVelsState::getDef(int wheel)
+double BinVelsState::get(int wheel)
 {
 	switch(wheel)
 	{
@@ -85,17 +85,17 @@ double BinVelsState::getDef(int wheel)
 	}
 }
 
-void BinVelsState::resetDef()
+void BinVelsState::reset()
 {
 	w1 = w2 = w3 = w4 = 0;
 }
 
-void BinVelsState::updateDef()
+void BinVelsState::update()
 {
 	
 }
 
-double BinVelsStateHold::getDef(int wheel)
+double BinVelsStateHold::get(int wheel)
 {
 	switch(wheel)
 	{
