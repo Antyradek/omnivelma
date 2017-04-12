@@ -9,3 +9,29 @@ Vels VelsState::getVels()
 	out.w4 = get(4);
 	return out;
 }
+
+void VelsState::set(sf::Joystick::Axis axis, double position)
+{
+	
+}
+
+void VelsState::set(sf::Keyboard::Key key, bool pressed)
+{
+	
+}
+
+double VelsState::get(int wheel)
+{
+	return 0;
+}
+
+void VelsState::reset()
+{
+	
+}
+
+void VelsState::update()
+{
+	
+}
+

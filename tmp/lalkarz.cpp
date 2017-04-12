@@ -3,6 +3,7 @@
 #include "bin_vels_state.hpp"
 #include "cont_vels_state.hpp"
 #include "steps_vels_state.hpp"
+#include "gamepad_vels_state.hpp"
 #include "font.hpp"
 #include "mono_font.hpp"
 
@@ -273,6 +274,9 @@ void setModeData()
 		case 4:
 			velsState.reset(new StepsVelsStateHold());
 			break;
+		case 5:
+			velsState.reset(new GamepadVelsState());
+			break;
 			
 		default:
 			break;
@@ -529,7 +533,7 @@ int main(int args, char** argv)
 			{
 				window.close();
 			}
-			else if((event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_NEXT_MODE) || (event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE))
+			else if((event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)) || (event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE))
 			{
 				switchNextMode();
 			}
@@ -540,6 +544,10 @@ int main(int args, char** argv)
 			else if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
 			{
 				velsState -> set(event.key.code, (event.type == sf::Event::KeyPressed));
+			}
+			else if(event.type == sf::Event::JoystickMoved)
+			{
+				velsState -> set(event.joystickMove.axis, event.joystickMove.position);
 			}
 		}
 		velsState -> update();

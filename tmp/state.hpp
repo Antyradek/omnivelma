@@ -4,13 +4,15 @@
 class VelsState
 {
 public:
-	virtual void set(sf::Keyboard::Key key, bool pressed) = 0;
+	virtual void set(sf::Keyboard::Key key, bool pressed);
 	
-	virtual double get(int wheel) = 0;
+	virtual void set(sf::Joystick::Axis axis, double position);
 	
-	virtual void reset() = 0;
+	virtual double get(int wheel);
 	
-	virtual void update() = 0;
+	virtual void reset();
+	
+	virtual void update();
 	
 	Vels getVels();
 };

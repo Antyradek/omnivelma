@@ -56,6 +56,7 @@
 #define KEY_NEXT_MODE 				sf::Keyboard::Key::Z
 #define KEY_TEXT_NEXT_MODE 			"Z"
 #define JS_BUTTON_NEXT_MODE 		6
+#define JS_BUTTON_NEXT_MODE_ALT		8
 #define JS_BUTTON_TEXT_NEXT_MODE 	"SELECT"
 
 //stop
@@ -81,6 +82,14 @@
 #define KEY_TEXT_WHEEL_4_UP			"6"
 #define KEY_WHEEL_4_DOWN			sf::Keyboard::Key::Numpad3
 #define KEY_TEXT_WHEEL_4_DOWN		"3"
+
+//sterowanie wejściem prędkości kół kontrolerem
+#define AXIS_WHEEL_1				sf::Joystick::Axis::V 
+#define AXIS_WHEEL_1_ALT			sf::Joystick::Axis::R
+#define AXIS_WHEEL_2				sf::Joystick::Axis::Y
+#define AXIS_WHEEL_3				sf::Joystick::Axis::X
+#define AXIS_WHEEL_4				sf::Joystick::Axis::U
+#define AXIS_WHEEL_4_ALT			sf::Joystick::Axis::Z
 
 ///Prędkości kół
 typedef struct 
