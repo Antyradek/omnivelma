@@ -1,0 +1,14 @@
+<package format="2">
+	<name>widelnica</name>
+	<version>1.0.0</version>
+	<description>Rozszczepienie wiadomości prędkości kół na wiele</description>
+	
+	<maintainer email="antyradek@protonmail.com">Antyradek</maintainer>
+	
+	<license>GPLv3</license>
+	
+	<buildtool_depend>catkin</buildtool_depend>
+	
+    <depend>roscpp</depend>
+	<depend>omnivelma_msgs</depend>
+</package>
