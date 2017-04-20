@@ -30,7 +30,8 @@ int main(int argc, char **argv)
         if(arg == "--help" || arg == "-h")
         {
             //pisz pomoc i wyjdź
-            std::cout << "Użycie:\nwidelnica <topic1> <topic2> <topic3> <...>" << std::endl;
+            std::cout << "Użycie: " << argv[0] << " [TOPIC1] [TOPIC2] [TOPIC3]..." << std::endl;
+			std::cout << "Rozdziela weyjście /widelnica/vels na poszczególne podane TOPIC." << std::endl;
             return 0;
         }
         else
@@ -55,6 +56,7 @@ int main(int argc, char **argv)
 		if(newPub)
 		{
 			pubList.push_back(newPub);
+			std::cout << "Wysyłanie do " << topicName << std::endl;
 		}
 		else
 		{

@@ -59,8 +59,8 @@ void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
 ///Wypisz pomoc
 void printHelp(const std::string& progName)
 {
-	std::cout << "Użycie: " << progName << " [OPCJE] TOPIC\nPrzekształć wiadomość geometry_msgs/Twist na omnivelma_msgs/Vels obracając wektory wokół osi Z i wyślij do TOPIC.\n" << std::endl;
-	std::cout << "  -r OBRÓT\t Obróć wejście. OBRÓT jest jednym z: 0, 90, 180, 270 i obraca wejście o tą ilość stopni w lewo." << std::endl;
+	std::cout << "Użycie: " << progName << " [-r OBRÓT] TOPIC\nPrzekształć wiadomość geometry_msgs/Twist na omnivelma_msgs/Vels obracając wektory wokół osi Z i wyślij do TOPIC.\n" << std::endl;
+	std::cout << "  OBRÓT jest jednym z: 0, 90, 180, 270 i obraca wejście o tą ilość stopni w lewo." << std::endl;
 	std::cout << "  -h, --help\tWypisz ten ekran." << std::endl;
 }
 
