@@ -62,8 +62,8 @@ int main(int argc, char **argv)
 		}
 	}
 
-    std::cout << "Transmutowanie do Omnivelmy... " << std::endl;
+    std::cout << "Rozdzielanie wiadomości... " << std::endl;
     ros::spin();
-    std::cout << "Wychodzenie z Transmutatora" << std::endl;
+    std::cout << "Wychodzenie z Widelnicy" << std::endl;
     return 0;
 }

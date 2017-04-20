@@ -4,10 +4,8 @@
 #include <omnivelma_msgs/Vels.h>
 #include <geometry_msgs/Twist.h>
 
-/// Nadajnik do Omnivelmy
-ros::Publisher omniPublisher;
-/// Nadajnik do Pseudovelmy
-ros::Publisher pseudoPublisher;
+/// Nadajnik
+ros::Publisher publisher;
 
 const double wheelRadius = 0.1;
 const double modelWidth = 0.76;
@@ -55,35 +53,75 @@ void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
     vels.rl = (velForw - velRight - (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
     vels.fr = (velForw - velRight + (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
     vels.fl = (velForw + velRight - (modelLength + modelWidth) * rotLeft * 2) / wheelRadius;
-    omniPublisher.publish(vels);
-    pseudoPublisher.publish(vels);
+    publisher.publish(vels);
+}
+
+///Wypisz pomoc
+void printHelp(const std::string& progName)
+{
+	std::cout << "Użycie: " << progName << " [OPCJE] TOPIC\nPrzekształć wiadomość geometry_msgs/Twist na omnivelma_msgs/Vels obracając wektory wokół osi Z i wyślij do TOPIC.\n" << std::endl;
+	std::cout << "  -r OBRÓT\t Obróć wejście. OBRÓT jest jednym z: 0, 90, 180, 270 i obraca wejście o tą ilość stopni w lewo." << std::endl;
+	std::cout << "  -h, --help\tWypisz ten ekran." << std::endl;
 }
 
 int main(int argc, char **argv)
 {
+	std::string progName(argv[0]);
+	if(argc <= 1)
+	{
+		std::cerr << "Nie podano Topica do wysyłania. Wpisz '" << progName << " --help' po instrukcje użycia." << std::endl;
+		exit(1);
+	}
     rotation = Rotation::No;
-    for(int i = 0; i < argc; i++)
+	std::string topicName;
+	int i = 1;
+    while (i < argc)
     {
         std::string arg(argv[i]);
         if(arg == "--help" || arg == "-h")
         {
             //pisz pomoc i wyjdź
-            std::cout << "Użycie:\ntransmutator -90\t\tObróć wejście o 90 stopni w lewo\ntransmutator -180\t\tObróć wejście do tyłu\ntransmutator -270\t\tObróć wejście 90 stopni w prawo" << std::endl;
+            printHelp(progName);
             return 0;
         }
-        else if(arg == "-90")
+        else if(arg == "-r")
         {
-            rotation = Rotation::Left90;
+			i++;
+			if(i < argc)
+			{
+				std::string rot(argv[i]);
+				if(rot == "90")
+					rotation = Rotation::Left90;
+				else if(rot == "180")
+					rotation = Rotation::Back;
+				else if(rot == "270")
+					rotation = Rotation::Right90;
+				else if(rot == "0")
+					rotation = Rotation::No;
+				else
+				{
+					std::cerr << "Podano nieprawidłową rotację." << std::endl;
+					exit(1);
+				}
+			}
+			else
+			{
+				std::cerr << "Nie podano rotacji." << std::endl;
+				exit(1);
+			}
         }
-        else if(arg == "-180")
-        {
-            rotation = Rotation::Back;
-        }
-        else if(arg == "-270")
-        {
-            rotation = Rotation::Right90;
-        }
+        else
+		{
+			topicName = arg;
+		}
+        i++;
     }
+    if(topicName.empty())
+	{
+		std::cerr << "Nie podano argumentu TOPIC." << std::endl;
+		exit(1);
+	}
+	
     if (!ros::isInitialized())
     {
         ros::init(argc, argv, "transmutator");
@@ -92,10 +130,14 @@ int main(int argc, char **argv)
 
     ros::NodeHandle handle;
     ros::Subscriber sub = handle.subscribe<geometry_msgs::Twist>("/transmutator/twist", 1, twistCallback);
-    omniPublisher = handle.advertise<omnivelma_msgs::Vels>("/omnivelma/vels", 1);
-    pseudoPublisher = handle.advertise<omnivelma_msgs::Vels>("/pseudovelma/vels", 1);
+    publisher = handle.advertise<omnivelma_msgs::Vels>(topicName, 1);
+	if(!publisher)
+	{
+		std::cerr << "Nie można stworzyć nadajnika " << topicName << std::endl;
+		exit(2);
+	}
 
-    std::cout << "Transmutowanie do Omnivelmy... " << std::endl;
+    std::cout << "Transmutowanie do " << topicName << "... " << std::endl;
     ros::spin();
     std::cout << "Wychodzenie z Transmutatora" << std::endl;
     return 0;
