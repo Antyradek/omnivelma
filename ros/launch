@@ -2,7 +2,7 @@
 # Uruchom Gazebo wraz z modelami
 
 source setup
-export GAZEBO_MODEL_PATH=GAZEBO_MODEL_PATH:$(pwd)/src
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
 ARG=$1
 if [ -z $1 ]
 	then
