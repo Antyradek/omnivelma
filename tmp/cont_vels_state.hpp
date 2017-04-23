@@ -23,7 +23,7 @@ protected:
 	
 	void update() override;
 	void set(sf::Keyboard::Key key, bool pressed) override;
-	double get(int wheel) override;
+	double get(Wheel wheel) override;
 	void reset() override;
 	
 	double clamp(double value) const;

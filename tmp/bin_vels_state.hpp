@@ -14,7 +14,7 @@ protected:
 	int w4;
 
 	void set(sf::Keyboard::Key key, bool pressed) override;
-	double get(int wheel) override;
+	double get(Wheel wheel) override;
 	void reset() override;
 	void update() override;
 };
@@ -22,5 +22,5 @@ protected:
 ///Binarne wejście z podtrzymaniem na zero
 class BinVelsStateHold : public BinVelsState
 {
-	double get(int wheel) override;
+	double get(Wheel wheel) override;
 };

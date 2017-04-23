@@ -57,17 +57,17 @@ void StepsVelsState::update()
 	
 }
 
-double StepsVelsState::get(int wheel)
+double StepsVelsState::get(Wheel wheel)
 {
 	switch(wheel)
 	{
-		case 1:
+		case W1:
 			return (double)w1 / INPUT_STEP_COUNT;
-		case 2:
+		case W2:
 			return (double)w2 / INPUT_STEP_COUNT;
-		case 3:
+		case W3:
 			return (double)w3 / INPUT_STEP_COUNT;
-		case 4:
+		case W4:
 			return (double)w4 / INPUT_STEP_COUNT;
 		default:
 			return 0;
@@ -87,17 +87,17 @@ int StepsVelsState::clamp(int value) const
 	return value;
 }
 
-double StepsVelsStateHold::get(int wheel)
+double StepsVelsStateHold::get(Wheel wheel)
 {
 	switch(wheel)
 	{
-		case 1:
+		case W1:
 			return (w1 == 0) ? std::nan("") : (double)w1 / INPUT_STEP_COUNT;
-		case 2:
+		case W2:
 			return (w2 == 0) ? std::nan("") : (double)w2 / INPUT_STEP_COUNT;
-		case 3:
+		case W3:
 			return (w3 == 0) ? std::nan("") : (double)w3 / INPUT_STEP_COUNT;
-		case 4:
+		case W4:
 			return (w4 == 0) ? std::nan("") : (double)w4 / INPUT_STEP_COUNT;
 		default:
 			return 0;

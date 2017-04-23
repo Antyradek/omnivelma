@@ -15,11 +15,11 @@ public:
 	void set(sf::Keyboard::Key key, bool pressed) override;
 	void update() override;
 	void reset() override;
-	double get(int wheel) override;
+	double get(Wheel wheel) override;
 };
 
 class StepsVelsStateHold : public StepsVelsState
 {
-	double get(int wheel) override;
+	double get(Wheel wheel) override;
 	
 };

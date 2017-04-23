@@ -91,6 +91,23 @@
 #define AXIS_WHEEL_4				sf::Joystick::Axis::U
 #define AXIS_WHEEL_4_ALT			sf::Joystick::Axis::Z
 
+///Koło
+enum Wheel
+{
+	W1,
+	W2,
+	W3,
+	W4
+};
+
+///Oś po której porusza się urządzenie
+enum Axis
+{
+	X,
+	Y,
+	Z
+};
+
 ///Prędkości kół
 typedef struct 
 {

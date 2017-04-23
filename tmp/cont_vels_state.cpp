@@ -91,17 +91,17 @@ void ContVelsState::set(sf::Keyboard::Key key, bool pressed)
 	w4 = clamp(w4);
 }
 
-double ContVelsState::get(int wheel)
+double ContVelsState::get(Wheel wheel)
 {
 	switch(wheel)
 	{
-		case 1:
+		case W1:
 			return w1;
-		case 2:
+		case W2:
 			return w2;
-		case 3:
+		case W3:
 			return w3;
-		case 4:
+		case W4:
 			return w4;
 		default:
 			return 0;

@@ -182,25 +182,25 @@ void drawGUI()
 		sf::Text wheelValue(defaultText);
 		
 		std::stringstream ss;
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(2);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W2);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
 		
 		ss.str(std::string());
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(3);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W3);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
 		
 		ss.str(std::string());
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(1);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W1);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
 		
 		ss.str(std::string());
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(4);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W4);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
@@ -218,7 +218,7 @@ void drawGUI()
 		maxMeter1.setSize(sf::Vector2f(METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
 		maxMeter2.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(2) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W2) * screenSize));
 		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -226,7 +226,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(3) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W3) * screenSize));
 		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -234,7 +234,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(1) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W1) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -242,7 +242,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(4) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W4) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());

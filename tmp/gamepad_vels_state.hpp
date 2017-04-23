@@ -11,6 +11,6 @@ protected:
 public:
 	GamepadVelsState();
 	void set(sf::Joystick::Axis axis, double position) override;
-	double get(int wheel) override;
+	double get(Wheel wheel) override;
 	void reset() override;
 };

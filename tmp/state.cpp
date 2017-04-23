@@ -3,23 +3,23 @@
 Vels State::getVels()
 {
 	Vels out;
-	out.w1 = get(1);
-	out.w2 = get(2);
-	out.w3 = get(3);
-	out.w4 = get(4);
+	out.w1 = get(Wheel::W1);
+	out.w2 = get(Wheel::W2);
+	out.w3 = get(Wheel::W3);
+	out.w4 = get(Wheel::W4);
 	return out;
 }
 
 Twist State::getTwist()
 {
 	Twist out;
-	out.x = getAxis(0);
-	out.y = getAxis(1);
-	out.z = getAxis(2);
+	out.x = getAxis(Axis::X);
+	out.y = getAxis(Axis::Y);
+	out.z = getAxis(Axis::Z);
 	return out;
 }
 
-double State::get(int wheel)
+double State::get(Wheel wheel)
 { 
 	return 0;
 }
@@ -40,7 +40,7 @@ void State::update()
 {
 }
 
-double State::getAxis(int axis)
+double State::getAxis(Axis axis)
 {
 	return 0;
 }

@@ -23,14 +23,14 @@ public:
 	///Aktualizuj wartości zmienne w czasie
 	virtual void update();
 	
-	///Zwróć prędkość koła 1,2,3,4
-	virtual double get(int wheel);
+	///Zwróć prędkość koła
+	virtual double get(Wheel wheel);
 	
 	///Zwróć strukturę prędkości
 	Vels getVels();
 	
 	///Zwróć wartość osi
-	virtual double getAxis(int axis);
+	virtual double getAxis(Axis axis);
 	
 	///Zwróć strukturę kierunku
 	Twist getTwist();

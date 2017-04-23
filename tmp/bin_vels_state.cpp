@@ -68,17 +68,17 @@ void BinVelsState::set(sf::Keyboard::Key key, bool pressed)
 	}
 }
 
-double BinVelsState::get(int wheel)
+double BinVelsState::get(Wheel wheel)
 {
 	switch(wheel)
 	{
-		case 1:
+		case W1:
 			return w1;
-		case 2:
+		case W2:
 			return w2;
-		case 3:
+		case W3:
 			return w3;
-		case 4:
+		case W4:
 			return w4;
 		default:
 			return 0;
@@ -95,17 +95,17 @@ void BinVelsState::update()
 	
 }
 
-double BinVelsStateHold::get(int wheel)
+double BinVelsStateHold::get(Wheel wheel)
 {
 	switch(wheel)
 	{
-		case 1:
+		case W1:
 			return (w1 == 0) ? std::nan("") : w1;
-		case 2:
+		case W2:
 			return (w2 == 0) ? std::nan("") : w2;
-		case 3:
+		case W3:
 			return (w3 == 0) ? std::nan("") : w3;
-		case 4:
+		case W4:
 			return (w4 == 0) ? std::nan("") : w4;
 		default:
 			return 0;
