@@ -1,6 +1,6 @@
 #include "state.hpp" 
 
-Vels VelsState::getVels()
+Vels State::getVels()
 {
 	Vels out;
 	out.w1 = get(1);
@@ -10,28 +10,47 @@ Vels VelsState::getVels()
 	return out;
 }
 
-void VelsState::set(sf::Joystick::Axis axis, double position)
+Twist State::getTwist()
 {
-	
+	Twist out;
+	out.x = getAxis(0);
+	out.y = getAxis(1);
+	out.z = getAxis(2);
+	return out;
 }
 
-void VelsState::set(sf::Keyboard::Key key, bool pressed)
-{
-	
+double State::get(int wheel)
+{ 
+	return 0;
 }
 
-double VelsState::get(int wheel)
+void State::reset()
+{
+}
+
+void State::set(sf::Joystick::Axis axis, double position)
+{
+}
+
+void State::set(sf::Keyboard::Key key, bool pressed)
+{
+}
+
+void State::update()
+{
+}
+
+double State::getAxis(int axis)
 {
 	return 0;
 }
 
-void VelsState::reset()
+
+void State::set(double deltaZ)
 {
-	
 }
 
-void VelsState::update()
+void State::set(double x, double y)
 {
-	
 }
 

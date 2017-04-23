@@ -43,13 +43,15 @@ bool keyWheelInput;
 std::mutex mainMutex;
 ///Dane synchronizowane między wątkami
 Vels vels;
+///Dane kierunku do synchronizowania między wątkami
+Twist twist;
 
 ///Font tekstu
 sf::Font font;
 sf::Font monoFont;
 
 ///Stan robota
-std::unique_ptr<VelsState> velsState;
+std::unique_ptr<State> state;
 
 ///Pętla drugiego wątku do wysyłania wiadomości ROSa
 void sendLoop()
@@ -180,25 +182,25 @@ void drawGUI()
 		sf::Text wheelValue(defaultText);
 		
 		std::stringstream ss;
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(2);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(2);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
 		
 		ss.str(std::string());
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(3);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(3);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
 		
 		ss.str(std::string());
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(1);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(1);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
 		
 		ss.str(std::string());
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << velsState -> get(4);
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(4);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
@@ -216,7 +218,7 @@ void drawGUI()
 		maxMeter1.setSize(sf::Vector2f(METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
 		maxMeter2.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(2) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(2) * screenSize));
 		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -224,7 +226,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(3) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(3) * screenSize));
 		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -232,7 +234,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(1) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(1) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -240,7 +242,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 		
-		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -velsState -> get(4) * screenSize));
+		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(4) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -260,22 +262,22 @@ void setModeData()
 	switch(mode)
 	{
 		case 0:
-			velsState.reset(new BinVelsState());
+			state.reset(new BinVelsState());
 			break;
 		case 1:
-			velsState.reset(new BinVelsStateHold());
+			state.reset(new BinVelsStateHold());
 			break;
 		case 2:
-			velsState.reset(new ContVelsState());
+			state.reset(new ContVelsState());
 			break;
 		case 3:
-			velsState.reset(new StepsVelsState());
+			state.reset(new StepsVelsState());
 			break;
 		case 4:
-			velsState.reset(new StepsVelsStateHold());
+			state.reset(new StepsVelsStateHold());
 			break;
 		case 5:
-			velsState.reset(new GamepadVelsState());
+			state.reset(new GamepadVelsState());
 			break;
 			
 		default:
@@ -317,7 +319,7 @@ int main(int args, char** argv)
 	currGear = 1;
 	binaryInput = true;
 	keyWheelInput = true;
-	velsState.reset(new BinVelsState());
+	state.reset(new BinVelsState());
 	
 	for(int i = 0; i < MODE_COUNT; i++)
 	{
@@ -539,25 +541,25 @@ int main(int args, char** argv)
 			}
 			else if(event.type == sf::Event::KeyPressed && event.key.code == KEY_STOP)
 			{
-				velsState -> reset();
+				state -> reset();
 			}
 			else if(event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
 			{
-				velsState -> set(event.key.code, (event.type == sf::Event::KeyPressed));
+				state -> set(event.key.code, (event.type == sf::Event::KeyPressed));
 			}
 			else if(event.type == sf::Event::JoystickMoved)
 			{
-				velsState -> set(event.joystickMove.axis, event.joystickMove.position);
+				state -> set(event.joystickMove.axis, event.joystickMove.position);
 			}
 		}
-		velsState -> update();
+		state -> update();
 
         window.clear();
         drawGUI();
         window.display();
 		
 		mainMutex.lock();
-		vels = velsState -> getVels();
+		vels = state -> getVels();
 		mainMutex.unlock();
     }
     

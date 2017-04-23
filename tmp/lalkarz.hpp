@@ -99,3 +99,11 @@ typedef struct
 	double w3;
 	double w4;
 } Vels;
+
+///Kieunki
+typedef struct
+{
+	double x;
+	double y;
+	double z;
+} Twist;
