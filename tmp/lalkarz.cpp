@@ -42,6 +42,11 @@ bool binaryInput;
 bool keyWheelInput;
 ///Tryb sterowania kołami ogólnie
 bool wheelInput;
+///Tryb sterowania kierunkiem
+bool twistInput;
+///Tryb sterowania kierunkiem z klawiatury
+bool keyTwistInput;
+
 ///Sekcja krytyczna na prędkościach kół
 std::mutex mainMutex;
 ///Dane synchronizowane między wątkami
@@ -134,13 +139,33 @@ void drawGUI()
 	
 	//wskazówka do przełączania trybów
 	sf::Text modeHelpText(helperText);
-	modeHelpText.setString(KEY_TEXT_NEXT_MODE);
 	if(showsJoystick)
 	{
 		modeHelpText.setString(JS_BUTTON_TEXT_NEXT_MODE);
 	}
+	else
+	{
+		modeHelpText.setString(KEY_TEXT_NEXT_MODE);
+	}
 	modeHelpText.setPosition(screenSize - modeHelpText.getGlobalBounds().width, 0);
 	window.draw(modeHelpText);
+	
+	//wskazówka zatrzymania
+	sf::Text stopText(defaultText);
+	stopText.setString(STOP_TEXT);
+	stopText.setPosition(0, screenSize * (1.0 - FONT_SIZE));
+	window.draw(stopText);
+	sf::Text stopHelpText(helperText);
+	if(showsJoystick)
+	{
+		stopHelpText.setString(JS_BUTTON_TEXT_STOP);
+	}
+	else
+	{
+		stopHelpText.setString(KEY_TEXT_STOP);
+	}
+	stopHelpText.setPosition(stopText.getGlobalBounds().width + screenSize * LIST_WIDTH, screenSize * (1.0 - FONT_SIZE));
+	window.draw(stopHelpText);
 	
 	//opis trybu
 	sf::Text modeText(defaultText);
@@ -251,6 +276,44 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 	}
+	
+	//Wskazówki do sterowania kierunkiem
+	if(keyTwistInput)
+	{
+		sf::Text axisHelper(helperText);
+		axisHelper.setString(KEY_TEXT_AXIS_X_DOWN);
+		axisHelper.setPosition(screenSize * 0.25, screenSize * (0.5 - FONT_SIZE * 0.5));
+		window.draw(axisHelper);
+		axisHelper.setString(KEY_TEXT_AXIS_X_UP);
+		axisHelper.setPosition(screenSize * 0.75 - axisHelper.getGlobalBounds().width, screenSize * (0.5 - FONT_SIZE * 0.5));
+		window.draw(axisHelper);
+		axisHelper.setString(KEY_TEXT_AXIS_Y_UP);
+		axisHelper.setPosition(screenSize * 0.5 - axisHelper.getGlobalBounds().width * 0.5, screenSize * (0.25 - FONT_SIZE));
+		window.draw(axisHelper);
+		axisHelper.setString(KEY_TEXT_AXIS_Y_DOWN);
+		axisHelper.setPosition(screenSize * 0.5 - axisHelper.getGlobalBounds().width * 0.5, screenSize * (0.75));
+		window.draw(axisHelper);
+		//TODO na boki, wyśrodkować
+	}
+	
+	//Markery kierunku
+	if(twistInput)
+	{
+		//pole
+		sf::RectangleShape vectorArea(sf::Vector2f(screenSize * (0.5 - 2 * WHEEL_WIDTH), screenSize * (0.5 - 2 * WHEEL_WIDTH)));
+		vectorArea.setFillColor(sf::Color::Transparent);
+		vectorArea.setOutlineColor(sf::Color::White);
+		vectorArea.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
+		vectorArea.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * (0.25 + WHEEL_WIDTH));
+		window.draw(vectorArea);
+		sf::RectangleShape midAxis(sf::Vector2f(screenSize * HELPER_TEXT_OUTLINE, vectorArea.getSize().y));
+		midAxis.setFillColor(sf::Color(255,255,255,100));
+		midAxis.setPosition(screenSize * 0.5 - midAxis.getSize().x * 0.5, screenSize * (0.25 + WHEEL_WIDTH));
+		window.draw(midAxis);
+		midAxis.setSize(sf::Vector2f(vectorArea.getSize().x, screenSize * HELPER_TEXT_OUTLINE));
+		midAxis.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * 0.5 - midAxis.getSize().y * 0.5);
+		window.draw(midAxis);
+	}
 }
 
 ///Ustaw dane powiązane z trybem
@@ -260,6 +323,8 @@ void setModeData()
 	binaryInput = (mode == 0 || mode == 1 || mode == 6);
 	keyWheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4);
 	wheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4 || mode == 5);
+	twistInput = (mode == 6 || mode == 7 || mode == 8 || mode == 9 || mode == 10);
+	keyTwistInput = (mode == 6 || mode == 7 || mode == 8);
 	
 	switch(mode)
 	{

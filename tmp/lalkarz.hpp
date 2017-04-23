@@ -63,10 +63,11 @@
 #define KEY_STOP					sf::Keyboard::Key::Space
 #define JS_BUTTON_STOP				7
 #define JS_BUTTON_STOP_ALT			9
+#define STOP_TEXT					"Zatrzymaj"
 #define KEY_TEXT_STOP				"SPACJA"
 #define JS_BUTTON_TEXT_STOP			"START"
 
-//sterowanie wejściem prędkości kół
+//sterowanie prędkością kół
 #define KEY_WHEEL_1_UP 				sf::Keyboard::Key::Multiply
 #define KEY_TEXT_WHEEL_1_UP 		"*"
 #define KEY_WHEEL_1_DOWN 			sf::Keyboard::Key::Numpad9
@@ -87,13 +88,29 @@
 #define KEY_WHEEL_4_DOWN			sf::Keyboard::Key::Numpad3
 #define KEY_TEXT_WHEEL_4_DOWN		"3"
 
-//sterowanie wejściem prędkości kół kontrolerem
+//sterowanie prędkością kół kontrolerem
 #define AXIS_WHEEL_1				sf::Joystick::Axis::V 
 #define AXIS_WHEEL_1_ALT			sf::Joystick::Axis::R
 #define AXIS_WHEEL_2				sf::Joystick::Axis::Y
 #define AXIS_WHEEL_3				sf::Joystick::Axis::X
 #define AXIS_WHEEL_4				sf::Joystick::Axis::U
 #define AXIS_WHEEL_4_ALT			sf::Joystick::Axis::Z
+
+//sterowanie kierunkiem
+#define KEY_AXIS_X_UP				sf::Keyboard::Key::D
+#define KEY_TEXT_AXIS_X_UP			"D"
+#define KEY_AXIS_X_DOWN				sf::Keyboard::Key::A
+#define KEY_TEXT_AXIS_X_DOWN		"A"
+
+#define KEY_AXIS_Y_UP				sf::Keyboard::Key::W
+#define KEY_TEXT_AXIS_Y_UP			"W"
+#define KEY_AXIS_Y_DOWN				sf::Keyboard::Key::S
+#define KEY_TEXT_AXIS_Y_DOWN		"S"
+
+#define KEY_AXIS_Z_LEFT				sf::Keyboard::Key::Q
+#define KEY_TEXT_AXIS_Z_LEFT		"Q"
+#define KEY_AXIS_Z_RIGHT			sf::Keyboard::Key::E
+#define KEY_TEXT_AXIS_Z_RIGHT		"E"
 
 ///Koło
 enum Wheel
