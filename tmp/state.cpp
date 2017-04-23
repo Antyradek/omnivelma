@@ -54,3 +54,39 @@ void State::set(double x, double y)
 {
 }
 
+IntVelsState::IntVelsState()
+{
+	reset();
+}
+
+void IntVelsState::reset()
+{
+	w1 = w2 = w3 = w4 = 0;
+}
+
+DoubleVelsState::DoubleVelsState()
+{
+	reset();
+}
+
+void DoubleVelsState::reset()
+{
+	w1 = w2 = w3 = w4 = 0;
+}
+
+double DoubleVelsState::get(Wheel wheel)
+{
+	switch(wheel)
+	{
+		case W1:
+			return w1;
+		case W2:
+			return w2;
+		case W3:
+			return w3;
+		case W4:
+			return w4;
+		default:
+			return 0;
+	}
+}

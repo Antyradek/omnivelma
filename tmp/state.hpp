@@ -47,3 +47,32 @@ class TwistState : public State
 {
 	
 };
+
+///Stan o prędkościach kół o wartości całkowitej
+class IntVelsState : public VelsState
+{
+protected:
+	int w1;
+	int w2;
+	int w3;
+	int w4;	
+
+public:
+	IntVelsState();
+	void reset() override;
+};
+
+///Stan o prędkościach kół o wartości rzeczywistej
+class DoubleVelsState : public VelsState
+{
+protected:
+	double w1;
+	double w2;
+	double w3;
+	double w4;
+	
+public:
+	DoubleVelsState();
+	void reset() override;
+	double get(Wheel wheel) override;
+};

@@ -1,10 +1,8 @@
 #include "cont_vels_state.hpp"
 
-ContVelsState::ContVelsState()
+ContVelsState::ContVelsState() : DoubleVelsState()
 {
-	w1 = w2 = w3 = w4 = 0;
-	w1dir = w2dir = w3dir = w4dir = 0;
-	
+	reset();
 }
 
 void ContVelsState::reset()
@@ -89,23 +87,6 @@ void ContVelsState::set(sf::Keyboard::Key key, bool pressed)
 	w2 = clamp(w2);
 	w3 = clamp(w3);
 	w4 = clamp(w4);
-}
-
-double ContVelsState::get(Wheel wheel)
-{
-	switch(wheel)
-	{
-		case W1:
-			return w1;
-		case W2:
-			return w2;
-		case W3:
-			return w3;
-		case W4:
-			return w4;
-		default:
-			return 0;
-	}
 }
 
 void ContVelsState::update()

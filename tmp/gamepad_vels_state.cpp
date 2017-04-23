@@ -1,27 +1,5 @@
 #include "gamepad_vels_state.hpp" 
 
-GamepadVelsState::GamepadVelsState()
-{
-	w1 = w2 = w3 = w4 = 0;
-}
-
-double GamepadVelsState::get(Wheel wheel)
-{
-	switch(wheel)
-	{
-		case W1:
-			return w1;
-		case W2:
-			return w2;
-		case W3:
-			return w3;
-		case W4:
-			return w4;
-		default:
-			return 0;
-	}
-}
-
 void GamepadVelsState::set(sf::Joystick::Axis axis, double position)
 {
 	switch(axis)
@@ -44,9 +22,3 @@ void GamepadVelsState::set(sf::Joystick::Axis axis, double position)
 			break;
 	}
 }
-
-void GamepadVelsState::reset()
-{
-	w1 = w2 = w3 = w4 = 0;
-}
-

@@ -1,16 +1,9 @@
 #pragma once
 #include "state.hpp"
 
-class GamepadVelsState : public VelsState
+///Prędkości kół z kontrolera
+class GamepadVelsState : public DoubleVelsState
 {
-protected:
-	double w1;
-	double w2;
-	double w3;
-	double w4;
 public:
-	GamepadVelsState();
 	void set(sf::Joystick::Axis axis, double position) override;
-	double get(Wheel wheel) override;
-	void reset() override;
 };

@@ -2,25 +2,16 @@
 #include "state.hpp"
  
 ///Binarne wejście
-class BinVelsState : public VelsState
+class BinVelsState : public IntVelsState
 {
 public:
-	BinVelsState();
-	
-protected:
-	int w1;
-	int w2;
-	int w3;
-	int w4;
-
 	void set(sf::Keyboard::Key key, bool pressed) override;
 	double get(Wheel wheel) override;
-	void reset() override;
-	void update() override;
 };
 
-///Binarne wejście z podtrzymaniem na zero
+///Binarne wejście z podtrzymaniem na zerze
 class BinVelsStateHold : public BinVelsState
 {
+public:
 	double get(Wheel wheel) override;
 };

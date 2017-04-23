@@ -1,13 +1,5 @@
 #include "bin_vels_state.hpp" 
 
-BinVelsState::BinVelsState()
-{
-	w1 = 0;
-	w2 = 0;
-	w3 = 0;
-	w4 = 0;
-}
-
 void BinVelsState::set(sf::Keyboard::Key key, bool pressed)
 {
 	if(pressed)
@@ -83,16 +75,6 @@ double BinVelsState::get(Wheel wheel)
 		default:
 			return 0;
 	}
-}
-
-void BinVelsState::reset()
-{
-	w1 = w2 = w3 = w4 = 0;
-}
-
-void BinVelsState::update()
-{
-	
 }
 
 double BinVelsStateHold::get(Wheel wheel)

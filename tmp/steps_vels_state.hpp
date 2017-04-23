@@ -1,25 +1,18 @@
 #pragma once
 #include "state.hpp"
 
-class StepsVelsState : public VelsState
+///Stopniowe ustawianie prędkości
+class StepsVelsState : public IntVelsState
 {
-protected:
-	int w1;
-	int w2;
-	int w3;
-	int w4;
-	
+protected:	
 	int clamp(int value) const;
 public:
-	StepsVelsState();
 	void set(sf::Keyboard::Key key, bool pressed) override;
-	void update() override;
-	void reset() override;
 	double get(Wheel wheel) override;
 };
 
+///Stopniowe ustawianie prędkości z podtrzymaniem na zerze
 class StepsVelsStateHold : public StepsVelsState
 {
 	double get(Wheel wheel) override;
-	
 };

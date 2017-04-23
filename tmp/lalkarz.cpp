@@ -33,12 +33,15 @@ std::wstring modeNames[MODE_COUNT];
 bool sendsTwist;
 ///Wysyła wiadomości Vels
 bool sendsVels;
+
 ///Pokazuje interfejs joysticka
 bool showsJoystick;
 ///Tryb binarnego wejścia
 bool binaryInput;
 ///Tryb sterowania kołami z klawiatury
 bool keyWheelInput;
+///Tryb sterowania kołami ogólnie
+bool wheelInput;
 ///Sekcja krytyczna na prędkościach kół
 std::mutex mainMutex;
 ///Dane synchronizowane między wątkami
@@ -129,7 +132,7 @@ void drawGUI()
 		window.draw(modeDigit);
 	}
 	
-	//wskazówka do sterowania
+	//wskazówka do przełączania trybów
 	sf::Text modeHelpText(helperText);
 	modeHelpText.setString(KEY_TEXT_NEXT_MODE);
 	if(showsJoystick)
@@ -176,9 +179,10 @@ void drawGUI()
 		window.draw(wheelHelper);
 	}
 	
-	//Wartości prędkości
-	if(sendsVels)
+	//Markery
+	if(wheelInput)
 	{
+		//wartości prędkości
 		sf::Text wheelValue(defaultText);
 		
 		std::stringstream ss;
@@ -204,11 +208,8 @@ void drawGUI()
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
-	}
-	
-	//Markery
-	if(sendsVels)
-	{
+
+		//słupki
 		sf::RectangleShape meter(sf::Vector2f(0,0));
 		sf::RectangleShape maxMeter1(sf::Vector2f(0,0));
 		maxMeter1.setFillColor(sf::Color::Transparent);
@@ -258,6 +259,7 @@ void setModeData()
 	showsJoystick = (mode == 5 || mode == 9);
 	binaryInput = (mode == 0 || mode == 1 || mode == 6);
 	keyWheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4);
+	wheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4 || mode == 5);
 	
 	switch(mode)
 	{
@@ -317,9 +319,7 @@ int main(int args, char** argv)
 	screenSize = WINDOW_SIZE;
 	mode = 0;
 	currGear = 1;
-	binaryInput = true;
-	keyWheelInput = true;
-	state.reset(new BinVelsState());
+	setModeData();
 	
 	for(int i = 0; i < MODE_COUNT; i++)
 	{
@@ -535,11 +535,11 @@ int main(int args, char** argv)
 			{
 				window.close();
 			}
-			else if((event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)) || (event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE))
+			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)))
 			{
 				switchNextMode();
 			}
-			else if(event.type == sf::Event::KeyPressed && event.key.code == KEY_STOP)
+			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_STOP) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_STOP || event.joystickButton.button == JS_BUTTON_STOP_ALT)))
 			{
 				state -> reset();
 			}

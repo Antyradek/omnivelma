@@ -1,10 +1,5 @@
 #include "steps_vels_state.hpp"
 
-StepsVelsState::StepsVelsState()
-{
-	w1 = w2 = w3 = w4 = 0;
-}
-
 void StepsVelsState::set(sf::Keyboard::Key key, bool pressed)
 {
 	if(pressed)
@@ -45,16 +40,6 @@ void StepsVelsState::set(sf::Keyboard::Key key, bool pressed)
 		w4 = clamp(w4);
 		
 	}
-}
-
-void StepsVelsState::reset()
-{
-	w1 = w2 = w3 = w4 = 0;
-}
-
-void StepsVelsState::update()
-{
-	
 }
 
 double StepsVelsState::get(Wheel wheel)

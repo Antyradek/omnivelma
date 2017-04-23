@@ -61,6 +61,10 @@
 
 //stop
 #define KEY_STOP					sf::Keyboard::Key::Space
+#define JS_BUTTON_STOP				7
+#define JS_BUTTON_STOP_ALT			9
+#define KEY_TEXT_STOP				"SPACJA"
+#define JS_BUTTON_TEXT_STOP			"START"
 
 //sterowanie wejściem prędkości kół
 #define KEY_WHEEL_1_UP 				sf::Keyboard::Key::Multiply
