@@ -4,8 +4,10 @@
 #include "cont_vels_state.hpp"
 #include "steps_vels_state.hpp"
 #include "gamepad_vels_state.hpp"
+#include "bin_twist_state.hpp"
 #include "font.hpp"
 #include "mono_font.hpp"
+#include "icon.hpp"
 
 ///Czas między kolejnymi wysłaniami wiadomości ROS
 double sendWaitTime;
@@ -238,7 +240,7 @@ void drawGUI()
 		sf::RectangleShape meter(sf::Vector2f(0,0));
 		sf::RectangleShape maxMeter1(sf::Vector2f(0,0));
 		maxMeter1.setFillColor(sf::Color::Transparent);
-		maxMeter1.setOutlineColor(sf::Color::White);
+		maxMeter1.setOutlineColor(BORDER_COLOR);
 		maxMeter1.setOutlineThickness(HELPER_TEXT_OUTLINE * screenSize);
 		sf::RectangleShape maxMeter2(maxMeter1);
 		maxMeter1.setSize(sf::Vector2f(METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
@@ -288,12 +290,17 @@ void drawGUI()
 		axisHelper.setPosition(screenSize * 0.75 - axisHelper.getGlobalBounds().width, screenSize * (0.5 - FONT_SIZE * 0.5));
 		window.draw(axisHelper);
 		axisHelper.setString(KEY_TEXT_AXIS_Y_UP);
-		axisHelper.setPosition(screenSize * 0.5 - axisHelper.getGlobalBounds().width * 0.5, screenSize * (0.25 - FONT_SIZE));
+		axisHelper.setPosition(screenSize * 0.5 - axisHelper.getGlobalBounds().width * 0.5, screenSize * (0.25 - WHEEL_WIDTH + FONT_SIZE));
 		window.draw(axisHelper);
 		axisHelper.setString(KEY_TEXT_AXIS_Y_DOWN);
 		axisHelper.setPosition(screenSize * 0.5 - axisHelper.getGlobalBounds().width * 0.5, screenSize * (0.75));
 		window.draw(axisHelper);
-		//TODO na boki, wyśrodkować
+		axisHelper.setString(KEY_TEXT_AXIS_Z_LEFT);
+		axisHelper.setPosition(0.25 * screenSize - axisHelper.getGlobalBounds().width, screenSize * (0.25 - 1.5 * METER_WIDTH - 0.5 * FONT_SIZE));
+		window.draw(axisHelper);
+		axisHelper.setString(KEY_TEXT_AXIS_Z_RIGHT);
+		axisHelper.setPosition(0.75 * screenSize, screenSize * (0.25 - 1.5 * METER_WIDTH - 0.5 * FONT_SIZE));
+		window.draw(axisHelper);
 	}
 	
 	//Markery kierunku
@@ -307,12 +314,36 @@ void drawGUI()
 		vectorArea.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * (0.25 + WHEEL_WIDTH));
 		window.draw(vectorArea);
 		sf::RectangleShape midAxis(sf::Vector2f(screenSize * HELPER_TEXT_OUTLINE, vectorArea.getSize().y));
-		midAxis.setFillColor(sf::Color(255,255,255,100));
+		midAxis.setFillColor(BORDER_COLOR);
 		midAxis.setPosition(screenSize * 0.5 - midAxis.getSize().x * 0.5, screenSize * (0.25 + WHEEL_WIDTH));
 		window.draw(midAxis);
 		midAxis.setSize(sf::Vector2f(vectorArea.getSize().x, screenSize * HELPER_TEXT_OUTLINE));
 		midAxis.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * 0.5 - midAxis.getSize().y * 0.5);
 		window.draw(midAxis);
+		//strzałka
+		double x = state -> getAxis(Axis::X);
+		double y = state -> getAxis(Axis::Y);
+		double z = state -> getAxis(Axis::Z);
+		sf::RectangleShape arrow(sf::Vector2f(std::sqrt(x * x + y * y) * vectorArea.getSize().x * 0.5, screenSize * ARROW_WIDTH));
+		arrow.setFillColor(sf::Color::White);
+		arrow.setOrigin(0, arrow.getSize().y * 0.5);
+		arrow.setPosition(screenSize * 0.5, screenSize * 0.5);
+		double phi = std::atan2(y,x);
+		arrow.rotate(-phi * RAD2DEG);
+		window.draw(arrow);
+		//obrót
+		sf::RectangleShape maxMeter(sf::Vector2f(0.25 * screenSize, METER_WIDTH * screenSize));
+		maxMeter.setFillColor(sf::Color::Transparent);
+		maxMeter.setOutlineColor(BORDER_COLOR);
+		maxMeter.setOutlineThickness(HELPER_TEXT_OUTLINE * screenSize);
+		maxMeter.setPosition(0.25 * screenSize, screenSize * (0.25 - 2 * METER_WIDTH));
+		window.draw(maxMeter);
+		maxMeter.setPosition(0.5 * screenSize, screenSize * (0.25 - 2 * METER_WIDTH));
+		window.draw(maxMeter);
+		sf::RectangleShape rotMeter(sf::Vector2f(z * -0.25 * screenSize, METER_WIDTH * screenSize));
+		rotMeter.setFillColor(sf::Color::White);
+		rotMeter.setPosition(maxMeter.getPosition());
+		window.draw(rotMeter);
 	}
 }
 
@@ -345,6 +376,9 @@ void setModeData()
 			break;
 		case 5:
 			state.reset(new GamepadVelsState());
+			break;
+		case 6:
+			state.reset(new BinTwistState());
 			break;
 			
 		default:
@@ -583,13 +617,17 @@ int main(int args, char** argv)
 	font.loadFromMemory(fontData, fontDataSize);
 	monoFont.loadFromMemory(monoFontData, monoFontDataSize);
 	
+	//wczytaj ikonę
+	sf::Image icon;
+	icon.loadFromMemory(iconData, iconDataSize);
+	
 	//uruchom program
 	std::thread sendThread(sendLoop);
 	
     window.create(sf::VideoMode(screenSize, screenSize), "Lalkarz", sf::Style::Close);
 	///window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
-	//window.setKeyRepeatEnabled(false);
+	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     while (window.isOpen())
     {

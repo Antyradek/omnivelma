@@ -6,3 +6,6 @@
 *.snm
 *.backup
 build
+
+tmp/*.o
+tmp/lalkarz

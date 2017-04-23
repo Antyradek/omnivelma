@@ -62,6 +62,18 @@ public:
 	void reset() override;
 };
 
+///Stan kierunku z wektorami o wartości całkowitej
+class IntTwistState : public TwistState
+{
+protected:
+	int x;
+	int y;
+	int z;
+public:
+	IntTwistState();
+	void reset() override;
+};
+
 ///Stan o prędkościach kół o wartości rzeczywistej
 class DoubleVelsState : public VelsState
 {

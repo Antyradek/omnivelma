@@ -64,6 +64,16 @@ void IntVelsState::reset()
 	w1 = w2 = w3 = w4 = 0;
 }
 
+IntTwistState::IntTwistState()
+{
+	reset();
+}
+
+void IntTwistState::reset()
+{
+	x = y = z = 0;
+}
+
 DoubleVelsState::DoubleVelsState()
 {
 	reset();

@@ -42,6 +42,10 @@
 #define LIST_WIDTH 					0.05
 ///Szerokość otoczki tekstu
 #define HELPER_TEXT_OUTLINE 		0.001
+///Szerokość sztrzałki
+#define ARROW_WIDTH					0.01
+///Kolor otoczki
+#define BORDER_COLOR				sf::Color(255,255,255,100)
 
 #define MODE_COUNT 					11
 #define GEAR_COUNT 					5
@@ -111,6 +115,9 @@
 #define KEY_TEXT_AXIS_Z_LEFT		"Q"
 #define KEY_AXIS_Z_RIGHT			sf::Keyboard::Key::E
 #define KEY_TEXT_AXIS_Z_RIGHT		"E"
+
+//radiany na kąty
+#define RAD2DEG 					57.2957795130824
 
 ///Koło
 enum Wheel
