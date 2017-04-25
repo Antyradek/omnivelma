@@ -29,7 +29,7 @@
 ///Wysokość miernika
 #define METER_HEIGHT				0.18
 ///Prędkość zmiany miernika
-#define METER_CHANGE_SPEED			0.8
+#define METER_CHANGE_SPEED			1.0
 ///Odległość miernika od koła
 #define METER_WHEEL_DIST			0.01
 ///Wielkość linii
@@ -44,8 +44,12 @@
 #define HELPER_TEXT_OUTLINE 		0.001
 ///Szerokość sztrzałki
 #define ARROW_WIDTH					0.01
+///Wielkość grotu strzałki
+#define ARROW_HEAD_WIDTH			0.02
 ///Kolor otoczki
 #define BORDER_COLOR				sf::Color(255,255,255,100)
+///Minimalna wartość, aby pokazać zmianę strzałki
+#define ARROW_EPSILON				0.001
 
 #define MODE_COUNT 					11
 #define GEAR_COUNT 					5

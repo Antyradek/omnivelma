@@ -88,3 +88,17 @@ public:
 	void reset() override;
 	double get(Wheel wheel) override;
 };
+
+///Stan kierunku z wektorami o wartości rzeczywistej
+class DoubleTwistState : public TwistState
+{
+protected:
+	double x;
+	double y;
+	double z;
+	
+public:
+	DoubleTwistState();
+	void reset() override;
+	double getAxis(Axis axis) override;
+};

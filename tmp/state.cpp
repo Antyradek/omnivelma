@@ -100,3 +100,29 @@ double DoubleVelsState::get(Wheel wheel)
 			return 0;
 	}
 }
+
+void DoubleTwistState::reset()
+{
+	x = y = z = 0;
+}
+
+DoubleTwistState::DoubleTwistState()
+{
+	reset();
+}
+
+double DoubleTwistState::getAxis(Axis axis)
+{
+	switch(axis)
+	{
+		case X:
+			return x;
+		case Y:
+			return y;
+		case Z:
+			return z;
+		default:
+			return 0;
+	}
+}
+

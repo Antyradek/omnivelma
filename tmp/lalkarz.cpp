@@ -5,6 +5,7 @@
 #include "steps_vels_state.hpp"
 #include "gamepad_vels_state.hpp"
 #include "bin_twist_state.hpp"
+#include "cont_twist_state.hpp"
 #include "font.hpp"
 #include "mono_font.hpp"
 #include "icon.hpp"
@@ -324,13 +325,30 @@ void drawGUI()
 		double x = state -> getAxis(Axis::X);
 		double y = state -> getAxis(Axis::Y);
 		double z = state -> getAxis(Axis::Z);
-		sf::RectangleShape arrow(sf::Vector2f(std::sqrt(x * x + y * y) * vectorArea.getSize().x * 0.5, screenSize * ARROW_WIDTH));
+		double r = std::sqrt(x * x + y * y);
+		sf::RectangleShape arrow(sf::Vector2f(r * vectorArea.getSize().x * 0.5, screenSize * ARROW_WIDTH));
+		sf::CircleShape niceCircle(screenSize * ARROW_WIDTH * 0.5, 20);
+		sf::CircleShape arrowEnd(screenSize * ARROW_HEAD_WIDTH, 3);
+		arrowEnd.setFillColor(sf::Color::White);
+		arrowEnd.setOrigin(screenSize * ARROW_HEAD_WIDTH, screenSize * ARROW_HEAD_WIDTH);
+		arrowEnd.setPosition(screenSize * 0.5 + 0.5 * x * vectorArea.getSize().x, screenSize * 0.5 - 0.5 * y * vectorArea.getSize().y);
 		arrow.setFillColor(sf::Color::White);
 		arrow.setOrigin(0, arrow.getSize().y * 0.5);
 		arrow.setPosition(screenSize * 0.5, screenSize * 0.5);
+		niceCircle.setFillColor(sf::Color::White);
+		niceCircle.setOrigin(screenSize * 0.5 * ARROW_WIDTH, screenSize * 0.5 * ARROW_WIDTH);
+		niceCircle.setPosition(0.5 * screenSize, 0.5 * screenSize);
 		double phi = std::atan2(y,x);
 		arrow.rotate(-phi * RAD2DEG);
+		arrowEnd.rotate(-phi * RAD2DEG - 30);
 		window.draw(arrow);
+		window.draw(niceCircle);
+		if(r > ARROW_EPSILON)
+		{
+			window.draw(arrowEnd);
+		}
+		//niceCircle.setPosition(screenSize * 0.5 + 0.5 * x * vectorArea.getSize().x, screenSize * 0.5 - 0.5 * y * vectorArea.getSize().y);
+		//window.draw(niceCircle);
 		//obrót
 		sf::RectangleShape maxMeter(sf::Vector2f(0.25 * screenSize, METER_WIDTH * screenSize));
 		maxMeter.setFillColor(sf::Color::Transparent);
@@ -379,6 +397,9 @@ void setModeData()
 			break;
 		case 6:
 			state.reset(new BinTwistState());
+			break;
+		case 7:
+			state.reset(new ContTwistState());
 			break;
 			
 		default:
