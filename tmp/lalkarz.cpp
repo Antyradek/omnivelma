@@ -326,11 +326,11 @@ void drawGUI()
 		double y = state -> getAxis(Axis::Y);
 		double z = state -> getAxis(Axis::Z);
 		double r = std::sqrt(x * x + y * y);
-		sf::RectangleShape arrow(sf::Vector2f(r * vectorArea.getSize().x * 0.5, screenSize * ARROW_WIDTH));
+		sf::RectangleShape arrow(sf::Vector2f(r * vectorArea.getSize().x * 0.5 - screenSize * ARROW_HEAD_WIDTH * 0.5, screenSize * ARROW_WIDTH));
 		sf::CircleShape niceCircle(screenSize * ARROW_WIDTH * 0.5, 20);
 		sf::CircleShape arrowEnd(screenSize * ARROW_HEAD_WIDTH, 3);
 		arrowEnd.setFillColor(sf::Color::White);
-		arrowEnd.setOrigin(screenSize * ARROW_HEAD_WIDTH, screenSize * ARROW_HEAD_WIDTH);
+		arrowEnd.setOrigin(screenSize * ARROW_HEAD_WIDTH, 0);
 		arrowEnd.setPosition(screenSize * 0.5 + 0.5 * x * vectorArea.getSize().x, screenSize * 0.5 - 0.5 * y * vectorArea.getSize().y);
 		arrow.setFillColor(sf::Color::White);
 		arrow.setOrigin(0, arrow.getSize().y * 0.5);
@@ -340,15 +340,14 @@ void drawGUI()
 		niceCircle.setPosition(0.5 * screenSize, 0.5 * screenSize);
 		double phi = std::atan2(y,x);
 		arrow.rotate(-phi * RAD2DEG);
-		arrowEnd.rotate(-phi * RAD2DEG - 30);
-		window.draw(arrow);
+		arrowEnd.rotate(-phi * RAD2DEG + 90);
+		
 		window.draw(niceCircle);
 		if(r > ARROW_EPSILON)
 		{
+			window.draw(arrow);
 			window.draw(arrowEnd);
 		}
-		//niceCircle.setPosition(screenSize * 0.5 + 0.5 * x * vectorArea.getSize().x, screenSize * 0.5 - 0.5 * y * vectorArea.getSize().y);
-		//window.draw(niceCircle);
 		//obrót
 		sf::RectangleShape maxMeter(sf::Vector2f(0.25 * screenSize, METER_WIDTH * screenSize));
 		maxMeter.setFillColor(sf::Color::Transparent);

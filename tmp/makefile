@@ -1,6 +1,6 @@
 CXX = g++
 
-CXX_FLAGS =-Wall -g --std=c++14
+CXX_FLAGS =-Wall --std=c++14 -O2
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lpthread
 SOURCES = $(shell ls *.cpp)
 OBJECTS = $(subst /,/,$(SOURCES:.cpp=.o))
