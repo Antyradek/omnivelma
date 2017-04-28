@@ -56,6 +56,8 @@ std::mutex mainMutex;
 Vels vels;
 ///Dane kierunku do synchronizowania między wątkami
 Twist twist;
+///Bieg do przemnożenia
+int outputMultiplier;
 
 ///Font tekstu
 sf::Font font;
@@ -84,7 +86,7 @@ void drawGUI()
 	//pomocnicze
 	sf::Text helperText("", font);
 	helperText.setCharacterSize(screenSize * CHAR_SIZE);
-	helperText.setFillColor(sf::Color(100,100,100,255));
+	helperText.setFillColor(DISABLED_COLOR);
 	helperText.setOutlineColor(sf::Color::White);
 	helperText.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
 	sf::Text defaultText("", font);
@@ -129,7 +131,7 @@ void drawGUI()
 		}
 		else
 		{
-			modeDigit.setFillColor(sf::Color(100,100,100,255));
+			modeDigit.setFillColor(DISABLED_COLOR);
 		}
 		if(i == mode)
 		{
@@ -167,7 +169,7 @@ void drawGUI()
 	{
 		stopHelpText.setString(KEY_TEXT_STOP);
 	}
-	stopHelpText.setPosition(stopText.getGlobalBounds().width + screenSize * LIST_WIDTH, screenSize * (1.0 - FONT_SIZE));
+	stopHelpText.setPosition(0, screenSize * (1.0 - 2.0 * FONT_SIZE));
 	window.draw(stopHelpText);
 	
 	//opis trybu
@@ -362,6 +364,37 @@ void drawGUI()
 		rotMeter.setPosition(maxMeter.getPosition());
 		window.draw(rotMeter);
 	}
+	//bieg
+	sf::Text gearText(defaultText);
+	gearText.setString("Bieg:");
+	gearText.setPosition(0.5 * screenSize - gearText.getGlobalBounds().width * 0.5, screenSize * (1.0 - 3.0 * FONT_SIZE));
+	window.draw(gearText);
+	//lista biegów
+	double gearListWidth = (GEAR_COUNT - 1) * LIST_WIDTH + FONT_SIZE;
+	double gearListStart = screenSize * (0.5 - gearListWidth * 0.5);
+	for(int i = 0; i < GEAR_COUNT; i++)
+	{
+		sf::Text gearDigit(defaultText);
+		gearDigit.setString(std::to_string(i + 1));
+		if(i + 1 == currGear)
+		{
+			gearDigit.setFillColor(sf::Color::White);
+		}
+		else
+		{
+			gearDigit.setFillColor(DISABLED_COLOR);
+		}
+		gearDigit.setPosition(gearListStart + (i * LIST_WIDTH) * screenSize, screenSize * (1.0 - 2.0 * FONT_SIZE));
+		window.draw(gearDigit);
+	}
+	//pomocnicze
+	sf::Text gearHelperText(helperText);
+	gearHelperText.setString(KEY_TEXT_GEAR_DOWN);
+	gearHelperText.setPosition(gearListStart, screenSize * (1.0 - 3.0 * FONT_SIZE));
+	window.draw(gearHelperText);
+	gearHelperText.setString(KEY_TEXT_GEAR_UP);
+	gearHelperText.setPosition(gearListStart + (GEAR_COUNT - 1) * LIST_WIDTH * screenSize, screenSize * (1.0 - 3.0 * FONT_SIZE));
+	window.draw(gearHelperText);
 }
 
 ///Ustaw dane powiązane z trybem
@@ -662,6 +695,14 @@ int main(int args, char** argv)
 			{
 				switchNextMode();
 			}
+			else if(event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_UP)
+			{
+				currGear++;
+			}
+			else if(event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_DOWN)
+			{
+				currGear--;
+			}
 			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_STOP) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_STOP || event.joystickButton.button == JS_BUTTON_STOP_ALT)))
 			{
 				state -> reset();
@@ -675,14 +716,29 @@ int main(int args, char** argv)
 				state -> set(event.joystickMove.axis, event.joystickMove.position);
 			}
 		}
+		
+		//clamp biegu
+		if(currGear <= 0)
+		{
+			currGear = 1;
+		}
+		else if(currGear > GEAR_COUNT)
+		{
+			currGear = GEAR_COUNT;
+		}
+		//aktualizacja czasu
 		state -> update();
 
+		//narysowanie GUI
         window.clear();
         drawGUI();
         window.display();
 		
+		//przekazanie ważnych wartości.
 		mainMutex.lock();
 		vels = state -> getVels();
+		twist = state -> getTwist();
+		outputMultiplier = currGear;
 		mainMutex.unlock();
     }
     

@@ -48,6 +48,8 @@
 #define ARROW_HEAD_WIDTH			0.02
 ///Kolor otoczki
 #define BORDER_COLOR				sf::Color(255,255,255,100)
+///Kolor wyłączenia
+#define DISABLED_COLOR				sf::Color(100,100,100,255)
 ///Minimalna wartość, aby pokazać zmianę strzałki
 #define ARROW_EPSILON				0.001
 
@@ -66,6 +68,12 @@
 #define JS_BUTTON_NEXT_MODE 		6
 #define JS_BUTTON_NEXT_MODE_ALT		8
 #define JS_BUTTON_TEXT_NEXT_MODE 	"SELECT"
+
+//przełączanie biegów
+#define KEY_GEAR_UP					sf::Keyboard::Key::R
+#define KEY_GEAR_DOWN				sf::Keyboard::Key::F
+#define KEY_TEXT_GEAR_UP			"R"
+#define KEY_TEXT_GEAR_DOWN			"F"
 
 //stop
 #define KEY_STOP					sf::Keyboard::Key::Space
