@@ -214,7 +214,7 @@ void drawGUI()
 	if(wheelInput)
 	{
 		//wartości prędkości
-		sf::Text wheelValue(defaultText);
+		sf::Text wheelValue(valueText);
 		
 		std::stringstream ss;
 		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W2);
@@ -364,6 +364,27 @@ void drawGUI()
 		rotMeter.setFillColor(sf::Color::White);
 		rotMeter.setPosition(maxMeter.getPosition());
 		window.draw(rotMeter);
+		//tekst
+		std::stringstream ss;
+		ss << std::fixed << std::setprecision(VALUE_PRECISION);
+		sf::Text valText(valueText);
+		
+		ss << "X " << x;
+		valText.setString(ss.str());
+		valText.setPosition(0.75 * screenSize, screenSize * (0.75 - WHEEL_HEIGHT));
+		window.draw(valText);
+		ss.str(std::string());
+		
+		ss << "Y " << y;
+		valText.setString(ss.str());
+		valText.setPosition(0.75 * screenSize, screenSize * (0.75 - 0.66 * WHEEL_HEIGHT));
+		window.draw(valText);
+		ss.str(std::string());
+		
+		ss << "Z " << z;
+		valText.setString(ss.str());
+		valText.setPosition(0.75 * screenSize, screenSize * (0.75 - 0.33 * WHEEL_HEIGHT));
+		window.draw(valText);
 	}
 	//bieg
 	sf::Text gearText(defaultText);
@@ -388,7 +409,7 @@ void drawGUI()
 		gearDigit.setPosition(gearListStart + (i * LIST_WIDTH) * screenSize, screenSize * (1.0 - 2.0 * FONT_SIZE));
 		window.draw(gearDigit);
 	}
-	//pomocnicze
+	//pomocnicze biegu
 	sf::Text gearHelperText(helperText);
 	gearHelperText.setString(KEY_TEXT_GEAR_DOWN);
 	gearHelperText.setPosition(gearListStart, screenSize * (1.0 - 3.0 * FONT_SIZE));
