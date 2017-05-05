@@ -787,6 +787,27 @@ int main(int args, char** argv)
 				{
 					setModeData();
 				}
+				
+				switch(event.key.code)
+				{
+					case sf::Keyboard::Num1:
+						currGear = 1;
+						break;
+					case sf::Keyboard::Num2:
+						currGear = 2;
+						break;
+					case sf::Keyboard::Num3:
+						currGear = 3;
+						break;
+					case sf::Keyboard::Num4:
+						currGear = 4;
+						break;
+					case sf::Keyboard::Num5:
+						currGear = 5;
+						break;
+					default:
+						break;
+				}
 			}
 		}
 		
