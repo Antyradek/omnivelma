@@ -6,6 +6,7 @@
 #include "gamepad_vels_state.hpp"
 #include "bin_twist_state.hpp"
 #include "cont_twist_state.hpp"
+#include "steps_twist_state.hpp"
 #include "font.hpp"
 #include "mono_font.hpp"
 #include "icon.hpp"
@@ -433,7 +434,9 @@ void setModeData()
 		case 7:
 			state.reset(new ContTwistState());
 			break;
-			
+		case 8:
+			state.reset(new StepsTwistState());
+			break;
 		default:
 			break;
 	}

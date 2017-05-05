@@ -4,7 +4,6 @@ void StepsVelsState::set(sf::Keyboard::Key key, bool pressed)
 {
 	if(pressed)
 	{
-		
 		switch(key)
 		{
 			case KEY_WHEEL_1_UP:
