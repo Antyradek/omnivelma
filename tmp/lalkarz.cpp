@@ -59,6 +59,8 @@ Vels vels;
 Twist twist;
 ///Bieg do przemnożenia
 int outputMultiplier;
+///Tryb wysyłania
+SendMode sendMode;
 
 ///Font tekstu
 sf::Font font;
@@ -711,11 +713,7 @@ int main(int args, char** argv)
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if(event.type == sf::Event::Closed)
-			{
-				window.close();
-			}
-			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)))
+            if((event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)))
 			{
 				switchNextMode();
 			}
@@ -738,6 +736,57 @@ int main(int args, char** argv)
 			else if(event.type == sf::Event::JoystickMoved)
 			{
 				state -> set(event.joystickMove.axis, event.joystickMove.position);
+			}
+			else if(event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+			
+			if(event.type == sf::Event::KeyPressed)
+			{
+				bool switched = true;
+				switch(event.key.code)
+				{
+					case sf::Keyboard::F1:
+						mode = 0;
+						break;
+					case sf::Keyboard::F2:
+						mode = 1;
+						break;
+					case sf::Keyboard::F3:
+						mode = 2;
+						break;
+					case sf::Keyboard::F4:
+						mode = 3;
+						break;
+					case sf::Keyboard::F5:
+						mode = 4;
+						break;
+					case sf::Keyboard::F6:
+						mode = 5;
+						break;
+					case sf::Keyboard::F7:
+						mode = 6;
+						break;
+					case sf::Keyboard::F8:
+						mode = 7;
+						break;
+					case sf::Keyboard::F9:
+						mode = 8;
+						break;
+					case sf::Keyboard::F10:
+						mode = 9;
+						break;
+					case sf::Keyboard::F11:
+						mode = 10;
+						break;
+					default:
+						switched = false;
+				}
+				if(switched)
+				{
+					setModeData();
+				}
 			}
 		}
 		
@@ -763,6 +812,14 @@ int main(int args, char** argv)
 		vels = state -> getVels();
 		twist = state -> getTwist();
 		outputMultiplier = currGear;
+		if(wheelInput)
+		{
+			sendMode = SendMode::SendVels;
+		}
+		else
+		{
+			sendMode = SendMode::SendTwist;
+		}
 		mainMutex.unlock();
     }
     

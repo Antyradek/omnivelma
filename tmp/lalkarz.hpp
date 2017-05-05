@@ -148,6 +148,13 @@ enum Axis
 	Z
 };
 
+//Tryb wysyłania
+enum SendMode
+{
+	SendVels,
+	SendTwist
+};
+
 ///Prędkości kół
 typedef struct 
 {
