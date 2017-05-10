@@ -51,7 +51,7 @@
 ///Kolor wyłączenia
 #define DISABLED_COLOR				sf::Color(100,100,100,255)
 ///Minimalna wartość, aby pokazać zmianę strzałki
-#define ARROW_EPSILON				0.001
+#define ARROW_EPSILON				0.01
 
 #define MODE_COUNT 					11
 #define GEAR_COUNT 					5
@@ -74,6 +74,10 @@
 #define KEY_GEAR_DOWN				sf::Keyboard::Key::F
 #define KEY_TEXT_GEAR_UP			"R"
 #define KEY_TEXT_GEAR_DOWN			"F"
+#define JS_BUTTON_GEAR_UP			5
+#define JS_BUTTON_GEAR_DOWN			4
+#define JS_BUTTON_TEXT_GEAR_UP		"RB"
+#define JS_BUTTON_TEXT_GEAR_DOWN	"LB"
 
 //stop
 #define KEY_STOP					sf::Keyboard::Key::Space
@@ -111,6 +115,13 @@
 #define AXIS_WHEEL_3				sf::Joystick::Axis::X
 #define AXIS_WHEEL_4				sf::Joystick::Axis::U
 #define AXIS_WHEEL_4_ALT			sf::Joystick::Axis::Z
+
+//sterowanie kierunkiem kontrolerem
+#define AXIS_TWIST_X				sf::Joystick::Axis::U
+#define AXIS_TWIST_X_ALT			sf::Joystick::Axis::Z
+#define AXIS_TWIST_Y				sf::Joystick::Axis::V
+#define AXIS_TWIST_Y_ALT			sf::Joystick::Axis::R
+#define AXIS_TWIST_Z				sf::Joystick::Axis::X
 
 //sterowanie kierunkiem
 #define KEY_AXIS_X_UP				sf::Keyboard::Key::D

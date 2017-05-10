@@ -4,6 +4,7 @@
 #include "cont_vels_state.hpp"
 #include "steps_vels_state.hpp"
 #include "gamepad_vels_state.hpp"
+#include "gamepad_twist_state.hpp"
 #include "bin_twist_state.hpp"
 #include "cont_twist_state.hpp"
 #include "steps_twist_state.hpp"
@@ -348,7 +349,7 @@ void drawGUI()
 		arrowEnd.rotate(-phi * RAD2DEG + 90);
 		
 		window.draw(niceCircle);
-		if(r > ARROW_EPSILON)
+		if(std::abs(r) > ARROW_EPSILON)
 		{
 			window.draw(arrow);
 			window.draw(arrowEnd);
@@ -413,10 +414,24 @@ void drawGUI()
 	}
 	//pomocnicze biegu
 	sf::Text gearHelperText(helperText);
-	gearHelperText.setString(KEY_TEXT_GEAR_DOWN);
+	if(showsJoystick)
+	{
+		gearHelperText.setString(JS_BUTTON_TEXT_GEAR_DOWN);
+	}
+	else
+	{
+		gearHelperText.setString(KEY_TEXT_GEAR_DOWN);
+	}
 	gearHelperText.setPosition(gearListStart, screenSize * (1.0 - 3.0 * FONT_SIZE));
 	window.draw(gearHelperText);
-	gearHelperText.setString(KEY_TEXT_GEAR_UP);
+	if(showsJoystick)
+	{
+		gearHelperText.setString(JS_BUTTON_TEXT_GEAR_UP);
+	}
+	else
+	{
+		gearHelperText.setString(KEY_TEXT_GEAR_UP);
+	}
 	gearHelperText.setPosition(gearListStart + (GEAR_COUNT - 1) * LIST_WIDTH * screenSize, screenSize * (1.0 - 3.0 * FONT_SIZE));
 	window.draw(gearHelperText);
 }
@@ -459,6 +474,9 @@ void setModeData()
 			break;
 		case 8:
 			state.reset(new StepsTwistState());
+			break;
+		case 9:
+			state.reset(new GamepadTwistState());
 			break;
 		default:
 			break;
@@ -713,15 +731,16 @@ int main(int args, char** argv)
         sf::Event event;
         while (window.pollEvent(event))
         {
+			//std::cout << event.joystickButton.button << std::endl;
             if((event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)))
 			{
 				switchNextMode();
 			}
-			else if(event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_UP)
+			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_UP) || (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_GEAR_UP))
 			{
 				currGear++;
 			}
-			else if(event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_DOWN)
+			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_DOWN) || (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_GEAR_DOWN))
 			{
 				currGear--;
 			}
