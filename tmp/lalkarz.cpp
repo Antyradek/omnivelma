@@ -52,6 +52,8 @@ bool wheelInput;
 bool twistInput;
 ///Tryb sterowania kierunkiem z klawiatury
 bool keyTwistInput;
+///Tryb sterowania myszką
+bool mouseTwistInput;
 
 ///Sekcja krytyczna na prędkościach kół
 std::mutex mainMutex;
@@ -213,6 +215,17 @@ void drawGUI()
 		wheelHelper.setPosition(screenSize * 0.75 - wheelHelper.getGlobalBounds().width, screenSize * 0.75);
 		window.draw(wheelHelper);
 	}
+	//Wskazówki do sterowania kołami kontrolerem
+	if(wheelInput && showsJoystick)
+	{
+		sf::Text joyHelper(helperText);
+		joyHelper.setString(AXIS_TEXT_VERTICAL);
+		joyHelper.setPosition(screenSize * 0.5 - joyHelper.getGlobalBounds().width * 0.5, screenSize * (0.3 - 0.5 * FONT_SIZE));
+		window.draw(joyHelper);
+		joyHelper.setString(AXIS_TEXT_HORIZONTAL);
+		joyHelper.setPosition(screenSize * 0.5 - joyHelper.getGlobalBounds().width * 0.5, screenSize * (0.7 - 0.5 * FONT_SIZE));
+		window.draw(joyHelper);
+	}
 	
 	//Markery
 	if(wheelInput)
@@ -309,6 +322,30 @@ void drawGUI()
 		axisHelper.setString(KEY_TEXT_AXIS_Z_RIGHT);
 		axisHelper.setPosition(0.75 * screenSize, screenSize * (0.25 - 1.5 * METER_WIDTH - 0.5 * FONT_SIZE));
 		window.draw(axisHelper);
+	}
+	
+	//wskazówki do sterowania kierunkiem kontrolerem
+	if(twistInput && showsJoystick)
+	{
+		sf::Text joyHelper(helperText);
+		joyHelper.setString(AXIS_TEXT_TWIST_DIR);
+		joyHelper.setPosition(screenSize * 0.5 - joyHelper.getGlobalBounds().width * 0.5, screenSize * 0.71);
+		window.draw(joyHelper);
+		joyHelper.setString(AXIS_TEXT_TWIST_ROT);
+		joyHelper.setPosition(screenSize * 0.5 - joyHelper.getGlobalBounds().width * 0.5, screenSize * 0.21);
+		window.draw(joyHelper);
+	}
+	
+	//wskazówki do sterowania kierunkiem myszką
+	if(mouseTwistInput)
+	{
+		sf::Text mouseHelper(helperText);
+		mouseHelper.setString(MOUSE_TEXT_POSITION);
+		mouseHelper.setPosition(screenSize * 0.5 - mouseHelper.getGlobalBounds().width * 0.5, screenSize * 0.71);
+		window.draw(mouseHelper);
+		mouseHelper.setString(MOUSE_TEXT_ROTATION);
+		mouseHelper.setPosition(screenSize * 0.5 - mouseHelper.getGlobalBounds().width * 0.5, screenSize * 0.21);
+		window.draw(mouseHelper);
 	}
 	
 	//Markery kierunku
@@ -446,6 +483,7 @@ void setModeData()
 	wheelInput = (mode == 0 || mode == 1 || mode == 2 || mode == 3 || mode == 4 || mode == 5);
 	twistInput = (mode == 6 || mode == 7 || mode == 8 || mode == 9 || mode == 10);
 	keyTwistInput = (mode == 6 || mode == 7 || mode == 8);
+	mouseTwistInput = (mode == 10);
 	
 	switch(mode)
 	{

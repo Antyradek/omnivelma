@@ -115,6 +115,8 @@
 #define AXIS_WHEEL_3				sf::Joystick::Axis::X
 #define AXIS_WHEEL_4				sf::Joystick::Axis::U
 #define AXIS_WHEEL_4_ALT			sf::Joystick::Axis::Z
+#define AXIS_TEXT_HORIZONTAL		L"Poziome osie joysticków"
+#define AXIS_TEXT_VERTICAL			L"Pionowe osie joysticków"
 
 //sterowanie kierunkiem kontrolerem
 #define AXIS_TWIST_X				sf::Joystick::Axis::U
@@ -122,8 +124,14 @@
 #define AXIS_TWIST_Y				sf::Joystick::Axis::V
 #define AXIS_TWIST_Y_ALT			sf::Joystick::Axis::R
 #define AXIS_TWIST_Z				sf::Joystick::Axis::X
+#define AXIS_TEXT_TWIST_DIR			"Prawy joystick"
+#define AXIS_TEXT_TWIST_ROT			L"Pozioma oś lewego joysticka"
 
-//sterowanie kierunkiem
+//sterowanie kierunkiem myszką
+#define MOUSE_TEXT_POSITION			"Pozycja kursora myszy"
+#define MOUSE_TEXT_ROTATION			L"Kółko myszy"
+
+//sterowanie kierunkiem klawiaturą
 #define KEY_AXIS_X_UP				sf::Keyboard::Key::D
 #define KEY_TEXT_AXIS_X_UP			"D"
 #define KEY_AXIS_X_DOWN				sf::Keyboard::Key::A
