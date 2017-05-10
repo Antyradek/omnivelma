@@ -8,6 +8,7 @@
 #include "bin_twist_state.hpp"
 #include "cont_twist_state.hpp"
 #include "steps_twist_state.hpp"
+#include "mouse_twist_state.hpp"
 #include "font.hpp"
 #include "mono_font.hpp"
 #include "icon.hpp"
@@ -478,6 +479,9 @@ void setModeData()
 		case 9:
 			state.reset(new GamepadTwistState());
 			break;
+		case 10:
+			state.reset(new MouseTwistState());
+			break;
 		default:
 			break;
 	}
@@ -755,6 +759,14 @@ int main(int args, char** argv)
 			else if(event.type == sf::Event::JoystickMoved)
 			{
 				state -> set(event.joystickMove.axis, event.joystickMove.position);
+			}
+			else if(event.type == sf::Event::MouseMoved)
+			{
+				state -> set((event.mouseMove.x - 0.5 * screenSize) / (screenSize * 0.5 * (0.5 - 2 * WHEEL_WIDTH)), -(event.mouseMove.y - 0.5 * screenSize) / (screenSize * 0.5 * (0.5 - WHEEL_HEIGHT)));
+			}
+			else if(event.type == sf::Event::MouseWheelScrolled)
+			{
+				state -> set(event.mouseWheelScroll.delta / INPUT_STEP_COUNT);
 			}
 			else if(event.type == sf::Event::Closed)
 			{
