@@ -17,7 +17,7 @@
 #include <cmath>
 
 ///Domyślna wielkość okna
-#define WINDOW_SIZE 				512 
+#define WINDOW_SIZE 				700 
 ///Szerokość rysunku koła
 #define WHEEL_WIDTH 				0.05
 ///Wysokość ryskunku koła
