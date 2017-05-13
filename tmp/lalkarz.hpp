@@ -42,6 +42,8 @@
 #define LIST_WIDTH 					0.05
 ///Szerokość otoczki tekstu
 #define HELPER_TEXT_OUTLINE 		0.001
+///Szerokość otoczki elementów
+#define HELPER_RECT_OUTLINE			0.002
 ///Szerokość sztrzałki
 #define ARROW_WIDTH					0.01
 ///Wielkość grotu strzałki

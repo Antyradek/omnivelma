@@ -93,15 +93,29 @@ void drawGUI()
 	//pomocnicze
 	sf::Text helperText("", font);
 	helperText.setCharacterSize(screenSize * CHAR_SIZE);
-	helperText.setFillColor(DISABLED_COLOR);
-	helperText.setOutlineColor(sf::Color::White);
-	helperText.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
+	#ifdef OLD_VERSION
+		helperText.setColor(DISABLED_COLOR);
+	#else
+		helperText.setFillColor(DISABLED_COLOR);
+		helperText.setOutlineColor(sf::Color::White);
+		helperText.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
+	#endif
 	sf::Text defaultText("", font);
-	defaultText.setFillColor(sf::Color::White);
 	defaultText.setCharacterSize(screenSize * CHAR_SIZE);
+	#ifdef OLD_VERSION
+		defaultText.setColor(sf::Color::White);
+	#else
+		defaultText.setFillColor(sf::Color::White);
+		defaultText.setCharacterSize(screenSize * CHAR_SIZE);
+	#endif
 	sf::Text valueText("", monoFont);
-	valueText.setFillColor(sf::Color::White);
 	valueText.setCharacterSize(screenSize * CHAR_SIZE);
+	#ifdef OLD_VERSION
+		valueText.setColor(sf::Color::White);
+	#else
+		valueText.setFillColor(sf::Color::White);
+		valueText.setCharacterSize(screenSize * CHAR_SIZE);
+	#endif
 	
 	//platforma
 	sf::RectangleShape wheel(sf::Vector2f(screenSize * WHEEL_WIDTH, screenSize * WHEEL_HEIGHT));
@@ -134,15 +148,27 @@ void drawGUI()
 		sf::Text modeDigit(defaultText);
 		if(enabledModes[i])
 		{
-			modeDigit.setFillColor(modeColor[i]);
+			#ifdef OLD_VERSION
+				modeDigit.setColor(modeColor[i]);
+			#else
+				modeDigit.setFillColor(modeColor[i]);
+			#endif
 		}
 		else
 		{
-			modeDigit.setFillColor(DISABLED_COLOR);
+			#ifdef OLD_VERSION
+				modeDigit.setColor(DISABLED_COLOR);
+			#else
+				modeDigit.setFillColor(DISABLED_COLOR);
+			#endif
 		}
 		if(i == mode)
 		{
-			modeDigit.setFillColor(sf::Color::White);
+			#ifdef OLD_VERSION
+				modeDigit.setColor(sf::Color::White);
+			#else
+				modeDigit.setFillColor(sf::Color::White);
+			#endif
 		}
 		modeDigit.setString(std::to_string(i + 1));
 		modeDigit.setPosition(i * screenSize * LIST_WIDTH, 0);
@@ -182,7 +208,11 @@ void drawGUI()
 	//opis trybu
 	sf::Text modeText(defaultText);
 	modeText.setString(modeNames[mode]);
-	modeText.setFillColor(modeColor[mode]);
+	#ifdef OLD_VERSION
+		modeText.setColor(modeColor[mode]);
+	#else
+		modeText.setFillColor(modeColor[mode]);
+	#endif
 	modeText.setPosition(0, screenSize * FONT_SIZE);
 	window.draw(modeText);
 	
@@ -262,7 +292,7 @@ void drawGUI()
 		sf::RectangleShape maxMeter1(sf::Vector2f(0,0));
 		maxMeter1.setFillColor(sf::Color::Transparent);
 		maxMeter1.setOutlineColor(BORDER_COLOR);
-		maxMeter1.setOutlineThickness(HELPER_TEXT_OUTLINE * screenSize);
+		maxMeter1.setOutlineThickness(HELPER_RECT_OUTLINE * screenSize);
 		sf::RectangleShape maxMeter2(maxMeter1);
 		maxMeter1.setSize(sf::Vector2f(METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
 		maxMeter2.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
@@ -355,14 +385,14 @@ void drawGUI()
 		sf::RectangleShape vectorArea(sf::Vector2f(screenSize * (0.5 - 2 * WHEEL_WIDTH), screenSize * (0.5 - 2 * WHEEL_WIDTH)));
 		vectorArea.setFillColor(sf::Color::Transparent);
 		vectorArea.setOutlineColor(sf::Color::White);
-		vectorArea.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
+		vectorArea.setOutlineThickness(screenSize * HELPER_RECT_OUTLINE);
 		vectorArea.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * (0.25 + WHEEL_WIDTH));
 		window.draw(vectorArea);
-		sf::RectangleShape midAxis(sf::Vector2f(screenSize * HELPER_TEXT_OUTLINE, vectorArea.getSize().y));
+		sf::RectangleShape midAxis(sf::Vector2f(screenSize * HELPER_RECT_OUTLINE, vectorArea.getSize().y));
 		midAxis.setFillColor(BORDER_COLOR);
 		midAxis.setPosition(screenSize * 0.5 - midAxis.getSize().x * 0.5, screenSize * (0.25 + WHEEL_WIDTH));
 		window.draw(midAxis);
-		midAxis.setSize(sf::Vector2f(vectorArea.getSize().x, screenSize * HELPER_TEXT_OUTLINE));
+		midAxis.setSize(sf::Vector2f(vectorArea.getSize().x, screenSize * HELPER_RECT_OUTLINE));
 		midAxis.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * 0.5 - midAxis.getSize().y * 0.5);
 		window.draw(midAxis);
 		//strzałka
@@ -396,7 +426,7 @@ void drawGUI()
 		sf::RectangleShape maxMeter(sf::Vector2f(0.25 * screenSize, METER_WIDTH * screenSize));
 		maxMeter.setFillColor(sf::Color::Transparent);
 		maxMeter.setOutlineColor(BORDER_COLOR);
-		maxMeter.setOutlineThickness(HELPER_TEXT_OUTLINE * screenSize);
+		maxMeter.setOutlineThickness(HELPER_RECT_OUTLINE * screenSize);
 		maxMeter.setPosition(0.25 * screenSize, screenSize * (0.25 - 2 * METER_WIDTH));
 		window.draw(maxMeter);
 		maxMeter.setPosition(0.5 * screenSize, screenSize * (0.25 - 2 * METER_WIDTH));
@@ -441,11 +471,19 @@ void drawGUI()
 		gearDigit.setString(std::to_string(i + 1));
 		if(i + 1 == currGear)
 		{
-			gearDigit.setFillColor(sf::Color::White);
+			#ifdef OLD_VERSION
+				gearDigit.setColor(sf::Color::White);
+			#else
+				gearDigit.setFillColor(sf::Color::White);
+			#endif
 		}
 		else
 		{
-			gearDigit.setFillColor(DISABLED_COLOR);
+			#ifdef OLD_VERSION
+				gearDigit.setColor(DISABLED_COLOR);
+			#else
+				gearDigit.setFillColor(DISABLED_COLOR);
+			#endif
 		}
 		gearDigit.setPosition(gearListStart + (i * LIST_WIDTH) * screenSize, screenSize * (1.0 - 2.0 * FONT_SIZE));
 		window.draw(gearDigit);
