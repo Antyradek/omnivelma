@@ -1,5 +1,6 @@
 SFML 2.4.2
-	Aby zaktualizować, proszę zastąpić pliki w include/ i lib/ najnowszymi wersjami.
+	Aby zaktualizować, proszę zastąpić pliki w include/ i lib/ najnowszymi wersjami z manualnie skompilowanego źródła (lub pakietu systemowego).
+	Skompilowane ze strony powodują błąd łączenia sf::String.
 	Nasza wersja Ubuntu obsługuje jedynie 2.3.2
 	https://www.sfml-dev.org/download.php
 
