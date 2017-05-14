@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include <ros/ros.h>
+#include <omnivelma_msgs/Vels.h>
+#include <geometry_msgs/Twist.h>
 #include <thread>
 #include <mutex>
 #include <atomic>
@@ -15,6 +18,7 @@
 #include <algorithm>
 #include <memory>
 #include <cmath>
+#include <vector>
 
 ///Domyślna wielkość okna
 #define WINDOW_SIZE 				700 
@@ -39,7 +43,7 @@
 ///Precyzja drukowanych wartości
 #define VALUE_PRECISION				2
 ///Odstęp między elementami listy
-#define LIST_WIDTH 					0.05
+#define LIST_WIDTH 					0.07
 ///Szerokość otoczki tekstu
 #define HELPER_TEXT_OUTLINE 		0.001
 ///Szerokość otoczki elementów
@@ -56,7 +60,6 @@
 #define ARROW_EPSILON				0.01
 
 #define MODE_COUNT 					11
-#define GEAR_COUNT 					5
 #define DEFAULT_FREQ 				10
 ///Ilość stopni w sterowaniu schodkowym
 #define INPUT_STEP_COUNT			10

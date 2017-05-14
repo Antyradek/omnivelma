@@ -32,7 +32,7 @@ std::string twistTopic;
 ///Topic do wysyłania Vels
 std::string velsTopic;
 ///Bieg (przemnożenie wejścia)
-int currGear;
+unsigned int currGear;
 ///Nazwy trybów
 std::wstring modeNames[MODE_COUNT];
 ///Wysyła wiadomości Twist
@@ -62,9 +62,12 @@ Vels vels;
 ///Dane kierunku do synchronizowania między wątkami
 Twist twist;
 ///Bieg do przemnożenia
-int outputMultiplier;
+double outputMultiplier;
 ///Tryb wysyłania
 SendMode sendMode;
+
+///Biegi
+std::vector<double> gears {0.01, 0.05, 0.1, 0.5, 1, 2, 5};
 
 ///Font tekstu
 sf::Font font;
@@ -77,14 +80,59 @@ std::unique_ptr<State> state;
 void sendLoop()
 {
 	//inicjalizuj ROSa
+	ros::NodeHandle handle;
+	ros::Publisher velsPub;
+	ros::Publisher twistPub;
+	bool velsOk = false;
+	bool twistOk = false;
+	
+	if(sendsVels)
+	{
+		velsOk = true;
+		velsPub = handle.advertise<omnivelma_msgs::Vels>(velsTopic, 1);
+		if(!velsPub)
+		{
+			std::cerr << "Nie usało się zainicjować wysyłania do " << velsTopic << " i został on pominięty." << std::endl;
+			velsOk = false;
+		}
+	}
+	
+	if(sendsTwist)
+	{
+		twistOk = true;
+		twistPub = handle.advertise<geometry_msgs::Twist>(twistTopic, 1);
+		if(!twistPub)
+		{
+			std::cerr << "Nie usało się zainicjować wysyłania do " << twistTopic << " i został on pominięty." << std::endl;
+			twistOk = false;
+		}
+	}
+	
 	while(isActive)
 	{
 		mainMutex.lock();
-			//wyślij
+		if(sendMode == SendMode::SendTwist && twistOk)
+		{
+			geometry_msgs::Twist newMsg;
+			newMsg.linear.x = outputMultiplier * twist.x;
+			newMsg.linear.y = outputMultiplier * twist.y;
+			newMsg.angular.z = outputMultiplier * twist.z;
+			
+			twistPub.publish(newMsg);
+		}
+		else if(sendMode == SendMode::SendVels && velsOk)
+		{
+			omnivelma_msgs::Vels newMsg;
+			newMsg.fr = outputMultiplier * vels.w1;
+			newMsg.fl = outputMultiplier * vels.w2;
+			newMsg.rl = outputMultiplier * vels.w3;
+			newMsg.rr = outputMultiplier * vels.w4;
+			velsPub.publish(newMsg);
+		}
 		mainMutex.unlock();
 		std::this_thread::sleep_for (std::chrono::milliseconds((int)(sendWaitTime * 1000)));
 	}
-	//kończ ROSa
+	ros::shutdown();
 }
 
 ///Narysuj GUI
@@ -463,12 +511,14 @@ void drawGUI()
 	gearText.setPosition(0.5 * screenSize - gearText.getGlobalBounds().width * 0.5, screenSize * (1.0 - 3.0 * FONT_SIZE));
 	window.draw(gearText);
 	//lista biegów
-	double gearListWidth = (GEAR_COUNT - 1) * LIST_WIDTH + FONT_SIZE;
+	double gearListWidth = (gears.size() - 1) * LIST_WIDTH + FONT_SIZE;
 	double gearListStart = screenSize * (0.5 - gearListWidth * 0.5);
-	for(int i = 0; i < GEAR_COUNT; i++)
+	for(unsigned int i = 0; i < gears.size(); i++)
 	{
 		sf::Text gearDigit(defaultText);
-		gearDigit.setString(std::to_string(i + 1));
+		std::stringstream ss;
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << gears[i];
+		gearDigit.setString(ss.str());
 		if(i + 1 == currGear)
 		{
 			#ifdef OLD_VERSION
@@ -508,7 +558,7 @@ void drawGUI()
 	{
 		gearHelperText.setString(KEY_TEXT_GEAR_UP);
 	}
-	gearHelperText.setPosition(gearListStart + (GEAR_COUNT - 1) * LIST_WIDTH * screenSize, screenSize * (1.0 - 3.0 * FONT_SIZE));
+	gearHelperText.setPosition(gearListStart + (gears.size() - 1) * LIST_WIDTH * screenSize, screenSize * (1.0 - 3.0 * FONT_SIZE));
 	window.draw(gearHelperText);
 }
 
@@ -582,35 +632,38 @@ void printHelp()
 	std::cout << "-v <topic>\t\tWysyłaj prędkości kół do topica typu omnivelma/Vels\n";
 	std::cout << "-f <częstotliwość>\tCzęstotliwość wysyłania wiadomości w Hz, domyślnie " << DEFAULT_FREQ << "\n";
 	std::cout << "-m <tryb>\t\tRozpocznij w podanym trybie działania\n";
-	std::cout << "-g <bieg>\t\tRozpocznij w podanym biegu, od 1 do " << GEAR_COUNT << "\n";
+	std::cout << "-g <bieg>\t\tRozpocznij w podanym biegu, od 1 do " << gears.size() << "\n";
 	std::cout << "-w <piksele>\t\tUstaw wielkość okna\n";
 	std::cout << "-h --help\t\tWypisz tę instrukcję" << std::endl;
 }
 
-int main(int args, char** argv)
+int main(int argc, char** argv)
 {
+	//ros::init() modyfikuje argumenty
+	ros::init(argc, argv, "lalkarz");
+	
 	//ustaw początkowe wartości
 	sendWaitTime = 1.0/DEFAULT_FREQ;
 	isActive = true;
 	screenSize = WINDOW_SIZE;
 	mode = 0;
-	currGear = 1;
+	currGear = 5;
 	setModeData();
 	
 	for(int i = 0; i < MODE_COUNT; i++)
 	{
 		enabledModes[i] = false;
 	}
-	modeColor[0] = sf::Color::Yellow;
-	modeColor[1] = sf::Color(255, 100, 0, 255);
-	modeColor[2] = sf::Color::Red;
-	modeColor[3] = sf::Color::Green;
-	modeColor[4] = sf::Color(0, 150, 0, 255);
-	modeColor[5] = sf::Color(0, 100, 100, 255);
-	modeColor[6] = sf::Color::Blue;
-	modeColor[7] = sf::Color(100, 0, 255, 255);
-	modeColor[8] = sf::Color(200, 0, 255, 255);
-	modeColor[9] = sf::Color(100, 0, 100, 255);
+	modeColor[0] = sf::Color(255, 0, 0, 255);
+	modeColor[1] = sf::Color(255, 125, 0, 255);
+	modeColor[2] = sf::Color(255, 255, 0, 255);
+	modeColor[3] = sf::Color(125, 255, 0, 255);
+	modeColor[4] = sf::Color(0, 255, 0, 255);
+	modeColor[5] = sf::Color(0, 255, 125, 255);
+	modeColor[6] = sf::Color(0, 255, 255, 255);
+	modeColor[7] = sf::Color(0, 125, 255, 255);
+	modeColor[8] = sf::Color(0, 0, 255, 255);
+	modeColor[9] = sf::Color(125, 0, 255, 255);
 	modeColor[10] = sf::Color(255, 0, 255, 255);
 	
 	modeNames[0] = L"Binarne prędkości kół \nsterowane klawiaturą numeryczną.";
@@ -630,7 +683,7 @@ int main(int args, char** argv)
 	sendsTwist = false;
 	sendsVels = false;
 	bool setMode = false;
-	while(arg < args)
+	while(arg < argc)
 	{
 		std::string currArg(argv[arg]);
 		
@@ -643,7 +696,7 @@ int main(int args, char** argv)
 		
 		arg++;
 		
-		if(arg >= args)
+		if(arg >= argc)
 		{
 			std::cerr << "Niepoprawne argumenty" << std::endl;
 			exit(EXIT_ARG_ERROR);
@@ -717,10 +770,10 @@ int main(int args, char** argv)
 		{
 			try
 			{
-				int gear = std::stoi(secArg);
-				if(gear <= 0 || gear > GEAR_COUNT)
+				unsigned int gear = std::stoi(secArg);
+				if(gear <= 0 || gear > gears.size())
 				{
-					std::cerr << "Podany bieg jest poza zasięgiem 1-" << GEAR_COUNT << std::endl;
+					std::cerr << "Podany bieg jest poza zasięgiem 1-" << gears.size() << std::endl;
 					exit(EXIT_ARG_ERROR);
 				}
 				currGear = gear;
@@ -923,9 +976,9 @@ int main(int args, char** argv)
 		{
 			currGear = 1;
 		}
-		else if(currGear > GEAR_COUNT)
+		else if(currGear > gears.size())
 		{
-			currGear = GEAR_COUNT;
+			currGear = gears.size();
 		}
 		//aktualizacja czasu
 		state -> update();
@@ -939,7 +992,7 @@ int main(int args, char** argv)
 		mainMutex.lock();
 		vels = state -> getVels();
 		twist = state -> getTwist();
-		outputMultiplier = currGear;
+		outputMultiplier = gears[currGear - 1];
 		if(wheelInput)
 		{
 			sendMode = SendMode::SendVels;

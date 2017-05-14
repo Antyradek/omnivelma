@@ -66,6 +66,9 @@ void printHelp(const std::string& progName)
 
 int main(int argc, char **argv)
 {
+	//ros::init() modyfikuje argumenty
+	ros::init(argc, argv, "transmutator");
+	
 	std::string progName(argv[0]);
 	if(argc <= 1)
 	{
@@ -121,12 +124,6 @@ int main(int argc, char **argv)
 		std::cerr << "Nie podano argumentu TOPIC." << std::endl;
 		exit(1);
 	}
-	
-    if (!ros::isInitialized())
-    {
-        ros::init(argc, argv, "transmutator");
-        std::cout << "ROS initializowany w Transmutatorze" << std::endl;
-    }
 
     ros::NodeHandle handle;
     ros::Subscriber sub = handle.subscribe<geometry_msgs::Twist>("/transmutator/twist", 1, twistCallback);

@@ -23,6 +23,9 @@ void velsCallback(const omnivelma_msgs::Vels::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
+	//ros::init() modyfikuje argumenty
+	ros::init(argc, argv, "widelnica");
+	
 	std::list<std::string> topicList;
     for(int i = 1; i < argc; i++)
     {
@@ -40,12 +43,7 @@ int main(int argc, char **argv)
 			topicList.push_back(arg);
 		}
     }
-    if (!ros::isInitialized())
-    {
-        ros::init(argc, argv, "widelnica");
-        std::cout << "ROS initializowany w Widelnicy" << std::endl;
-    }
-
+    
     ros::NodeHandle handle;
 	//odbiornik wiadomości
     ros::Subscriber sub = handle.subscribe<omnivelma_msgs::Vels>("/widelnica/vels", 1, velsCallback);
@@ -66,6 +64,5 @@ int main(int argc, char **argv)
 
     std::cout << "Rozdzielanie wiadomości... " << std::endl;
     ros::spin();
-    std::cout << "Wychodzenie z Widelnicy" << std::endl;
     return 0;
 }
