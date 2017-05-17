@@ -13,48 +13,40 @@ Jest to temat pracy inżynierskiej dla WEiTI na PW.
 Należy zbudować odpowiedni model i oprogramować go do wykonywania zadanych czynności.
 Model powinien służyć do testowania na nim programu sterującego.
 
-Wszystko zostało przerobione na pakiety ROS. Stare wersje uruchamiane bezpośrednio w Gazebo są w gdzieś poprzednich commitach.
-Velmaverse - Świat do symulacji, który importuje roboty z paczek.
-Omnivelma - Platforma symulowana fizycznie.
-Pseudovelma - Platforma symulowana kinematycznie.
-Flooria - Podłoga ze zmiennym współczynnikiem tarcia.
-Ocznica - Obserwator liczący odległości od platform.
-Transmutator - Translator geometry_msgs/Twist na osobne prędkości kół.
-omnivelma_msgs - Wiadomości i wywołania dla pozostałych modułów.
+Wszystko jest pakietami ROSa.
+Velmaverse			Świat do symulacji, który importuje roboty z paczek.
+Omnivelma			Platforma symulowana fizycznie.
+Pseudovelma			Platforma symulowana kinematycznie.
+Flooria				Podłoga ze zmiennym współczynnikiem tarcia.
+Ocznica				Obserwator liczący odległości od platform.
+Transmutator		Translator geometry_msgs/Twist na osobne prędkości kół omnivelma_msgs/Vels.
+omnivelma_msgs		Wiadomości i wywołania dla pozostałych modułów.
+Lalkarz				Graficzny program sterujący.
+Widelnica			Rozdzielacz omnivelma_msgs/Vels na wiele innych topiców.
+Vreporter			Połączenie z symulatorem V-Rep.
 
 Uruchomienie w ROS:
 Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to katalog roboczy.
 Przenieś tam zawartość katalogu ros/.
 $ ./init
 To zainicjuje katalog roboczy i skompiluje projekt.
-$ ./launch <obrót>
-Uruchomi Gazebo z platformami, oraz Transmutator. Argument 90, 180, 270 mówi o ile stopni obrócić wejście Twist w lewo.
-Przydatne, jeśli przód programu sterującego nie jest w kierunku Y+, jak w Omnivelmie.
+$ ./launch
+Uruchomi Gazebo z platformami, sterowanie, oraz programy wspomagające.
 
-Potem dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
+Można ustawić zmienną systemową VREP_ROOT na katalog główny V-Repa, wtedy automagicznie to do niego będzie iść sterowanie, zamiast Gazebo.
+Należy wcześniej włączyć edytor i wczytać scenę z modelem w katalogu /vrep.
+Uruchomić symulację, wtedy skrypt init.
+
+Dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
 To ustawi odpowiednie zmienne systemowe, aby komendy wykrywały pakiety i typy.
 
-Sterowanie:
-Program wystawi interfejs /omnivelma/vels o typie omnivelma_msgs/Vels, który składa się z 4 double dla każdego koła.
-Argumenty w kolejności: Przedni Prawy, Przedni Lewy, Tylny Lewy, Tylny Prawy.
-Można łatwo (acz niepełnie) sterować za pomocą wtyczki RQT podłączonej do transmutatora z obrotem 90° w lewo (argument -90).
-
-Aby wysłać wiadomość, aby ustawić prędkość kół np.:
+Aby wysłać wiadomość bezpośrednio, aby ustawić prędkość kół np.:
 $ rostopic pub -1 /omnivelma/vels omnivelma_msgs/Vels -- 1 -1 -1 1
 (program, komenda, ilość wiadomości, topic, typ, oddzielacz argumentów, wartości struktry)
 
-Program helper pomaga wysyłać wiadomości powyższą komendą:
-./helper -o 1 -1 1 -1
-Ustawienie prędkości kół (obrót w prawo) dla Omnivelmy (dynamicznej).
-./helper -b 1 -1 -1 1
-Ustawienie prędkości kół (jazda w prawo) dla obu platform na raz.
-./helper -p 1 0 0 1
-Ustawienie prędkości kół (jazda na skos prosto w prawo) dla Pseudovelmy (kinematycznej).
-
-Gazebo nie wymaga działającego w tle roscore, ponieważ uruchamia wewnętrznie swój własny.
-
 Aby uruchomić jedynie jedną platformę można zmodyfikować plik src/velmaverse/worlds/omnivelma.world.
+Warto zmodyfikować skrypt launch, aby dostosować sieć połączeń do siebie.
 
 Komunikacja:
 Pseudovelma:
@@ -72,9 +64,15 @@ Flooria:
 	/flooria/set_friction		ustaw współczynniki tarcia podłoża
 Transmutator:
 	/transmutator/twist			wejście do sterowania kierunkiem
-	TOPIC						wyjście prędkości kół do sprecyzowane w argumencie
+	ARG							wyjście prędkości kół do sprecyzowania w argumencie
 Widelnica:
 	/widelnica/vels				wejście do rozmnożenia
-	TOPIC...					wyjścia podane w argumentach
+	ARG...						wyjścia podane w argumentach
+Lalkarz:
+	ARG							wyjście prędkości kół podane w argumencie
+	ARG							wyjście kierunku podane w argumencie
+Vreporter:
+	/vreporter/vels				wejście prędkości kół
+	
 
 	

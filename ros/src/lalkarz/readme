@@ -2,13 +2,14 @@ Lalkarz - Okno graficzne do sterowania robotem z klawiatury, kontrolera lub mysz
 
 Lalkarz wysyła wiadomości typu omnivelma_msgs/Vels i geometry_msgs/Twist do podanych odbiorców.
 Użyj Widelnicy, aby rodzdzielić wejście dla Omnivelmy i Pseudovelmy, jeśli jest taka konieczność.
-Użyj Transmutatora, jeśli chcesz sterować kierunkiem platform zamiast prędkościami kół.
-Podłącz kontroler, aby łatwo sterować.
+Użyj Transmutatora, jeśli chcesz sterować kierunkiem platform zamiast bezpośrednio prędkościami kół (wygodniejsze).
+Podłącz kontroler, aby łatwo sterować niebinarnym wejściem.
 -t <topic>			Wysyłaj zadane prędkości do topica typu geometry_msgs/Twist
 -v <topic>			Wysyłaj prędkości kół do topica typu omnivelma/Vels
 -f <częstotliwość>	Częstotliwość wysyłania wiadomości w Hz, domyślnie 10
 -m <tryb>			Rozpocznij w podanym trybie działania
--g <bieg>			Rozpocznij w podanym biegu, od 1 do 5
+-g <bieg>			Rozpocznij w podanym biegu, od 1 do 7
+-n					Nie wysyłaj NaN przy niektórych trybach
 -w <piksele>		Ustaw wielkość okna
 -h --help			Wypisz tę instrukcję
 
@@ -24,7 +25,7 @@ Tryby:
 9:	Przyrostowy schodkowy kierunek sterowany klawiaturą.
 10:	Kierunek sterowany kontrolerem.
 11:	Kierunek sterowany myszką.
-Podtrzymanie oznacza wysyłanie NAN do modelu, który nie modyfikuje wtedy prędkości koła.
+Podtrzymanie oznacza wysyłanie NaN do modelu, który nie modyfikuje wtedy prędkości koła.
 Platforma się tak nie zachowuje, jest to dodatkowa funcjonalność (patrz inżynierka, temat o niemożliwych testach).
 
 Wejście:

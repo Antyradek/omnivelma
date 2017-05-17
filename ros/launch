@@ -1,20 +1,30 @@
 #!/bin/bash
-# Uruchom Gazebo wraz z modelami
 
 source setup
-export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
 
-roslaunch velmaverse velmaverse.launch &
-export PIDGAZ=$!
-rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
-export PIDWID=$!
-rosrun transmutator transmutator /widelnica/vels &
-export PIDTRA=$!
-rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist &
-export PIDLAL=$!
-
-# Na ^C wyłącz wszystkie procesy
-trap "kill $PIDLAL; kill $PIDTRA; kill $PIDOWID; kill $PIDGAZ;" SIGINT 
+if [ -z $VREP_ROOT ]
+then
+	# Uruchom Gazebo wraz z modelami
+	export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+	roslaunch velmaverse velmaverse.launch &
+	export PIDGAZ=$!
+	rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
+	export PIDWID=$!
+	rosrun transmutator transmutator /widelnica/vels &
+	export PIDTRA=$!
+	rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist &
+	export PIDLAL=$!
+	trap "kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+else
+	# Uruchom V-Repa
+	rosrun vreporter vreporter &
+	export PIDVRE=$!
+	rosrun transmutator transmutator /vreporter/vels &
+	export PIDTRA=$!
+	rosrun lalkarz lalkarz -v /vreporter/vels -t /transmutator/twist &
+	export PIDLAL=$!
+	trap "kill $PIDLAL; kill $PIDTRA; kill $PIDVRE;" SIGINT 
+fi
 
 echo "Wciśnij ^C, aby wyłączyć procesy"
 sleep infinity

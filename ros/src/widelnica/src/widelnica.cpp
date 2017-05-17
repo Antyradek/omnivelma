@@ -21,7 +21,7 @@ void velsCallback(const omnivelma_msgs::Vels::ConstPtr& msg)
 	}
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	//ros::init() modyfikuje argumenty
 	ros::init(argc, argv, "widelnica");

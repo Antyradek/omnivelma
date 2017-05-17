@@ -39,6 +39,10 @@ std::wstring modeNames[MODE_COUNT];
 bool sendsTwist;
 ///Wysyła wiadomości Vels
 bool sendsVels;
+///Joystick podłączony
+bool joystickConnected;
+///Nie wysyła NaN
+bool noNan;
 
 ///Pokazuje interfejs joysticka
 bool showsJoystick;
@@ -633,6 +637,7 @@ void printHelp()
 	std::cout << "-f <częstotliwość>\tCzęstotliwość wysyłania wiadomości w Hz, domyślnie " << DEFAULT_FREQ << "\n";
 	std::cout << "-m <tryb>\t\tRozpocznij w podanym trybie działania\n";
 	std::cout << "-g <bieg>\t\tRozpocznij w podanym biegu, od 1 do " << gears.size() << "\n";
+	std::cout << "-n\t\t\tNie wysyłaj NaN przy niektórych trybach\n";
 	std::cout << "-w <piksele>\t\tUstaw wielkość okna\n";
 	std::cout << "-h --help\t\tWypisz tę instrukcję" << std::endl;
 }
@@ -682,10 +687,13 @@ int main(int argc, char** argv)
 	int arg = 1;
 	sendsTwist = false;
 	sendsVels = false;
+	joystickConnected = false;
+	noNan = false;
 	bool setMode = false;
 	while(arg < argc)
 	{
 		std::string currArg(argv[arg]);
+		arg++;
 		
 		//wypisz pomoc
 		if(currArg == "-h" || currArg == "--help")
@@ -694,7 +702,12 @@ int main(int argc, char** argv)
 			exit(0);
 		}
 		
-		arg++;
+		//wyłącz tryby NaN
+		else if(currArg == "-n")
+		{
+			noNan = true;
+			continue;
+		}
 		
 		if(arg >= argc)
 		{
@@ -703,27 +716,19 @@ int main(int argc, char** argv)
 		}
 		
 		std::string secArg(argv[arg]);
+		arg++;
 		
 		//Twist
 		if(currArg == "-t")
 		{
 			sendsTwist = true;
 			twistTopic = secArg;
-			enabledModes[6] = true;
-			enabledModes[7] = true;
-			enabledModes[8] = true;
-			enabledModes[10] = true;
 		}
 		//Vels
 		else if(currArg == "-v")
 		{
 			sendsVels = true;
 			velsTopic = secArg;
-			enabledModes[0] = true;
-			enabledModes[1] = true;
-			enabledModes[2] = true;
-			enabledModes[3] = true;
-			enabledModes[4] = true;
 		}
 		//częstotliwość
 		else if(currArg == "-f")
@@ -807,22 +812,22 @@ int main(int argc, char** argv)
 			std::cerr << "Nierozpoznany argument " << currArg << std::endl;
 			exit(EXIT_ARG_ERROR);
 		}
-		
-		arg++;
 	}
 	//sprawdź podłączenie joysticka
 	sf::Joystick::update();
-	if(sf::Joystick::isConnected(0))
-	{
-		if(sendsTwist)
-		{
-			enabledModes[9] = true;
-		}
-		if(sendsVels)
-		{
-			enabledModes[5] = true;
-		}
-	}
+	joystickConnected = sf::Joystick::isConnected(0);
+	//ustaw możliwe tryby
+	enabledModes[0] = sendsVels;
+	enabledModes[1] = (sendsVels && !noNan);
+	enabledModes[2] = sendsVels;
+	enabledModes[3] = sendsVels;
+	enabledModes[4] = (sendsVels && !noNan);
+	enabledModes[5] = (sendsVels && joystickConnected);
+	enabledModes[6] = sendsTwist;
+	enabledModes[7] = sendsTwist;
+	enabledModes[8] = sendsTwist;
+	enabledModes[9] = (sendsTwist && joystickConnected);
+	enabledModes[10] = sendsTwist;
 	//czy podany tryb może być aktywowany
 	if(setMode)
 	{
@@ -905,6 +910,7 @@ int main(int argc, char** argv)
 			if(event.type == sf::Event::KeyPressed)
 			{
 				bool switched = true;
+				int oldMode = mode;
 				switch(event.key.code)
 				{
 					case sf::Keyboard::F1:
@@ -945,7 +951,14 @@ int main(int argc, char** argv)
 				}
 				if(switched)
 				{
-					setModeData();
+					if(enabledModes[mode])
+					{
+						setModeData();
+					}
+					else
+					{
+						mode = oldMode;
+					}
 				}
 				
 				switch(event.key.code)
@@ -964,6 +977,18 @@ int main(int argc, char** argv)
 						break;
 					case sf::Keyboard::Num5:
 						currGear = 5;
+						break;
+					case sf::Keyboard::Num6:
+						currGear = 6;
+						break;
+					case sf::Keyboard::Num7:
+						currGear = 7;
+						break;
+					case sf::Keyboard::Num8:
+						currGear = 8;
+						break;
+					case sf::Keyboard::Num9:
+						currGear = 9;
 						break;
 					default:
 						break;

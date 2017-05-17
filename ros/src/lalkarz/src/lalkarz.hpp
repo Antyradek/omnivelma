@@ -43,7 +43,7 @@
 ///Precyzja drukowanych wartości
 #define VALUE_PRECISION				2
 ///Odstęp między elementami listy
-#define LIST_WIDTH 					0.07
+#define LIST_WIDTH 					0.08
 ///Szerokość otoczki tekstu
 #define HELPER_TEXT_OUTLINE 		0.001
 ///Szerokość otoczki elementów
@@ -64,8 +64,8 @@
 ///Ilość stopni w sterowaniu schodkowym
 #define INPUT_STEP_COUNT			10
 
-#define EXIT_ARG_ERROR 				-1
-#define EXIT_FONT_ERROR 			-2
+#define EXIT_ARG_ERROR 				0x01
+#define EXIT_FONT_ERROR 			0x02
 
 //przełączanie trybów
 #define KEY_NEXT_MODE 				sf::Keyboard::Key::Z
