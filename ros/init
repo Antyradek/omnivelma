@@ -1,8 +1,14 @@
 #!/bin/bash
-# Inicjalizacja katalogu roboczego i kompilacja
 
+# Wyłącz kompilację pakietu vreporter, jeśli V-Rep nie jest ustawiony
+if [ -z $VREP_ROOT ]
+	then
+	CATKIN_BLACKLIST="-DCATKIN_BLACKLIST_PACKAGES=vreporter"
+fi
+
+# Inicjalizacja katalogu roboczego i kompilacja
 source /opt/ros/kinetic/setup.bash
 cd src
 catkin_init_workspace
 cd ..
-catkin_make
+catkin_make $CATKIN_BLACKLIST

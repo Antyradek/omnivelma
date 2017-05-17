@@ -1,0 +1,15 @@
+Zastąpienie Gazebo programem V-Rep.
+
+Potrzebujesz V-Repa z tego miejsca: 
+http://www.coppeliarobotics.com/downloads.html
+Uruchamia się go za pomocą skryptu vrep.sh, nie trzeba instalować.
+Możesz go umieścić w dowolnym miejscu na komputerze.
+
+Otwórz w nim tę scenę omnivelma.ttt.
+
+W katalogu ROSa jest pakiet vreporter do komunikacji z V-Repem.
+Ustaw zmienną systemową VREP_ROOT na katalog symulatora, aby włączyć generowanie tego pakietu w skrypcie init.
+Jeśli ściągniesz V-Repa i ustawisz zmienną, pamiętaj o usunięciu build/ i devel/, aby włączyć generowanie pakietu na nowo.
+
+
+
