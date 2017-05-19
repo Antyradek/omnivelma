@@ -17,13 +17,11 @@ then
 	trap "kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
 else
 	# Uruchom V-Repa
-	rosrun vreporter vreporter &
-	export PIDVRE=$!
-	rosrun transmutator transmutator /vreporter/vels &
+	rosrun transmutator transmutator /vrevelma/vels &
 	export PIDTRA=$!
-	rosrun lalkarz lalkarz -v /vreporter/vels -t /transmutator/twist &
+	rosrun lalkarz lalkarz -v /vrevelma/vels -t /transmutator/twist &
 	export PIDLAL=$!
-	trap "kill $PIDLAL; kill $PIDTRA; kill $PIDVRE;" SIGINT 
+	trap "kill $PIDLAL; kill $PIDTRA;" SIGINT 
 fi
 
 echo "Wciśnij ^C, aby wyłączyć procesy"

@@ -4,9 +4,9 @@ Naprawić model widoku z góry (wyrenderować na nowo)
 Napisać o tym, że zakładamy bezoporowy obrót kół, a przy wymuszonym są niespodziewane błędy, jak w rzeczywistości.
 Napisać, że przód jest nieokreślony, dlatego został zbudowany translator
 Użyć słowa primytywy w opisie fizyki modelu
-
+Opis dokładny każdego elementu składowego.
+Opis, że model jest szerszy, bo obsługuje NaN.
+Narysować graf połączeń elementów.
 
 Do zrobienia:
 Masa transportowana i intefejs jej zmiany. (może być i tak za mało dokładne, żeby był sens)
-Interfejs GUI.
-Powtórka w V-REPie.

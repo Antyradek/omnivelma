@@ -1,0 +1,16 @@
+Vreporter - Połączenie ROS-a z V-Repem za pomocą RemoteAPI.
+Teleporter to V-Repa (albo reporter z ROSa, jak kto woli).
+
+Pomimo, że V-Rep posiada natywne połączenie z ROSem, to nie chce ono działać tak łatwo.
+V-Rep powinien automatycznie wykrywać pracujący roscore i wczytać skompilowaną bibliotekę, ale nie zawsze to działa.
+Ten sposób tutaj zadziała zawsze.
+
+Ten program odbiera wiadomości ROSa i pakuje dane wywołując funkcję API V-Repa.
+Działa to na gniazdach sieciowych, wywołujemy funkcję Lua z wartościami prędkości kół, ze skryptu sterującego modelem.
+
+Przed kompilacją ustaw zmienną systemową do katalogu V-Repa, gdyż potrzeba z niego nagłówki i kody.
+Na przykład:
+export VREP_ROOT=/home/klapacjusz/Downloads/V-REP_PRO_EDU_V3_4_0_Linux
+
+
+
