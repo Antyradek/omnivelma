@@ -21,7 +21,10 @@ Kąt i prędkość dla każdego koła.
 /omnivelma/pose
 geometry_msgs/Pose
 Zwraca aktualną pozycję
-http://docs.ros.org/api/geometry_msgs/html/msg/Pose.html
+
+/omnivelma/twist
+geometry_msgs/Twist
+Zwraca aktualną prędkość
 
 /omnivelma/set_friction
 omnivelma_msgs/SetFriction

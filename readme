@@ -56,6 +56,7 @@ Omnivelma:
 	/omnivelma/vels				wejście prędkości kół
 	/omnivelma/pose				wyjście pozycji
 	/omnivelma/encoders			dane enkoderów ze wszystkich kół
+	/omnivelma/twist			aktuanlna prędkość platformy
 	/omnivelma/set_friction		ustawienie wartości tarcia rolek
 	/omnivelma/set_inertia		ustawienie masy i tensoru dla wszystkich składowych modelu
 Ocznica:
