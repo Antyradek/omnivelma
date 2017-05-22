@@ -3,6 +3,6 @@
 # Inicjalizacja katalogu roboczego i kompilacja
 source /opt/ros/kinetic/setup.bash
 cd src
-catkin init
+catkin_init_workspace
 cd ..
-catkin build
+catkin_make

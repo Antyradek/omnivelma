@@ -13,6 +13,17 @@
                     </mesh>
                 </geometry>
             </collision>
+            <inertial>
+            	<mass>77.24</mass>
+            	<inertia>
+            		<ixx>0.0807</ixx>
+            		<ixy>0</ixy>
+            		<ixz>0</ixz>
+            		<iyy>0.0450</iyy>
+            		<iyx>0</iyx>
+            		<izz>0.0399</izz>
+            	</inertia>
+            </inertial>
             <visual name="base_visual">
                 <geometry>
                     <mesh>
@@ -37,6 +48,17 @@
                     </mesh>
                 </geometry>
             </collision>
+            <inertial>
+            	<mass>20.24</mass>
+            	<inertia>
+            		<ixx>0.0407</ixx>
+            		<ixy>0</ixy>
+            		<ixz>0</ixz>
+            		<iyy>0.0398</iyy>
+            		<iyx>0</iyx>
+            		<izz>0.0505</izz>
+            	</inertia>
+            </inertial>
             <visual name="front_visual">
                 <geometry>
                     <mesh>
