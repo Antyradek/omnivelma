@@ -21,13 +21,16 @@ Uruchom symulację i sprawdź, czy rozumie wiadomości użyte w skrypcie.
 Uruchom odpowiednie pakiety ROSa do komunikacji z systemem na następujące topic:
 
 Wejście:
-/vrepovelma/vels			wejście prędkości kół
+/vrevelma/vels			wejście prędkości kół
+Wyjście:
+/vrevelma/pose			wyjście aktualnej pozycji i rotacji
+/vrevelma/encoders		wyjście aktualnych prędkości i rotacji kół
 
 Jeśli libv_repExtRosInterface.so nie jest wczytywany, może być potrzebna jego ponowna kompilacja.
 Wykonaj instrukcje w $VREP_ROOT/programming/ros_packages/ros_vrep_rosinterface_install_guide.txt
 Nie muszą być przestrzegane bardzo dokładnie, ale ważne jest zainstalowanie wymaganych programów do kompilacji.
 W ściągniętym z GitHuba pakiecie vrep_ros_interface należy wykonać instrukcje w pliku README.txt
-Jak tam napisano, należy dodać definicję "omnivelma_msgs/Vels" do pliku "meta/messages.txt", aby skrypt w Lua rozumiał wiadomość.
+Jak tam napisano, należy dodać definicję "omnivelma_msgs/Vels", oraz "omnivelma_msgs/Encoders" do pliku "meta/messages.txt", aby skrypt w Lua rozumiał wiadomość.
 To nie wystarczy do sukcesywnej kompilacji, gdyż ważna jest kolejność generowania pakietów. Należy jeszcze:
 - dodać "omnivelma_msgs" do sekcji "find_package" w pliku CMakeLists.txt
 - dodać "omnivelma_msgs" do sekcji "catkin_package" w pliku CMakeLists.txt
