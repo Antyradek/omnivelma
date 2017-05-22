@@ -52,6 +52,7 @@ Komunikacja:
 Pseudovelma:
 	/pseudovelma/vels			wejście prędkości kół
 	/pseudovelma/pose			wyjście pozycji
+	/pseudovelma/twist			aktuanlna prędkość platformy
 Omnivelma:
 	/omnivelma/vels				wejście prędkości kół
 	/omnivelma/pose				wyjście pozycji

@@ -18,3 +18,7 @@ Wysłanie NaN zachowuje poprzednią prędkość koła.
 geometry_msgs/Pose
 Zwraca aktualną pozycję
 http://docs.ros.org/api/geometry_msgs/html/msg/Pose.html
+
+/pseudovelma/twist
+geometry_msgs/Twist
+Zwraca aktualną prędkość

@@ -9,6 +9,7 @@
 #include <ros/ros.h>
 #include <omnivelma_msgs/Vels.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/Twist.h>
 
 #define MODEL_NAME std::string("pseudovelma")
 
@@ -56,8 +57,11 @@ public:
         //Stwórz topic do odbierania wiadomości
         rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
 
-        //stwórz topic do nadawania wiadomości
-        rosPub = rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
+        //stwórz topic do nadawania pozycji
+        rosPose = rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
+		
+		//stwórz topic do nadawania prędkości
+		rosTwist = rosNode -> advertise<geometry_msgs::Twist>("/pseudovelma/twist", 1000);
 
 		std::cout << "Podłączono Pseudovelmę " << std::endl;
     }
@@ -87,15 +91,27 @@ public:
 
         //wyślij pozycję
         const math::Pose& pose = model -> GetWorldPose();
-        geometry_msgs::Pose msg;
-        msg.position.x = pose.pos.x;
-        msg.position.y = pose.pos.y;
-        msg.position.z = pose.pos.z;
-        msg.orientation.x = pose.rot.x;
-        msg.orientation.y = pose.rot.y;
-        msg.orientation.z = pose.rot.z;
-        msg.orientation.w = pose.rot.w;
-        rosPub.publish(msg);
+        geometry_msgs::Pose poseMsg;
+		poseMsg.position.x = pose.pos.x;
+		poseMsg.position.y = pose.pos.y;
+		poseMsg.position.z = pose.pos.z;
+		poseMsg.orientation.x = pose.rot.x;
+		poseMsg.orientation.y = pose.rot.y;
+		poseMsg.orientation.z = pose.rot.z;
+		poseMsg.orientation.w = pose.rot.w;
+		rosPose.publish(poseMsg);
+		
+		//wyślij prędkość
+		const math::Vector3 linVel = model -> GetWorldLinearVel();
+		const math::Vector3 angVel = model -> GetWorldAngularVel();
+		geometry_msgs::Twist twistMsg;
+		twistMsg.linear.x = linVel.x;
+		twistMsg.linear.y = linVel.y;
+		twistMsg.linear.z = linVel.z;
+		twistMsg.angular.x = angVel.x;
+		twistMsg.angular.y = angVel.y;
+		twistMsg.angular.z = angVel.z;
+		rosTwist.publish(twistMsg);
     }
 
     ///Pobierz wiadomość od ROSa
@@ -144,7 +160,10 @@ private:
     ros::Subscriber rosSub;
 
     ///Nadajnik pozycji
-    ros::Publisher rosPub;
+    ros::Publisher rosPose;
+	
+	///Nadajnik prędkości
+	ros::Publisher rosTwist;
 
 };
 
