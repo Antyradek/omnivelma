@@ -25,6 +25,7 @@ Wejście:
 Wyjście:
 /vrevelma/pose			wyjście aktualnej pozycji i rotacji
 /vrevelma/encoders		wyjście aktualnych prędkości i rotacji kół
+/vrevelma/twist			wyjście aktualnej prędkości platformy
 
 Jeśli libv_repExtRosInterface.so nie jest wczytywany, może być potrzebna jego ponowna kompilacja.
 Wykonaj instrukcje w $VREP_ROOT/programming/ros_packages/ros_vrep_rosinterface_install_guide.txt

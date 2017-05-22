@@ -75,6 +75,11 @@ Lalkarz:
 	ARG							wyjście kierunku podane w argumencie
 Vreporter:
 	/vreporter/vels				wejście prędkości kół
+Vrevelma:
+	/vrevelma/vels				wejście prędkości kół
+	/vrevelma/pose				wyjście aktualnej pozycji i rotacji
+	/vrevelma/encoders			wyjście aktualnych prędkości i rotacji kół
+	/vrevelma/twist				wyjście aktualnej prędkości platformy
 	
 
 	
