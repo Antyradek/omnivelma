@@ -7,6 +7,10 @@ Użyć słowa primytywy w opisie fizyki modelu
 Opis dokładny każdego elementu składowego.
 Opis, że model jest szerszy, bo obsługuje NaN.
 Narysować graf połączeń elementów.
+Za duża prędkość kół psuje symulację w V-Repie
+Bullet ssie
+Gazebo bardzo dobrze działa
 
 Do zrobienia:
 Masa transportowana i intefejs jej zmiany. (może być i tak za mało dokładne, żeby był sens)
+Lalkarz wczytuje Encodery i wyświetla drugi słupek?

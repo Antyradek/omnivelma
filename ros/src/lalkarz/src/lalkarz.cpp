@@ -430,7 +430,7 @@ void drawGUI()
 		window.draw(mouseHelper);
 	}
 	
-	//Markery kierunku
+	//markery kierunku
 	if(twistInput)
 	{
 		//pole
@@ -509,11 +509,13 @@ void drawGUI()
 		valText.setPosition(0.75 * screenSize, screenSize * (0.75 - 0.33 * WHEEL_HEIGHT));
 		window.draw(valText);
 	}
-	//bieg
+	
+	//napis bieg
 	sf::Text gearText(defaultText);
 	gearText.setString("Bieg:");
 	gearText.setPosition(0.5 * screenSize - gearText.getGlobalBounds().width * 0.5, screenSize * (1.0 - 3.0 * FONT_SIZE));
 	window.draw(gearText);
+	
 	//lista biegów
 	double gearListWidth = (gears.size() - 1) * LIST_WIDTH + FONT_SIZE;
 	double gearListStart = screenSize * (0.5 - gearListWidth * 0.5);
@@ -542,11 +544,16 @@ void drawGUI()
 		gearDigit.setPosition(gearListStart + (i * LIST_WIDTH) * screenSize, screenSize * (1.0 - 2.0 * FONT_SIZE));
 		window.draw(gearDigit);
 	}
+	
 	//pomocnicze biegu
 	sf::Text gearHelperText(helperText);
 	if(showsJoystick)
 	{
 		gearHelperText.setString(JS_BUTTON_TEXT_GEAR_DOWN);
+	}
+	else if(keyWheelInput)
+	{
+		gearHelperText.setString(KEY_TEXT_GEAR_DOWN_ALT);
 	}
 	else
 	{
@@ -557,6 +564,10 @@ void drawGUI()
 	if(showsJoystick)
 	{
 		gearHelperText.setString(JS_BUTTON_TEXT_GEAR_UP);
+	}
+	else if(keyWheelInput)
+	{
+		gearHelperText.setString(KEY_TEXT_GEAR_UP_ALT);
 	}
 	else
 	{
@@ -874,11 +885,11 @@ int main(int argc, char** argv)
 			{
 				switchNextMode();
 			}
-			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_UP) || (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_GEAR_UP))
+			else if((event.type == sf::Event::KeyPressed && (event.key.code == KEY_GEAR_UP || event.key.code == KEY_GEAR_UP_ALT)) || (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_GEAR_UP))
 			{
 				currGear++;
 			}
-			else if((event.type == sf::Event::KeyPressed && event.key.code == KEY_GEAR_DOWN) || (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_GEAR_DOWN))
+			else if((event.type == sf::Event::KeyPressed && (event.key.code == KEY_GEAR_DOWN || event.key.code == KEY_GEAR_DOWN_ALT)) || (event.type == sf::Event::JoystickButtonPressed && event.joystickButton.button == JS_BUTTON_GEAR_DOWN))
 			{
 				currGear--;
 			}

@@ -20,7 +20,7 @@
             		<ixy>0</ixy>
             		<ixz>0</ixz>
             		<iyy>0.0450</iyy>
-            		<iyx>0</iyx>
+            		<iyz>0</iyz>
             		<izz>0.0399</izz>
             	</inertia>
             </inertial>
@@ -55,7 +55,7 @@
             		<ixy>0</ixy>
             		<ixz>0</ixz>
             		<iyy>0.0398</iyy>
-            		<iyx>0</iyx>
+            		<iyz>0</iyz>
             		<izz>0.0505</izz>
             	</inertia>
             </inertial>

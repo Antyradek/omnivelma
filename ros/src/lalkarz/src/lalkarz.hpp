@@ -79,6 +79,10 @@
 #define KEY_GEAR_DOWN				sf::Keyboard::Key::F
 #define KEY_TEXT_GEAR_UP			"R"
 #define KEY_TEXT_GEAR_DOWN			"F"
+#define KEY_GEAR_UP_ALT				sf::Keyboard::Key::Add
+#define KEY_GEAR_DOWN_ALT			sf::Keyboard::Key::Subtract
+#define KEY_TEXT_GEAR_UP_ALT		"+"
+#define KEY_TEXT_GEAR_DOWN_ALT		"-"
 #define JS_BUTTON_GEAR_UP			5
 #define JS_BUTTON_GEAR_DOWN			4
 #define JS_BUTTON_TEXT_GEAR_UP		"RB"
