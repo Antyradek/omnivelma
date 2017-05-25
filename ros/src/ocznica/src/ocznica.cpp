@@ -29,7 +29,6 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
-			std::cout << "Initializacja ROSa w Ocznicy" << std::endl;
         }
 
         //stwórz Node dla ROSa
@@ -41,8 +40,6 @@ public:
         //znajdź modele
         omnivelma = world -> GetModel("omnivelma");
         pseudovelma = world -> GetModel("pseudovelma");
-		
-		std::cout << "Ocznica obserwuje" << std::endl;
     }
 
 public:

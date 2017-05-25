@@ -25,3 +25,8 @@ rosparam list
 
 Podobny robot:
 PR2
+
+Plotter:
+rqt_multiplot 
+sudo apt-get install ros-kinetic-rqt-multiplot
+https://github.com/ethz-asl/rqt_multiplot_plugin

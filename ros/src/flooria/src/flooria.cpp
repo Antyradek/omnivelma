@@ -5,6 +5,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <ros/ros.h>
+#include <ros/console.h>
 #include <omnivelma_msgs/SetFriction.h>
 
 #define MODEL_NAME std::string("flooria")
@@ -31,7 +32,6 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
-			std::cout << "Initializacja ROSa we Floorii" << std::endl;
         }
 
         //stwórz Node dla ROSa
@@ -40,8 +40,6 @@ public:
         //stwórz serwer do ustawiania tarcia
 		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>("/flooria/set_friction", std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosSrv = rosNode -> advertiseService(aso);
-
-        std::cout << "Podłączono Floorię " << std::endl;
     }
 
 private:
@@ -49,7 +47,7 @@ private:
     {
         pyramid -> SetMuPrimary(req.mu1);
         pyramid -> SetMuSecondary(req.mu2);
-        std::cout << "Ustawiono tarcia podłoża: " << req.mu1 << " " << req.mu2 << std::endl;
+		ROS_DEBUG("Ustawiono tarcia podłoża: %lf %lf", req.mu1, req.mu2);
         return true;
     }
 

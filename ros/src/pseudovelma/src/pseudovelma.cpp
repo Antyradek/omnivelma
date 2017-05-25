@@ -7,6 +7,7 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/math/gzmath.hh>
 #include <ros/ros.h>
+#include <ros/console.h>
 #include <omnivelma_msgs/Vels.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Twist.h>
@@ -48,7 +49,6 @@ public:
             int argc = 0;
             char **argv = NULL;
             ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
-			std::cout << "Initializacja ROSa w Pseudovelmie" << std::endl;
         }
 
         //stwórz Node dla ROSa
@@ -62,8 +62,6 @@ public:
 		
 		//stwórz topic do nadawania prędkości
 		rosTwist = rosNode -> advertise<geometry_msgs::Twist>("/pseudovelma/twist", 1000);
-
-		std::cout << "Podłączono Pseudovelmę " << std::endl;
     }
 
 public:

@@ -2,6 +2,7 @@
 #include <string>
 #include <list>
 #include <ros/ros.h>
+#include <ros/console.h>
 #include <omnivelma_msgs/Vels.h>
 
 ///Lista nadajników
@@ -54,15 +55,13 @@ int main(int argc, char** argv)
 		if(newPub)
 		{
 			pubList.push_back(newPub);
-			std::cout << "Wysyłanie do " << topicName << std::endl;
 		}
 		else
 		{
-			std::cerr << "Nie udało się zainicjalizować wysyłania do " << topicName << " i został on pominięty." << std::endl;
+			ROS_ERROR_STREAM("Nie udało się zainicjalizować wysyłania do " << topicName << " i został on pominięty.");
 		}
 	}
 
-    std::cout << "Rozdzielanie wiadomości... " << std::endl;
     ros::spin();
     return 0;
 }

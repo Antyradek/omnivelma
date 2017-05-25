@@ -6,6 +6,7 @@
 #include <gazebo/physics/physics.hh>
 #include <gazebo/common/common.hh>
 #include <ros/ros.h>
+#include <ros/console.h>
 #include <omnivelma_msgs/Vels.h>
 #include <omnivelma_msgs/SetFriction.h>
 #include <omnivelma_msgs/Encoders.h>
@@ -49,7 +50,6 @@ public:
             int argc = 0;
             char **argv = nullptr;
             ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
-            std::cout << "ROS initializowany w Omnivelmie" << std::endl;
         }
 
         //stwórz Node dla ROSa
@@ -74,8 +74,6 @@ public:
         //stwórz serwer do odbierania inercji
 		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosIne = rosNode -> advertiseService(asi);
-
-        std::cout << "Podłączono Omnivelmę " << std::endl;
     }
 
 public:
@@ -137,7 +135,7 @@ private:
         pyramidFR -> SetMuSecondary(req.mu2);
         pyramidFL -> SetMuPrimary(req.mu1);
         pyramidFL -> SetMuSecondary(req.mu2);
-        std::cout << "Ustawiono tarcia: " << req.mu1 << " " << req.mu2 << std::endl;
+        ROS_DEBUG("Ustawiono tarcia: %lf %lf", req.mu1, req.mu2);
         return true;
     }
     ///Ustaw masy, środki mas i tensor inercji.
@@ -190,11 +188,11 @@ private:
         }
         catch(common::Exception err)
         {
-            std::cerr << "Nie udało się ustawić inercji: " << err.GetErrorStr() << std::endl;
+            ROS_ERROR_STREAM("Nie udało się ustawić inercji: " << err.GetErrorStr());
             return false;
         }
 
-        std::cout << "Ustawiono inercje: " << req.base.m << " " << req.front.m << " " << req.wheel.m << std::endl;
+        ROS_DEBUG("Ustawiono inercje");
         return true;
     }
 

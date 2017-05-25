@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <ros/ros.h>
+#include <ros/console.h>
 #include <omnivelma_msgs/Vels.h>
 #include <geometry_msgs/Twist.h>
 
@@ -130,12 +131,10 @@ int main(int argc, char **argv)
     publisher = handle.advertise<omnivelma_msgs::Vels>(topicName, 1);
 	if(!publisher)
 	{
-		std::cerr << "Nie można stworzyć nadajnika " << topicName << std::endl;
+		ROS_FATAL("Nie można stworzyć nadajnika");
 		exit(2);
 	}
 
-    std::cout << "Transmutowanie do " << topicName << "... " << std::endl;
     ros::spin();
-    std::cout << "Wychodzenie z Transmutatora" << std::endl;
     return 0;
 }
