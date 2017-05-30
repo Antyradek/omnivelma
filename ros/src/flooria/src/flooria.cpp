@@ -40,6 +40,10 @@ public:
         //stwórz serwer do ustawiania tarcia
 		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>("/flooria/set_friction", std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosSrv = rosNode -> advertiseService(aso);
+        if(!rosSrv)
+        {
+        	ROS_FATAL("Nie udało się aktywować serwera /flooria/set_friction");
+        }
     }
 
 private:

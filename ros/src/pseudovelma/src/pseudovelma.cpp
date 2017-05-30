@@ -56,12 +56,24 @@ public:
 
         //Stwórz topic do odbierania wiadomości
         rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
+        if(!rosSub)
+        {
+        	ROS_FATAL("Nie udało się ustawić odbiornika /pseudovelma/vels");
+        }
 
         //stwórz topic do nadawania pozycji
         rosPose = rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
+        if(!rosPose)
+        {
+        	ROS_FATAL("Nie udało się ustawić nadajnika /pseudovelma/pose");
+        }
 		
 		//stwórz topic do nadawania prędkości
 		rosTwist = rosNode -> advertise<geometry_msgs::Twist>("/pseudovelma/twist", 1000);
+		if(!rosTwist)
+        {
+        	ROS_FATAL("Nie udało się ustawić nadajnika /pseudovelma/twist");
+        }
     }
 
 public:

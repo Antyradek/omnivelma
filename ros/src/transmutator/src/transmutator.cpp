@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 	if(argc <= 1)
 	{
 		std::cerr << "Nie podano Topica do wysyłania. Wpisz '" << progName << " --help' po instrukcje użycia." << std::endl;
-		exit(1);
+		return -1;
 	}
     rotation = Rotation::No;
 	std::string topicName;
@@ -105,13 +105,13 @@ int main(int argc, char **argv)
 				else
 				{
 					std::cerr << "Podano nieprawidłową rotację." << std::endl;
-					exit(1);
+					return -1;
 				}
 			}
 			else
 			{
 				std::cerr << "Nie podano rotacji." << std::endl;
-				exit(1);
+				return -1;
 			}
         }
         else
@@ -123,16 +123,20 @@ int main(int argc, char **argv)
     if(topicName.empty())
 	{
 		std::cerr << "Nie podano argumentu TOPIC." << std::endl;
-		exit(1);
+		return -1;
 	}
 
     ros::NodeHandle handle;
     ros::Subscriber sub = handle.subscribe<geometry_msgs::Twist>("/transmutator/twist", 1, twistCallback);
+    if(!sub)
+    {
+    	ROS_FATAL("Nie można stworzyć odbiornika /transmutator/twist");
+    }
     publisher = handle.advertise<omnivelma_msgs::Vels>(topicName, 1);
 	if(!publisher)
 	{
-		ROS_FATAL("Nie można stworzyć nadajnika");
-		exit(2);
+		ROS_FATAL_STREAM("Nie można stworzyć nadajnika " << topicName);
+		return -2;
 	}
 
     ros::spin();

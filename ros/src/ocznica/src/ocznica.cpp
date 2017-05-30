@@ -19,7 +19,6 @@ public:
     ///Uruchamiane na inicjalizację
     void Load(physics::WorldPtr world, sdf::ElementPtr sdfElement)
     {
-
         //podłączenie do wydarznia aktualizacji
         updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
 
@@ -36,6 +35,10 @@ public:
 
         //stwórz topic do nadawania wiadomości
         rosPub = rosNode -> advertise<omnivelma_msgs::Relative>("/ocznica/relative", 1000);
+        if(!rosPub)
+        {
+        	ROS_FATAL("Nie udało się stworzyć nadajnika /ocznica/relative");
+        }
 
         //znajdź modele
         omnivelma = world -> GetModel("omnivelma");

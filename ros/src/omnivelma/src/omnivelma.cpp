@@ -57,23 +57,47 @@ public:
 
         //stwórz topic do odbierania prędkości
 		rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
+		if(!rosSub)
+		{
+			ROS_FATAL("Nie udało się stworzyć odbiornika /omnivelma/vels");
+		}
 
         //stwórz topic do nadawania pozycji
 		rosPose = rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
+		if(!rosPose)
+		{
+			ROS_FATAL("Nie udało się stworzyć nadajnika /omnivelma/pose");
+		}
 
         //stwórz topic do nadawania enkoderów
 		rosEnc = rosNode -> advertise<omnivelma_msgs::Encoders>("/omnivelma/encoders", 1000);
+		if(!rosEnc)
+		{
+			ROS_FATAL("Nie udało się stworzyć nadajnika /omnivelma/encoders");
+		}
 		
 		//stwórz topic do nadawania prędkości
 		rosTwist = rosNode -> advertise<geometry_msgs::Twist>("/omnivelma/twist", 1000);
+		if(!rosTwist)
+		{
+			ROS_FATAL("Nie udało się stworzyć nadajnika /omnivelma/twist");
+		}
 
         //stwórz serwer do odbierania tarcia
 		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosFri = rosNode -> advertiseService(aso);
+        if(!rosFri)
+		{
+			ROS_FATAL("Nie udało się stworzyć serwera /omnivelma/set_friction");
+		}
 
         //stwórz serwer do odbierania inercji
 		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosIne = rosNode -> advertiseService(asi);
+        if(!rosIne)
+		{
+			ROS_FATAL("Nie udało się stworzyć serwera /omnivelma/set_inertia");
+		}
     }
 
 private:

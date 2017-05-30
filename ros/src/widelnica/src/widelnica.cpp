@@ -48,6 +48,11 @@ int main(int argc, char** argv)
     ros::NodeHandle handle;
 	//odbiornik wiadomości
     ros::Subscriber sub = handle.subscribe<omnivelma_msgs::Vels>("/widelnica/vels", 1, velsCallback);
+    if(!sub)
+    {
+    	ROS_FATAL("Nie udało się stworzyć odbiornika /widelnica/vels");
+    }
+    
 	//lista nadajników
 	for(std::string topicName : topicList)
 	{
@@ -58,7 +63,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			ROS_ERROR_STREAM("Nie udało się zainicjalizować wysyłania do " << topicName << " i został on pominięty.");
+			ROS_ERROR_STREAM("Nie udało się stworzyć nadajnika " << topicName << " i został on pominięty");
 		}
 	}
 
