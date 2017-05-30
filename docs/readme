@@ -13,7 +13,6 @@ Gazebo bardzo dobrze działa
 Czujnik laserowy SICK LSM100-10000
 
 Do zrobienia:
-Encodery składają się z dwóch części vels
 	-> rekompilacja Vrevelmy
 Przy okazji pododawać sprawdzenia, czy udało się stworzyć nadajniki itp.
 Kilka skryptów do różnych testów i uruchomień zamiast if

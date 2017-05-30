@@ -76,7 +76,7 @@ public:
         rosIne = rosNode -> advertiseService(asi);
     }
 
-public:
+private:
     ///Funkcja podłączana do zdarzenia aktualizacji
     void OnUpdate()
     {
@@ -101,14 +101,14 @@ public:
 
         //wyślij enkodery
         omnivelma_msgs::Encoders encMsg;
-        encMsg.vel_rr = motorRR -> GetVelocity(0);
-        encMsg.angle_rr = motorRR -> GetAngle(0).Radian();
-        encMsg.vel_rl = motorRL -> GetVelocity(0);
-        encMsg.angle_rl = motorRL -> GetAngle(0).Radian();
-        encMsg.vel_fr = motorFR -> GetVelocity(0);
-        encMsg.angle_fr = motorFR -> GetAngle(0).Radian();
-        encMsg.vel_fl = motorFL -> GetVelocity(0);
-        encMsg.angle_fl = motorFL -> GetAngle(0).Radian();
+        encMsg.velocity.rr = motorRR -> GetVelocity(0);
+        encMsg.angle.rr = motorRR -> GetAngle(0).Radian();
+        encMsg.velocity.rl = motorRL -> GetVelocity(0);
+        encMsg.angle.rl = motorRL -> GetAngle(0).Radian();
+        encMsg.velocity.fr = motorFR -> GetVelocity(0);
+        encMsg.angle.fr = motorFR -> GetAngle(0).Radian();
+        encMsg.velocity.fl = motorFL -> GetVelocity(0);
+        encMsg.angle.fl = motorFL -> GetAngle(0).Radian();
         rosEnc.publish(encMsg);
 		
 		//wyślij prędkość
@@ -123,7 +123,7 @@ public:
 		twistMsg.angular.z = angVel.z;
 		rosTwist.publish(twistMsg);
     }
-private:
+    
     ///Ustaw tarcia dla kół
     bool SetFriction(const omnivelma_msgs::SetFriction::Request& req, omnivelma_msgs::SetFriction::Response& res)
     {
@@ -197,7 +197,6 @@ private:
     }
 
     ///Pobierz wiadomość od ROSa
-private:
     void OnRosMsg(const omnivelma_msgs::Vels::ConstPtr& msg)
     {
 		if(!std::isnan(msg -> rr))
@@ -210,7 +209,6 @@ private:
 			motorFL -> SetVelocity(0, msg -> fl);
     }
 
-private:
     ///Wskaźnik na model
     physics::ModelPtr model;
 

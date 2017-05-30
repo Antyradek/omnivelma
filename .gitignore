@@ -5,7 +5,7 @@
 *.nav
 *.snm
 *.backup
-build
-
-tmp/*.o
-tmp/lalkarz
+ros/build/
+ros/devel/
+ros/.catkin_workspace
+ros/src/CMakeLists.txt
