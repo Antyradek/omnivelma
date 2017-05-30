@@ -14,8 +14,6 @@ Czujnik laserowy SICK LSM100-10000
 
 Do zrobienia:
 	-> rekompilacja Vrevelmy
-Przy okazji pododawać sprawdzenia, czy udało się stworzyć nadajniki itp.
-Kilka skryptów do różnych testów i uruchomień zamiast if
 Zrobić tak, aby nazwa topica była nazwą modelu
 Stamped dla: (http://answers.ros.org/question/53930/roscpp-warning-in-rospublisherpublish/)
 	pseudovelma/pose

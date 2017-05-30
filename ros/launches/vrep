@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#Uruchom V-Repa
+#Lalkarz wysyła Vels do V-Repa
+#Lalkarz wysyła Twist do Transmutatora, który również wysyła Vels do V-Repa
+
+source setup
+rosrun transmutator transmutator /vrevelma/vels &
+export PIDTRA=$!
+rosrun lalkarz lalkarz -v /vrevelma/vels -t /transmutator/twist &
+export PIDLAL=$!
+trap "kill $PIDLAL; kill $PIDTRA;" SIGINT
+
+echo "Wciśnij ^C, aby wyłączyć procesy"
+sleep infinity

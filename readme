@@ -30,12 +30,16 @@ Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to 
 Przenieś tam zawartość katalogu ros/.
 $ ./init
 To zainicjuje katalog roboczy i skompiluje projekt.
-$ ./launch
-Uruchomi Gazebo z platformami, sterowanie, oraz programy wspomagające.
+$ ./launch/<scenariusz>
+Uruchomi odpowiednią symulację
 
-Można ustawić zmienną systemową VREP_ROOT na katalog główny V-Repa, wtedy automagicznie to do niego będzie iść sterowanie, zamiast Gazebo.
-Należy wcześniej włączyć edytor i wczytać scenę z modelem w katalogu /vrep.
-Uruchomić symulację, wtedy skrypt init.
+Symulacje:
+launch/gazebo
+	Symulacja Omnivelmy i Pseudovelmy w Gazebo
+launch/vrep
+	Symulacja Vrevelmy w V-Repie
+	Zmienna VREP_ROOT musi być ustawiona
+	V-Rep musi być uruchomiony z wczytaną sceną vrep/omnivelma.ttt
 
 Dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
