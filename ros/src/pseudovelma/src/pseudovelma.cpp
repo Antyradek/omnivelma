@@ -9,8 +9,8 @@
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <omnivelma_msgs/Vels.h>
-#include <geometry_msgs/Pose.h>
-#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TwistStamped.h>
 
 #define MODEL_NAME std::string("pseudovelma")
 
@@ -31,6 +31,8 @@ public:
         wheelRadius = 0.1;
         modelWidth = 0.76;
         modelLength = 0.72;
+        
+        counter = 0;
     }
 
     ///Uruchamiane na inicjalizację
@@ -56,24 +58,24 @@ public:
         rosNode.reset(new ros::NodeHandle());
 		
         //Stwórz topic do odbierania wiadomości
-        rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix.append("vels"), 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
+        rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix + "vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
         if(!rosSub)
         {
-        	ROS_FATAL_STREAM("Nie udało się ustawić odbiornika " << topicPrefix.append("vels"));
+        	ROS_FATAL_STREAM("Nie udało się ustawić odbiornika " << topicPrefix + "vels");
         }
 
         //stwórz topic do nadawania pozycji
-        rosPose = rosNode -> advertise<geometry_msgs::Pose>(topicPrefix.append("pose"), 1000);
+        rosPose = rosNode -> advertise<geometry_msgs::PoseStamped>(topicPrefix + "pose", 1000);
         if(!rosPose)
         {
-        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix.append("pose"));
+        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "pose");
         }
 		
 		//stwórz topic do nadawania prędkości
-		rosTwist = rosNode -> advertise<geometry_msgs::Twist>(topicPrefix.append("twist"), 1000);
+		rosTwist = rosNode -> advertise<geometry_msgs::TwistStamped>(topicPrefix + "twist", 1000);
 		if(!rosTwist)
         {
-        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix.append("twist"));
+        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "twist");
         }
     }
 
@@ -102,27 +104,35 @@ public:
 
         //wyślij pozycję
         const math::Pose& pose = model -> GetWorldPose();
-        geometry_msgs::Pose poseMsg;
-		poseMsg.position.x = pose.pos.x;
-		poseMsg.position.y = pose.pos.y;
-		poseMsg.position.z = pose.pos.z;
-		poseMsg.orientation.x = pose.rot.x;
-		poseMsg.orientation.y = pose.rot.y;
-		poseMsg.orientation.z = pose.rot.z;
-		poseMsg.orientation.w = pose.rot.w;
+        geometry_msgs::PoseStamped poseMsg;
+		poseMsg.pose.position.x = pose.pos.x;
+		poseMsg.pose.position.y = pose.pos.y;
+		poseMsg.pose.position.z = pose.pos.z;
+		poseMsg.pose.orientation.x = pose.rot.x;
+		poseMsg.pose.orientation.y = pose.rot.y;
+		poseMsg.pose.orientation.z = pose.rot.z;
+		poseMsg.pose.orientation.w = pose.rot.w;
+		poseMsg.header.seq = counter;
+		poseMsg.header.stamp = ros::Time::now();
+		poseMsg.header.frame_id = "1";
 		rosPose.publish(poseMsg);
 		
 		//wyślij prędkość
 		const math::Vector3 linVel = model -> GetWorldLinearVel();
 		const math::Vector3 angVel = model -> GetWorldAngularVel();
-		geometry_msgs::Twist twistMsg;
-		twistMsg.linear.x = linVel.x;
-		twistMsg.linear.y = linVel.y;
-		twistMsg.linear.z = linVel.z;
-		twistMsg.angular.x = angVel.x;
-		twistMsg.angular.y = angVel.y;
-		twistMsg.angular.z = angVel.z;
+		geometry_msgs::TwistStamped twistMsg;
+		twistMsg.twist.linear.x = linVel.x;
+		twistMsg.twist.linear.y = linVel.y;
+		twistMsg.twist.linear.z = linVel.z;
+		twistMsg.twist.angular.x = angVel.x;
+		twistMsg.twist.angular.y = angVel.y;
+		twistMsg.twist.angular.z = angVel.z;
+		twistMsg.header.seq = counter;
+		twistMsg.header.stamp = ros::Time::now();
+		twistMsg.header.frame_id = "1";
 		rosTwist.publish(twistMsg);
+		
+		counter++;
     }
 
     ///Pobierz wiadomość od ROSa
@@ -175,6 +185,9 @@ private:
 	
 	///Nadajnik prędkości
 	ros::Publisher rosTwist;
+	
+	///Licznik kroków symulacji
+	unsigned int counter;
 
 };
 

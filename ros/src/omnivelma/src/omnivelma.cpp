@@ -9,9 +9,9 @@
 #include <ros/console.h>
 #include <omnivelma_msgs/Vels.h>
 #include <omnivelma_msgs/SetFriction.h>
-#include <omnivelma_msgs/Encoders.h>
-#include <geometry_msgs/Pose.h>
-#include <geometry_msgs/Twist.h>
+#include <omnivelma_msgs/EncodersStamped.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TwistStamped.h>
 #include <omnivelma_msgs/SetInertia.h>
 
 #define MODEL_NAME std::string("omnivelma")
@@ -25,12 +25,18 @@ namespace gazebo
 class Omnivelma : public ModelPlugin
 {
 public:
+	Omnivelma()
+	{
+		counter = 0;	
+	}
+	
+public:
     ///Uruchamiane na inicjalizację
     void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
     {
         model = parent;
 
-        //updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
+        updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
 
         linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
         std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
@@ -56,48 +62,48 @@ public:
         //stwórz Node dla ROSa
         rosNode.reset(new ros::NodeHandle());
 
-        //stwórz topic do odbierania prędkości
-		rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix.append("vels"), 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
+        //stwórz topic do odbierania prędkości kół
+		rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix + "vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
 		if(!rosSub)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć odbiornika " << topicPrefix.append("vels"));
+			ROS_FATAL_STREAM("Nie udało się stworzyć odbiornika " << topicPrefix + "vels");
 		}
 
         //stwórz topic do nadawania pozycji
-		rosPose = rosNode -> advertise<geometry_msgs::Pose>(topicPrefix.append("pose"), 1000);
+		rosPose = rosNode -> advertise<geometry_msgs::PoseStamped>(topicPrefix + "pose", 1000);
 		if(!rosPose)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix.append("pose"));
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix + "pose");
 		}
 
         //stwórz topic do nadawania enkoderów
-		rosEnc = rosNode -> advertise<omnivelma_msgs::Encoders>(topicPrefix.append("encoders"), 1000);
+		rosEnc = rosNode -> advertise<omnivelma_msgs::EncodersStamped>(topicPrefix + "encoders", 1000);
 		if(!rosEnc)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix.append("encoders"));
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix + "encoders");
 		}
 		
 		//stwórz topic do nadawania prędkości
-		rosTwist = rosNode -> advertise<geometry_msgs::Twist>(topicPrefix.append("twist"), 1000);
+		rosTwist = rosNode -> advertise<geometry_msgs::TwistStamped>(topicPrefix + "twist", 1000);
 		if(!rosTwist)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix.append("twist"));
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix + "twist");
 		}
 
         //stwórz serwer do odbierania tarcia
-		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>(topicPrefix.append("set_friction"), std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>(topicPrefix + "set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosFri = rosNode -> advertiseService(aso);
         if(!rosFri)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix.append("set_friction"));
+			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix + "set_friction");
 		}
 
         //stwórz serwer do odbierania inercji
-		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetInertia>(topicPrefix.append("set_inertia"), std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetInertia>(topicPrefix + "set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosIne = rosNode -> advertiseService(asi);
         if(!rosIne)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix.append("set_inertia"));
+			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix + "set_inertia");
 		}
     }
    
@@ -115,38 +121,47 @@ private:
 
         //wyślij pozycję
         const math::Pose& pose = model -> GetWorldPose();
-		geometry_msgs::Pose poseMsg;
-        poseMsg.position.x = pose.pos.x;
-        poseMsg.position.y = pose.pos.y;
-        poseMsg.position.z = pose.pos.z;
-        poseMsg.orientation.x = pose.rot.x;
-        poseMsg.orientation.y = pose.rot.y;
-        poseMsg.orientation.z = pose.rot.z;
-        poseMsg.orientation.w = pose.rot.w;
+		geometry_msgs::PoseStamped poseMsg;
+        poseMsg.pose.position.x = pose.pos.x;
+        poseMsg.pose.position.y = pose.pos.y;
+        poseMsg.pose.position.z = pose.pos.z;
+        poseMsg.pose.orientation.x = pose.rot.x;
+        poseMsg.pose.orientation.y = pose.rot.y;
+        poseMsg.pose.orientation.z = pose.rot.z;
+        poseMsg.pose.orientation.w = pose.rot.w;
+        poseMsg.header.seq = counter;
+		poseMsg.header.stamp = ros::Time::now();
+		poseMsg.header.frame_id = "1";
         rosPose.publish(poseMsg);
 
         //wyślij enkodery
-        omnivelma_msgs::Encoders encMsg;
-        encMsg.velocity.rr = motorRR -> GetVelocity(0);
-        encMsg.angle.rr = motorRR -> GetAngle(0).Radian();
-        encMsg.velocity.rl = motorRL -> GetVelocity(0);
-        encMsg.angle.rl = motorRL -> GetAngle(0).Radian();
-        encMsg.velocity.fr = motorFR -> GetVelocity(0);
-        encMsg.angle.fr = motorFR -> GetAngle(0).Radian();
-        encMsg.velocity.fl = motorFL -> GetVelocity(0);
-        encMsg.angle.fl = motorFL -> GetAngle(0).Radian();
+        omnivelma_msgs::EncodersStamped encMsg;
+        encMsg.encoders.velocity.rr = motorRR -> GetVelocity(0);
+        encMsg.encoders.angle.rr = motorRR -> GetAngle(0).Radian();
+        encMsg.encoders.velocity.rl = motorRL -> GetVelocity(0);
+        encMsg.encoders.angle.rl = motorRL -> GetAngle(0).Radian();
+        encMsg.encoders.velocity.fr = motorFR -> GetVelocity(0);
+        encMsg.encoders.angle.fr = motorFR -> GetAngle(0).Radian();
+        encMsg.encoders.velocity.fl = motorFL -> GetVelocity(0);
+        encMsg.encoders.angle.fl = motorFL -> GetAngle(0).Radian();
+        encMsg.header.seq = counter;
+		encMsg.header.stamp = ros::Time::now();
+		encMsg.header.frame_id = "0";
         rosEnc.publish(encMsg);
 		
 		//wyślij prędkość
 		const math::Vector3 linVel = model -> GetWorldLinearVel();
 		const math::Vector3 angVel = model -> GetWorldAngularVel();
-		geometry_msgs::Twist twistMsg;
-		twistMsg.linear.x = linVel.x;
-		twistMsg.linear.y = linVel.y;
-		twistMsg.linear.z = linVel.z;
-		twistMsg.angular.x = angVel.x;
-		twistMsg.angular.y = angVel.y;
-		twistMsg.angular.z = angVel.z;
+		geometry_msgs::TwistStamped twistMsg;
+		twistMsg.twist.linear.x = linVel.x;
+		twistMsg.twist.linear.y = linVel.y;
+		twistMsg.twist.linear.z = linVel.z;
+		twistMsg.twist.angular.x = angVel.x;
+		twistMsg.twist.angular.y = angVel.y;
+		twistMsg.twist.angular.z = angVel.z;
+		twistMsg.header.seq = counter;
+		twistMsg.header.stamp = ros::Time::now();
+		twistMsg.header.frame_id = "1";
 		rosTwist.publish(twistMsg);
     }
     
@@ -276,6 +291,9 @@ private:
 
     ///Serwer ustawiania inercji
     ros::ServiceServer rosIne;
+    
+    ///Licznik kroków
+    unsigned int counter;
 
 };
 

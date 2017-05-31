@@ -15,11 +15,9 @@ Czujnik laserowy SICK LSM100-10000
 Do zrobienia:
 	-> rekompilacja Vrevelmy
 Stamped dla: (http://answers.ros.org/question/53930/roscpp-warning-in-rospublisherpublish/)
-	pseudovelma/pose
-	pseudovelma/twist
-	omnivelma/pose
-	omnivelma/twist
 	vrevelma/pose
 	vrevelma/twist
+Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
+	https://en.wikipedia.org/wiki/List_of_moments_of_inertia
 Lalkarz wczytuje Encodery (jedną część vels) i wyświetla drugi słupek
 Wsadzić model laserowego czujnika (monokl), oskryptować na podstawie lsm1xx

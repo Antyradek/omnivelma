@@ -6,7 +6,7 @@
 #include <gazebo/common/common.hh>
 #include <gazebo/math/gzmath.hh>
 #include <ros/ros.h>
-#include <omnivelma_msgs/Relative.h>
+#include <omnivelma_msgs/RelativeStamped.h>
 #include <cmath>
 
 namespace gazebo
@@ -15,7 +15,11 @@ namespace gazebo
 class Ocznica : public WorldPlugin
 {
 public:
-
+	Ocznica()
+	{
+		counter = 0;
+	}
+	
     ///Uruchamiane na inicjalizację
     void Load(physics::WorldPtr world, sdf::ElementPtr sdfElement)
     {
@@ -32,7 +36,7 @@ public:
         isCorrect = true;
 
         //stwórz topic do nadawania wiadomości
-        rosPub = rosNode -> advertise<omnivelma_msgs::Relative>("/ocznica/relative", 1000);
+        rosPub = rosNode -> advertise<omnivelma_msgs::RelativeStamped>("/ocznica/relative", 1000);
         if(!rosPub)
         {
         	ROS_FATAL("Nie udało się stworzyć nadajnika /ocznica/relative");
@@ -64,9 +68,12 @@ public:
         //to działa jedynie dla małych kątów!
         double angle = sqrt(pow(omniPose.rot.x - pseudoPose.rot.x,2) + pow(omniPose.rot.y - pseudoPose.rot.y,2) + pow(omniPose.rot.z - pseudoPose.rot.z,2) + pow(omniPose.rot.w - pseudoPose.rot.w,2));
 
-        omnivelma_msgs::Relative msg;
-        msg.distance = dist;
-        msg.angle = angle;
+        omnivelma_msgs::RelativeStamped msg;
+        msg.relative.distance = dist;
+        msg.relative.angle = angle;
+        msg.header.seq = counter;
+		msg.header.stamp = ros::Time::now();
+		msg.header.frame_id = "0";
         rosPub.publish(msg);
     }
 
@@ -89,6 +96,9 @@ private:
     
     ///Czy udało się działać
     bool isCorrect;
+    
+    ///Licznik kroków
+    unsigned int counter;
 
 };
 

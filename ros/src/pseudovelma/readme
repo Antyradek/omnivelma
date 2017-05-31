@@ -15,10 +15,10 @@ tylne prawe
 Wysłanie NaN zachowuje poprzednią prędkość koła.
 
 /pseudovelma/pose
-geometry_msgs/Pose
+geometry_msgs/PoseStamped
 Zwraca aktualną pozycję
 http://docs.ros.org/api/geometry_msgs/html/msg/Pose.html
 
 /pseudovelma/twist
-geometry_msgs/Twist
+geometry_msgs/TwistStamped
 Zwraca aktualną prędkość

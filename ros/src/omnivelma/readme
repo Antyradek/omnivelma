@@ -15,15 +15,15 @@ tylne prawe
 Wysłanie NaN nie modyfikuje poprzedniej prędkości.
 
 /omnivelma/encoders
-omnivelma_msgs/Encoders
+omnivelma_msgs/EncodersStamped
 Kąt i prędkość dla każdego koła.
 
 /omnivelma/pose
-geometry_msgs/Pose
+geometry_msgs/PoseStamped
 Zwraca aktualną pozycję
 
 /omnivelma/twist
-geometry_msgs/Twist
+geometry_msgs/TwistStamped
 Zwraca aktualną prędkość
 
 /omnivelma/set_friction
