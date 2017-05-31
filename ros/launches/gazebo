@@ -14,7 +14,7 @@ rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
 export PIDWID=$!
 rosrun transmutator transmutator /widelnica/vels &
 export PIDTRA=$!
-rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist &
+rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist -e /lalkarz/encoders &
 export PIDLAL=$!
 trap "kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
 

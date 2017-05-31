@@ -27,15 +27,17 @@
 ///Wysokość ryskunku koła
 #define WHEEL_HEIGHT				0.1
 ///Odległość wartości od koła
-#define VALUE_WHEEL_DIST			0.1
+#define VALUE_WHEEL_DIST			0.13
 ///Szerokość miernika
 #define METER_WIDTH					0.05
+///Szerokość miernika enkoderów
+#define ENC_METER_WIDTH				0.02
 ///Wysokość miernika
 #define METER_HEIGHT				0.18
 ///Prędkość zmiany miernika
 #define METER_CHANGE_SPEED			1.0
 ///Odległość miernika od koła
-#define METER_WHEEL_DIST			0.01
+#define METER_WHEEL_DIST			0.05
 ///Wielkość linii
 #define FONT_SIZE 					0.03
 ///Wielkość znaków
@@ -59,7 +61,9 @@
 ///Minimalna wartość, aby pokazać zmianę strzałki
 #define ARROW_EPSILON				0.01
 
+///Ilość trybów
 #define MODE_COUNT 					11
+///Domyślna częstotliwość
 #define DEFAULT_FREQ 				10
 ///Ilość stopni w sterowaniu schodkowym
 #define INPUT_STEP_COUNT			10
@@ -199,3 +203,4 @@ typedef struct
 	double y;
 	double z;
 } Twist;
+

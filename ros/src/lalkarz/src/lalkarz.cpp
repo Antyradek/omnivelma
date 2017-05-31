@@ -31,6 +31,8 @@ sf::Color modeColor[MODE_COUNT];
 std::string twistTopic;
 ///Topic do wysyłania Vels
 std::string velsTopic;
+///Topic do przyjmowania Encoders
+std::string encTopic;
 ///Bieg (przemnożenie wejścia)
 unsigned int currGear;
 ///Nazwy trybów
@@ -43,6 +45,8 @@ bool sendsVels;
 bool joystickConnected;
 ///Nie wysyła NaN
 bool noNan;
+///Przyjmuje encodery
+bool readsEnc;
 
 ///Pokazuje interfejs joysticka
 bool showsJoystick;
@@ -70,6 +74,11 @@ double outputMultiplier;
 ///Tryb wysyłania
 SendMode sendMode;
 
+///Sekcja krytyczna na wejściu enkoderów
+std::mutex encMutex;
+///Dane enkoderów synchronizowane
+Vels enc;
+
 ///Biegi
 std::vector<double> gears {0.01, 0.05, 0.1, 0.5, 1, 2, 5};
 
@@ -79,6 +88,25 @@ sf::Font monoFont;
 
 ///Stan robota
 std::unique_ptr<State> state;
+///Wartości enkoderów
+Vels guiEnc;
+
+///Funkcja wywoływana na odbiór wiadomości od ROSa
+void onEncMsg(const omnivelma_msgs::Vels::ConstPtr& msg)
+{
+	encMutex.lock();
+	enc.w1 = msg -> fr;
+	enc.w2 = msg -> fl;
+	enc.w3 = msg -> rl;
+	enc.w4 = msg -> rr;
+	encMutex.unlock();
+}
+
+///Trzeci wątek do odbioru wiadomości, blokujemy wątek na ROSowej funkcji, aby wywoływała asynchronicznie podaną w odbiorniku funkcję
+void recvLoop()
+{
+	ros::spin();	
+}
 
 ///Pętla drugiego wątku do wysyłania wiadomości ROSa
 void sendLoop()
@@ -87,6 +115,7 @@ void sendLoop()
 	ros::NodeHandle handle;
 	ros::Publisher velsPub;
 	ros::Publisher twistPub;
+	ros::Subscriber encSub;
 	bool velsOk = false;
 	bool twistOk = false;
 	
@@ -96,7 +125,7 @@ void sendLoop()
 		velsPub = handle.advertise<omnivelma_msgs::Vels>(velsTopic, 1);
 		if(!velsPub)
 		{
-			std::cerr << "Nie usało się zainicjować wysyłania do " << velsTopic << " i został on pominięty." << std::endl;
+			std::cerr << "Nie udało się zainicjować wysyłania do " << velsTopic << " i został on pominięty." << std::endl;
 			velsOk = false;
 		}
 	}
@@ -107,36 +136,54 @@ void sendLoop()
 		twistPub = handle.advertise<geometry_msgs::Twist>(twistTopic, 1);
 		if(!twistPub)
 		{
-			std::cerr << "Nie usało się zainicjować wysyłania do " << twistTopic << " i został on pominięty." << std::endl;
+			std::cerr << "Nie udało się zainicjować wysyłania do " << twistTopic << " i został on pominięty." << std::endl;
 			twistOk = false;
 		}
 	}
 	
+	if(readsEnc)
+	{
+		encSub = handle.subscribe<omnivelma_msgs::Vels>(encTopic, 1, onEncMsg);
+		if(!encSub)
+		{
+			std::cerr << "Nie udało się zainicjować odbierania od " << encTopic << " i został on pominięty." << std::endl;
+			readsEnc = false;
+		}
+	}
+		
+	std::thread recvThread(recvLoop);
 	while(isActive)
 	{
 		mainMutex.lock();
-		if(sendMode == SendMode::SendTwist && twistOk)
+		double mult = outputMultiplier;
+		Twist t = twist;
+		Vels v = vels;
+		SendMode mod = sendMode;
+		mainMutex.unlock();
+		
+		if(mod == SendMode::SendTwist && twistOk)
 		{
 			geometry_msgs::Twist newMsg;
-			newMsg.linear.x = outputMultiplier * twist.x;
-			newMsg.linear.y = outputMultiplier * twist.y;
-			newMsg.angular.z = outputMultiplier * twist.z;
+			newMsg.linear.x = mult * t.x;
+			newMsg.linear.y = mult * t.y;
+			newMsg.angular.z = mult * t.z;
 			
 			twistPub.publish(newMsg);
 		}
-		else if(sendMode == SendMode::SendVels && velsOk)
+		else if(mod == SendMode::SendVels && velsOk)
 		{
 			omnivelma_msgs::Vels newMsg;
-			newMsg.fr = outputMultiplier * vels.w1;
-			newMsg.fl = outputMultiplier * vels.w2;
-			newMsg.rl = outputMultiplier * vels.w3;
-			newMsg.rr = outputMultiplier * vels.w4;
+			newMsg.fr = mult * v.w1;
+			newMsg.fl = mult * v.w2;
+			newMsg.rl = mult * v.w3;
+			newMsg.rr = mult * v.w4;
 			velsPub.publish(newMsg);
 		}
-		mainMutex.unlock();
+		
 		std::this_thread::sleep_for (std::chrono::milliseconds((int)(sendWaitTime * 1000)));
 	}
 	ros::shutdown();
+	recvThread.join();
 }
 
 ///Narysuj GUI
@@ -382,6 +429,52 @@ void drawGUI()
 		window.draw(meter);
 	}
 	
+	//Enkodery
+	if(readsEnc)
+	{
+		sf::RectangleShape meter(sf::Vector2f(0,0));
+		sf::RectangleShape maxMeter1(sf::Vector2f(0,0));
+		meter.setFillColor(BORDER_COLOR);
+		maxMeter1.setFillColor(sf::Color::Transparent);
+		maxMeter1.setOutlineColor(BORDER_COLOR);
+		maxMeter1.setOutlineThickness(HELPER_RECT_OUTLINE * screenSize);
+		sf::RectangleShape maxMeter2(maxMeter1);
+		maxMeter1.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
+		maxMeter2.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
+		
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w2 / gears[currGear - 1]) * screenSize));
+		meter.setPosition((0.25 - METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
+		
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w3 / gears[currGear - 1]) * screenSize));
+		meter.setPosition((0.25 - METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
+		
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w1 / gears[currGear - 1]) * screenSize));
+		meter.setPosition((0.75 + METER_WHEEL_DIST - ENC_METER_WIDTH) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
+		
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w4 / gears[currGear - 1]) * screenSize));
+		meter.setPosition((0.75 + METER_WHEEL_DIST - ENC_METER_WIDTH) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
+		maxMeter1.setPosition(meter.getPosition());
+		maxMeter2.setPosition(meter.getPosition());
+		window.draw(maxMeter1);
+		window.draw(maxMeter2);
+		window.draw(meter);
+	}
+	
 	//Wskazówki do sterowania kierunkiem
 	if(keyTwistInput)
 	{
@@ -494,19 +587,19 @@ void drawGUI()
 		
 		ss << "X " << x;
 		valText.setString(ss.str());
-		valText.setPosition(0.75 * screenSize, screenSize * (0.75 - WHEEL_HEIGHT));
+		valText.setPosition(0.6 * screenSize, screenSize * 0.75);
 		window.draw(valText);
 		ss.str(std::string());
 		
 		ss << "Y " << y;
 		valText.setString(ss.str());
-		valText.setPosition(0.75 * screenSize, screenSize * (0.75 - 0.66 * WHEEL_HEIGHT));
+		valText.setPosition(0.6 * screenSize, screenSize * (0.75 + FONT_SIZE));
 		window.draw(valText);
 		ss.str(std::string());
 		
 		ss << "Z " << z;
 		valText.setString(ss.str());
-		valText.setPosition(0.75 * screenSize, screenSize * (0.75 - 0.33 * WHEEL_HEIGHT));
+		valText.setPosition(0.6 * screenSize, screenSize * (0.75 + 2 * FONT_SIZE));
 		window.draw(valText);
 	}
 	
@@ -644,7 +737,8 @@ void printHelp()
 {
 	std::cout << "Lalkarz - program do ręcznego sterowania robotami poprzez kierunek lub prędkości kół za pomocą klawiatury lub kontrolera. Podłącz kontroler, żeby aktywować sterowanie.\n";
 	std::cout << "-t <topic>\t\tWysyłaj zadane prędkości do topica typu geometry_msgs/Twist\n";
-	std::cout << "-v <topic>\t\tWysyłaj prędkości kół do topica typu omnivelma/Vels\n";
+	std::cout << "-v <topic>\t\tWysyłaj prędkości kół do topica typu omnivelma_msgs/Vels\n";
+	std::cout << "-e <topic>\t\tCzytaj wartości enkoderów typu omnivelma_msgs/Encoders\n";
 	std::cout << "-f <częstotliwość>\tCzęstotliwość wysyłania wiadomości w Hz, domyślnie " << DEFAULT_FREQ << "\n";
 	std::cout << "-m <tryb>\t\tRozpocznij w podanym trybie działania\n";
 	std::cout << "-g <bieg>\t\tRozpocznij w podanym biegu, od 1 do " << gears.size() << "\n";
@@ -740,6 +834,12 @@ int main(int argc, char** argv)
 		{
 			sendsVels = true;
 			velsTopic = secArg;
+		}
+		//Enc
+		else if(currArg == "-e")
+		{
+			readsEnc = true;
+			encTopic = secArg;
 		}
 		//częstotliwość
 		else if(currArg == "-f")
@@ -1038,6 +1138,11 @@ int main(int argc, char** argv)
 			sendMode = SendMode::SendTwist;
 		}
 		mainMutex.unlock();
+		
+		//odbieranie enkoderów
+		encMutex.lock();
+		guiEnc = enc;
+		encMutex.unlock();
     }
     
     isActive = false;
