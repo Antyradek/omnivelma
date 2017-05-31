@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#Uruchom Gazebo
+#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
+#Lalkarz wysysła Vels do Omnivelmy
+#Omnivelma wysyła Enkodery do Dziadziusia, który wysyła je do Pseudovelmy
+#Inaczej: Pseudovelma jeździ po takich danych, jakie generuje Omnivelma
+
+source setup
+#Ustaw ścieżkę modeli dla Gazebo
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+roslaunch velmaverse velmaverse.launch &
+PIDGAZ=$!
+rosrun lalkarz lalkarz -v /omnivelma/vels -e /pseudovelma/vels &
+PIDLAL=$!
+rosrun dziadzio dziadzio /omnivelma/encoders /pseudovelma/vels &
+PIDDZI=$!
+trap "kill $PIDDZI; kill $PIDLAL; kill $PIDGAZ;" SIGINT 
+
+echo "Wciśnij ^C, aby wyłączyć procesy"
+sleep infinity

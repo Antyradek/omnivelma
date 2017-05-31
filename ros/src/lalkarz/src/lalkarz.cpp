@@ -738,7 +738,7 @@ void printHelp()
 	std::cout << "Lalkarz - program do ręcznego sterowania robotami poprzez kierunek lub prędkości kół za pomocą klawiatury lub kontrolera. Podłącz kontroler, żeby aktywować sterowanie.\n";
 	std::cout << "-t <topic>\t\tWysyłaj zadane prędkości do topica typu geometry_msgs/Twist\n";
 	std::cout << "-v <topic>\t\tWysyłaj prędkości kół do topica typu omnivelma_msgs/Vels\n";
-	std::cout << "-e <topic>\t\tCzytaj wartości enkoderów typu omnivelma_msgs/Encoders\n";
+	std::cout << "-e <topic>\t\tCzytaj wartości enkoderów typu omnivelma_msgs/Vels\n";
 	std::cout << "-f <częstotliwość>\tCzęstotliwość wysyłania wiadomości w Hz, domyślnie " << DEFAULT_FREQ << "\n";
 	std::cout << "-m <tryb>\t\tRozpocznij w podanym trybie działania\n";
 	std::cout << "-g <bieg>\t\tRozpocznij w podanym biegu, od 1 do " << gears.size() << "\n";

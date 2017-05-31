@@ -24,6 +24,8 @@ omnivelma_msgs		Wiadomości i wywołania dla pozostałych modułów.
 Lalkarz				Graficzny program sterujący.
 Widelnica			Rozdzielacz omnivelma_msgs/Vels na wiele innych topiców.
 Vreporter			Połączenie z symulatorem V-Rep.
+Vrevelma			Platforma w V-Repie.
+Dziadzio			Wyłuskanie prędkości kół z odczytu enkoderów.
 
 Uruchomienie w ROS:
 Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to katalog roboczy.
@@ -40,6 +42,8 @@ launches/vrep
 	Symulacja Vrevelmy w V-Repie
 	Zmienna VREP_ROOT musi być ustawiona
 	V-Rep musi być uruchomiony z wczytaną sceną vrep/omnivelma.ttt
+launches/reencoders
+	Pseudovelma jeździ tak, jak pokazują enkodery Omnivelmy
 
 Dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
@@ -85,7 +89,7 @@ Vrevelma:
 	/vrevelma/pose				wyjście aktualnej pozycji i rotacji
 	/vrevelma/encoders			wyjście aktualnych prędkości i rotacji kół
 	/vrevelma/twist				wyjście aktualnej prędkości platformy
-Dziadzio
+Dziadzio:
 	INTOPIC						wejście typu omnivelma_msgs/EncodersStamped
 	OUTTOPIC					wyjście typu omnivelma_msgs/Vels
 	
