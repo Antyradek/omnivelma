@@ -30,9 +30,10 @@ public:
     {
         model = parent;
 
-        updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
+        //updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Omnivelma::OnUpdate, this));
 
-        linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
+        linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
+        std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
 
         pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
         pyramidRL = model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid();
@@ -43,7 +44,7 @@ public:
         motorRL = model -> GetJoint(linkPrefix + "motor_rl");
         motorFR = model -> GetJoint(linkPrefix + "motor_fr");
         motorFL = model -> GetJoint(linkPrefix + "motor_fl");
-
+        
         //inicjalizacja ROSa
         if (!ros::isInitialized())
         {
@@ -56,49 +57,50 @@ public:
         rosNode.reset(new ros::NodeHandle());
 
         //stwórz topic do odbierania prędkości
-		rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>("/omnivelma/vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
+		rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix.append("vels"), 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
 		if(!rosSub)
 		{
-			ROS_FATAL("Nie udało się stworzyć odbiornika /omnivelma/vels");
+			ROS_FATAL_STREAM("Nie udało się stworzyć odbiornika " << topicPrefix.append("vels"));
 		}
 
         //stwórz topic do nadawania pozycji
-		rosPose = rosNode -> advertise<geometry_msgs::Pose>("/omnivelma/pose", 1000);
+		rosPose = rosNode -> advertise<geometry_msgs::Pose>(topicPrefix.append("pose"), 1000);
 		if(!rosPose)
 		{
-			ROS_FATAL("Nie udało się stworzyć nadajnika /omnivelma/pose");
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix.append("pose"));
 		}
 
         //stwórz topic do nadawania enkoderów
-		rosEnc = rosNode -> advertise<omnivelma_msgs::Encoders>("/omnivelma/encoders", 1000);
+		rosEnc = rosNode -> advertise<omnivelma_msgs::Encoders>(topicPrefix.append("encoders"), 1000);
 		if(!rosEnc)
 		{
-			ROS_FATAL("Nie udało się stworzyć nadajnika /omnivelma/encoders");
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix.append("encoders"));
 		}
 		
 		//stwórz topic do nadawania prędkości
-		rosTwist = rosNode -> advertise<geometry_msgs::Twist>("/omnivelma/twist", 1000);
+		rosTwist = rosNode -> advertise<geometry_msgs::Twist>(topicPrefix.append("twist"), 1000);
 		if(!rosTwist)
 		{
-			ROS_FATAL("Nie udało się stworzyć nadajnika /omnivelma/twist");
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix.append("twist"));
 		}
 
         //stwórz serwer do odbierania tarcia
-		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>("/omnivelma/set_friction", std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>(topicPrefix.append("set_friction"), std::bind(&Omnivelma::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosFri = rosNode -> advertiseService(aso);
         if(!rosFri)
 		{
-			ROS_FATAL("Nie udało się stworzyć serwera /omnivelma/set_friction");
+			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix.append("set_friction"));
 		}
 
         //stwórz serwer do odbierania inercji
-		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetInertia>("/omnivelma/set_inertia", std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+		ros::AdvertiseServiceOptions asi = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetInertia>(topicPrefix.append("set_inertia"), std::bind(&Omnivelma::SetInertia, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosIne = rosNode -> advertiseService(asi);
         if(!rosIne)
 		{
-			ROS_FATAL("Nie udało się stworzyć serwera /omnivelma/set_inertia");
+			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix.append("set_inertia"));
 		}
     }
+   
 
 private:
     ///Funkcja podłączana do zdarzenia aktualizacji

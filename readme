@@ -34,9 +34,9 @@ $ ./launch/<scenariusz>
 Uruchomi odpowiednią symulację
 
 Symulacje:
-launch/gazebo
+launches/gazebo
 	Symulacja Omnivelmy i Pseudovelmy w Gazebo
-launch/vrep
+launches/vrep
 	Symulacja Vrevelmy w V-Repie
 	Zmienna VREP_ROOT musi być ustawiona
 	V-Rep musi być uruchomiony z wczytaną sceną vrep/omnivelma.ttt

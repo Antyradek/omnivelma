@@ -22,7 +22,8 @@ public:
     {
         model = parent;
 
-        linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
+        linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
+        std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
 
         pyramid = model -> GetLink(linkPrefix + "base") -> GetCollision("collision") -> GetSurface() -> FrictionPyramid();
 
@@ -30,7 +31,7 @@ public:
         if (!ros::isInitialized())
         {
             int argc = 0;
-            char **argv = NULL;
+            char **argv = nullptr;
             ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
         }
 
@@ -38,11 +39,11 @@ public:
         rosNode.reset(new ros::NodeHandle());
 
         //stwórz serwer do ustawiania tarcia
-		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>("/flooria/set_friction", std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
+		ros::AdvertiseServiceOptions aso = ros::AdvertiseServiceOptions::create<omnivelma_msgs::SetFriction>(topicPrefix.append("set_friction"), std::bind(&Flooria::SetFriction, this, std::placeholders::_1, std::placeholders::_2), nullptr, nullptr);
         rosSrv = rosNode -> advertiseService(aso);
         if(!rosSrv)
         {
-        	ROS_FATAL("Nie udało się aktywować serwera /flooria/set_friction");
+        	ROS_FATAL_STREAM("Nie udało się aktywować serwera " << topicPrefix.append("set_friction"));
         }
     }
 

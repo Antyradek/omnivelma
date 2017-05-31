@@ -19,9 +19,6 @@ public:
     ///Uruchamiane na inicjalizację
     void Load(physics::WorldPtr world, sdf::ElementPtr sdfElement)
     {
-        //podłączenie do wydarznia aktualizacji
-        updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
-
         //inicjalizacja ROSa
         if (!ros::isInitialized())
         {
@@ -32,6 +29,7 @@ public:
 
         //stwórz Node dla ROSa
         rosNode.reset(new ros::NodeHandle());
+        isCorrect = true;
 
         //stwórz topic do nadawania wiadomości
         rosPub = rosNode -> advertise<omnivelma_msgs::Relative>("/ocznica/relative", 1000);
@@ -43,6 +41,17 @@ public:
         //znajdź modele
         omnivelma = world -> GetModel("omnivelma");
         pseudovelma = world -> GetModel("pseudovelma");
+        if(!omnivelma || !pseudovelma)
+        {
+        	ROS_ERROR("Nie udało się znaleźć Omnivelmy lub Pseudovelmy");
+        	isCorrect = false;
+        }
+        
+        if(isCorrect)
+        {
+        	//podłączenie do wydarznia aktualizacji
+        	updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
+        }
     }
 
 public:
@@ -77,6 +86,9 @@ private:
 
     ///wskaźnik na model kinematyczny
     physics::ModelPtr pseudovelma;
+    
+    ///Czy udało się działać
+    bool isCorrect;
 
 };
 

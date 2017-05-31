@@ -37,12 +37,13 @@ public:
     void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
     {
         model = parent;
-
+        
+        linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
+        std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
+        
         //podłączenie do wydarznia aktualizacji
         updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Pseudovelma::OnUpdate, this));
-
-        linkPrefix = MODEL_NAME.append("::").append(model -> GetName()).append("::");
-
+        
         //inicjalizacja ROSa
         if (!ros::isInitialized())
         {
@@ -53,26 +54,26 @@ public:
 
         //stwórz Node dla ROSa
         rosNode.reset(new ros::NodeHandle());
-
+		
         //Stwórz topic do odbierania wiadomości
-        rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>("/pseudovelma/vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
+        rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix.append("vels"), 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
         if(!rosSub)
         {
-        	ROS_FATAL("Nie udało się ustawić odbiornika /pseudovelma/vels");
+        	ROS_FATAL_STREAM("Nie udało się ustawić odbiornika " << topicPrefix.append("vels"));
         }
 
         //stwórz topic do nadawania pozycji
-        rosPose = rosNode -> advertise<geometry_msgs::Pose>("/pseudovelma/pose", 1000);
+        rosPose = rosNode -> advertise<geometry_msgs::Pose>(topicPrefix.append("pose"), 1000);
         if(!rosPose)
         {
-        	ROS_FATAL("Nie udało się ustawić nadajnika /pseudovelma/pose");
+        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix.append("pose"));
         }
 		
 		//stwórz topic do nadawania prędkości
-		rosTwist = rosNode -> advertise<geometry_msgs::Twist>("/pseudovelma/twist", 1000);
+		rosTwist = rosNode -> advertise<geometry_msgs::Twist>(topicPrefix.append("twist"), 1000);
 		if(!rosTwist)
         {
-        	ROS_FATAL("Nie udało się ustawić nadajnika /pseudovelma/twist");
+        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix.append("twist"));
         }
     }
 

@@ -154,6 +154,5 @@
                 </material>
             </visual>
         </link>
-
     </model>
-    </sdf>
+</sdf>
