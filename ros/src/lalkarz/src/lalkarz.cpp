@@ -430,7 +430,7 @@ void drawGUI()
 	}
 	
 	//Enkodery
-	if(readsEnc)
+	if(readsEnc && wheelInput)
 	{
 		sf::RectangleShape meter(sf::Vector2f(0,0));
 		sf::RectangleShape maxMeter1(sf::Vector2f(0,0));

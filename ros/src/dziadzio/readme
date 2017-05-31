@@ -1,0 +1,19 @@
+Dziadzio - dziadek do orzechów, odbiera omnivelma_msgs/EncodersStamped, wyciąga z niej i nadaje omnivelma_msgs/Vels
+Jest to potrzebne, dlatego, że nie da się odbierać subtopiców bezpośrednio.
+
+Jeśli na przykład Omnivelma nadaje /omnivelma/encoders typu omnivelma_msgs/EncodersStamped
+I jeśli Lalkarz odbiera /omnivelma/encoders/encoders/velocity typu omnivelma_msgs/Vels
+To topiki nie zostaną połączone, odbiornik będzie maskował część nadajnika
+Teoretycznie da się obejść to poprzez rurowanie "rostopic echo | rostopic pub", lecz daje to dziwny, statyczny wynik, jakby opóźniony?
+Lalkarz może też odbierać omnivelma_msgs/EncodersStamped, ale uznałem że nie powinien odbierać nadto niepotrzebnych informacji i ciężko będzie później podłączyć do niego coś innego.
+
+Użycie: dziadzio INTOPIC OUTTOPIC
+
+INTOPIC
+omnivelma_msgs/EncodersStamped
+Wartości enkoderów z nagłówkiem.
+
+OUTTOPIC
+omnivelma_msgs/Vels
+Sama część prędkości z wiadomości enkoderów.
+

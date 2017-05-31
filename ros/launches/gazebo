@@ -9,14 +9,16 @@ source setup
 #Ustaw ścieżkę modeli dla Gazebo
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
 roslaunch velmaverse velmaverse.launch &
-export PIDGAZ=$!
+PIDGAZ=$!
 rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
-export PIDWID=$!
+PIDWID=$!
 rosrun transmutator transmutator /widelnica/vels &
-export PIDTRA=$!
+PIDTRA=$!
 rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist -e /lalkarz/encoders &
-export PIDLAL=$!
-trap "kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+PIDLAL=$!
+rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders
+PIDDZI=$!
+trap "kill $PIDDZI; kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
 
 echo "Wciśnij ^C, aby wyłączyć procesy"
 sleep infinity

@@ -5,7 +5,8 @@ Użyj Widelnicy, aby rodzdzielić wejście dla Omnivelmy i Pseudovelmy, jeśli j
 Użyj Transmutatora, jeśli chcesz sterować kierunkiem platform zamiast bezpośrednio prędkościami kół (wygodniejsze).
 Podłącz kontroler, aby łatwo sterować niebinarnym wejściem.
 -t <topic>			Wysyłaj zadane prędkości do topica typu geometry_msgs/Twist
--v <topic>			Wysyłaj prędkości kół do topica typu omnivelma/Vels
+-v <topic>			Wysyłaj prędkości kół do topica typu omnivelma_msgs/Vels
+-e <topic>			Wyświetlaj enkodery typu omnivelma_msgs/Vels
 -f <częstotliwość>	Częstotliwość wysyłania wiadomości w Hz, domyślnie 10
 -m <tryb>			Rozpocznij w podanym trybie działania
 -g <bieg>			Rozpocznij w podanym biegu, od 1 do 7

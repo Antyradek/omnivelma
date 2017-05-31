@@ -6,9 +6,9 @@
 
 source setup
 rosrun transmutator transmutator /vrevelma/vels &
-export PIDTRA=$!
+PIDTRA=$!
 rosrun lalkarz lalkarz -v /vrevelma/vels -t /transmutator/twist &
-export PIDLAL=$!
+PIDLAL=$!
 trap "kill $PIDLAL; kill $PIDTRA;" SIGINT
 
 echo "Wciśnij ^C, aby wyłączyć procesy"

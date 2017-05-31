@@ -77,6 +77,7 @@ Widelnica:
 Lalkarz:
 	ARG							wyjście prędkości kół podane w argumencie
 	ARG							wyjście kierunku podane w argumencie
+	ARG							wejście enkoderów podane w argumencie
 Vreporter:
 	/vreporter/vels				wejście prędkości kół
 Vrevelma:
@@ -84,6 +85,9 @@ Vrevelma:
 	/vrevelma/pose				wyjście aktualnej pozycji i rotacji
 	/vrevelma/encoders			wyjście aktualnych prędkości i rotacji kół
 	/vrevelma/twist				wyjście aktualnej prędkości platformy
+Dziadzio
+	INTOPIC						wejście typu omnivelma_msgs/EncodersStamped
+	OUTTOPIC					wyjście typu omnivelma_msgs/Vels
 	
 
 	
