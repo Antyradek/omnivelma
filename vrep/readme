@@ -5,7 +5,7 @@ http://www.coppeliarobotics.com/downloads.html
 Uruchamia się go za pomocą skryptu vrep.sh, nie trzeba instalować.
 Możesz go umieścić w dowolnym miejscu na komputerze.
 
-Otwórz w nim dołączoną scenę omnivelma.ttt.
+Otwórz w nim dołączoną scenę vrevelma.ttt.
 Są dwa sposoby na komunikację z V-Repem.
 
 SPOSÓB 1:
@@ -17,8 +17,8 @@ Jeśli ściągniesz V-Repa i ustawisz zmienną, pamiętaj o usunięciu build/ i 
 SPOSÓB 2:
 Tutaj jest biblioteka libv_repExtRosInterface.so, przenieś ją do $VREP_ROOT, uruchom roscore, a potem V-Repa.
 Powinien wczytać "RosInterface", sprawdź log uruchomienia.
-Uruchom symulację i sprawdź, czy rozumie wiadomości użyte w skrypcie.
-Uruchom odpowiednie pakiety ROSa do komunikacji z systemem na następujące topic:
+Uruchom symulację i sprawdź, czy rozumie wiadomości użyte w skrypcie, czy log nie świeci się na żółto.
+Uruchom odpowiednie pakiety ROSa do komunikacji z systemem na następujące topici:
 
 Wejście:
 /vrevelma/vels			wejście prędkości kół

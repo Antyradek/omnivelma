@@ -41,7 +41,7 @@ launches/gazebo
 launches/vrep
 	Symulacja Vrevelmy w V-Repie
 	Zmienna VREP_ROOT musi być ustawiona
-	V-Rep musi być uruchomiony z wczytaną sceną vrep/omnivelma.ttt
+	V-Rep musi być uruchomiony z wczytaną sceną vrep/vrevelma.ttt
 launches/reencoders
 	Pseudovelma jeździ tak, jak pokazują enkodery Omnivelmy
 
