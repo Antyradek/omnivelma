@@ -18,7 +18,9 @@ rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist -e /lalkarz/enc
 PIDLAL=$!
 rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders &
 PIDDZI=$!
-trap "kill $PIDDZI; kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+rqt_multiplot --multiplot-config multiplot/gazebo.xml --multiplot-run-all &
+PIDMUL=$!
+trap "kill $PIDMUL; kill $PIDDZI; kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
 
 echo "Wciśnij ^C, aby wyłączyć procesy"
 sleep infinity
