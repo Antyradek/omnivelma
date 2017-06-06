@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#Uruchom wzystkie trzy platformy porównując je
+#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
+#V-Rep wczytuje Vrevelmę
+#Lalkarz wysysła Vels do Widelnicy, która dzieli Vels dla Omnivelmy, Pseudovelmy i Vrevelmy
+#Lalkarz wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
+
+source setup
+#Ustaw ścieżkę modeli dla Gazebo
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+roslaunch velmaverse velmaverse.launch &
+PIDGAZ=$!
+rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels /vrevelma/vels &
+PIDWID=$!
+rosrun transmutator transmutator /widelnica/vels &
+PIDTRA=$!
+rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist &
+PIDLAL=$!
+rqt_multiplot --multiplot-config multiplot/diff.xml --multiplot-run-all &
+PIDMUL=$!
+trap "kill $PIDMUL; kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+
+echo "Wciśnij ^C, aby wyłączyć procesy"
+sleep infinity

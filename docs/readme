@@ -13,6 +13,8 @@ Gazebo bardzo dobrze działa
 Czujnik laserowy SICK LSM100-10000
 
 Do zrobienia:
+Lalkarz nie przyjmuje nazwy odbiornika, jest zdefiniowana z góry
+	-e jest pojedyńczym argumentem
 Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 	https://en.wikipedia.org/wiki/List_of_moments_of_inertia
 Wsadzić model laserowego czujnika (monokl), oskryptować na podstawie lsm1xx
