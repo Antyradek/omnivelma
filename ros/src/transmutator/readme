@@ -1,4 +1,4 @@
-Transmutator - Zamiana kierunku na prędkości kół.
+Transmutator - Zamiana kierunku na prędkości kół. Model kinematyki odwrotnej.
 Użycie: transmutator [-r OBRÓT] TOPIC
 Transmutacja (z obrotem) geometry_msgs/Twist na omnivelma/Vels i wysłanie do TOPIC.
 geometry_msgs/Twist jest generowane przez moduł RQT, oraz pr2_teleop, można używać różnorodnych urządzeń sterujących.

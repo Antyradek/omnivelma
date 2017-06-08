@@ -30,7 +30,7 @@
 	
 	\section{Problem}
 	\begin{frame}
-		\frametitle{Platforma z P109}
+		\frametitle{Platforma mobilna}
 		\begin{columns}[c]
 			\column{0.5\textwidth}
 			\centering
@@ -43,50 +43,70 @@
 		\end{columns}
 	\end{frame}
 	\begin{frame}
-		\frametitle{Cel projektu --- zamodelowanie}
-		Po co potrzebny jest model:
+		\frametitle{Cel projektu --- opracowanie modelu symulacyjnego}
+		Do czego przydatny jest model:
 		\begin{itemize}
-		 \item Pozwala bezpiecznie testować nowe oprogramowanie.
-		 \item Przyspiesza budowanie algorytmów sterowania.
-		 \item Ułatwia przeprowadzanie skomplikowanych i niemożliwych testów.
-		 \item Daje możliwość implementacji nieistniejących czujników do testów.
+			\item Pozwala bezpiecznie testować nowe oprogramowanie.
+			\item Przyspiesza implementację i testowanie.
+			\item Ułatwia przeprowadzanie skomplikowanych i niebezpiecznych dla robota testów.
+			\item Daje możliwość implementacji czujników niezamontowanych w urządzeniu.
 		\end{itemize}
 		Wymagania:
 		\begin{itemize}
-		 \item Reaguje na siły w podobny sposób, co robot.
-		 \item Przyjmuje takie samo sterowanie.
-		 \item Generuje odpowiednie dane z wirtualnych czujników.
+			\item Model reaguje na momenty siły i tarcie w sposób zbliżony do robota.
+			\item Przyjmuje taką samą postać sygnałów sterujących.
+			\item Generuje odpowiednie dane z czujników wirtualnych.
 		\end{itemize}
 	\end{frame}
-	
+	\begin{frame}
+		\frametitle{Założenia}
+		\begin{itemize}
+			\item Symulacja kół musi być przybliżona ze względu na ograniczoną moc obliczeniową komputera.
+			\item Robot i model poruszają się tylko po płaszczyźnie.
+			\item Odwzorowujemy kinematykę, dynamikę i tarcie.
+			\item Mogą występować poślizgi kół.
+			\item Symulacja obarczona jest naturalnym błędem natury liczb zmiennoprzecinkowych.
+		\end{itemize}
+	\end{frame}
+
 	\section{Platforma}
+	\begin{frame}
+		\frametitle{Budowa}
+		\centering
+		\includegraphics[width=0.4\textwidth]{graphics/base_top.png}
+		\begin{itemize}
+			\item Przegub zawiasowy łączy dwie części platformy.
+			\item Koła ustawione są w kształt litery \emph{X}.
+			\item Oś rolki aktualnie znajdującej się u góry koła jest prostopadła do osi rolki kolidującej z podłożem.
+		\end{itemize}
+	\end{frame}
+
 	\begin{frame}
 		\frametitle{Koła Szwedzkie (Mecanum)}
 		\centering
 		\includegraphics[width=\textwidth]{graphics/wheel.pdf}
 		\begin{itemize}
 			\item Każde koło ma 12 pasywnych rolek.
-			\item Rolka obrócona względem osi o 45\textdegree.
+			\item Rolka jest obrócona o 45\textdegree{} względem płaszczyzny koła.
 			\item Punkt kontaktu powinien płynnie przechodzić z rolki na rolkę.
-			\item Koło pod wpływem momentu siły i tarcia generuje dwa wektory zamiast jednego.
+			\item Koło pod wpływem momentu siły i tarcia podłoża generuje dwa wektory siły, zamiast jednego.
 		\end{itemize}
 	\end{frame}
 	\begin{frame}
 		\frametitle{Dodatkowy wektor}
 		\centering
 		\includegraphics[width=\textwidth]{graphics/vectors.pdf} \\
-		Standardowa opona pod wpływem tarcia przekształca prędkość kątową na liniową w płaszczyźnie obrotu.
-		Koło Mecanum ma dodatkowy wektor równolegle do osi obrotu, zatem prędkość wypadkowa jest obrócona o 45\textdegree.
+		Standardowe koło używając tarcia przekształca prędkość kątową na liniową w płaszczyźnie obrotu.
+		Specjalne koło Mecanum ma dodatkowy wektor równoległy do osi obrotu, zatem prędkość wypadkowa jest obrócona o 45\textdegree.
 	\end{frame}
 	\begin{frame}
 		\frametitle{Kierunki ruchu}
 		\centering
 		\includegraphics[width=\textwidth]{graphics/dirs.pdf} \\
-		Poprzez znoszenie się składowych prędkości, pojazd może poruszać się w kierunkach nieosiągalnych dla urządzeń o zwykłych kołach.
+		Poprzez znoszenie się składowych prędkości, robot może poruszać się w kierunkach nieosiągalnych dla pojazdów o zwykłych kołach.
 	\end{frame}
 	\begin{frame}
 		\frametitle{Kinematyka}
-		Jak matematycznie przekształcić dane poszczególnych prędkości kół na wypadkową prędkość całości w danej chwili.
 		\[
 		\begin{bmatrix}
 		v_x \\
@@ -107,52 +127,14 @@
 		\omega_4 \\
 		\end{bmatrix}
 		\]
-		\begin{table}
 		\centering
-		\begin{tabular}{c l}
-		Oznaczenie & Opis \\
-		\hline
-		$r$ &  Promień koła w najszerszym miejscu. \\
-		$a$ &  Szerokość platformy. \\
-		$b$ &  Długość platformy. \\
-		$\omega_i$ &  Prędkość kątowa kół. \\
-		$v_x$ &  Prędkość transwersalna w osi X. \\
-		$v_y$ &  Prędkość transwersalna w osi Y. \\
-		$\omega_z$ &  Prędkość kątowa w osi Z (w górę). \\
-		\end{tabular}
-		\end{table}
-	\end{frame}
-	
-	\section{Narzędzia}
-	\begin{frame}
-		\frametitle{Główne komponenty}
-		\begin{columns}[c]
-			\column{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/ros_logo.png} \\
-			Logo ROS\footnotemark[1]
-			\column{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/gazebo_logo.png} \\
-			Logo Gazebo\footnotemark[2]
-			\column{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/vrep_logo.png} \\
-			Logo V-Rep\footnotemark[3]
-		\end{columns}
-		\footnotetext[1]{http://www.ros.org/}
-		\footnotetext[2]{http://gazebosim.org/}
-		\footnotetext[3]{http://www.v-rep.eu}
+		\includegraphics[width=0.5\textwidth]{graphics/base_dims.pdf} 
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Struktura projektu}
-		\begin{itemize}
-			\item Symulator, który wczytuje model platformy i wystawia interfejs kolejek wiadomości ROS-a.
-			\item Zbiór pakietów i narzędzi ROS-a pozwala na sprawne zarządzanie kolejkami.
-			\item Program do manualnego sterowania robotem lub algorytm wyznaczania trasy.
-			\item Programy zbierające dane do wyświetlenia.
-		\end{itemize}
+		\centering
+		\includegraphics[width=\textwidth]{graphics/comm.pdf} 
 	\end{frame}
 	
 	\section{Implementacja}
@@ -164,81 +146,83 @@
 			\includegraphics[width=\textwidth]{graphics/model.png} \\
 			Dynamiczny model platformy.
 			\column{0.6\textwidth}
+			Uproszczone modele dynamiki:
 			\begin{itemize}
 				\item Model dynamiczny w Gazebo.
-				\item Matematycznie doskonały model kinematyczny.
 				\item Model dynamiczny w V-Repie.
+			\end{itemize}
+			Matematycznie dokładne modele kinematyki:
+			\begin{itemize}
+				\item Model kinematyki prostej --- koła na prędkość.
+				\item Model kinematyki odwrotnej --- prędkość na koła.
 			\end{itemize}
 		\end{columns}
 	\end{frame}
 	
-	\begin{frame}
-		\frametitle{Manualne sterowanie}
-		\begin{columns}[c]
-			\column{0.5\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/lalkarz_1.png} \\
-			\column{0.5\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/lalkarz_2.png} \\
-		\end{columns}
-		\begin{itemize}
-			\item Generuje bezpośrednie zadane prędkości kół lub kierunek.
-			\item Obsługuje wejście z klawiatury, kontrolera i myszki.
-			\item Wyświetla wartości modelu czujnika enkoderów.
-		\end{itemize}
-	\end{frame}
-	
 	\section{Pomiary}
 	\begin{frame}
-		\frametitle{Obszar testów}
-		\begin{columns}[c]
-			\column{0.5\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/testfloor.png} \\
-			Rysunki na podłożu do łatwego testowania.
-			\column{0.5\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/track_1.png} \\
-			Najprostszy przebieg po pierwszej trasie, bez obrotu wokół osi.
-		\end{columns}
+		\frametitle{Sprzęt i wersje programów}
+		Eksperymenty przeprowadzono na dobrej jakości sprzęcie i możliwie najaktualniejszych wersjach programów.
+		\begin{itemize}
+			\item System operacyjny Ubuntu LTS Xenial Xerus
+			\item ROS Kinetic Kame
+			\item V-Rep 3.4.0
+		\end{itemize}
+		\begin{itemize}
+			\item Intel i7-4720HQ 2.60GHz
+			\item 16 GiB RAM
+			\item Renderowanie na wbudowanej karcie graficznej
+		\end{itemize}
+		W czasie testów użycie procesora nigdy nie wyniosło 100\%.
 	\end{frame}
 	\begin{frame}
-		\frametitle{Powtarzalność}
-		\begin{columns}[c]
-			\column{0.5\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/bag_2.png} \\
-			Druga trasa sterowana nieostrożnie.
-			\column{0.5\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{graphics/bag_3.png} \\
-			Trzecia trasa sterowana binarnie.
-		\end{columns}
+		\frametitle{Obszar testów}
+		\centering
+		\includegraphics[width=0.8\textwidth]{graphics/track_1.png} \\
+		Prosty przebieg bez zmiany orientacji platformy.
+	\end{frame}
+	\begin{frame}
+		\frametitle{Powtarzalność przebiegu}
+		\centering
+		\includegraphics[width=0.8\textwidth]{graphics/bag_3.png} \\
+		Robot sterowany binarnymi prędkościami kół.
+	\end{frame}
+	\begin{frame}
+		\frametitle{Badanie odometrii}
+		\centering
+		\includegraphics[width=0.7\textwidth]{graphics/reen_1.png} \\
+		Model kinematyczny porusza się na podstawie danych generowanych przez model czujnika w modelu dynamicznym.
 	\end{frame}
 	\begin{frame}
 		\frametitle{Pokaz?}
 		Pokaz na żywo, bądź film.
 	\end{frame}
  
-	
 	\section{Podsumowanie}
 	\begin{frame}
-		\frametitle{Aktualny stan}
+		\frametitle{Podsumowanie}
 		\begin{itemize}
-			\item Eksperymenty są powtarzalne.
-			\item Pomimo różnej budowy symulatorów i modeli, trasy są podobne.
-			\item Istnieje wiele aspektów w których można próbować ulepszyć model.
+			\item Opracowano 3 modele symulacyjne i model pomocniczy, które pozwalają na symulację dynamiki i kinematyki.
+			\item Modele mają różną budowę wewnętrzną i działają na różnych symulatorach.
+			\item Przebiegi ścieżek są zbliżone do siebie.
+			\item Modele generują dane z zasymulowanych czujników.
+			\item Stworzono model podłoża o zmiennym współczynniku tarcia.
+			\item Stworzono zestaw programów ułatwiających testowanie.
 		\end{itemize}
 	\end{frame}
- 
 	\begin{frame}
-		\frametitle{Ku przyszłości}
+		\frametitle{Perspektywy rozwoju}
 		\begin{itemize}
-			\item Zdjęcie sterowania i przybliżonej trasy robota, a następnie ulepszanie modelu, aby jak najbardziej zbliżyć się do rzeczywistego przebiegu.
-			\item Modyfikacje programu sterującego dla wygody.
+			\item Porównanie działania modelu i robota przy tym samym sterowaniu.
+			\item Usprawnienie interfejsu do sterowania ręcznego.
 			\item Próba implementacji modelu czujnika laserowego.
-			\item Możliwie jak najbardziej dogłębna analiza modelu i określenie przyczyn rozbieżności.
+			\item Szczegółowa analiza modelu i określenie przyczyn rozbieżności.
+			\item Rozwój modelu w wielu innych aspektach.
 		\end{itemize}
+	\end{frame}
+	\begin{frame}
+		\frametitle{Koniec}
+		\centering
+		Dziękuję za uwagę.
 	\end{frame}
 \end{document}
