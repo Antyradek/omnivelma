@@ -4,11 +4,11 @@
 ///Rzeczywisty kierunek ustawiany przytrzymaniem klawiszy
 class ContTwistState : public DoubleTwistState
 {
-	protected:
+protected:
 	int xDir;
 	int yDir;
 	int zDir;
-	
+
 	sf::Clock xClock;
 	sf::Clock yClock;
 	sf::Clock zClock;

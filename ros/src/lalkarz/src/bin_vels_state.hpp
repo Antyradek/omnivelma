@@ -1,6 +1,6 @@
 #pragma once
 #include "state.hpp"
- 
+
 ///Binarne wejście
 class BinVelsState : public IntVelsState
 {

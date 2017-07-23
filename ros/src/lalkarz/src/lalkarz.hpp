@@ -21,7 +21,7 @@
 #include <vector>
 
 ///Domyślna wielkość okna
-#define WINDOW_SIZE 				700 
+#define WINDOW_SIZE 				700
 ///Szerokość rysunku koła
 #define WHEEL_WIDTH 				0.05
 ///Wysokość ryskunku koła
@@ -122,7 +122,7 @@
 #define KEY_TEXT_WHEEL_4_DOWN		"3"
 
 //sterowanie prędkością kół kontrolerem
-#define AXIS_WHEEL_1				sf::Joystick::Axis::V 
+#define AXIS_WHEEL_1				sf::Joystick::Axis::V
 #define AXIS_WHEEL_1_ALT			sf::Joystick::Axis::R
 #define AXIS_WHEEL_2				sf::Joystick::Axis::Y
 #define AXIS_WHEEL_3				sf::Joystick::Axis::X
@@ -188,7 +188,7 @@ enum SendMode
 };
 
 ///Prędkości kół
-typedef struct 
+typedef struct
 {
 	double w1;
 	double w2;

@@ -1,4 +1,4 @@
-#include "mouse_twist_state.hpp" 
+#include "mouse_twist_state.hpp"
 
 void MouseTwistState::set(double deltaZ)
 {

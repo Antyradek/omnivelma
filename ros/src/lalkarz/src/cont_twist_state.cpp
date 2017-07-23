@@ -1,4 +1,4 @@
-#include "cont_twist_state.hpp" 
+#include "cont_twist_state.hpp"
 
 ContTwistState::ContTwistState() : DoubleTwistState()
 {
@@ -38,46 +38,46 @@ void ContTwistState::set(sf::Keyboard::Key key, bool pressed)
 	{
 		switch(key)
 		{
-			case KEY_AXIS_X_UP:
-				xDir = 1;
-				break;
-			case KEY_AXIS_X_DOWN:
-				xDir = -1;
-				break;
-			case KEY_AXIS_Y_UP:
-				yDir = 1;
-				break;
-			case KEY_AXIS_Y_DOWN:
-				yDir = -1;
-				break;
-			case KEY_AXIS_Z_LEFT:
-				zDir = 1;
-				break;
-			case KEY_AXIS_Z_RIGHT:
-				zDir = -1;
-				break;
-			default:
-				break;
+		case KEY_AXIS_X_UP:
+			xDir = 1;
+			break;
+		case KEY_AXIS_X_DOWN:
+			xDir = -1;
+			break;
+		case KEY_AXIS_Y_UP:
+			yDir = 1;
+			break;
+		case KEY_AXIS_Y_DOWN:
+			yDir = -1;
+			break;
+		case KEY_AXIS_Z_LEFT:
+			zDir = 1;
+			break;
+		case KEY_AXIS_Z_RIGHT:
+			zDir = -1;
+			break;
+		default:
+			break;
 		}
 	}
 	else
 	{
 		switch(key)
 		{
-			case KEY_AXIS_X_UP:
-			case KEY_AXIS_X_DOWN:
-				xDir = 0;
-				break;
-			case KEY_AXIS_Y_UP:
-			case KEY_AXIS_Y_DOWN:
-				yDir = 0;
-				break;
-			case KEY_AXIS_Z_LEFT:
-			case KEY_AXIS_Z_RIGHT:
-				zDir = 0;
-				break;
-			default:
-				break;
+		case KEY_AXIS_X_UP:
+		case KEY_AXIS_X_DOWN:
+			xDir = 0;
+			break;
+		case KEY_AXIS_Y_UP:
+		case KEY_AXIS_Y_DOWN:
+			yDir = 0;
+			break;
+		case KEY_AXIS_Z_LEFT:
+		case KEY_AXIS_Z_RIGHT:
+			zDir = 0;
+			break;
+		default:
+			break;
 		}
 	}
 }

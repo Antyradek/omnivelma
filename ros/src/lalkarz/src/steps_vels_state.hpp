@@ -4,7 +4,7 @@
 ///Stopniowe ustawianie prędkości
 class StepsVelsState : public IntVelsState
 {
-protected:	
+protected:
 	int clamp(int value) const;
 public:
 	void set(sf::Keyboard::Key key, bool pressed) override;

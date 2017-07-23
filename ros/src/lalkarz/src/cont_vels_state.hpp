@@ -9,7 +9,7 @@ protected:
 	int w2dir;
 	int w3dir;
 	int w4dir;
-	
+
 	sf::Clock w1clock;
 	sf::Clock w2clock;
 	sf::Clock w3clock;

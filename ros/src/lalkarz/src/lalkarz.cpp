@@ -105,7 +105,7 @@ void onEncMsg(const omnivelma_msgs::Vels::ConstPtr& msg)
 ///Trzeci wątek do odbioru wiadomości, blokujemy wątek na ROSowej funkcji, aby wywoływała asynchronicznie podaną w odbiorniku funkcję
 void recvLoop()
 {
-	ros::spin();	
+	ros::spin();
 }
 
 ///Pętla drugiego wątku do wysyłania wiadomości ROSa
@@ -118,7 +118,7 @@ void sendLoop()
 	ros::Subscriber encSub;
 	bool velsOk = false;
 	bool twistOk = false;
-	
+
 	if(sendsVels)
 	{
 		velsOk = true;
@@ -129,7 +129,7 @@ void sendLoop()
 			velsOk = false;
 		}
 	}
-	
+
 	if(sendsTwist)
 	{
 		twistOk = true;
@@ -140,7 +140,7 @@ void sendLoop()
 			twistOk = false;
 		}
 	}
-	
+
 	if(readsEnc)
 	{
 		encSub = handle.subscribe<omnivelma_msgs::Vels>(encTopic, 1, onEncMsg);
@@ -150,7 +150,7 @@ void sendLoop()
 			readsEnc = false;
 		}
 	}
-		
+
 	std::thread recvThread(recvLoop);
 	while(isActive)
 	{
@@ -160,14 +160,14 @@ void sendLoop()
 		Vels v = vels;
 		SendMode mod = sendMode;
 		mainMutex.unlock();
-		
+
 		if(mod == SendMode::SendTwist && twistOk)
 		{
 			geometry_msgs::Twist newMsg;
 			newMsg.linear.x = mult * t.x;
 			newMsg.linear.y = mult * t.y;
 			newMsg.angular.z = mult * t.z;
-			
+
 			twistPub.publish(newMsg);
 		}
 		else if(mod == SendMode::SendVels && velsOk)
@@ -179,7 +179,7 @@ void sendLoop()
 			newMsg.rr = mult * v.w4;
 			velsPub.publish(newMsg);
 		}
-		
+
 		std::this_thread::sleep_for (std::chrono::milliseconds((int)(sendWaitTime * 1000)));
 	}
 	ros::shutdown();
@@ -192,88 +192,88 @@ void drawGUI()
 	//pomocnicze
 	sf::Text helperText("", font);
 	helperText.setCharacterSize(screenSize * CHAR_SIZE);
-	#ifdef OLD_VERSION
-		helperText.setColor(DISABLED_COLOR);
-	#else
-		helperText.setFillColor(DISABLED_COLOR);
-		helperText.setOutlineColor(sf::Color::White);
-		helperText.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
-	#endif
+#ifdef OLD_VERSION
+	helperText.setColor(DISABLED_COLOR);
+#else
+	helperText.setFillColor(DISABLED_COLOR);
+	helperText.setOutlineColor(sf::Color::White);
+	helperText.setOutlineThickness(screenSize * HELPER_TEXT_OUTLINE);
+#endif
 	sf::Text defaultText("", font);
 	defaultText.setCharacterSize(screenSize * CHAR_SIZE);
-	#ifdef OLD_VERSION
-		defaultText.setColor(sf::Color::White);
-	#else
-		defaultText.setFillColor(sf::Color::White);
-		defaultText.setCharacterSize(screenSize * CHAR_SIZE);
-	#endif
+#ifdef OLD_VERSION
+	defaultText.setColor(sf::Color::White);
+#else
+	defaultText.setFillColor(sf::Color::White);
+	defaultText.setCharacterSize(screenSize * CHAR_SIZE);
+#endif
 	sf::Text valueText("", monoFont);
 	valueText.setCharacterSize(screenSize * CHAR_SIZE);
-	#ifdef OLD_VERSION
-		valueText.setColor(sf::Color::White);
-	#else
-		valueText.setFillColor(sf::Color::White);
-		valueText.setCharacterSize(screenSize * CHAR_SIZE);
-	#endif
-	
+#ifdef OLD_VERSION
+	valueText.setColor(sf::Color::White);
+#else
+	valueText.setFillColor(sf::Color::White);
+	valueText.setCharacterSize(screenSize * CHAR_SIZE);
+#endif
+
 	//platforma
 	sf::RectangleShape wheel(sf::Vector2f(screenSize * WHEEL_WIDTH, screenSize * WHEEL_HEIGHT));
 	wheel.setFillColor(modeColor[mode] * sf::Color(100, 100, 100, 255));
-	
+
 	sf::RectangleShape wheel2(wheel);
 	wheel2.setPosition(screenSize * 0.25, screenSize * 0.25);
 	window.draw(wheel2);
-	
+
 	sf::RectangleShape wheel3(wheel);
 	wheel3.setPosition(screenSize * 0.25, screenSize * (0.75 - WHEEL_HEIGHT));
 	window.draw(wheel3);
-	
+
 	sf::RectangleShape wheel1(wheel);
 	wheel1.setPosition(screenSize * (0.75 - WHEEL_WIDTH), screenSize * 0.25);
 	window.draw(wheel1);
-	
+
 	sf::RectangleShape wheel4(wheel);
 	wheel4.setPosition(screenSize * (0.75 - WHEEL_WIDTH), screenSize * (0.75 - WHEEL_HEIGHT));
 	window.draw(wheel4);
-	
+
 	sf::RectangleShape body(sf::Vector2f(screenSize * (0.5 - 2 * WHEEL_WIDTH), screenSize * 0.5));
 	body.setFillColor(modeColor[mode]);
 	body.setPosition(screenSize * (0.25 + WHEEL_WIDTH), screenSize * 0.25);
 	window.draw(body);
-	
+
 	//lista trybów
 	for(int i = 0; i < MODE_COUNT; i++)
 	{
 		sf::Text modeDigit(defaultText);
 		if(enabledModes[i])
 		{
-			#ifdef OLD_VERSION
-				modeDigit.setColor(modeColor[i]);
-			#else
-				modeDigit.setFillColor(modeColor[i]);
-			#endif
+#ifdef OLD_VERSION
+			modeDigit.setColor(modeColor[i]);
+#else
+			modeDigit.setFillColor(modeColor[i]);
+#endif
 		}
 		else
 		{
-			#ifdef OLD_VERSION
-				modeDigit.setColor(DISABLED_COLOR);
-			#else
-				modeDigit.setFillColor(DISABLED_COLOR);
-			#endif
+#ifdef OLD_VERSION
+			modeDigit.setColor(DISABLED_COLOR);
+#else
+			modeDigit.setFillColor(DISABLED_COLOR);
+#endif
 		}
 		if(i == mode)
 		{
-			#ifdef OLD_VERSION
-				modeDigit.setColor(sf::Color::White);
-			#else
-				modeDigit.setFillColor(sf::Color::White);
-			#endif
+#ifdef OLD_VERSION
+			modeDigit.setColor(sf::Color::White);
+#else
+			modeDigit.setFillColor(sf::Color::White);
+#endif
 		}
 		modeDigit.setString(std::to_string(i + 1));
 		modeDigit.setPosition(i * screenSize * LIST_WIDTH, 0);
 		window.draw(modeDigit);
 	}
-	
+
 	//wskazówka do przełączania trybów
 	sf::Text modeHelpText(helperText);
 	if(showsJoystick)
@@ -286,7 +286,7 @@ void drawGUI()
 	}
 	modeHelpText.setPosition(screenSize - modeHelpText.getGlobalBounds().width, 0);
 	window.draw(modeHelpText);
-	
+
 	//wskazówka zatrzymania
 	sf::Text stopText(defaultText);
 	stopText.setString(STOP_TEXT);
@@ -303,18 +303,18 @@ void drawGUI()
 	}
 	stopHelpText.setPosition(0, screenSize * (1.0 - 2.0 * FONT_SIZE));
 	window.draw(stopHelpText);
-	
+
 	//opis trybu
 	sf::Text modeText(defaultText);
 	modeText.setString(modeNames[mode]);
-	#ifdef OLD_VERSION
-		modeText.setColor(modeColor[mode]);
-	#else
-		modeText.setFillColor(modeColor[mode]);
-	#endif
+#ifdef OLD_VERSION
+	modeText.setColor(modeColor[mode]);
+#else
+	modeText.setFillColor(modeColor[mode]);
+#endif
 	modeText.setPosition(0, screenSize * FONT_SIZE);
 	window.draw(modeText);
-	
+
 	//Wskazówki do sterowania kołami
 	if(keyWheelInput)
 	{
@@ -355,31 +355,31 @@ void drawGUI()
 		joyHelper.setPosition(screenSize * 0.5 - joyHelper.getGlobalBounds().width * 0.5, screenSize * (0.7 - 0.5 * FONT_SIZE));
 		window.draw(joyHelper);
 	}
-	
+
 	//Markery
 	if(wheelInput)
 	{
 		//wartości prędkości
 		sf::Text wheelValue(valueText);
-		
+
 		std::stringstream ss;
 		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W2);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
-		
+
 		ss.str(std::string());
 		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W3);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.25 - VALUE_WHEEL_DIST) * screenSize - wheelValue.getGlobalBounds().width, screenSize * (0.75 - 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
-		
+
 		ss.str(std::string());
 		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W1);
 		wheelValue.setString(ss.str());
 		wheelValue.setPosition((0.75 + VALUE_WHEEL_DIST) * screenSize, screenSize * (0.25 + 0.5 * WHEEL_HEIGHT) - wheelValue.getGlobalBounds().height);
 		window.draw(wheelValue);
-		
+
 		ss.str(std::string());
 		ss << std::fixed << std::setprecision(VALUE_PRECISION) << std::right << state -> get(Wheel::W4);
 		wheelValue.setString(ss.str());
@@ -395,7 +395,7 @@ void drawGUI()
 		sf::RectangleShape maxMeter2(maxMeter1);
 		maxMeter1.setSize(sf::Vector2f(METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
 		maxMeter2.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
-		
+
 		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W2) * screenSize));
 		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -403,7 +403,7 @@ void drawGUI()
 		window.draw(maxMeter1);
 		window.draw(maxMeter2);
 		window.draw(meter);
-		
+
 		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W3) * screenSize));
 		meter.setPosition((0.25 - METER_WIDTH - METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -411,7 +411,7 @@ void drawGUI()
 		window.draw(maxMeter1);
 		window.draw(maxMeter2);
 		window.draw(meter);
-		
+
 		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W1) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -419,7 +419,7 @@ void drawGUI()
 		window.draw(maxMeter1);
 		window.draw(maxMeter2);
 		window.draw(meter);
-		
+
 		meter.setSize(sf::Vector2f(METER_WIDTH * screenSize, METER_HEIGHT * -state -> get(Wheel::W4) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -428,7 +428,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 	}
-	
+
 	//Enkodery
 	if(readsEnc && wheelInput)
 	{
@@ -441,7 +441,7 @@ void drawGUI()
 		sf::RectangleShape maxMeter2(maxMeter1);
 		maxMeter1.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
 		maxMeter2.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
-		
+
 		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w2 / gears[currGear - 1]) * screenSize));
 		meter.setPosition((0.25 - METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -449,7 +449,7 @@ void drawGUI()
 		window.draw(maxMeter1);
 		window.draw(maxMeter2);
 		window.draw(meter);
-		
+
 		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w3 / gears[currGear - 1]) * screenSize));
 		meter.setPosition((0.25 - METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -457,7 +457,7 @@ void drawGUI()
 		window.draw(maxMeter1);
 		window.draw(maxMeter2);
 		window.draw(meter);
-		
+
 		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w1 / gears[currGear - 1]) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST - ENC_METER_WIDTH) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -465,7 +465,7 @@ void drawGUI()
 		window.draw(maxMeter1);
 		window.draw(maxMeter2);
 		window.draw(meter);
-		
+
 		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w4 / gears[currGear - 1]) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST - ENC_METER_WIDTH) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
@@ -474,7 +474,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 	}
-	
+
 	//Wskazówki do sterowania kierunkiem
 	if(keyTwistInput)
 	{
@@ -498,7 +498,7 @@ void drawGUI()
 		axisHelper.setPosition(0.75 * screenSize, screenSize * (0.25 - 1.5 * METER_WIDTH - 0.5 * FONT_SIZE));
 		window.draw(axisHelper);
 	}
-	
+
 	//wskazówki do sterowania kierunkiem kontrolerem
 	if(twistInput && showsJoystick)
 	{
@@ -510,7 +510,7 @@ void drawGUI()
 		joyHelper.setPosition(screenSize * 0.5 - joyHelper.getGlobalBounds().width * 0.5, screenSize * 0.21);
 		window.draw(joyHelper);
 	}
-	
+
 	//wskazówki do sterowania kierunkiem myszką
 	if(mouseTwistInput)
 	{
@@ -522,7 +522,7 @@ void drawGUI()
 		mouseHelper.setPosition(screenSize * 0.5 - mouseHelper.getGlobalBounds().width * 0.5, screenSize * 0.21);
 		window.draw(mouseHelper);
 	}
-	
+
 	//markery kierunku
 	if(twistInput)
 	{
@@ -560,7 +560,7 @@ void drawGUI()
 		double phi = std::atan2(y,x);
 		arrow.rotate(-phi * RAD2DEG);
 		arrowEnd.rotate(-phi * RAD2DEG + 90);
-		
+
 		window.draw(niceCircle);
 		if(std::abs(r) > ARROW_EPSILON)
 		{
@@ -584,31 +584,31 @@ void drawGUI()
 		std::stringstream ss;
 		ss << std::fixed << std::setprecision(VALUE_PRECISION);
 		sf::Text valText(valueText);
-		
+
 		ss << "X " << x;
 		valText.setString(ss.str());
 		valText.setPosition(0.6 * screenSize, screenSize * 0.75);
 		window.draw(valText);
 		ss.str(std::string());
-		
+
 		ss << "Y " << y;
 		valText.setString(ss.str());
 		valText.setPosition(0.6 * screenSize, screenSize * (0.75 + FONT_SIZE));
 		window.draw(valText);
 		ss.str(std::string());
-		
+
 		ss << "Z " << z;
 		valText.setString(ss.str());
 		valText.setPosition(0.6 * screenSize, screenSize * (0.75 + 2 * FONT_SIZE));
 		window.draw(valText);
 	}
-	
+
 	//napis bieg
 	sf::Text gearText(defaultText);
 	gearText.setString("Bieg:");
 	gearText.setPosition(0.5 * screenSize - gearText.getGlobalBounds().width * 0.5, screenSize * (1.0 - 3.0 * FONT_SIZE));
 	window.draw(gearText);
-	
+
 	//lista biegów
 	double gearListWidth = (gears.size() - 1) * LIST_WIDTH + FONT_SIZE;
 	double gearListStart = screenSize * (0.5 - gearListWidth * 0.5);
@@ -620,24 +620,24 @@ void drawGUI()
 		gearDigit.setString(ss.str());
 		if(i + 1 == currGear)
 		{
-			#ifdef OLD_VERSION
-				gearDigit.setColor(sf::Color::White);
-			#else
-				gearDigit.setFillColor(sf::Color::White);
-			#endif
+#ifdef OLD_VERSION
+			gearDigit.setColor(sf::Color::White);
+#else
+			gearDigit.setFillColor(sf::Color::White);
+#endif
 		}
 		else
 		{
-			#ifdef OLD_VERSION
-				gearDigit.setColor(DISABLED_COLOR);
-			#else
-				gearDigit.setFillColor(DISABLED_COLOR);
-			#endif
+#ifdef OLD_VERSION
+			gearDigit.setColor(DISABLED_COLOR);
+#else
+			gearDigit.setFillColor(DISABLED_COLOR);
+#endif
 		}
 		gearDigit.setPosition(gearListStart + (i * LIST_WIDTH) * screenSize, screenSize * (1.0 - 2.0 * FONT_SIZE));
 		window.draw(gearDigit);
 	}
-	
+
 	//pomocnicze biegu
 	sf::Text gearHelperText(helperText);
 	if(showsJoystick)
@@ -680,44 +680,44 @@ void setModeData()
 	twistInput = (mode == 6 || mode == 7 || mode == 8 || mode == 9 || mode == 10);
 	keyTwistInput = (mode == 6 || mode == 7 || mode == 8);
 	mouseTwistInput = (mode == 10);
-	
+
 	switch(mode)
 	{
-		case 0:
-			state.reset(new BinVelsState());
-			break;
-		case 1:
-			state.reset(new BinVelsStateHold());
-			break;
-		case 2:
-			state.reset(new ContVelsState());
-			break;
-		case 3:
-			state.reset(new StepsVelsState());
-			break;
-		case 4:
-			state.reset(new StepsVelsStateHold());
-			break;
-		case 5:
-			state.reset(new GamepadVelsState());
-			break;
-		case 6:
-			state.reset(new BinTwistState());
-			break;
-		case 7:
-			state.reset(new ContTwistState());
-			break;
-		case 8:
-			state.reset(new StepsTwistState());
-			break;
-		case 9:
-			state.reset(new GamepadTwistState());
-			break;
-		case 10:
-			state.reset(new MouseTwistState());
-			break;
-		default:
-			break;
+	case 0:
+		state.reset(new BinVelsState());
+		break;
+	case 1:
+		state.reset(new BinVelsStateHold());
+		break;
+	case 2:
+		state.reset(new ContVelsState());
+		break;
+	case 3:
+		state.reset(new StepsVelsState());
+		break;
+	case 4:
+		state.reset(new StepsVelsStateHold());
+		break;
+	case 5:
+		state.reset(new GamepadVelsState());
+		break;
+	case 6:
+		state.reset(new BinTwistState());
+		break;
+	case 7:
+		state.reset(new ContTwistState());
+		break;
+	case 8:
+		state.reset(new StepsTwistState());
+		break;
+	case 9:
+		state.reset(new GamepadTwistState());
+		break;
+	case 10:
+		state.reset(new MouseTwistState());
+		break;
+	default:
+		break;
 	}
 }
 
@@ -727,12 +727,12 @@ void switchNextMode()
 	do
 	{
 		mode = (mode + 1) % MODE_COUNT;
-	}while(!enabledModes[mode]);
-	
+	} while(!enabledModes[mode]);
+
 	setModeData();
 }
 
-///Wypisz pomoc 
+///Wypisz pomoc
 void printHelp()
 {
 	std::cout << "Lalkarz - program do ręcznego sterowania robotami poprzez kierunek lub prędkości kół za pomocą klawiatury lub kontrolera. Podłącz kontroler, żeby aktywować sterowanie.\n";
@@ -751,7 +751,7 @@ int main(int argc, char** argv)
 {
 	//ros::init() modyfikuje argumenty
 	ros::init(argc, argv, "lalkarz");
-	
+
 	//ustaw początkowe wartości
 	sendWaitTime = 1.0/DEFAULT_FREQ;
 	isActive = true;
@@ -759,7 +759,7 @@ int main(int argc, char** argv)
 	mode = 0;
 	currGear = 5;
 	setModeData();
-	
+
 	for(int i = 0; i < MODE_COUNT; i++)
 	{
 		enabledModes[i] = false;
@@ -775,7 +775,7 @@ int main(int argc, char** argv)
 	modeColor[8] = sf::Color(0, 0, 255, 255);
 	modeColor[9] = sf::Color(125, 0, 255, 255);
 	modeColor[10] = sf::Color(255, 0, 255, 255);
-	
+
 	modeNames[0] = L"Binarne prędkości kół \nsterowane klawiaturą numeryczną.";
 	modeNames[1] = L"Binarne prędkości kół z podtrzymaniem \nsterowane klawiaturą numeryczną.";
 	modeNames[2] = L"Przyrostowe prędkości kół \nsterowane klawiaturą numeryczną.";
@@ -787,7 +787,7 @@ int main(int argc, char** argv)
 	modeNames[8] = L"Przyrostowy schodkowy kierunek \nsterowany klawiaturą.";
 	modeNames[9] = L"Kierunek \nsterowany kontrolerem.";
 	modeNames[10] = L"Kierunek \nsterowany myszką.";
-	
+
 	//odczytywanie argumentów
 	int arg = 1;
 	sendsTwist = false;
@@ -799,30 +799,30 @@ int main(int argc, char** argv)
 	{
 		std::string currArg(argv[arg]);
 		arg++;
-		
+
 		//wypisz pomoc
 		if(currArg == "-h" || currArg == "--help")
 		{
 			printHelp();
 			exit(0);
 		}
-		
+
 		//wyłącz tryby NaN
 		else if(currArg == "-n")
 		{
 			noNan = true;
 			continue;
 		}
-		
+
 		if(arg >= argc)
 		{
 			std::cerr << "Niepoprawne argumenty" << std::endl;
 			exit(EXIT_ARG_ERROR);
 		}
-		
+
 		std::string secArg(argv[arg]);
 		arg++;
-		
+
 		//Twist
 		if(currArg == "-t")
 		{
@@ -962,26 +962,26 @@ int main(int argc, char** argv)
 	//wczytaj czcionki
 	font.loadFromMemory(fontData, fontDataSize);
 	monoFont.loadFromMemory(monoFontData, monoFontDataSize);
-	
+
 	//wczytaj ikonę
 	sf::Image icon;
 	icon.loadFromMemory(iconData, iconDataSize);
-	
+
 	//uruchom program
 	std::thread sendThread(sendLoop);
-	
-    window.create(sf::VideoMode(screenSize, screenSize), "Lalkarz", sf::Style::Close);
+
+	window.create(sf::VideoMode(screenSize, screenSize), "Lalkarz", sf::Style::Close);
 	///window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
 			//std::cout << event.joystickButton.button << std::endl;
-            if((event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)))
+			if((event.type == sf::Event::KeyPressed && event.key.code == KEY_NEXT_MODE) || (event.type == sf::Event::JoystickButtonPressed && (event.joystickButton.button == JS_BUTTON_NEXT_MODE || event.joystickButton.button == JS_BUTTON_NEXT_MODE_ALT)))
 			{
 				switchNextMode();
 			}
@@ -1017,48 +1017,48 @@ int main(int argc, char** argv)
 			{
 				window.close();
 			}
-			
+
 			if(event.type == sf::Event::KeyPressed)
 			{
 				bool switched = true;
 				int oldMode = mode;
 				switch(event.key.code)
 				{
-					case sf::Keyboard::F1:
-						mode = 0;
-						break;
-					case sf::Keyboard::F2:
-						mode = 1;
-						break;
-					case sf::Keyboard::F3:
-						mode = 2;
-						break;
-					case sf::Keyboard::F4:
-						mode = 3;
-						break;
-					case sf::Keyboard::F5:
-						mode = 4;
-						break;
-					case sf::Keyboard::F6:
-						mode = 5;
-						break;
-					case sf::Keyboard::F7:
-						mode = 6;
-						break;
-					case sf::Keyboard::F8:
-						mode = 7;
-						break;
-					case sf::Keyboard::F9:
-						mode = 8;
-						break;
-					case sf::Keyboard::F10:
-						mode = 9;
-						break;
-					case sf::Keyboard::F11:
-						mode = 10;
-						break;
-					default:
-						switched = false;
+				case sf::Keyboard::F1:
+					mode = 0;
+					break;
+				case sf::Keyboard::F2:
+					mode = 1;
+					break;
+				case sf::Keyboard::F3:
+					mode = 2;
+					break;
+				case sf::Keyboard::F4:
+					mode = 3;
+					break;
+				case sf::Keyboard::F5:
+					mode = 4;
+					break;
+				case sf::Keyboard::F6:
+					mode = 5;
+					break;
+				case sf::Keyboard::F7:
+					mode = 6;
+					break;
+				case sf::Keyboard::F8:
+					mode = 7;
+					break;
+				case sf::Keyboard::F9:
+					mode = 8;
+					break;
+				case sf::Keyboard::F10:
+					mode = 9;
+					break;
+				case sf::Keyboard::F11:
+					mode = 10;
+					break;
+				default:
+					switched = false;
 				}
 				if(switched)
 				{
@@ -1071,42 +1071,42 @@ int main(int argc, char** argv)
 						mode = oldMode;
 					}
 				}
-				
+
 				switch(event.key.code)
 				{
-					case sf::Keyboard::Num1:
-						currGear = 1;
-						break;
-					case sf::Keyboard::Num2:
-						currGear = 2;
-						break;
-					case sf::Keyboard::Num3:
-						currGear = 3;
-						break;
-					case sf::Keyboard::Num4:
-						currGear = 4;
-						break;
-					case sf::Keyboard::Num5:
-						currGear = 5;
-						break;
-					case sf::Keyboard::Num6:
-						currGear = 6;
-						break;
-					case sf::Keyboard::Num7:
-						currGear = 7;
-						break;
-					case sf::Keyboard::Num8:
-						currGear = 8;
-						break;
-					case sf::Keyboard::Num9:
-						currGear = 9;
-						break;
-					default:
-						break;
+				case sf::Keyboard::Num1:
+					currGear = 1;
+					break;
+				case sf::Keyboard::Num2:
+					currGear = 2;
+					break;
+				case sf::Keyboard::Num3:
+					currGear = 3;
+					break;
+				case sf::Keyboard::Num4:
+					currGear = 4;
+					break;
+				case sf::Keyboard::Num5:
+					currGear = 5;
+					break;
+				case sf::Keyboard::Num6:
+					currGear = 6;
+					break;
+				case sf::Keyboard::Num7:
+					currGear = 7;
+					break;
+				case sf::Keyboard::Num8:
+					currGear = 8;
+					break;
+				case sf::Keyboard::Num9:
+					currGear = 9;
+					break;
+				default:
+					break;
 				}
 			}
 		}
-		
+
 		//clamp biegu
 		if(currGear <= 0)
 		{
@@ -1120,10 +1120,10 @@ int main(int argc, char** argv)
 		state -> update();
 
 		//narysowanie GUI
-        window.clear();
-        drawGUI();
-        window.display();
-		
+		window.clear();
+		drawGUI();
+		window.display();
+
 		//przekazanie ważnych wartości.
 		mainMutex.lock();
 		vels = state -> getVels();
@@ -1138,15 +1138,15 @@ int main(int argc, char** argv)
 			sendMode = SendMode::SendTwist;
 		}
 		mainMutex.unlock();
-		
+
 		//odbieranie enkoderów
 		encMutex.lock();
 		guiEnc = enc;
 		encMutex.unlock();
-    }
-    
-    isActive = false;
-    sendThread.join();
+	}
 
-    return 0;
-} 
+	isActive = false;
+	sendThread.join();
+
+	return 0;
+}

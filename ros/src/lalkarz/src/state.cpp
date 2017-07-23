@@ -1,4 +1,4 @@
-#include "state.hpp" 
+#include "state.hpp"
 
 Vels State::getVels()
 {
@@ -20,7 +20,7 @@ Twist State::getTwist()
 }
 
 double State::get(Wheel wheel)
-{ 
+{
 	return 0;
 }
 
@@ -88,16 +88,16 @@ double DoubleVelsState::get(Wheel wheel)
 {
 	switch(wheel)
 	{
-		case W1:
-			return w1;
-		case W2:
-			return w2;
-		case W3:
-			return w3;
-		case W4:
-			return w4;
-		default:
-			return 0;
+	case W1:
+		return w1;
+	case W2:
+		return w2;
+	case W3:
+		return w3;
+	case W4:
+		return w4;
+	default:
+		return 0;
 	}
 }
 
@@ -115,14 +115,14 @@ double DoubleTwistState::getAxis(Axis axis)
 {
 	switch(axis)
 	{
-		case X:
-			return x;
-		case Y:
-			return y;
-		case Z:
-			return z;
-		default:
-			return 0;
+	case X:
+		return x;
+	case Y:
+		return y;
+	case Z:
+		return z;
+	default:
+		return 0;
 	}
 }
 

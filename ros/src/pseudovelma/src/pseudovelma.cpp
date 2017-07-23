@@ -20,73 +20,75 @@ namespace gazebo
 class Pseudovelma : public ModelPlugin
 {
 public:
-    ///Konstruktor dba, aby prędkość początkowa była 0
-    Pseudovelma()
-    {
+	///Konstruktor dba, aby prędkość początkowa była 0
+	Pseudovelma()
+	{
 		//zmienne napisane tak, jak ustawione są koła
-		flVel = 0; 	frVel = 0;
-		rlVel = 0; 	rrVel = 0;
+		flVel = 0;
+		frVel = 0;
+		rlVel = 0;
+		rrVel = 0;
 
-        //z modelu
-        wheelRadius = 0.1;
-        modelWidth = 0.76;
-        modelLength = 0.72;
-        
-        counter = 0;
-    }
+		//z modelu
+		wheelRadius = 0.1;
+		modelWidth = 0.76;
+		modelLength = 0.72;
 
-    ///Uruchamiane na inicjalizację
-    void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
-    {
-        model = parent;
-        
-        linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
-        std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
-        
-        //podłączenie do wydarznia aktualizacji
-        updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Pseudovelma::OnUpdate, this));
-        
-        //inicjalizacja ROSa
-        if (!ros::isInitialized())
-        {
-            int argc = 0;
-            char **argv = NULL;
-            ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
-        }
+		counter = 0;
+	}
 
-        //stwórz Node dla ROSa
-        rosNode.reset(new ros::NodeHandle());
-		
-        //Stwórz topic do odbierania wiadomości
-        rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix + "vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
-        if(!rosSub)
-        {
-        	ROS_FATAL_STREAM("Nie udało się ustawić odbiornika " << topicPrefix + "vels");
-        }
+	///Uruchamiane na inicjalizację
+	void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
+	{
+		model = parent;
 
-        //stwórz topic do nadawania pozycji
-        rosPose = rosNode -> advertise<geometry_msgs::PoseStamped>(topicPrefix + "pose", 1000);
-        if(!rosPose)
-        {
-        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "pose");
-        }
-		
+		linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
+		std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
+
+		//podłączenie do wydarznia aktualizacji
+		updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Pseudovelma::OnUpdate, this));
+
+		//inicjalizacja ROSa
+		if (!ros::isInitialized())
+		{
+			int argc = 0;
+			char **argv = NULL;
+			ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
+		}
+
+		//stwórz Node dla ROSa
+		rosNode.reset(new ros::NodeHandle());
+
+		//Stwórz topic do odbierania wiadomości
+		rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix + "vels", 1, std::bind(&Pseudovelma::OnRosMsg, this, std::placeholders::_1));
+		if(!rosSub)
+		{
+			ROS_FATAL_STREAM("Nie udało się ustawić odbiornika " << topicPrefix + "vels");
+		}
+
+		//stwórz topic do nadawania pozycji
+		rosPose = rosNode -> advertise<geometry_msgs::PoseStamped>(topicPrefix + "pose", 1000);
+		if(!rosPose)
+		{
+			ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "pose");
+		}
+
 		//stwórz topic do nadawania prędkości
 		rosTwist = rosNode -> advertise<geometry_msgs::TwistStamped>(topicPrefix + "twist", 1000);
 		if(!rosTwist)
-        {
-        	ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "twist");
-        }
-    }
+		{
+			ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "twist");
+		}
+	}
 
 public:
-    ///Funkcja podłączana do zdarzenia aktualizacji
-    void OnUpdate()
-    {
-        double velX = -frVel + flVel - rlVel + rrVel;
-        double velY = frVel + flVel + rlVel + rrVel;
-        velX *= 0.25 * wheelRadius;
-        velY *= 0.25 * wheelRadius;
+	///Funkcja podłączana do zdarzenia aktualizacji
+	void OnUpdate()
+	{
+		double velX = -frVel + flVel - rlVel + rrVel;
+		double velY = frVel + flVel + rlVel + rrVel;
+		velX *= 0.25 * wheelRadius;
+		velY *= 0.25 * wheelRadius;
 		math::Vector3 transVect = math::Vector3(velX, velY, 0);
 		double k = 2.0/(modelWidth + modelLength);
 		double rot = frVel - flVel - rlVel + rrVel;
@@ -97,14 +99,14 @@ public:
 		transVect = modelRot.RotateVector(transVect);
 
 
-        model -> SetAngularVel(math::Vector3(0,0,rot));
-        model -> SetLinearVel(transVect);
+		model -> SetAngularVel(math::Vector3(0,0,rot));
+		model -> SetLinearVel(transVect);
 
-        //TODO obracanie kołami dla ozdoby
+		//TODO obracanie kołami dla ozdoby
 
-        //wyślij pozycję
-        const math::Pose& pose = model -> GetWorldPose();
-        geometry_msgs::PoseStamped poseMsg;
+		//wyślij pozycję
+		const math::Pose& pose = model -> GetWorldPose();
+		geometry_msgs::PoseStamped poseMsg;
 		poseMsg.pose.position.x = pose.pos.x;
 		poseMsg.pose.position.y = pose.pos.y;
 		poseMsg.pose.position.z = pose.pos.z;
@@ -116,7 +118,7 @@ public:
 		poseMsg.header.stamp = ros::Time::now();
 		poseMsg.header.frame_id = "1";
 		rosPose.publish(poseMsg);
-		
+
 		//wyślij prędkość
 		const math::Vector3 linVel = model -> GetWorldLinearVel();
 		const math::Vector3 angVel = model -> GetWorldAngularVel();
@@ -131,14 +133,14 @@ public:
 		twistMsg.header.stamp = ros::Time::now();
 		twistMsg.header.frame_id = "1";
 		rosTwist.publish(twistMsg);
-		
-		counter++;
-    }
 
-    ///Pobierz wiadomość od ROSa
+		counter++;
+	}
+
+	///Pobierz wiadomość od ROSa
 public:
-    void OnRosMsg(const omnivelma_msgs::Vels::ConstPtr &msg)
-    {
+	void OnRosMsg(const omnivelma_msgs::Vels::ConstPtr &msg)
+	{
 		if(!std::isnan(msg -> fl))
 			flVel = msg -> fl;
 		if(!std::isnan(msg -> fr))
@@ -147,45 +149,45 @@ public:
 			rlVel = msg -> rl;
 		if(!std::isnan(msg -> rr))
 			rrVel = msg -> rr;
-    }
+	}
 
 private:
-    ///Wskaźnik na model
-    physics::ModelPtr model;
+	///Wskaźnik na model
+	physics::ModelPtr model;
 
-    ///Wskaźnik na zdarzenie aktualizacji
-    event::ConnectionPtr updateConnection;
+	///Wskaźnik na zdarzenie aktualizacji
+	event::ConnectionPtr updateConnection;
 
-    ///Przedrostek modelu
-    std::string linkPrefix;
+	///Przedrostek modelu
+	std::string linkPrefix;
 
-    ///Prękości kół
-    double rrVel;
-    double rlVel;
-    double frVel;
-    double flVel;
+	///Prękości kół
+	double rrVel;
+	double rlVel;
+	double frVel;
+	double flVel;
 
-    ///Średnica kół
-    double wheelRadius;
+	///Średnica kół
+	double wheelRadius;
 
-    ///Szerokość modelu
-    double modelWidth;
+	///Szerokość modelu
+	double modelWidth;
 
 	///Długość modelu
-    double modelLength;
+	double modelLength;
 
-    ///Node dla ROSa
-    std::unique_ptr<ros::NodeHandle> rosNode;
+	///Node dla ROSa
+	std::unique_ptr<ros::NodeHandle> rosNode;
 
-    ///Odbiornik ROSa
-    ros::Subscriber rosSub;
+	///Odbiornik ROSa
+	ros::Subscriber rosSub;
 
-    ///Nadajnik pozycji
-    ros::Publisher rosPose;
-	
+	///Nadajnik pozycji
+	ros::Publisher rosPose;
+
 	///Nadajnik prędkości
 	ros::Publisher rosTwist;
-	
+
 	///Licznik kroków symulacji
 	unsigned int counter;
 

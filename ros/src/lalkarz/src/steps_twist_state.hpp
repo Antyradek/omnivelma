@@ -9,5 +9,5 @@ protected:
 public:
 	void set(sf::Keyboard::Key key, bool pressed) override;
 	double getAxis(Axis axis) override;
-	
+
 };

@@ -1,4 +1,4 @@
-#include "steps_twist_state.hpp" 
+#include "steps_twist_state.hpp"
 
 int StepsTwistState::clamp(int value) const
 {
@@ -17,14 +17,14 @@ double StepsTwistState::getAxis(Axis axis)
 {
 	switch(axis)
 	{
-		case X:
-			return (double)x / INPUT_STEP_COUNT;
-		case Y:
-			return (double)y / INPUT_STEP_COUNT;
-		case Z:
-			return (double)z / INPUT_STEP_COUNT;
-		default:
-			return 0;
+	case X:
+		return (double)x / INPUT_STEP_COUNT;
+	case Y:
+		return (double)y / INPUT_STEP_COUNT;
+	case Z:
+		return (double)z / INPUT_STEP_COUNT;
+	default:
+		return 0;
 	}
 }
 
@@ -34,26 +34,26 @@ void StepsTwistState::set(sf::Keyboard::Key key, bool pressed)
 	{
 		switch(key)
 		{
-			case KEY_AXIS_X_UP:
-				x += 1;
-				break;
-			case KEY_AXIS_X_DOWN:
-				x -= 1;
-				break;
-			case KEY_AXIS_Y_UP:
-				y += 1;
-				break;
-			case KEY_AXIS_Y_DOWN:
-				y -= 1;
-				break;
-			case KEY_AXIS_Z_LEFT:
-				z += 1;
-				break;
-			case KEY_AXIS_Z_RIGHT:
-				z -= 1;
-				break;
-			default:
-				break;
+		case KEY_AXIS_X_UP:
+			x += 1;
+			break;
+		case KEY_AXIS_X_DOWN:
+			x -= 1;
+			break;
+		case KEY_AXIS_Y_UP:
+			y += 1;
+			break;
+		case KEY_AXIS_Y_DOWN:
+			y -= 1;
+			break;
+		case KEY_AXIS_Z_LEFT:
+			z += 1;
+			break;
+		case KEY_AXIS_Z_RIGHT:
+			z -= 1;
+			break;
+		default:
+			break;
 		}
 		x = clamp(x);
 		y = clamp(y);
