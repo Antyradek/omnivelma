@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+    <model name="monokl">
+        <pose>0 0 0 0 0 0</pose>
+        <static>false</static>
+        <!--Korpus-->
+        <link name="base">
+            <pose>0 0 0 0 0 0</pose>
+            <collision name="base_collision">
+				<pose>0 0 0.077 0 0 0</pose>
+                <geometry>
+					<cylinder>
+						<radius>0.051</radius>
+						<length>0.152</length>
+					</cylinder>
+                </geometry>
+            </collision>
+			<visual name="base_visual">
+				<pose>0 0 0.077 0 0 0</pose>
+				<geometry>
+					<cylinder>
+						<radius>0.051</radius>
+						<length>0.152</length>
+					</cylinder>
+				</geometry>
+				<material>
+					<script>
+						<uri>model://monokl/materials/monokl.material</uri>
+						<name>monokl/base</name>
+					</script>
+				</material>
+			</visual>
+        </link>
+		
+    </model>
+</sdf>
