@@ -16,17 +16,47 @@
                 </geometry>
             </collision>
 			<visual name="base_visual">
-				<pose>0 0 0.077 0 0 0</pose>
+				<pose>0 0 0.049 0 0 0</pose>
 				<geometry>
 					<cylinder>
 						<radius>0.051</radius>
-						<length>0.152</length>
+						<length>0.098</length>
 					</cylinder>
 				</geometry>
 				<material>
 					<script>
 						<uri>model://monokl/materials/monokl.material</uri>
 						<name>monokl/base</name>
+					</script>
+				</material>
+			</visual>
+			<visual name="cap_visual">
+				<pose>0 0 0.142 0 0 0</pose>
+				<geometry>
+					<cylinder>
+						<radius>0.047</radius>
+						<length>0.019</length>
+					</cylinder>
+				</geometry>
+				<material>
+					<script>
+						<uri>model://monokl/materials/monokl.material</uri>
+						<name>monokl/base</name>
+					</script>
+				</material>
+			</visual>
+			<visual name="glass_visual">
+				<pose>0 0 0.115 0 0 0</pose>
+				<geometry>
+					<cylinder>
+						<radius>0.040</radius>
+						<length>0.040</length>
+					</cylinder>
+				</geometry>
+				<material>
+					<script>
+						<uri>model://monokl/materials/monokl.material</uri>
+						<name>monokl/glass</name>
 					</script>
 				</material>
 			</visual>
