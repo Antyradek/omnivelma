@@ -56,6 +56,9 @@ public:
 			//podłączenie do wydarznia aktualizacji
 			updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
 		}
+		
+		//powiadom o gotowości
+		ROS_DEBUG_STREAM("Ocznica zainicjalizowana");
 	}
 
 public:

@@ -45,6 +45,9 @@ public:
 		{
 			ROS_FATAL_STREAM("Nie udało się aktywować serwera " << topicPrefix.append("set_friction"));
 		}
+		
+		//powiadom o gotowości
+		ROS_DEBUG_STREAM("Flooria zainicjalizowana");
 	}
 
 private:

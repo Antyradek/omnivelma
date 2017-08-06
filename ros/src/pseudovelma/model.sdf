@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
     <model name="pseudovelma">
+		<plugin name="pseudovelma" filename="libpseudovelma.so"/>
         <pose>0 0 0.101 0 0 0</pose>
         <static>false</static>
         <!--Baza całości-->

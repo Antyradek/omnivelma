@@ -79,6 +79,9 @@ public:
 		{
 			ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "twist");
 		}
+		
+		//powiadom o gotowości
+		ROS_DEBUG_STREAM("Pseudovelma zainicjalizowana");
 	}
 
 public:

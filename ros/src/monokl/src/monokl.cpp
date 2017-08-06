@@ -1,20 +1,17 @@
 #include <functional>
 #include <string>
 #include <iostream>
-#include <cmath>
 #include <gazebo/gazebo.hh>
-#include <gazebo/physics/physics.hh>
-#include <gazebo/common/common.hh>
+#include <gazebo/sensors/sensors.hh>
 #include <ros/ros.h>
 #include <ros/console.h>
 
-#define MODEL_NAME std::string("monokl")
 #define CLIENT_NAME "gazebo_ros"
 
 namespace gazebo
 {
 ///Klasa sterująca platformą
-class Monokl : public ModelPlugin
+class Monokl : public SensorPlugin
 {
 public:
 	Monokl()
@@ -24,14 +21,17 @@ public:
 
 public:
 	///Uruchamiane na inicjalizację
-	void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
+	void Load(sensors::SensorPtr parent, sdf::ElementPtr sdf)
 	{
-		model = parent;
+		//wyciągnij wskaźnik na odpowiedni czujnik
+		sensor = std::dynamic_pointer_cast<sensors::RaySensor>(parent);
+		if(!sensor)
+		{
+			ROS_FATAL_STREAM("Błąd znajdywania czujnika laserowego");
+		}
 
-		updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Monokl::OnUpdate, this));
-
-		linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
-		std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
+		//podłącz zdarzenie aktualizacji
+		updateConnection = sensor -> ConnectUpdated(std::bind(&Monokl::OnUpdate, this));
 
 		//inicjalizacja ROSa
 		if (!ros::isInitialized())
@@ -43,8 +43,14 @@ public:
 
 		//stwórz Node dla ROSa
 		rosNode.reset(new ros::NodeHandle());
-
 		
+		//aktywuj sensor
+		sensor -> SetActive(true);
+
+		//powiadom o gotowości
+		ROS_DEBUG_STREAM("Monokl (" << sensor -> ScopedName() << ") zainicjalizowany");
+		
+		std::cout << sensor -> ScopedName() << std::endl;
 	}
 
 
@@ -54,16 +60,13 @@ private:
 	{
 		
 	}
-
-	///Wskaźnik na model
-	physics::ModelPtr model;
-
+	
 	///Wskaźnik na zdarzenie aktualizacji
 	event::ConnectionPtr updateConnection;
 
-	///Przedrostek modelu
-	std::string linkPrefix;
-
+	///Wskaźnik na czujnik
+	sensors::RaySensorPtr sensor;
+	
 	///Node dla ROSa
 	std::unique_ptr<ros::NodeHandle> rosNode;
 
@@ -71,7 +74,7 @@ private:
 	unsigned int counter;
 
 };
-
-//zarejestruj wtyczkę
-GZ_REGISTER_MODEL_PLUGIN(Monokl)
+GZ_REGISTER_SENSOR_PLUGIN(Monokl)
 }
+
+

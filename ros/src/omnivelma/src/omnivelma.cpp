@@ -105,6 +105,9 @@ public:
 		{
 			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix + "set_inertia");
 		}
+		
+		//powiadom o gotowości
+		ROS_DEBUG_STREAM("Omnivelma zainicjalizowana");
 	}
 
 

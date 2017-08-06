@@ -13,7 +13,6 @@
 			<include>
 				<uri>model://flooria</uri>
 			</include>
-			<plugin name="flooria" filename="libflooria.so"/>
 		</model>
 
 		<!-- Platforma dynamiczna -->
@@ -21,7 +20,6 @@
 			<include>
 				<uri>model://omnivelma</uri>
 			</include>
-			<plugin name="omnivelma" filename="libomnivelma.so"/>
 		</model>
 
 		<!-- Platforma kinematyczna -->
@@ -29,7 +27,6 @@
 			<include>
 				<uri>model://pseudovelma</uri>
 			</include>
-			<plugin name="pseudovelma" filename="libpseudovelma.so"/>
 		</model>
 	</world>
 </sdf>

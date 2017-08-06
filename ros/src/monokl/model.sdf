@@ -1,8 +1,7 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
     <model name="monokl">
-        <pose>0 0 0 0 0 0</pose>
-        <static>false</static>
+		
         <!--Korpus-->
         <link name="base">
             <pose>0 0 0 0 0 0</pose>
@@ -60,7 +59,29 @@
 					</script>
 				</material>
 			</visual>
+			<sensor name="monokl" type="ray">
+				<update_rate>50</update_rate>
+				<pose>0 0 0.115 0 0 0</pose>
+				<visualize>true</visualize>
+				<plugin name="monokl" filename="libmonokl.so"/>
+				<ray>
+					<scan>
+						<horizontal>
+							<!-- tryb 50Hz, 270°, próbka co 0,5° -->
+							<samples>540</samples>
+							<resolution>1</resolution>
+							<min_angle>-0.7853982</min_angle>
+							<max_angle>3.926991</max_angle>
+						</horizontal>
+					</scan>
+					<range>
+						<min>0.5</min>
+						<max>20</max>
+						<!-- TODO rozdzielczość liniowa? -->
+					</range>
+					<!-- TODO dodać szum -->
+				</ray>
+			</sensor>
         </link>
-		
     </model>
 </sdf>
