@@ -4,16 +4,19 @@ project(monokl)
 find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   roscpp
+  sensor_msgs
 )
 
 catkin_package(
 	CATKIN_DEPENDS 
 	gazebo_ros
 	roscpp 
+	sensor_msgs
 )
 
 find_package(gazebo REQUIRED)
 find_package(roscpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 set(CMAKE_CXX_FLAGS   "-Wall --std=c++14")
 link_directories(${GAZEBO_LIBRARY_DIRS})

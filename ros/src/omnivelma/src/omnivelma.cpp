@@ -66,28 +66,28 @@ public:
 		rosSub = rosNode -> subscribe<omnivelma_msgs::Vels>(topicPrefix + "vels", 1, std::bind(&Omnivelma::OnRosMsg, this, std::placeholders::_1));
 		if(!rosSub)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć odbiornika " << topicPrefix + "vels");
+			ROS_FATAL_STREAM("Nie udało się stworzyć odbiornika " << topicPrefix << "vels");
 		}
 
 		//stwórz topic do nadawania pozycji
 		rosPose = rosNode -> advertise<geometry_msgs::PoseStamped>(topicPrefix + "pose", 1000);
 		if(!rosPose)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix + "pose");
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix << "pose");
 		}
 
 		//stwórz topic do nadawania enkoderów
 		rosEnc = rosNode -> advertise<omnivelma_msgs::EncodersStamped>(topicPrefix + "encoders", 1000);
 		if(!rosEnc)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix + "encoders");
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix << "encoders");
 		}
 
 		//stwórz topic do nadawania prędkości
 		rosTwist = rosNode -> advertise<geometry_msgs::TwistStamped>(topicPrefix + "twist", 1000);
 		if(!rosTwist)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix + "twist");
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix << "twist");
 		}
 
 		//stwórz serwer do odbierania tarcia
@@ -95,7 +95,7 @@ public:
 		rosFri = rosNode -> advertiseService(aso);
 		if(!rosFri)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix + "set_friction");
+			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix << "set_friction");
 		}
 
 		//stwórz serwer do odbierania inercji
@@ -103,7 +103,7 @@ public:
 		rosIne = rosNode -> advertiseService(asi);
 		if(!rosIne)
 		{
-			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix + "set_inertia");
+			ROS_FATAL_STREAM("Nie udało się stworzyć serwera " << topicPrefix << "set_inertia");
 		}
 		
 		//powiadom o gotowości
@@ -165,7 +165,9 @@ private:
 		twistMsg.header.seq = counter;
 		twistMsg.header.stamp = ros::Time::now();
 		twistMsg.header.frame_id = "1";
+		
 		rosTwist.publish(twistMsg);
+		counter++;
 	}
 
 	///Ustaw tarcia dla kół

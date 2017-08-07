@@ -63,6 +63,7 @@
 				<update_rate>50</update_rate>
 				<pose>0 0 0.115 0 0 0</pose>
 				<visualize>true</visualize>
+				<topic>/monokl</topic>
 				<plugin name="monokl" filename="libmonokl.so"/>
 				<ray>
 					<scan>

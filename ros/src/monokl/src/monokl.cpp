@@ -5,8 +5,11 @@
 #include <gazebo/sensors/sensors.hh>
 #include <ros/ros.h>
 #include <ros/console.h>
+#include <sensor_msgs/LaserScan.h>
 
 #define CLIENT_NAME "gazebo_ros"
+#define MONOKL_R_NAME "monokl_r"
+#define MONOKL_L_NAME "monokl_l"
 
 namespace gazebo
 {
@@ -46,11 +49,33 @@ public:
 		
 		//aktywuj sensor
 		sensor -> SetActive(true);
+		
+		//ustaw przedrostek
+		/* W czasie importu modelu w modelu, tracimy referencję na model. Zatem trzeba się 
+		 * dowiedzieć o tym, czy jest to prawy, czy lewy czujnik, korzystając jednynie z nazwy. */
+		std::string name = sensor -> ParentName();
+		if(name.find(MONOKL_R_NAME) != std::string::npos && name.find(MONOKL_L_NAME) == std::string::npos)
+		{
+			sensorName = MONOKL_R_NAME;
+		}
+		else if(name.find(MONOKL_R_NAME) == std::string::npos && name.find(MONOKL_L_NAME) != std::string::npos)
+		{
+			sensorName = MONOKL_L_NAME;
+		}
+		else
+		{
+			ROS_FATAL_STREAM("Błąd określania czujnika w modelu, musi on mieć w ścieżce nazwę " << MONOKL_R_NAME << " lub " << MONOKL_L_NAME);
+		}
+		
+		//wystaw interfejs ROSa
+		publisher = rosNode -> advertise<sensor_msgs::LaserScan>("/" + sensorName + "/scan", 1000);
+		if(!publisher)
+		{
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << sensorName);
+		}
 
 		//powiadom o gotowości
-		ROS_DEBUG_STREAM("Monokl (" << sensor -> ScopedName() << ") zainicjalizowany");
-		
-		std::cout << sensor -> ScopedName() << std::endl;
+		ROS_DEBUG_STREAM("Monokl (" << sensorName << ") zainicjalizowany");
 	}
 
 
@@ -58,8 +83,38 @@ private:
 	///Funkcja podłączana do zdarzenia aktualizacji
 	void OnUpdate()
 	{
+		sensor_msgs::LaserScan scan;
 		
+		//uzupełnij nagłówek
+		scan.header.seq = counter;
+		scan.header.stamp.sec = sensor -> LastMeasurementTime().sec;
+		scan.header.stamp.nsec = sensor -> LastMeasurementTime().nsec;
+		scan.header.frame_id = sensorName;
+		
+		//uzupełnij parametry czujnika
+		scan.angle_min = sensor -> AngleMin().Radian();
+		scan.angle_max = sensor -> AngleMax().Radian();
+		scan.angle_increment = sensor -> AngleResolution();
+		scan.time_increment = 0;
+		scan.scan_time = 1.0 / sensor -> UpdateRate();
+		scan.range_max = sensor -> RangeMax();
+		scan.range_min = sensor -> RangeMin();
+		
+		//uzupełnij próbki
+		for(int i = 0; i < sensor -> LaserShape() -> GetSampleCount(); i++)
+		{
+			scan.ranges.push_back(sensor -> LaserShape() -> GetRange(i));
+		}
+		
+		publisher.publish(scan);
+		counter++;
 	}
+	
+	///Topic do nadawania pomiarów
+	ros::Publisher publisher;
+	
+	///Przedrostek nazwy sensora
+	std::string sensorName;
 	
 	///Wskaźnik na zdarzenie aktualizacji
 	event::ConnectionPtr updateConnection;
