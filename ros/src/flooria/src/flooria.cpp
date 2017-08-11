@@ -13,7 +13,7 @@
 
 namespace gazebo
 {
-///Klasa sterująca platformą
+///Klasa podłogi ze zmiennym tarciem
 class Flooria : public ModelPlugin
 {
 public:

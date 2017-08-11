@@ -7,6 +7,7 @@
 #include <gazebo/common/common.hh>
 #include <ros/ros.h>
 #include <ros/console.h>
+#include <tf2_ros/transform_broadcaster.h>
 #include <omnivelma_msgs/Vels.h>
 #include <omnivelma_msgs/SetFriction.h>
 #include <omnivelma_msgs/EncodersStamped.h>
@@ -45,11 +46,21 @@ public:
 		pyramidRL = model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid();
 		pyramidFR = model -> GetLink(linkPrefix + "wheel_fr") -> GetCollision("wheel_fr_collision") -> GetSurface() -> FrictionPyramid();
 		pyramidFL = model -> GetLink(linkPrefix + "wheel_fl") -> GetCollision("wheel_fl_collision") -> GetSurface() -> FrictionPyramid();
+		
+		if(!pyramidRR || !pyramidRL || !pyramidFR || !pyramidFL)
+		{
+			ROS_FATAL_STREAM("Nie udało się znaleźć piramid kolizji modelu");
+		}
 
 		motorRR = model -> GetJoint(linkPrefix + "motor_rr");
 		motorRL = model -> GetJoint(linkPrefix + "motor_rl");
 		motorFR = model -> GetJoint(linkPrefix + "motor_fr");
 		motorFL = model -> GetJoint(linkPrefix + "motor_fl");
+		
+		if(!motorRR || !motorRL || !motorFR || !motorFL)
+		{
+			ROS_FATAL_STREAM("Nie udało się znaleźć modeli silników");
+		}
 
 		//inicjalizacja ROSa
 		if (!ros::isInitialized())
@@ -134,7 +145,7 @@ private:
 		poseMsg.pose.orientation.w = pose.rot.w;
 		poseMsg.header.seq = counter;
 		poseMsg.header.stamp = ros::Time::now();
-		poseMsg.header.frame_id = "1";
+		poseMsg.header.frame_id = "map";
 		rosPose.publish(poseMsg);
 
 		//wyślij enkodery
@@ -164,9 +175,23 @@ private:
 		twistMsg.twist.angular.z = angVel.z;
 		twistMsg.header.seq = counter;
 		twistMsg.header.stamp = ros::Time::now();
-		twistMsg.header.frame_id = "1";
-		
+		twistMsg.header.frame_id = "map";
 		rosTwist.publish(twistMsg);
+		
+		//wyślij ramkę (zakładamy ramkę world w 0,0,0)
+		geometry_msgs::TransformStamped transMsg;
+		transMsg.header.stamp = ros::Time::now();
+		transMsg.header.frame_id = "map";
+		transMsg.child_frame_id = "omnivelma";
+		transMsg.transform.translation.x = pose.pos.x;
+		transMsg.transform.translation.y = pose.pos.y;
+		transMsg.transform.translation.z = pose.pos.z;
+		transMsg.transform.rotation.x = pose.rot.x;
+		transMsg.transform.rotation.y = pose.rot.y;
+		transMsg.transform.rotation.z = pose.rot.z;
+		transMsg.transform.rotation.w = pose.rot.w;
+		framePublisher.sendTransform(transMsg);
+		
 		counter++;
 	}
 
@@ -299,6 +324,9 @@ private:
 
 	///Licznik kroków
 	unsigned int counter;
+	
+	//Nadajnik ramki
+	tf2_ros::TransformBroadcaster framePublisher;
 
 };
 

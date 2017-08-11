@@ -84,7 +84,7 @@ public:
 		ROS_DEBUG_STREAM("Pseudovelma zainicjalizowana");
 	}
 
-public:
+private:
 	///Funkcja podłączana do zdarzenia aktualizacji
 	void OnUpdate()
 	{
@@ -119,7 +119,7 @@ public:
 		poseMsg.pose.orientation.w = pose.rot.w;
 		poseMsg.header.seq = counter;
 		poseMsg.header.stamp = ros::Time::now();
-		poseMsg.header.frame_id = "1";
+		poseMsg.header.frame_id = "map";
 		rosPose.publish(poseMsg);
 
 		//wyślij prędkość
@@ -134,14 +134,13 @@ public:
 		twistMsg.twist.angular.z = angVel.z;
 		twistMsg.header.seq = counter;
 		twistMsg.header.stamp = ros::Time::now();
-		twistMsg.header.frame_id = "1";
+		twistMsg.header.frame_id = "map";
 		rosTwist.publish(twistMsg);
 
 		counter++;
 	}
 
 	///Pobierz wiadomość od ROSa
-public:
 	void OnRosMsg(const omnivelma_msgs::Vels::ConstPtr &msg)
 	{
 		if(!std::isnan(msg -> fl))
@@ -154,7 +153,6 @@ public:
 			rrVel = msg -> rr;
 	}
 
-private:
 	///Wskaźnik na model
 	physics::ModelPtr model;
 

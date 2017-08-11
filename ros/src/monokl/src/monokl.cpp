@@ -12,8 +12,8 @@
 #define MONOKL_L_NAME "monokl_l"
 
 namespace gazebo
-{
-///Klasa sterująca platformą
+{	
+///Klasa laserowego sensora
 class Monokl : public SensorPlugin
 {
 public:
@@ -21,8 +21,7 @@ public:
 	{
 		counter = 0;
 	}
-
-public:
+	
 	///Uruchamiane na inicjalizację
 	void Load(sensors::SensorPtr parent, sdf::ElementPtr sdf)
 	{
@@ -32,10 +31,7 @@ public:
 		{
 			ROS_FATAL_STREAM("Błąd znajdywania czujnika laserowego");
 		}
-
-		//podłącz zdarzenie aktualizacji
-		updateConnection = sensor -> ConnectUpdated(std::bind(&Monokl::OnUpdate, this));
-
+		
 		//inicjalizacja ROSa
 		if (!ros::isInitialized())
 		{
@@ -43,9 +39,13 @@ public:
 			char **argv = nullptr;
 			ros::init(argc, argv, CLIENT_NAME, ros::init_options::NoSigintHandler);
 		}
-
+		
 		//stwórz Node dla ROSa
 		rosNode.reset(new ros::NodeHandle());
+
+		//podłącz zdarzenie aktualizacji
+		updateConnection = sensor -> ConnectUpdated(std::bind(&Monokl::OnUpdate, this));
+
 		
 		//aktywuj sensor
 		sensor -> SetActive(true);
@@ -53,7 +53,7 @@ public:
 		//ustaw przedrostek
 		/* W czasie importu modelu w modelu, tracimy referencję na model. Zatem trzeba się 
 		 * dowiedzieć o tym, czy jest to prawy, czy lewy czujnik, korzystając jednynie z nazwy. */
-		std::string name = sensor -> ParentName();
+		std::string name  = sensor -> ParentName();
 		if(name.find(MONOKL_R_NAME) != std::string::npos && name.find(MONOKL_L_NAME) == std::string::npos)
 		{
 			sensorName = MONOKL_R_NAME;
@@ -89,7 +89,7 @@ private:
 		scan.header.seq = counter;
 		scan.header.stamp.sec = sensor -> LastMeasurementTime().sec;
 		scan.header.stamp.nsec = sensor -> LastMeasurementTime().nsec;
-		scan.header.frame_id = sensorName;
+		scan.header.frame_id = sensorName + "_heart";
 		
 		//uzupełnij parametry czujnika
 		scan.angle_min = sensor -> AngleMin().Radian();
@@ -100,10 +100,10 @@ private:
 		scan.range_max = sensor -> RangeMax();
 		scan.range_min = sensor -> RangeMin();
 		
-		//uzupełnij próbki
-		for(int i = 0; i < sensor -> LaserShape() -> GetSampleCount(); i++)
+		//uzupełnij próbki (szum jest automatycznie dodany)
+		for(int i = 0; i < sensor -> RangeCount(); i++)
 		{
-			scan.ranges.push_back(sensor -> LaserShape() -> GetRange(i));
+			scan.ranges.push_back(sensor -> Range(i));
 		}
 		
 		publisher.publish(scan);
@@ -113,22 +113,23 @@ private:
 	///Topic do nadawania pomiarów
 	ros::Publisher publisher;
 	
-	///Przedrostek nazwy sensora
-	std::string sensorName;
-	
-	///Wskaźnik na zdarzenie aktualizacji
-	event::ConnectionPtr updateConnection;
-
 	///Wskaźnik na czujnik
 	sensors::RaySensorPtr sensor;
 	
-	///Node dla ROSa
-	std::unique_ptr<ros::NodeHandle> rosNode;
-
 	///Licznik kroków
 	unsigned int counter;
+	
+	///Wskaźnik na zdarzenie aktualizacji
+	event::ConnectionPtr updateConnection;
+	
+	///Node dla ROSa
+	std::unique_ptr<ros::NodeHandle> rosNode;
+	
+	///Przedrostek nazwy sensora
+	std::string sensorName;
 
 };
+
 GZ_REGISTER_SENSOR_PLUGIN(Monokl)
 }
 

@@ -61,7 +61,7 @@ public:
 		ROS_DEBUG_STREAM("Ocznica zainicjalizowana");
 	}
 
-public:
+private:
 	///Funkcja podłączana do zdarzenia aktualizacji
 	void OnUpdate()
 	{
@@ -80,7 +80,6 @@ public:
 		rosPub.publish(msg);
 	}
 
-private:
 
 	///Wskaźnik na zdarzenie aktualizacji
 	event::ConnectionPtr updateConnection;
