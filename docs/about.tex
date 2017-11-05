@@ -115,7 +115,8 @@ Ich osie ustawione są w ten sposób, że osie rolek dwóch kół z tej samej st
 Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X} patrząc na nie z góry.
 Warto pamiętać, że oś aktualnie dolnej rolki jest prostopadła do osi górnej rolki.
 
-Istnieje również odwrotna odmiana ustawienia kół, w której rolki tworzą literę \emph{O}, czyli oś przednia jest zamieniona z tylną, lub jakby cała platforma była odwrócona do góry nogami.
+Istnieje również odwrotna odmiana ustawienia kół, w której rolki tworzą literę \emph{O}, 
+czyli oś przednia jest zamieniona z tylną, lub jakby cała platforma była odwrócona do góry nogami.
 Ten drugi sposób także pozwala na ruch wielokierunkowy, ale nie jest tak często stosowany \cite{paletobot}.
 
 \begin{figure}[H]
@@ -137,16 +138,85 @@ Zazwyczaj przybliża się ją torusem w celu uproszczenia produkcji \cite{roller
 Istnieją także inne budowy kół, złożone z wielu małych rolek tak, aby w każdym momencie kilka rolek dotykało podłoża.
 Można także złożyć kilka powyższych kół obok siebie w jednym kole.
 Przydatne jest to dla robotów transportujących duże masy, gdyż zmniejsza to obciążenie pojedynczych rolek.
-Niestety taka budowa jest chroniona aktywnym patentem, więc pojedyncze koło, na które patent już wygasł z jest jedynym popularnie używanym \cite{paletobot}.
+Niestety taka budowa jest chroniona aktywnym patentem, więc pojedyncze koło, na które patent już wygasł, z jest jedynym popularnie używanym \cite{paletobot}.
 
 Podstawowym problemem technologicznym koła jest skomplikowana budowa, ale także ślizganie się rolek po powierzchni.
 Odległość osi od płaszczyzny nieznacznie zmienia się przy przenoszeniu ciężaru z rolki na rolkę, co przy dużych prędkościach powoduje drgania i jeszcze większe błędy pomiarów.
 Środkowy przegub zmniejsza ich przenoszenie na drugą część platformy.
 Poślizg kół powoduje, że enkodery nie mogą być jedynymi czujnikami służącymi do wyznaczania pozycji bazy, gdyż są zbyt mało dokładne \cite{heavy}.
 
-\section{Czujnik laserowy}
-Platforma wyposażona jest w dwa czujniki laserowe firmy SICK.
+\subsection{Działanie}
+Standardowe koło, używając tarcia, przekształca prędkość kątową na liniową w płaszczyźnie obrotu. 
+Specjalne koło Mecanum ma dodatkowy wektor równoległy do osi obrotu, zatem prędkość wypadkowa jest obrócona o 45°, zależnie od typu koła (prawoskrętne lub lewoskrętne) i 
+kierunku obrotu.
 
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{graphics/vectors.pdf}
+\caption{Wektory składowe i wypadkowe koła widzianego z góry.}
+\label{fig:wheel_vectors}
+\end{figure} 
+
+Ustawiając te koła w odpowiedni, opisany wcześniej na obrazku \ref{fig:base_top}, sposób można zmusić wektory kół do odpowiedniego znoszenia się składowych,
+a w efekcie pozwolić robotowi na poruszanie się w kierunkach nieosiągalnych dla pojazdów o standardowych kołach.
+A zatem, można nałożyć te składowe na wcześniejszy rysunek \ref{fig:mecanum_dirs} i dokładnie się przyjrzeć, dlaczego koła popychają przy danym obrocie platformę w 
+danym kierunku.
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=\textwidth]{graphics/mecanum_dirs_vect.pdf}
+\caption{Wektory składowe i wypadkowe piasty koła widzianego z góry.}
+\label{fig:mecanum_dirs_vect}
+\end{figure} 
+
+W pierwszym przypadku, wektory o kierunku prostopadłym do płaszczyzny symetrii urządzenia znoszą się, pomimo że mają przeciwne zwroty na przedniej i tylnej parze kół.
+Pozostają jedynie składowe równoległe do płaszczyzny symetrii, które powodują prostoliniowy ruch w przód.
+
+Drugi przypadek jest podobny, lecz dwa koła nie obracają się. Nie jest to ruch pasywny, gdyż taki wprowadzałby nieprzewidywane poślizgi, a aktywne hamowanie.
+Wtedy wektory nie mają się jak znosić i platforma wykonuje ruch pod kątem 45° do płaszczyzny symetrii.
+
+Zasada ruchu w bok jest bardzo podobna do ruchu w przód. Tutaj również wektory znoszą się parami, jednak tym razem na prawych kołach i lewych.
+
+Alternatywnie, bardzo łatwo nadać prędkość kątową podstawie przy odpowiednim ustawieniu prędkości kół.
+
+Warto nadmienić, że w idealnym przypadku rolki nie obracają się, gdy wypadkowy wektor prędkości koła jest prostopadły do osi koła. 
+Inaczej mówiąc, rolka będzie się obracać tym mocniej, im bardziej ruch koła wymuszany jest równolegle do osi koła, 
+czy to na skutek znoszenia się wektorów, czy oporu przeszkody.
+I na przykład, przy ruchu w przód rolki koła praktycznie się nie obracają, lecz przy ruchu w bok biorą aktywny udział.
+Może mieć to wpływ na zużywanie się rolek, nie tylko z punktu widzenia ilości obrotów danej rolki na pokonanym dystansie, 
+ale także sposobu w jaki wymuszany jest jej ruch.
+Rolki zawsze będą nieznacznie się obracać nieco szarpanym ruchem w obie strony, ze względu na poślizgi od innych kół, 
+niejednostajne tarcie piast wszystkich innych rolek, czy różnice terenu. 
+Zatem przejazd przykładowego odcinka przodem lub bokiem, będzie w różnym stopniu i w różny sposób zużywał elementy wykonawcze.
+To, jaki styl jazdy opłaca się zastosować, aby zminimalizować zużywanie się elementów jest dużą, odrębną dziedziną nauki.
+
+\section{Czujnik laserowy}
+Platforma wyposażona jest w dwa, dwuwymiarowe czujniki laserowe typu LiDAR firmy SICK.
+
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.5\textwidth]{graphics/sensor.png}
+\caption{Czujnik laserowy SICK LMS100-10000.}
+\label{fig:sensor}
+\end{figure} 
+
+\subsection{Zasada działania}
+Wszystkie czujniki tego typu mają bardzo podobną zasadę działania.
+Pośrodku urządzenia znajduje się obrotowe lusterko zwrócone pod kątem 45° do osi obrotu.
+Równolegle do osi znajduje się laser, który emituje pulsacyjną wiązkę podczerwonego promienia co pewien okres.
+Aktualna pozycja lusterka jest wykrywana przez enkoder.
+Obok lasera jest czujnik, który bada wysłane przez laser, odbite od lusterka, obiektu i ponownie lusterka, światło.
+
+Na koniec zaawansowany algorytm we wbudowanym mikrokontrolerze ustala kąt i odległość wykrytego obiektu na podstawie tych danych.
+Odpowiada także za usunięcie szumu i ewentualnych odbić promienia.
+Komunikacja odbywa się za pomocą różnych interfejsów sieciowych.
+
+\subsection{Komunikacja}
+Wysyłając do czujnika odpowiedni ciąg bajtów, można ustawić jego tryb działania, odpytać o zebrane dane, czy wykryć konfigurację i stan.
+
+W przypadku naszej platformy, komunikacja odbywa się poprzez interfejs Ethernetowy.
+Program komunikujący się bezpośrednio z urządzeniem zwraca listę kolejnych, wykrytych punktów.
+Dokładne dane i cechy czujnika dostępne są na stronie producenta \cite{sick_website}.
 
 \section{Składniki systemu}
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.
