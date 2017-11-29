@@ -99,21 +99,21 @@ Oczywiście ma to znaczenie jedynie kosmetyczne, gdyż w żaden sposób nie wpł
 \subsection{Komunikacja}
 Komunikacja programu sterującego platformą odbywa się przez wbudowane z ROSa narzędzie \emph{topic}.
 
-Wiadomość o nowych zadanych prędkościach kół nie mieści się w standardzie, zatem został stworzony własny typ \texttt{pseudovelma/Vels}.
+Wiadomość o nowych zadanych prędkościach kół nie mieści się w standardzie, zatem został stworzony własny typ \texttt{omnivelma\_msgs/Vels}.
 Zawiera cztery wartości zmiennoprzecinkowe podwójnej precyzji.
 Wartości oznaczają prędkości w rad/s.
 
 Program posiada komunikację:
 \begin{itemize}
- \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs/Pose} z aktualną pozycją i rotacją platformy.
- \item Odbiór wiadomości własnego typu \texttt{pseudovelma/Vels} z zadanymi prędkościami kół.
+ \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs/PoseStamped} z aktualną pozycją i rotacją platformy oraz nagłówkiem z identyfikatorem i czasem nadania pakietu.
+ \item Odbiór wiadomości typu \texttt{omnivelma\_msgs/Vels} z zadanymi prędkościami kół.
 \end{itemize}
 
 \subsection{Zachowanie}
 Platforma ignoruje kompletnie otoczenie poruszając się przez inne obiekty.
 Po nadaniu stałych prędkości kół następuje ruch po okręgach zgodnie z przewidywaniami.
 
-Cały czas zwraca aktualną pozycję i rotację działając jak układ całkujący funkcje ruchu z powyższej macierzy.
+Cały czas zwraca aktualną pozycję i rotację, działając jak układ całkujący funkcje ruchu z powyższej macierzy.
 
 \section{Model dynamiczny}
 Wykorzystując maszynę do symulacji fizyki możemy umieścić w niej model określający kształty, masy i zależności obiektów, potem nadać elementom wirtualny ruch i otrzymać przybliżone wyniki do tego, jak zachowywałaby się rzeczywista platforma.
@@ -150,7 +150,9 @@ Taki model naturalnie podskakiwałby przy ruchu zwiększając tym samym i tak du
 
 Przybliżenie rolki siatką jedynie zmniejsza powyższy efekt, gdyż sama siatka zbudowana jest z prostych odcinków.
 Zwiększając jej gęstość zwiększamy jakość symulacji, ale narażamy się na olbrzymi skok ilości obliczeń.
-Kalkulowanie kolizji z siatką jest najdroższe z możliwych.
+Kalkulowanie kolizji z siatką jest najdroższe z możliwych dla maszyny symulującej fizykę.
+
+Duża liczba przegubów także utrudnia symulację, przede wszystkim, każde kolejne zagnieżdżenie nakłada błędy liczbowe poprzednich przegubów.
 
 \subsection{Resetowanie pozycji koła}
 Ten sposób został użyty w modelach w symulatorze V-Rep.
@@ -177,6 +179,12 @@ Metody zmieniające pozycję obiektu nie działają.
 W dodatku potrzebna jest także możliwość ustawiania rotacji i pozycji przegubu, elementu \texttt{joint}, co nie jest wystawione do modyfikacji w API.
 
 Bardzo skomplikowany sposób działania kół skłania do szukania innych rozwiązań.
+
+Jest tutaj także jeszcze jedna, bardzo ważna cecha. Jakość symulacji zależy od jej prędkości.
+Jest tak ponieważ im bardziej obciążony jest symulator, tym większy czas pomiędzy kolejnymi klatkami symulacji i pomiędzy kolejnymi resetowaniami pozycji koła.
+Oznacza to, że druga oś zacznie wpływać na symulację z nieliniowo rosnącym błędem aż do kolejnego resetu koła.
+Przy odpowiednio niskim czasie odświeżania, różnice spowodują nieakceptowalny spadek jakości symulacji.
+Model zacznie opóźniać się względem fizycznej platformy.
 
 \subsection{Zmiana osi rolki}
 Poprzedni przypadek można zmodyfikować poprzez wyznaczanie nowej osi przegubu łączącego wirtualne koło z kulą symulującą rolkę.
@@ -213,12 +221,12 @@ Warto tu wytłumaczyć, w jaki sposób maszyny symulacji fizyki interpretują ko
 \end{figure} 
 
 Po wykryciu punktu kolizji i wyznaczeniu wektora normalnych $N$ do dotykających się obiektów należy zadziałać odpowiednimi siłami, aby zatrzymać, lub odbić obiekty.
-Dodatkowo ponieważ prędkości obiektów nie muszą być równoległe do wektora kolizji, należy zasymulować siłę tarcia z odpowiednią dla współczynnika tarcia wartością.
+Dodatkowo, ponieważ prędkości obiektów nie muszą być równoległe do wektora kolizji, należy zasymulować siłę tarcia z odpowiednią dla współczynnika tarcia wartością.
 Można to uzyskać nadając punktowi siłę prostopadłą do wektora normalnych, ten wektor może być rozpisany przy pomocy dwóch wektorów jednostkowych $F_1$ i $F_2$. 
 Te wektory są prostopadłe do wektora normalnych, równoległe do płaszczyzny kolizji.
 
 W normalnej symulacji nigdy nie potrzeba osobno modyfikować współczynników tarcia wzdłuż tych wektorów, gdyż powierzchnie obiektów mają równe współczynniki tarcia w każdym kierunku.
-Jednakże modyfikując je statycznie, lub dynamicznie można uzyskać bardzo ciekawe efekty.
+Jednakże modyfikując je statycznie, lub dynamicznie, można uzyskać bardzo ciekawe efekty.
 Instrukcja podaje przykład w którym, aby zamodelować tarcie opon samochodu prostopadle do kierunku jazdy, należy dynamicznie zmieniać współczynnik tarcia dla wektora $F_1$, lub $F_2$ w tym kierunku.
 Współczynnik tarcia prostopadle do kierunku jazdy może być liniowo zależny od prędkości.
 Spowoduje to, że im większa prędkość samochodu, tym boczna siła łatwiej zmieni tor jego jazdy, co ma odwzorowanie w rzeczywistości.
@@ -253,12 +261,29 @@ Maszyna Bullet również liczy kolizje w ten sposób i ma modyfikowalne wektory,
 \subsection{Komunikacja}
 Ze względu na wiele ustawień elementów bazy, należy stworzyć bogaty interfejs.
 \begin{itemize}
- \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs/Pose} z aktualną pozycją i rotacją platformy.
- \item Odbiór wiadomości własnego typu \texttt{pseudovelma/Vels} z zadanymi prędkościami kół.
+ \item Nadawanie w każdym cyklu symulacji wiadomości typu \texttt{geometry\_msgs/PoseStamped} z aktualną pozycją i rotacją platformy, oraz nagłówek z czasem i identyfikatorem.
+ \item Nadawanie w każdym cyklu prędkości platformy w wiadomości typu \texttt{geometry\_msgs/TwistStamped} z nagłówkiem.
+ \item Symulator enkodera nadający aktualną pozycję i rotację kół w wiadomości \texttt{omnivelma\_msgs/EncodersStamped} z nagłówkiem.
+ \item Odbiór wiadomości własnego typu \texttt{omnivelma\_msgs/Vels} z zadanymi prędkościami kół.
  \item Odbiór wywołań ustawiających współczynniki tarcia wzdłuż wektorów $F_1$ i $F_2$.
- \item Symulator enkodera nadający aktualną pozycję i rotację obiektu.
- \item Odbiór wywołań ustawiających masy i momenty obrotowe niektórych elementów składowych konstrukcji, oraz masy transportowanego robota.
+ \item Odbiór wywołań ustawiających masy i momenty obrotowe niektórych elementów składowych konstrukcji.
 \end{itemize}
+
+\subsection{Rozszerzenie modelu}
+Ponieważ komputerowa reprezentacja liczby zmiennoprzecinkowej pozwala na zapisanie nie tylko liczbowych wartości, postanowiłem rozszerzyć model o dodatkową funkcjonalność,
+wywoływaną wysłaniem do modelu cichej nie-liczby (NaN) w polu zadanej prędkości. Cicha nie-liczba powstaje w procesorze przy przeprowadzaniu 
+nieprawidłowych, acz niekrytycznych obliczeń zmiennoprzecinkowych, na przykład dzielenie przez zero, lub dzielenie nieskończoności przez minus-nieskończoność.
+Takie operacje nie powodują błędu programu, jedynie wynik w postaci nie-liczby propaguje przez wszystkie pozostałe operacje.
+
+Nadanie prędkości modelom w przestrzeni wirtualnej polega na wywołaniu odpowiedniej funkcji maszyny symulującej fizykę.
+Można zadać sobie pytanie, jak zachowa się model, jeśli dla niektórych kół nie zmieniać prędkości po każdym odebraniu pakietu.
+
+Wobec tego, jeśli w pakiecie z nowymi prędkościami kół znajdzie się cicha nie-liczba, program sterujący nie nada nowej prędkości kołu.
+Jest to podobne do nadania tej samej prędkości, jaką można aktualnie odczytać (jaką zwróciłby enkoder).
+
+Zwraca nam to uwagę również na potrzebę, aby program do komunikacji z robotem nie skończył się błędem po odebraniu jednej z takich nie-liczb.
+Ten program przekształca liczby zmiennoprzecinkowe zawarte w ROSoswych pakietach na dane zrozumiałe przez sterownik silnika, które zazwyczaj są liczbami
+stałoprzecinkowymi, nie mogącymi przedstawiać nie-liczb.
 
 \section{Porównanie modeli}
 Posiadając model kinematyczny, którego ruch jest sterowany wzorami możemy porównać jego pozycję i rotację z modelem dynamicznym.
@@ -299,26 +324,3 @@ Opóźnienia powstałe na modelu dynamicznym są cechą dokładności maszyny sy
 Jednakże ich wartość jest znacznie mniejsza od niedokładności wprowadzonej przez niedoskonałość rzeczywistego obiektu.
 To oznacza, że model ma rzeczywistą wartość pod kątem pomocy w symulacji robota.
 
-\section{Podsumowanie}
-W kolejnych przygotowaniach do pracy udało się przetestować różne sposoby modelowania bazy, znaleźć najlepszy działający i stworzyć modele.
-Porównanie działania modelu z wartościami obliczonymi matematycznie pozwoliło zobaczyć możliwe problemy, które pojawią się we współpracy z rzeczywistą platformą.
-
-Została zdobyta wiedza na temat problemów obsługi programu Gazebo, oraz jego integracji z ROSem, jakie funkcjonalności nie są zaimplementowane i jakie nie działają.
-Nie jest to nigdzie dobrze opisane, więc błędy zdarzały się w zupełnie nieprzewidzianych okolicznościach.
-
-Należało nauczyć się działania architektury systemu ROS, aby poznać działanie jego składowych i obsługę standardowych programów.
-Udało się uzyskać standardowe pakiety systemu ROS kompilowane przez jego systemy, komunikujące się w standardowy sposób i przenośne na inne komputery.
-Tutaj również pojawiły się niestandardowe problemy z kompilacją, na przykład zła kolejność generacji plików rozwiązywalna przez zresetowanie systemu operacyjnego.
-
-Należy teraz stworzyć identyczny model w programie V-Rep, a dokładniej zmodyfikować istniejący Kuka Youbot pod kątem rozmiarów bazy.
-Trzeba go podłączyć do systemu ROS w taki sam sposób, jak poprzednie, aby dało się nim równie łatwo sterować.
-
-Należy dodać dużą ilość interfejsów do zmiany różnych parametrów modelu, między innymi masy, moment obrotowy, transponowana masa i jej środek ciężkości.
-Platforma musi zwracać wartości enkodera jak pozycja i prędkość.
-Warto dodać elementy dodatkowe, jak model interaktywnego podłoża ze zmiennym współczynnikiem tarcia.
-
-Do zrobienia jest także system ułatwiający manualne sterowanie bazą za pomocą interfejsu graficznego i zbierający informacje do porównania z ruchami prawdziwego robota.
-Interfejs graficzny będzie wtyczką w QT tworzącą kolejny panel w ROSowym programie \emph{rqt}.
-
-Na koniec używając wystawionego interfejsu metodą prób i błędów należy znaleźć takie ustawienia (np. masa, tarcie), które produkują rezultat najbardziej zbliżony do działania rzeczywistego modelu.
-Ten zabieg może trwać nieokreśloną ilość czasu, a wpływ na niego będzie miał stan modelu robota manipulującego i pozostałe elementy składowe.

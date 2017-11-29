@@ -191,7 +191,11 @@ Zatem przejazd przykładowego odcinka przodem lub bokiem, będzie w różnym sto
 To, jaki styl jazdy opłaca się zastosować, aby zminimalizować zużywanie się elementów jest dużą, odrębną dziedziną nauki.
 
 \section{Czujnik laserowy}
-Platforma wyposażona jest w dwa, dwuwymiarowe czujniki laserowe typu LiDAR firmy SICK.
+\label{sec:lidar}
+Program sterujący platformą nie jest w stanie dokładnie określić pozycji robota, bazując jedynie na odometrii.
+Potrzebny jest zatem czujnik laserowy.
+Platforma wyposażona jest w dwa, dwuwymiarowe czujniki typu LiDAR firmy SICK.
+LiDAR to zbitek wyrazów \emph{light} i \emph{radar}, chociaż skrót może być rozwinięty w różne słowa.
 
 \begin{figure}[H]
 \centering
@@ -202,21 +206,53 @@ Platforma wyposażona jest w dwa, dwuwymiarowe czujniki laserowe typu LiDAR firm
 
 \subsection{Zasada działania}
 Wszystkie czujniki tego typu mają bardzo podobną zasadę działania.
-Pośrodku urządzenia znajduje się obrotowe lusterko zwrócone pod kątem 45° do osi obrotu.
+Pośrodku urządzenia znajduje się obrotowe lusterko, zwrócone pod kątem 45° do osi obrotu.
 Równolegle do osi znajduje się laser, który emituje pulsacyjną wiązkę podczerwonego promienia co pewien okres.
 Aktualna pozycja lusterka jest wykrywana przez enkoder.
 Obok lasera jest czujnik, który bada wysłane przez laser, odbite od lusterka, obiektu i ponownie lusterka, światło.
 
-Na koniec zaawansowany algorytm we wbudowanym mikrokontrolerze ustala kąt i odległość wykrytego obiektu na podstawie tych danych.
+Na koniec zaawansowany algorytm we wbudowanym mikrokontrolerze ustala kąt i odległość wykrytego obiektu.
 Odpowiada także za usunięcie szumu i ewentualnych odbić promienia.
-Komunikacja odbywa się za pomocą różnych interfejsów sieciowych.
+Komunikacja odbywa się za pomocą różnych interfejsów sieciowych, zazwyczaj w architekturze master-slave.
 
 \subsection{Komunikacja}
 Wysyłając do czujnika odpowiedni ciąg bajtów, można ustawić jego tryb działania, odpytać o zebrane dane, czy wykryć konfigurację i stan.
 
 W przypadku naszej platformy, komunikacja odbywa się poprzez interfejs Ethernetowy.
-Program komunikujący się bezpośrednio z urządzeniem zwraca listę kolejnych, wykrytych punktów.
+Program komunikujący się bezpośrednio z urządzeniem zwraca pakiety zawierające pomiary z ostatniego obrotu czujnika, oraz dane 
+opisujące sam pomiar takie jak czas, początkowy kąt pomiaru, tryb itp.
 Dokładne dane i cechy czujnika dostępne są na stronie producenta \cite{sick_website}.
+
+Urządzenie wspiera uwierzytelnianie przez hasło, wgrywanie nowego oprogramowania,
+ustawienia czasu, oraz zmianę różnych parametrów działania.
+
+\subsection{Podstawowe cechy}
+Czujnik składa się z dwóch części, głównego trzonu oraz nakładki.
+To powoduje, że nie może mierzyć w kącie pełnym i powstaje martwa strefa.
+Przedstawia to dobrze grafika producenta.
+\begin{figure}[H]
+\centering
+ \includegraphics[width=0.6\textwidth]{graphics/sick.png}
+\caption{Wykres producenta dotyczący zasięgu czujnika.}
+\label{fig:lidar}
+\end{figure} 
+\begin{table}
+\centering
+\begin{tabular}{l r}
+Cecha & Wartość \\
+\hline
+Kąt pracy & 270\textdegree \\
+Długość fali światła lasera & 905 nm (podczerwień) \\
+Częstotliwości skanowania & 25 Hz / 50 Hz \\
+Maksymalna odległość obiektu & $\approx$ 20 m \\
+Rozdzielczość kątowa & $0,25 \degree$ / $0,5 \degree $ \\
+Systematyczny błąd pomiarowy & $\pm 0,03$ m \\
+Przypadkowy błąd odległości & $0,012$ m \\
+\end{tabular}
+\caption{Podstawowe cechy czujnika laserowego.}
+\label{tab:lidar}
+\end{table}
+Urządzenie jest w stanie komunikować się za pomocą portu szeregowego RS-232, połączenia Ethernetowego i sieci CAN.
 
 \section{Składniki systemu}
 Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy wykorzystujące kolejki wiadomości.

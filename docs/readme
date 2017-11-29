@@ -1,23 +1,39 @@
 Do poruszenia:
-Info, że przesunięcie środka ciężkości nie zmieniło eksperymantów.
-Naprawić model widoku z góry (wyrenderować na nowo)
+Info, że przesunięcie środka ciężkości nie zmieniło eksperymentów.
 Napisać o tym, że zakładamy bezoporowy obrót kół, a przy wymuszonym są niespodziewane błędy, jak w rzeczywistości.
 Napisać, że przód jest nieokreślony, dlatego został zbudowany translator
 Użyć słowa primytywy w opisie fizyki modelu
 Opis dokładny każdego elementu składowego.
-Opis, że model jest szerszy, bo obsługuje NaN.
 Narysować graf połączeń elementów.
-Za duża prędkość kół psuje symulację w V-Repie
 Bullet ssie
 Gazebo bardzo dobrze działa
-Czujnik laserowy SICK LSM100-10000
+
+WSTĘP:
+Opis programów wspierających (Lalkarz, rqt-multiplot, i generalnie grupa przekazujacych).
+
+MODEL:
+Struktura gwiazdowa
+Zagnieżdżenie modelu także jest gwiazdą.
+Pseudovelma jest symulowana silnikiem, więc pojedyncza precyzja.
+
+CZUJNIK: <-
+Opowiedzieć o błędach pomiarowych.
+Opowiedzieć o błędach grubych.
+Nazwać czujnik Monokl.
+Opowiedzieć o mechanice ramek, jak przekazywana jest pozycja, wskazać nazwy.
+Pokazać zrzut ekranu z laserami i punktami.
+
+WSPOMAGACZE:
+Odwołać się do sekcji we wstępie.
+Opowiedzieć o każdym pakiecie osobno, co robi, do czego jest potrzebny.
+Graf przepływu informacji.
+
 
 Do zrobienia:
 Lalkarz nie przyjmuje nazwy odbiornika, jest zdefiniowana z góry
 	-e jest pojedyńczym argumentem
 Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 	https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-Dodać szum do Monokla
 Stworzyć system ramek tf2 
 	U Pseudovelmy względem world
 	U Monokla względem omnivelmy (lub world) w osobnej wtyczce, na aktualizację (która również musi określić swoją prawolewość z nazwy)

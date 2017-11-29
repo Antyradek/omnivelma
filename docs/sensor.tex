@@ -1,3 +1,43 @@
 \chapter{Model czujnika laserowego}
-Program sterujący platformą nie jest w stanie dokładnie określić pozycji robota, bazując jedynie na odometrii.
-Potrzebny jest zatem czujnik laserowy.
+Istnieje dedykowany obiekt w standardzie SDF dla tego typu czujników.
+Również Gazebo wspiera wizualnie symulację poprzez możliwość renderowania obliczonych półprostych.
+
+\section{Obliczenia symulatora}
+Czujnik laserowy jest bardzo łatwo zasymulować w przestrzeni wirtualnej za pomocą rzutowania półprostych.
+Jest to jedna z podstawowych technik renderowania obrazu.
+Używa się jej także przy obliczaniu symulacji fizycznej i specjalnych wydarzeń związanych na przykład z grami komputerowymi.
+
+Półprosta jest emitowana z jakiegoś punktu w jakimś kierunku w przestrzeni trójwymiarowej.
+Następnie system próbuje znaleźć pierwszy punkt jej kolizji z jakimś symulowanym ciałem fizycznym, posiadającym odpowiedni kolider 
+Ponieważ zasoby komputera zawsze są ograniczone, symulacja półprostej także musi mieć pewien limit. 
+Zwykle jest on jednak na tyle duży, że z punktu widzenia lokalnych wydarzeń, można uznać tą odległość za nieskończoną.
+
+Algorytm obliczania kolizji z półprostą bazuje na kosztowym porównywaniu pozycji każdego obiektu fizycznego na scenie.
+Istnieją oczywiście sposoby na zmniejszenie ilości obliczeń, na przykład metoda prostopadłościanów zawierających obiekt, ale sposób radzenia sobie z tym nie jest
+częścią tematu pracy,
+Wystarczy wspomnieć, że symulacja dużej ilości laserów jest operacją kosztowną.
+
+\section{Różnice między czujnikiem, a modelem}
+Półprosta emitowana jest z puntu reprezentującego środek czujnika, naturalnie, model upraszcza rzeczywisty czujnik (budowa czujnika laserowego została opisana w sekcji \ref{lidar}).
+Uproszczenie polega na tym, że nie ma w środku żadnego lustra lub obracającej się części. 
+W rzeczywistości w czujniku jest jeden laser, emitujący pulsy w określonych odstępach czasu.
+W modelu można zatem przyjąć osobne półproste dla każdego pulsu lasera.
+
+Można zauważyć tym samym, że model wydaje się lepszym czujnikiem, niż rzeczywisty LiDAR.
+W danej chwili model emituje promień we wszystkich kierunkach jednocześnie, podczas gdy czujnik jednym pulsem może dokonać tylko jednego pomiaru o danym w tej chwili kącie.
+Jednakże dyskretny sposób symulacji powoduje, że w obu przypadkach dane są podawane w grupach.
+Czujnik jest wstanie wysłać pakiet z danymi ostatniego pomiaru, podczas gdy program modelujący czujnik jest obsługiwany na zasadzie przerwań czasowych 
+po każdej klatce i tylko wtedy może wywołać funkcje zwracające dane zasymulowanych pomiarów.
+To oznacza, że interfejs do ich obsługi wcale nie jest aż tak inny.
+Dodatkowo, w zależności od obciążenia komputera, model czujnika jest podatny na opóźnienia w odczytywaniu stanu.
+
+\section{Komunikacja}
+Jednakże, bazując na architekturze opisanej wcześniej na rysunku \ref{fig:agent}, należy tak zbudować system, aby program komunikował się w identyczny sposób z 
+modelem czujnika, jak i samym czujnikiem.
+Służą do tego specjalne pakiety ROSa, zawierające czas pomiaru, typ i dane.
+Program obsługujący model czujnika generuje i wysyła pakiety typu \texttt{sensor\_msgs/LaserScan}.
+
+Identycznie, inny program, podłączony do czujnika za pomocą jednego z interfejsów, także powinien generować takie same pakiety.
+
+\section{Model w Gazebo}
+Podobnie, jak w modelu platformy fizycznej, należy napisać SDF...
