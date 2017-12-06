@@ -16,10 +16,7 @@ Struktura gwiazdowa
 Zagnieżdżenie modelu także jest gwiazdą.
 Pseudovelma jest symulowana silnikiem, więc pojedyncza precyzja.
 
-CZUJNIK: <-
-Opowiedzieć o błędach pomiarowych.
-Opowiedzieć o błędach grubych.
-Nazwać czujnik Monokl.
+CZUJNIK:
 Opowiedzieć o mechanice ramek, jak przekazywana jest pozycja, wskazać nazwy.
 Pokazać zrzut ekranu z laserami i punktami.
 
@@ -38,3 +35,5 @@ Stworzyć system ramek tf2
 	U Pseudovelmy względem world
 	U Monokla względem omnivelmy (lub world) w osobnej wtyczce, na aktualizację (która również musi określić swoją prawolewość z nazwy)
 	Wyciągnąć do linka serce tak, aby było dostępne z wtyczki
+Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
+Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 

@@ -1,11 +1,12 @@
 \chapter{Model czujnika laserowego}
 Istnieje dedykowany obiekt w standardzie SDF dla tego typu czujników.
-Również Gazebo wspiera wizualnie symulację poprzez możliwość renderowania obliczonych półprostych.
+Również Gazebo wspiera wizualnie symulację poprzez możliwość renderowania zasymulowanych impulsów lasera.
+Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{Monokl}.
 
 \section{Obliczenia symulatora}
 Czujnik laserowy jest bardzo łatwo zasymulować w przestrzeni wirtualnej za pomocą rzutowania półprostych.
 Jest to jedna z podstawowych technik renderowania obrazu.
-Używa się jej także przy obliczaniu symulacji fizycznej i specjalnych wydarzeń związanych na przykład z grami komputerowymi.
+Używa się jej także przy obliczaniu symulacji fizycznej i specjalnych wydarzeń związanych, na przykład, z grami komputerowymi.
 
 Półprosta jest emitowana z jakiegoś punktu w jakimś kierunku w przestrzeni trójwymiarowej.
 Następnie system próbuje znaleźć pierwszy punkt jej kolizji z jakimś symulowanym ciałem fizycznym, posiadającym odpowiedni kolider 
@@ -28,8 +29,18 @@ W danej chwili model emituje promień we wszystkich kierunkach jednocześnie, po
 Jednakże dyskretny sposób symulacji powoduje, że w obu przypadkach dane są podawane w grupach.
 Czujnik jest wstanie wysłać pakiet z danymi ostatniego pomiaru, podczas gdy program modelujący czujnik jest obsługiwany na zasadzie przerwań czasowych 
 po każdej klatce i tylko wtedy może wywołać funkcje zwracające dane zasymulowanych pomiarów.
-To oznacza, że interfejs do ich obsługi wcale nie jest aż tak inny.
-Dodatkowo, w zależności od obciążenia komputera, model czujnika jest podatny na opóźnienia w odczytywaniu stanu.
+To oznacza, że interfejsy do ich obsługi wcale nie różnią się tak bardzo.
+
+Drugą rzeczą, w której czujnik przoduje, jest nieskończona (z punktu widzenia symulacji) odległość pomiaru.
+Nie tylko jako najdalszy wykryty punkt, ale także i najbliższy. 
+Czujnik nie obcina pomiarów przy określonej odległości, po prostu spada ich jakość, zmniejsza dokładność, zwiększa ilość błędów.
+Symulator ma całkowitą dowolność w ustawianiu progu, dla którego obcina pomiar.
+
+Podobnie, jak w poprzednim przypadku, symulator zawsze ma taką samą dokładność pomiaru, niezależnie od odległości punktu od czujnika.
+Czujnik zmienia błędność danych w zależności jak daleko od niego jest obiekt.
+
+W zależności od obciążenia komputera, model czujnika jest podatny na opóźnienia w odczytywaniu stanu.
+Czujnik zawsze działa z tą samą częstotliwością, a jego program sterujący jest wbudowany w mikrokontroler i spełnia sztywne ramy czasowe.
 
 \section{Komunikacja}
 Jednakże, bazując na architekturze opisanej wcześniej na rysunku \ref{fig:agent}, należy tak zbudować system, aby program komunikował się w identyczny sposób z 
@@ -40,4 +51,55 @@ Program obsługujący model czujnika generuje i wysyła pakiety typu \texttt{sen
 Identycznie, inny program, podłączony do czujnika za pomocą jednego z interfejsów, także powinien generować takie same pakiety.
 
 \section{Model w Gazebo}
+%TODO
 Podobnie, jak w modelu platformy fizycznej, należy napisać SDF...
+
+\section{Błędy}
+Jak podano wcześniej w tabelce \ref{tab:lidar}, wyróżnione są dwa typy błędów pomiaru, systematyczny i pomiarowy.
+Dodatkowo istnieje także błąd gruby.
+Model czujnika powinien uwzględniać te błędy, aby zwracać dane jak najbardziej zbliżone do LiDARa.
+
+\subsection{Błąd gruby}
+Najprostszy typ błędu polega na dużych odchyłach niektórych pomiarów od pozostałych wartości.
+W trakcie przetwarzania odczytu, te punkty powinno się odrzucić.
+Nie mniej jednak, to zadanie należy do programu sterującego, więc należy umożliwić mu testowanie tej funkcjonalności poprzez wprowadzenie takich błędów do zasymulowanych odczytów.
+
+Najczęstszym przypadkiem błędu grubego jest brak odbioru wysłanego impulsu. 
+To skutkuje nadaniem aktualnemu pomiarowi wartości maksymalnej, co jest bardzo łatwo wykryć i usunąć.
+
+Innym problemem może być odebranie światła niepochodzącego od emitera urządzenia, a jakiegoś zewnętrznego źródła.
+
+Ponieważ rozkład i częstotliwość tych błędów zależy od środowiska w jakim działa czujnik, bardzo ciężko jest dobrać odpowiedni algorytm ich generacji.
+%TODO dopisać po implementacji
+
+\subsection{Błąd systematyczny}
+Ten błąd jest stałą wartością, dodaną do każdego pomiaru.
+Spowodowany jest niedoskonałością budowy elementów pomiarowych, niewłaściwą kalibracją, zużyciem, lub otoczeniem w jakim pracuje czujnik.
+
+Rzeczywisty czujnik powinien być skalibrowany przed użyciem właśnie po to, aby wewnętrzny program sterujący mógł obliczyć aktualne zboczenia 
+i skorygować pomiary przed wysłaniem ich dalej. Kalibracja może być nadana na samym urządzeniu, poprzez zmianę jego parametrów działania,
+inaczej, zmianę współczynników przy korygowaniu pomiarów, przez system wbudowany, przed wysłaniem.
+Czujnik może także wysyłać czyste i obarczone błędami dane do programu sterującego, który samodzielnie je skoryguje.
+Pozwoli to na zastosowanie dowolnych algorytmów oczyszczania danych, kosztem większego obciążenia programu sterującego.
+
+Symulator czujnika powinien mieć interfejs do ustawienia tej wartości, aby mógł być ,,skalibrowany'' w taki sam sposób, jak faktyczne urządzenie.
+%TODO dopisać po implementacji
+
+\subsection{Błąd pomiarowy}
+Jest to mała, losowa wartość, dodana do każdego pomiaru.
+Wynika ona z niedoskonałości samego czujnika, nieznanych zakłóceń i niezbadanych efektów kwantowych.
+Nie da się w żaden sposób usunąć, zmniejszyć, lub przewidzieć tego typu błędów.
+Jedynym sposobem jest obliczenie średniej błędu na podstawie dużej ilości pomiarów.
+
+Błąd pomiarowy ma zwykle rozkład normalny o określonym odchyleniu standardowym.
+Standard SDF przewiduje element określający tę liczbę, a Gazebo może wewnętrznie obliczyć i dodać do wyników odpowiednią wartość.
+Również producent podał w tabeli danych urządzenia obliczony rozkład standardowy.
+
+W związku z tym, wartość podana przez producenta, podana w tabelce \ref{tab:lidar}, może być bezpośrednio zapisana do 
+elementu odchylenia standardowego, w pliku SDF opisującym czujnik.
+Wadą takiego rozwiązania jest niemożność modyfikacji tego parametru w trakcie wykonywania programu, gdyż Gazebo nie wystawia API do modyfikacji tej wartości.
+Aby temu zaradzić, wystarczy obliczać błąd standardowy w programie sterującym i manualnie dodawać go do zwróconej przez symulator tablicy.
+Funkcje do obliczania błędu standardowego zostały wprowadzone do standardu języka C++ w 2011 roku.
+
+
+
