@@ -52,7 +52,7 @@ public:
 		
 		//ustaw przedrostek
 		/* W czasie importu modelu w modelu, tracimy referencję na model. Zatem trzeba się 
-		 * dowiedzieć o tym, czy jest to prawy, czy lewy czujnik, korzystając jednynie z nazwy. */
+		 * dowiedzieć o tym, czy jest to prawy, czy lewy czujnik, korzystając jedynie z nazwy. */
 		std::string name  = sensor -> ParentName();
 		if(name.find(MONOKL_R_NAME) != std::string::npos && name.find(MONOKL_L_NAME) == std::string::npos)
 		{

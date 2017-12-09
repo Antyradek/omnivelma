@@ -15,7 +15,7 @@
 
 namespace gazebo
 {
-	//Klasa nadająca aktyalną pozycję czujników laserowych do tf2
+	//Klasa nadająca aktualną pozycję czujników laserowych do tf2
 	class MonoklChain : public ModelPlugin
 	{
 	public:
@@ -36,7 +36,7 @@ namespace gazebo
 			
 			if(!linkL || !linkR)
 			{
-				ROS_FATAL_STREAM("Nie udało się znaleźć modeli czujnoków laserowych");
+				ROS_FATAL_STREAM("Nie udało się znaleźć modeli czujników laserowych");
 			}
 			
 			updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&MonoklChain::OnUpdate, this));

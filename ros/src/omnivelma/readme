@@ -1,4 +1,4 @@
-Omnivelma - platforma dynamiczna
+Omnivelma - Platforma dynamiczna
 MonoklChain - Informator o pozycjach czujników
 
 Komunikacja programu w formie:
@@ -38,5 +38,11 @@ omnivelma_msgs/SetInertia
 Ustawia masę, środek ciężkości i moment bezwładności dla części składowych modelu.
 Każda składowa ma lokalny środek ciężkości w przybliżonym punkcie ciężkości.
 
-
-
+Ramki:
+map                         Środek układu współrzędnych, środek mapy w (0,0,0)
+omnivelma                   Środek platformy
+monokl_r_heart              Emiter lasera w prawym LiDARze
+monokl_l_heart              Emiter lasera w lewym LiDARze
+map → omnivelma             Nadawane przez omnivelma.cpp
+map → monokl_r_heart        Nadawane przez monokl_chain.cpp
+map → monokl_l_heart        Nadawane przez monokl_chain.cpp

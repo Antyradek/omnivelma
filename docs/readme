@@ -13,11 +13,10 @@ Opis programów wspierających (Lalkarz, rqt-multiplot, i generalnie grupa przek
 
 MODEL:
 Struktura gwiazdowa
-Zagnieżdżenie modelu także jest gwiazdą.
 Pseudovelma jest symulowana silnikiem, więc pojedyncza precyzja.
+Zrzut ekranu
 
 CZUJNIK:
-Opowiedzieć o mechanice ramek, jak przekazywana jest pozycja, wskazać nazwy.
 Pokazać zrzut ekranu z laserami i punktami.
 
 WSPOMAGACZE:
@@ -37,3 +36,4 @@ Stworzyć system ramek tf2
 	Wyciągnąć do linka serce tak, aby było dostępne z wtyczki
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
+Monokl powinien mieć także masę.

@@ -5,6 +5,7 @@ nazwa
 typ
 opis
 
-
-
+/monokl_r/scan monokl_l/scan
+sensor_msgs/LaserScan
+Dane skanowania prawego, lub lewego czujnika
 
