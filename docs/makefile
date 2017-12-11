@@ -1,4 +1,4 @@
-FILES= main.tex title.tex abstract.tex about.tex model.tex bibliography.tex sensor.tex
+FILES= main.tex title.tex abstract.tex about.tex model.tex bibliography.tex sensor.tex components.tex
 
 all:main.pdf
 

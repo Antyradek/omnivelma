@@ -20,7 +20,6 @@ CZUJNIK:
 Pokazać zrzut ekranu z laserami i punktami.
 
 WSPOMAGACZE:
-Odwołać się do sekcji we wstępie.
 Opowiedzieć o każdym pakiecie osobno, co robi, do czego jest potrzebny.
 Graf przepływu informacji.
 
@@ -37,3 +36,6 @@ Stworzyć system ramek tf2
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
 Monokl powinien mieć także masę.
+Lalkarz przy myszce powinien mieć obrót także sterowalny klawiszami.
+	Globalny, niezmienny mnożnik obrotu.
+	Każdy tryb ma własne biegi, mnożące wejście.

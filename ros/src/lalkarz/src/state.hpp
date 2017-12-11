@@ -11,7 +11,7 @@ public:
 	///Powiadom o zmianie osi kontrolera
 	virtual void set(sf::Joystick::Axis axis, double position);
 
-	///Ustaw bezpośredie wartości ruchu po płaszczyźnie
+	///Ustaw bezpośrednie wartości ruchu po płaszczyźnie
 	virtual void set(double x, double y);
 
 	///Ustaw zmianę obrotu wokół osi

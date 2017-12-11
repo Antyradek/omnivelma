@@ -876,7 +876,7 @@ int main(int argc, char** argv)
 			}
 			catch(std::exception err)
 			{
-				std::cerr << "Podanay tryb nie jest liczbą" << std::endl;
+				std::cerr << "Podany tryb nie jest liczbą" << std::endl;
 				exit(EXIT_ARG_ERROR);
 			}
 			setMode = true;
@@ -914,7 +914,7 @@ int main(int argc, char** argv)
 			}
 			catch(std::exception err)
 			{
-				std::cerr << "Podana wialkość okna nie jest liczbą" << std::endl;
+				std::cerr << "Podana wielkość okna nie jest liczbą" << std::endl;
 				exit(EXIT_ARG_ERROR);
 			}
 		}

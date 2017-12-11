@@ -24,7 +24,7 @@
 #define WINDOW_SIZE 				700
 ///Szerokość rysunku koła
 #define WHEEL_WIDTH 				0.05
-///Wysokość ryskunku koła
+///Wysokość rysunku koła
 #define WHEEL_HEIGHT				0.1
 ///Odległość wartości od koła
 #define VALUE_WHEEL_DIST			0.13
@@ -50,7 +50,7 @@
 #define HELPER_TEXT_OUTLINE 		0.001
 ///Szerokość otoczki elementów
 #define HELPER_RECT_OUTLINE			0.002
-///Szerokość sztrzałki
+///Szerokość strzałki
 #define ARROW_WIDTH					0.01
 ///Wielkość grotu strzałki
 #define ARROW_HEAD_WIDTH			0.02
@@ -196,7 +196,7 @@ typedef struct
 	double w4;
 } Vels;
 
-///Kieunki
+///Kierunki
 typedef struct
 {
 	double x;
