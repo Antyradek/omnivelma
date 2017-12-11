@@ -17,11 +17,11 @@ Pseudovelma jest symulowana silnikiem, więc pojedyncza precyzja.
 Zrzut ekranu
 
 CZUJNIK:
+Opisać dokładnie obrazek.
 
 WSPOMAGACZE:
-Opowiedzieć o każdym pakiecie osobno, co robi, do czego jest potrzebny.
+rqt-multiplot, rviz
 Graf przepływu informacji.
-
 
 Do zrobienia:
 Lalkarz nie przyjmuje nazwy odbiornika, jest zdefiniowana z góry

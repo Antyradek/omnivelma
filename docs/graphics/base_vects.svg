@@ -16,7 +16,7 @@
    height="4289.3813"
    viewBox="0 0 4423.0698 4289.3813"
    sodipodi:docname="base_vects.svg"
-   inkscape:version="0.92.1 r"><metadata
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
@@ -79,7 +79,7 @@
        inkscape:collect="always"><path
          inkscape:connector-curvature="0"
          transform="matrix(0.4,0,0,0.4,4,0)"
-         style="fill:#c31717;fill-opacity:1;fill-rule:evenodd;stroke:#c31717;stroke-width:1.00000003pt;stroke-opacity:1"
+         style="fill:#306e29;fill-opacity:1;fill-rule:evenodd;stroke:#306e29;stroke-width:1.00000003pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path5317" /></marker><marker
        inkscape:isstock="true"
@@ -92,7 +92,7 @@
        inkscape:collect="always"><path
          inkscape:connector-curvature="0"
          transform="matrix(0.4,0,0,0.4,4,0)"
-         style="fill:#306e29;fill-opacity:1;fill-rule:evenodd;stroke:#306e29;stroke-width:1.00000003pt;stroke-opacity:1"
+         style="fill:#c31717;fill-opacity:1;fill-rule:evenodd;stroke:#c31717;stroke-width:1.00000003pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          id="path5163" /></marker><marker
        inkscape:stockid="DiamondLstart"
@@ -348,9 +348,9 @@
      inkscape:window-height="2032"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="0.23105567"
-     inkscape:cx="-289.15492"
-     inkscape:cy="2063.2924"
+     inkscape:zoom="0.65352412"
+     inkscape:cx="2423.7242"
+     inkscape:cy="3073.408"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -523,7 +523,7 @@
          id="path28940-2-8"
          d="m 2477.6706,734.73568 769.6732,-1.5302"
          style="opacity:1;fill:none;fill-opacity:1;stroke:#c31717;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#marker5165);paint-order:stroke fill markers" /></g><g
-       transform="rotate(135,3247.3438,733.20546)"
+       transform="rotate(135,3249.4622,732.39197)"
        id="g31883-1-7-7"><path
          sodipodi:nodetypes="cc"
          inkscape:connector-curvature="0"
