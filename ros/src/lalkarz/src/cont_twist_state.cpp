@@ -25,9 +25,13 @@ void ContTwistState::update()
 double ContTwistState::clamp(double value) const
 {
 	if(value < -1)
+	{
 		return -1;
+	}
 	else if(value > 1)
+	{
 		return 1;
+	}
 	return value;
 }
 

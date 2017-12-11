@@ -79,9 +79,6 @@ std::mutex encMutex;
 ///Dane enkoderów synchronizowane
 Vels enc;
 
-///Biegi
-std::vector<double> gears {0.01, 0.05, 0.1, 0.5, 1, 2, 5};
-
 ///Font tekstu
 sf::Font font;
 sf::Font monoFont;
@@ -315,7 +312,7 @@ void drawGUI()
 	modeText.setPosition(0, screenSize * FONT_SIZE);
 	window.draw(modeText);
 
-	//Wskazówki do sterowania kołami
+	//wskazówki do sterowania kołami
 	if(keyWheelInput)
 	{
 		sf::Text wheelHelper(helperText);
@@ -344,7 +341,7 @@ void drawGUI()
 		wheelHelper.setPosition(screenSize * 0.75 - wheelHelper.getGlobalBounds().width, screenSize * 0.75);
 		window.draw(wheelHelper);
 	}
-	//Wskazówki do sterowania kołami kontrolerem
+	//wskazówki do sterowania kołami kontrolerem
 	if(wheelInput && showsJoystick)
 	{
 		sf::Text joyHelper(helperText);
@@ -356,7 +353,7 @@ void drawGUI()
 		window.draw(joyHelper);
 	}
 
-	//Markery
+	//markery
 	if(wheelInput)
 	{
 		//wartości prędkości
@@ -429,7 +426,7 @@ void drawGUI()
 		window.draw(meter);
 	}
 
-	//Enkodery
+	//enkodery
 	if(readsEnc && wheelInput)
 	{
 		sf::RectangleShape meter(sf::Vector2f(0,0));
@@ -442,7 +439,7 @@ void drawGUI()
 		maxMeter1.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, -METER_HEIGHT * screenSize));
 		maxMeter2.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * screenSize));
 
-		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w2 / gears[currGear - 1]) * screenSize));
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w2 / state -> getGears()[currGear - 1]) * screenSize));
 		meter.setPosition((0.25 - METER_WHEEL_DIST) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -450,7 +447,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 
-		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w3 / gears[currGear - 1]) * screenSize));
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w3 / state -> getGears()[currGear - 1]) * screenSize));
 		meter.setPosition((0.25 - METER_WHEEL_DIST) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -458,7 +455,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 
-		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w1 / gears[currGear - 1]) * screenSize));
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w1 / state -> getGears()[currGear - 1]) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST - ENC_METER_WIDTH) * screenSize, (0.25 + 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -466,7 +463,7 @@ void drawGUI()
 		window.draw(maxMeter2);
 		window.draw(meter);
 
-		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w4 / gears[currGear - 1]) * screenSize));
+		meter.setSize(sf::Vector2f(ENC_METER_WIDTH * screenSize, METER_HEIGHT * -(guiEnc.w4 / state -> getGears()[currGear - 1]) * screenSize));
 		meter.setPosition((0.75 + METER_WHEEL_DIST - ENC_METER_WIDTH) * screenSize, (0.75 - 0.5 * WHEEL_HEIGHT) * screenSize);
 		maxMeter1.setPosition(meter.getPosition());
 		maxMeter2.setPosition(meter.getPosition());
@@ -475,7 +472,7 @@ void drawGUI()
 		window.draw(meter);
 	}
 
-	//Wskazówki do sterowania kierunkiem
+	//wskazówki do sterowania kierunkiem
 	if(keyTwistInput)
 	{
 		sf::Text axisHelper(helperText);
@@ -491,6 +488,12 @@ void drawGUI()
 		axisHelper.setString(KEY_TEXT_AXIS_Y_DOWN);
 		axisHelper.setPosition(screenSize * 0.5 - axisHelper.getGlobalBounds().width * 0.5, screenSize * (0.75));
 		window.draw(axisHelper);
+	}
+	
+	//wskazówki do sterowania obrotem
+	if(keyTwistInput || mouseTwistInput)
+	{
+		sf::Text axisHelper(helperText);
 		axisHelper.setString(KEY_TEXT_AXIS_Z_LEFT);
 		axisHelper.setPosition(0.25 * screenSize - axisHelper.getGlobalBounds().width, screenSize * (0.25 - 1.5 * METER_WIDTH - 0.5 * FONT_SIZE));
 		window.draw(axisHelper);
@@ -610,13 +613,13 @@ void drawGUI()
 	window.draw(gearText);
 
 	//lista biegów
-	double gearListWidth = (gears.size() - 1) * LIST_WIDTH + FONT_SIZE;
+	double gearListWidth = (state -> getGears().size() - 1) * GEAR_LIST_WIDTH + FONT_SIZE;
 	double gearListStart = screenSize * (0.5 - gearListWidth * 0.5);
-	for(unsigned int i = 0; i < gears.size(); i++)
+	for(unsigned int i = 0; i < state -> getGears().size(); i++)
 	{
 		sf::Text gearDigit(defaultText);
 		std::stringstream ss;
-		ss << std::fixed << std::setprecision(VALUE_PRECISION) << gears[i];
+		ss << std::fixed << std::setprecision(VALUE_PRECISION) << state -> getGears()[i];
 		gearDigit.setString(ss.str());
 		if(i + 1 == currGear)
 		{
@@ -634,7 +637,7 @@ void drawGUI()
 			gearDigit.setFillColor(DISABLED_COLOR);
 #endif
 		}
-		gearDigit.setPosition(gearListStart + (i * LIST_WIDTH) * screenSize, screenSize * (1.0 - 2.0 * FONT_SIZE));
+		gearDigit.setPosition(gearListStart + (i * GEAR_LIST_WIDTH) * screenSize, screenSize * (1.0 - 2.0 * FONT_SIZE));
 		window.draw(gearDigit);
 	}
 
@@ -666,7 +669,7 @@ void drawGUI()
 	{
 		gearHelperText.setString(KEY_TEXT_GEAR_UP);
 	}
-	gearHelperText.setPosition(gearListStart + (gears.size() - 1) * LIST_WIDTH * screenSize, screenSize * (1.0 - 3.0 * FONT_SIZE));
+	gearHelperText.setPosition(gearListStart + (state -> getGears().size() - 1) * GEAR_LIST_WIDTH * screenSize, screenSize * (1.0 - 3.0 * FONT_SIZE));
 	window.draw(gearHelperText);
 }
 
@@ -741,7 +744,7 @@ void printHelp()
 	std::cout << "-e <topic>\t\tCzytaj wartości enkoderów typu omnivelma_msgs/Vels\n";
 	std::cout << "-f <częstotliwość>\tCzęstotliwość wysyłania wiadomości w Hz, domyślnie " << DEFAULT_FREQ << "\n";
 	std::cout << "-m <tryb>\t\tRozpocznij w podanym trybie działania\n";
-	std::cout << "-g <bieg>\t\tRozpocznij w podanym biegu, od 1 do " << gears.size() << "\n";
+	std::cout << "-g <bieg>\t\tRozpocznij w podanym biegu, od 1 do " << state -> getGears().size() << "\n";
 	std::cout << "-n\t\t\tNie wysyłaj NaN przy niektórych trybach\n";
 	std::cout << "-w <piksele>\t\tUstaw wielkość okna\n";
 	std::cout << "-h --help\t\tWypisz tę instrukcję" << std::endl;
@@ -887,9 +890,9 @@ int main(int argc, char** argv)
 			try
 			{
 				unsigned int gear = std::stoi(secArg);
-				if(gear <= 0 || gear > gears.size())
+				if(gear <= 0 || gear > state -> getGears().size())
 				{
-					std::cerr << "Podany bieg jest poza zasięgiem 1-" << gears.size() << std::endl;
+					std::cerr << "Podany bieg jest poza zasięgiem 1-" << state -> getGears().size() << std::endl;
 					exit(EXIT_ARG_ERROR);
 				}
 				currGear = gear;
@@ -1112,9 +1115,9 @@ int main(int argc, char** argv)
 		{
 			currGear = 1;
 		}
-		else if(currGear > gears.size())
+		else if(currGear > state -> getGears().size())
 		{
-			currGear = gears.size();
+			currGear = state -> getGears().size();
 		}
 		//aktualizacja czasu
 		state -> update();
@@ -1128,7 +1131,7 @@ int main(int argc, char** argv)
 		mainMutex.lock();
 		vels = state -> getVels();
 		twist = state -> getTwist();
-		outputMultiplier = gears[currGear - 1];
+		outputMultiplier = state -> getGears()[currGear - 1];
 		if(wheelInput)
 		{
 			sendMode = SendMode::SendVels;

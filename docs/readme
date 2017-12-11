@@ -31,11 +31,7 @@ Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 	https://en.wikipedia.org/wiki/List_of_moments_of_inertia
 Stworzyć system ramek tf2 
 	U Pseudovelmy względem world
-	U Monokla względem omnivelmy (lub world) w osobnej wtyczce, na aktualizację (która również musi określić swoją prawolewość z nazwy)
-	Wyciągnąć do linka serce tak, aby było dostępne z wtyczki
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
 Monokl powinien mieć także masę.
-Lalkarz przy myszce powinien mieć obrót także sterowalny klawiszami.
-	Globalny, niezmienny mnożnik obrotu.
-	Każdy tryb ma własne biegi, mnożące wejście.
+Lalkarz może mieć globalny, niezmienny mnożnik obrotu.

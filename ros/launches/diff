@@ -17,7 +17,7 @@ rosrun transmutator transmutator /widelnica/vels &
 PIDTRA=$!
 rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist &
 PIDLAL=$!
-rqt_multiplot --multiplot-config multiplot/diff.xml --multiplot-run-all &
+rqt_multiplot --multiplot-config $(pwd)/multiplot/diff.xml --multiplot-run-all &
 PIDMUL=$!
 trap "kill $PIDMUL; kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
 

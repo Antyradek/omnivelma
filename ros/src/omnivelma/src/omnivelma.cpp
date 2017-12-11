@@ -178,7 +178,7 @@ private:
 		twistMsg.header.frame_id = "map";
 		rosTwist.publish(twistMsg);
 		
-		//wyślij ramkę (zakładamy ramkę world w 0,0,0)
+		//wyślij ramkę (zakładamy ramkę map w 0,0,0)
 		geometry_msgs::TransformStamped transMsg;
 		transMsg.header.stamp = ros::Time::now();
 		transMsg.header.frame_id = "map";

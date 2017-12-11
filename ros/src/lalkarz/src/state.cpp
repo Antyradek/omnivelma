@@ -19,6 +19,11 @@ Twist State::getTwist()
 	return out;
 }
 
+std::vector<double> State::getGears()
+{
+	return gears;
+}
+
 double State::get(Wheel wheel)
 {
 	return 0;
@@ -56,6 +61,8 @@ void State::set(double x, double y)
 
 IntVelsState::IntVelsState()
 {
+	std::vector<double> newGears {0.01, 0.05, 0.1, 0.5, 1, 2, 5};
+	gears = newGears;
 	reset();
 }
 
@@ -66,6 +73,8 @@ void IntVelsState::reset()
 
 IntTwistState::IntTwistState()
 {
+	std::vector<double> newGears {0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.5};
+	gears = newGears;
 	reset();
 }
 
@@ -76,6 +85,8 @@ void IntTwistState::reset()
 
 DoubleVelsState::DoubleVelsState()
 {
+	std::vector<double> newGears {0.01, 0.05, 0.1, 0.5, 1, 2, 5};
+	gears = newGears;
 	reset();
 }
 
@@ -103,6 +114,8 @@ double DoubleVelsState::get(Wheel wheel)
 
 void DoubleTwistState::reset()
 {
+	std::vector<double> newGears {0.001, 0.005, 0.01, 0.05, 0.1, 0.2, 0.5};
+	gears = newGears;
 	x = y = z = 0;
 }
 

@@ -101,7 +101,6 @@ private:
 		math::Quaternion modelRot = model -> GetWorldPose().rot;
 		transVect = modelRot.RotateVector(transVect);
 
-
 		model -> SetAngularVel(math::Vector3(0,0,rot));
 		model -> SetLinearVel(transVect);
 

@@ -34,6 +34,14 @@ public:
 
 	///Zwróć strukturę kierunku
 	Twist getTwist();
+	
+	///Zwróć wartość biegu
+	std::vector<double> getGears();
+	
+protected:
+	///Wartości biegów dla tego trybu
+	std::vector<double> gears;
+	
 };
 
 ///Stan w którym sterujemy prędkościami kół

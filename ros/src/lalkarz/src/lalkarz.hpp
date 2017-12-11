@@ -43,9 +43,11 @@
 ///Wielkość znaków
 #define CHAR_SIZE					0.025
 ///Precyzja drukowanych wartości
-#define VALUE_PRECISION				2
+#define VALUE_PRECISION				3
 ///Odstęp między elementami listy
 #define LIST_WIDTH 					0.08
+///Odstęp między elementami listy biegów
+#define GEAR_LIST_WIDTH 			0.1
 ///Szerokość otoczki tekstu
 #define HELPER_TEXT_OUTLINE 		0.001
 ///Szerokość otoczki elementów
