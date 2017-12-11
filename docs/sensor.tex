@@ -58,11 +58,15 @@ Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{Monokl}.
 	Model składa się z dwóch elementów: korpusu i samego ,,mechanizmu'' urządzenia.
 	Mechanizm przytwierdzony jest w odpowiednim miejscu korpusu za pomocą stałego połączenia (elementu \texttt{joint}).
 
-	Korpus posiada siatkę, reprezentującą uproszczony wygląd urządzenia, a także element w kształcie walca, odpowiedzialny za kolizję.
+	Korpus posiada siatkę, reprezentującą uproszczony wygląd urządzenia, a także dwa elementy w kształcie walców, odpowiedzialne za kolizję.
 	Odpowiada za przesunięcie samego lasera względem podstawy na której całe urządzenie jest montowane i pozwala na wygodną referencję z innego modelu w celu utworzenia połączenia.
 
 	Główna część czujnika posiada ozdobną siatkę udającą czarną szybkę LiDARa, oraz element SDF \texttt{sensor}, odpowiedzialny za sam czujnik.
 	W kolejnych podelementach zawierają się parametry urządzenia, takie jak ilość symulowanych laserów, ich zasięg, kąt pierwszego i ostatniego lasera, oraz współczynnik błędu pomiarowego.
+	
+	Teoretycznie, lepiej aby model posiadał jeden element odpowiedzialny za kolizje, gdyż to byłoby szybsze do symulacji. 
+	Jednakże, półproste emitowane ze środka również się by z nim zderzały, a co za tym idzie, nie opuszczałyby modelu czujnika.
+	Dlatego potrzeba jest, aby w miejscu ich wychodzenia (czarna szybka) nie było żadnego koldera.
 
 	\subsection{Połączenie modeli}
 		Jak wcześniej wspomniano,
@@ -85,68 +89,75 @@ Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{Monokl}.
 		Alternatywnie, zawsze można stworzyć dwa, osobne modele czujników, albo wszystko umieścić od razu w jednym pliku.
 		Jednak takie rozwiązanie niszczy komponentową budowę środowiska i nie pozwala na użycie składowych w innych modelach.
 		
+		\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{graphics/scan.png}
+		\caption{Zrzut ekranu platformy z Gazebo i wygenerowane dane, obserwowane w Rviz.}
+		\label{fig:scan}
+		\end{figure}
+		
 	\subsection{Mechanika ramek}
-	\label{sec:frames}
-	Komunikacja poprzez pakiety wiadomości nie jest jedynym sposobem na przekazywanie informacji w środowisku ROS.
-	%TODO wspomnieć o tym wcześniej
-	Istnieje także mechanika ramek transformacji \texttt{TF2}.
-	Jest to podobna rzecz do niezaimplementowanej funkcjonalności Gazebo, ale nie jest automatyczna i nie ogranicza się tylko do jednego programu.
-	
-	Ramka transformacji jest informacją o aktualnej pozycji i rotacji jakiegoś obiektu względem innego.
-	Polega na wysłaniu pakietu typu \texttt{geometry\_msgs/TransformStamped} prosto do demona ROS.
-	Pakiet zawiera w sobie nagłówek, informujący o czasie i identyfikatorze nadania ramki, i względem jakiego obiektu podawana jest pozycja i rotacja.
-	Następna jest nazwa nowej ramki, jej pozycja i rotacja względem nazwy obiektu podanego w nagłówku.
-	Dowolny program może nadać dowolny pakiet transformacji.
-	Demon ROSa następnie zbiera wszystkie pozycje i oblicza transformacje dla programów, które pytają się o względne pozycje elementów.
-	
-	Przykładowo, gdyby symulacja robota nie odbywałaby się w przestrzeni wirtualnej, w maszynie symulacyjnej fizyki, 
-	informacja o dokładnym położeniu obiektu składowego w przestrzeni wcale nie musiałaby być tak łatwo dostępna.
-	To ma szczególne znaczenie dla skomplikowanych mechanizmów typu wielosegmentowe ramię manipulacyjne.
-	Obliczenie pozycji i rotacji końcówki ramienia wymagałoby informacji o aktualnych pozycjach i rotacjach wszystkich innych segmentów.
-	Która strona miałaby zajmować się obliczeniami i kto powinien posiadać i komu przekazywać te informacje?
-	
-	Demon ROSa działa tutaj jak trzecia strona, zbierająca dane od przegubów i obliczająca pozycje i rotacje wszystkich punktów.
-	W takim przypadku, każdy segment symulacji mógłby przekazywać swój identyfikator, identyfikator obiektu którym steruje, jego pozycję i rotację.
-	Inne programy, na przykład do wizualizacji, mogłyby wtedy zapytać się demona ROSa o dokładne pozycje przegubów w przestrzeni kartezjańskiej, a on obliczyłby je i zwrócił.
-	
-	W symulacji platformy wielokierunkowej mechanika ramek jest potrzebna, gdyż pakiet zwierający pomiary z czujnika laserowego nie posiada informacji o aktualnej
-	pozycji samego czujnika, a jedynie identyfikator swojej ramki. Te informacje potrzebne są programowi obliczającemu pozycję z czujników i ewentualnemu wizualizatorowi samych
-	czujników laserowych.
-	
-	Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROSa pozycje i rotacje środków czujników laserowych, dla uproszczenia
-	względem początku układu współrzędnych, punktu (0,0,0). 
-	Program sterujący modelem samej platformy także nadaje ramkę z pozycją i rotacją platformy względem środka układu.
-	Dokładnie taki sam efekt byłby, gdyby nadawać stałą pozycję i rotację czujników laserowych, ale względem ramki platformy (nadawanej przez inny sterownik).
-	Stałą, ponieważ czujniki nie zmieniają swojej pozycji na platformie, są przytwierdzone na stałe.
-	
-	\begin{table}
-	\centering
-	\begin{tabular}{l r}
-	Punkt ramki & Nazwa punktu \\
-	\hline
-	Stały środek mapy & \texttt{map} \\
-	Środek platformy & \texttt{omnivelma} \\
-	Środek platformy kinematycznej & \texttt{pseudovelma} \\
-	Emiter prawego lasera & \texttt{monokl\_r\_heart} \\
-	Emiter lewego lasera & \texttt{monokl\_l\_heart} \\
-	\end{tabular}
-	\caption{Nazwy identyfikatorów ramek, używanych w symulatorze.}
-	\label{tab:frames}
-	\end{table}
-	
-	\begin{table}
-	\centering
-	\begin{tabular}{l c r}
-	Nazwa & Punkt względny & Punkt danych \\
-	\hline
-	Pozycja i rotacja platformy & \texttt{map} & \texttt{omnivelma} \\
-	Pozycja i rotacja platformy kinematycznej & \texttt{map} & \texttt{pseudovelma} \\
-	Pozycja i rotacja prawego czujnika & \texttt{map} & \texttt{monokl\_r\_heart} \\
-	Pozycja i rotacja lewego czujnika & \texttt{map} & \texttt{monokl\_l\_heart} \\
-	\end{tabular}
-	\caption{Ramki wysyłane do demona ROS.}
-	\label{tab:frame_send}
-	\end{table}
+		\label{sec:frames}
+		Komunikacja poprzez pakiety wiadomości nie jest jedynym sposobem na przekazywanie informacji w środowisku ROS.
+		%TODO wspomnieć o tym wcześniej
+		Istnieje także mechanika ramek transformacji \texttt{TF2}.
+		Jest to podobna rzecz do niezaimplementowanej funkcjonalności Gazebo, ale nie jest automatyczna i nie ogranicza się tylko do jednego programu.
+		
+		Ramka transformacji jest informacją o aktualnej pozycji i rotacji jakiegoś obiektu względem innego.
+		Polega na wysłaniu pakietu typu \texttt{geometry\_msgs/TransformStamped} prosto do demona ROS.
+		Pakiet zawiera w sobie nagłówek, informujący o czasie i identyfikatorze nadania ramki, i względem jakiego obiektu podawana jest pozycja i rotacja.
+		Następna jest nazwa nowej ramki, jej pozycja i rotacja względem nazwy obiektu podanego w nagłówku.
+		Dowolny program może nadać dowolny pakiet transformacji.
+		Demon ROSa następnie zbiera wszystkie pozycje i oblicza transformacje dla programów, które pytają się o względne pozycje elementów.
+		
+		Przykładowo, gdyby symulacja robota nie odbywałaby się w przestrzeni wirtualnej, w maszynie symulacyjnej fizyki, 
+		informacja o dokładnym położeniu obiektu składowego w przestrzeni wcale nie musiałaby być tak łatwo dostępna.
+		To ma szczególne znaczenie dla skomplikowanych mechanizmów typu wielosegmentowe ramię manipulacyjne.
+		Obliczenie pozycji i rotacji końcówki ramienia wymagałoby informacji o aktualnych pozycjach i rotacjach wszystkich innych segmentów.
+		Która strona miałaby zajmować się obliczeniami i kto powinien posiadać i komu przekazywać te informacje?
+		
+		Demon ROSa działa tutaj jak trzecia strona, zbierająca dane od przegubów i obliczająca pozycje i rotacje wszystkich punktów.
+		W takim przypadku, każdy segment symulacji mógłby przekazywać swój identyfikator, identyfikator obiektu którym steruje, jego pozycję i rotację.
+		Inne programy, na przykład do wizualizacji, mogłyby wtedy zapytać się demona ROSa o dokładne pozycje przegubów w przestrzeni kartezjańskiej, a on obliczyłby je i zwrócił.
+		
+		W symulacji platformy wielokierunkowej mechanika ramek jest potrzebna, gdyż pakiet zwierający pomiary z czujnika laserowego nie posiada informacji o aktualnej
+		pozycji samego czujnika, a jedynie identyfikator swojej ramki. Te informacje potrzebne są programowi obliczającemu pozycję z czujników i ewentualnemu wizualizatorowi samych
+		czujników laserowych.
+		
+		Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROSa pozycje i rotacje środków czujników laserowych, dla uproszczenia
+		względem początku układu współrzędnych, punktu (0,0,0). 
+		Program sterujący modelem samej platformy także nadaje ramkę z pozycją i rotacją platformy względem środka układu.
+		Dokładnie taki sam efekt byłby, gdyby nadawać stałą pozycję i rotację czujników laserowych, ale względem ramki platformy (nadawanej przez inny sterownik).
+		Stałą, ponieważ czujniki nie zmieniają swojej pozycji na platformie, są przytwierdzone na stałe.
+		
+		\begin{table}
+			\centering
+			\begin{tabular}{l r}
+				Punkt ramki & Nazwa punktu \\
+				\hline
+				Stały środek mapy & \texttt{map} \\
+				Środek platformy & \texttt{omnivelma} \\
+				Środek platformy kinematycznej & \texttt{pseudovelma} \\
+				Emiter prawego lasera & \texttt{monokl\_r\_heart} \\
+				Emiter lewego lasera & \texttt{monokl\_l\_heart} \\
+			\end{tabular}
+			\caption{Nazwy identyfikatorów ramek, używanych w symulatorze.}
+			\label{tab:frames}
+		\end{table}
+			
+		\begin{table}
+			\centering
+			\begin{tabular}{l c r}
+				Nazwa & Punkt względny & Punkt danych \\
+				\hline
+				Pozycja i rotacja platformy & \texttt{map} & \texttt{omnivelma} \\
+				Pozycja i rotacja platformy kinematycznej & \texttt{map} & \texttt{pseudovelma} \\
+				Pozycja i rotacja prawego czujnika & \texttt{map} & \texttt{monokl\_r\_heart} \\
+				Pozycja i rotacja lewego czujnika & \texttt{map} & \texttt{monokl\_l\_heart} \\
+			\end{tabular}
+			\caption{Ramki wysyłane do demona ROS.}
+			\label{tab:frame_send}
+		\end{table}
 
 \section{Błędy}
 	Jak podano wcześniej w tabelce \ref{tab:lidar}, wyróżnione są dwa typy błędów pomiaru, systematyczny i pomiarowy.

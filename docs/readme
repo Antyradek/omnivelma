@@ -9,7 +9,7 @@ Bullet ssie
 Gazebo bardzo dobrze działa
 
 WSTĘP:
-Opis programów wspierających (Lalkarz, rqt-multiplot, i generalnie grupa przekazujacych).
+Opis programów wspierających (Lalkarz, rqt-multiplot, rviz, i generalnie grupa przekazujacych).
 
 MODEL:
 Struktura gwiazdowa
@@ -17,7 +17,6 @@ Pseudovelma jest symulowana silnikiem, więc pojedyncza precyzja.
 Zrzut ekranu
 
 CZUJNIK:
-Pokazać zrzut ekranu z laserami i punktami. -> Zrzuty ekranu są w ~/Dirty
 
 WSPOMAGACZE:
 Opowiedzieć o każdym pakiecie osobno, co robi, do czego jest potrzebny.
