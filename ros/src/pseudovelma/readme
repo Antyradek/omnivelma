@@ -21,3 +21,8 @@ Zwraca aktualną pozycję
 /pseudovelma/twist
 geometry_msgs/TwistStamped
 Zwraca aktualną prędkość
+
+Ramki:
+map                         Środek układu współrzędnych, środek mapy w (0,0,0)
+pseudovelma                 Środek platformy kinematycznej
+map → pseudovelma           Nadawane przez pseudovelma.cpp

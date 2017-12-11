@@ -8,6 +8,7 @@
 #include <gazebo/math/gzmath.hh>
 #include <ros/ros.h>
 #include <ros/console.h>
+#include <tf2_ros/transform_broadcaster.h>
 #include <omnivelma_msgs/Vels.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TwistStamped.h>
@@ -135,6 +136,20 @@ private:
 		twistMsg.header.stamp = ros::Time::now();
 		twistMsg.header.frame_id = "map";
 		rosTwist.publish(twistMsg);
+		
+		//wyślij ramkę (zakładamy ramkę map w 0,0,0)
+		geometry_msgs::TransformStamped transMsg;
+		transMsg.header.stamp = ros::Time::now();
+		transMsg.header.frame_id = "map";
+		transMsg.child_frame_id = "pseudovelma";
+		transMsg.transform.translation.x = pose.pos.x;
+		transMsg.transform.translation.y = pose.pos.y;
+		transMsg.transform.translation.z = pose.pos.z;
+		transMsg.transform.rotation.x = pose.rot.x;
+		transMsg.transform.rotation.y = pose.rot.y;
+		transMsg.transform.rotation.z = pose.rot.z;
+		transMsg.transform.rotation.w = pose.rot.w;
+		framePublisher.sendTransform(transMsg);
 
 		counter++;
 	}
@@ -161,7 +176,7 @@ private:
 	///Przedrostek modelu
 	std::string linkPrefix;
 
-	///Prękości kół
+	///Prędkości kół
 	double rrVel;
 	double rlVel;
 	double frVel;
@@ -190,6 +205,9 @@ private:
 
 	///Licznik kroków symulacji
 	unsigned int counter;
+	
+	//Nadajnik ramki
+	tf2_ros::TransformBroadcaster framePublisher;
 
 };
 

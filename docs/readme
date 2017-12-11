@@ -17,7 +17,7 @@ Pseudovelma jest symulowana silnikiem, więc pojedyncza precyzja.
 Zrzut ekranu
 
 CZUJNIK:
-Pokazać zrzut ekranu z laserami i punktami.
+Pokazać zrzut ekranu z laserami i punktami. -> Zrzuty ekranu są w ~/Dirty
 
 WSPOMAGACZE:
 Opowiedzieć o każdym pakiecie osobno, co robi, do czego jest potrzebny.
@@ -29,8 +29,6 @@ Lalkarz nie przyjmuje nazwy odbiornika, jest zdefiniowana z góry
 	-e jest pojedyńczym argumentem
 Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 	https://en.wikipedia.org/wiki/List_of_moments_of_inertia
-Stworzyć system ramek tf2 
-	U Pseudovelmy względem world
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
 Monokl powinien mieć także masę.

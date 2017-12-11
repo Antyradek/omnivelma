@@ -6,11 +6,20 @@
         <link name="base">
             <pose>0 0 0 0 0 0</pose>
             <collision name="base_collision">
-				<pose>0 0 0.077 0 0 0</pose>
+				<pose>0 0 0.049 0 0 0</pose>
                 <geometry>
 					<cylinder>
 						<radius>0.051</radius>
-						<length>0.152</length>
+						<length>0.098</length>
+					</cylinder>
+                </geometry>
+            </collision>
+			<collision name="cap_collision">
+				<pose>0 0 0.142 0 0 0</pose>
+                <geometry>
+					<cylinder>
+						<radius>0.047</radius>
+						<length>0.019</length>
 					</cylinder>
                 </geometry>
             </collision>
@@ -63,7 +72,6 @@
 			</visual>
 			<sensor name="monokl" type="ray">
 				<update_rate>50</update_rate>
-				<pose>0 0 0.115 0 0 0</pose>
 				<visualize>true</visualize>
 				<topic>/monokl</topic>
 				<plugin name="monokl" filename="libmonokl.so"/>
