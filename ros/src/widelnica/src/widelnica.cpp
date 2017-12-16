@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 		{
 			//pisz pomoc i wyjdź
 			std::cout << "Użycie: " << argv[0] << " [TOPIC1] [TOPIC2] [TOPIC3]..." << std::endl;
-			std::cout << "Rozdziela weyjście /widelnica/vels na poszczególne podane TOPIC." << std::endl;
+			std::cout << "Rozdziela wejście /widelnica/vels na poszczególne podane TOPIC." << std::endl;
 			return 0;
 		}
 		else

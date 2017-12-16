@@ -19,7 +19,7 @@ include_directories(${roscpp_INCLUDE_DIRS})
 include_directories(${omnivelma_msgs_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 
-set(CMAKE_CXX_FLAGS "-Wall --std=c++14")
+set(CMAKE_CXX_FLAGS "-Wall -Wpedantic --std=c++14")
 add_executable(${PROJECT_NAME} src/dziadzio.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 

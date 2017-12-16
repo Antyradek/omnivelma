@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#Uruchom Gazebo
+#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę(która się nie rusza)
+#Pantofelek wczytuje skanery i wysyła Twist do Transmutatora
+#Transmutator wysyła do Omnivelmy
+
+source setup
+#Ustaw ścieżkę modeli dla Gazebo
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+roslaunch velmaverse velmaverse.launch &
+PIDGAZ=$!
+rosrun transmutator transmutator /omnivelma/vels &
+PIDTRA=$!
+rosrun pantofelek pantofelek /transmutator/twist /monokl_r/scan /monokl_l/scan &
+PIDPAN=$!
+trap "kill $PIDPAN; kill $PIDTRA kill $PIDGAZ;" SIGINT 
+
+echo "Wciśnij ^C, aby wyłączyć procesy"
+sleep infinity

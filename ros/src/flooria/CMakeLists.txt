@@ -18,7 +18,7 @@ find_package(gazebo REQUIRED)
 find_package(roscpp REQUIRED)
 find_package(omnivelma_msgs REQUIRED)
 
-set(CMAKE_CXX_FLAGS   "-Wall --std=c++14")
+set(CMAKE_CXX_FLAGS   "-Wall -Wpedantic --std=c++14")
 link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")

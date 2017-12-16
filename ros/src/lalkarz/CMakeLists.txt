@@ -19,7 +19,7 @@ include_directories(${roscpp_INCLUDE_DIRS})
 include_directories(${omnivelma_msgs_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 
-set(CMAKE_CXX_FLAGS "-Wall --std=c++14")
+set(CMAKE_CXX_FLAGS "-Wall -Wpedantic --std=c++14")
 include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 add_executable(${PROJECT_NAME} 
