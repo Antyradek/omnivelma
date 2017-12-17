@@ -79,7 +79,6 @@
         </link>
 		
 		<!-- Czujniki laserowe (TODO pozycje do dokładniejszego dopracowania)-->
-		<!--
 		<include>
 			<uri>model://monokl</uri>
 			<name>monokl_r</name>
@@ -100,7 +99,7 @@
 		<joint name="monokl_l_fix" type="fixed">
 			<parent>base</parent>
 			<child>monokl_l::base</child>
-		</joint>-->
+		</joint>
 		
         <!-- Koła wirtualne -->
         <link name="wheel_rr">
