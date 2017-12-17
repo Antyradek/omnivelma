@@ -41,15 +41,27 @@ public:
 
 		linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
 		std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
-
-		pyramidRR = model -> GetLink(linkPrefix + "wheel_rr") -> GetCollision("wheel_rr_collision") -> GetSurface() -> FrictionPyramid();
-		pyramidRL = model -> GetLink(linkPrefix + "wheel_rl") -> GetCollision("wheel_rl_collision") -> GetSurface() -> FrictionPyramid();
-		pyramidFR = model -> GetLink(linkPrefix + "wheel_fr") -> GetCollision("wheel_fr_collision") -> GetSurface() -> FrictionPyramid();
-		pyramidFL = model -> GetLink(linkPrefix + "wheel_fl") -> GetCollision("wheel_fl_collision") -> GetSurface() -> FrictionPyramid();
 		
-		if(!pyramidRR || !pyramidRL || !pyramidFR || !pyramidFL)
+		//odszukaj obiekty kół
+		physics::LinkPtr wheelRR = model ->  GetLink(linkPrefix + "wheel_rr");
+		physics::LinkPtr wheelRL = model ->  GetLink(linkPrefix + "wheel_rl");
+		physics::LinkPtr wheelFR = model ->  GetLink(linkPrefix + "wheel_fr");
+		physics::LinkPtr wheelFL = model ->  GetLink(linkPrefix + "wheel_fl");
+		
+		if(!wheelRR || !wheelRL || !wheelFR || !wheelFL)
 		{
-			ROS_FATAL_STREAM("Nie udało się znaleźć piramid kolizji modelu");
+			ROS_FATAL_STREAM("Nie udało się znaleźć obiektów kół");
+		}
+
+		//odszukaj kolizje kół
+		wheelRRCollision = wheelRR -> GetCollision("wheel_rr_collision");
+		wheelRLCollision = wheelRL -> GetCollision("wheel_rl_collision");
+		wheelFRCollision = wheelFR -> GetCollision("wheel_fr_collision");
+		wheelFLCollision = wheelFL -> GetCollision("wheel_fl_collision");
+		
+		if(!wheelRRCollision || !wheelRLCollision || !wheelFRCollision || !wheelFLCollision)
+		{
+			ROS_FATAL_STREAM("Nie udało się znaleźć kolizji kół modelu");
 		}
 
 		motorRR = model -> GetJoint(linkPrefix + "motor_rr");
@@ -59,7 +71,7 @@ public:
 		
 		if(!motorRR || !motorRL || !motorFR || !motorFL)
 		{
-			ROS_FATAL_STREAM("Nie udało się znaleźć modeli silników");
+			ROS_FATAL_STREAM("Nie udało się znaleźć przegubów silników");
 		}
 
 		//inicjalizacja ROSa
@@ -127,11 +139,18 @@ private:
 	void OnUpdate()
 	{
 		//ustaw kierunek wektorów tarcia
+		//kierunek wektora o wększym współczynniku tarcia jest ustalony w lokalnym, dla koła, układzie współrzędnych
+		//zatem wektor należy obrócić zgodznie z modelem i odwrotnie do obrotu koła, aby wyjściowo był w płaszczyźnie platformy
 		const math::Quaternion modelRot = model -> GetWorldPose().rot;
-		pyramidRR -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, AXIS_LENGTH, 0));
-		pyramidRL -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, AXIS_LENGTH, 0));
-		pyramidFR -> direction1 = modelRot.RotateVector(math::Vector3(AXIS_LENGTH, -AXIS_LENGTH, 0));
-		pyramidFL -> direction1 = modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, -AXIS_LENGTH, 0));
+		const math::Quaternion wheelRRRot = wheelRRCollision -> GetWorldPose().rot;
+		const math::Quaternion wheelRLRot = wheelRLCollision -> GetWorldPose().rot;
+		const math::Quaternion wheelFRRot = wheelFRCollision -> GetWorldPose().rot;
+		const math::Quaternion wheelFLRot = wheelFLCollision -> GetWorldPose().rot;
+		
+		wheelRRCollision -> GetSurface() -> FrictionPyramid() -> direction1 = wheelRRRot.RotateVectorReverse(modelRot.RotateVector(math::Vector3(AXIS_LENGTH, AXIS_LENGTH, 0)));
+		wheelRLCollision -> GetSurface() -> FrictionPyramid() -> direction1 = wheelRLRot.RotateVectorReverse(modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, AXIS_LENGTH, 0)));
+		wheelFRCollision -> GetSurface() -> FrictionPyramid() -> direction1 = wheelFRRot.RotateVectorReverse(modelRot.RotateVector(math::Vector3(AXIS_LENGTH, -AXIS_LENGTH, 0)));
+		wheelFLCollision -> GetSurface() -> FrictionPyramid() -> direction1 = wheelFLRot.RotateVectorReverse(modelRot.RotateVector(math::Vector3(-AXIS_LENGTH, -AXIS_LENGTH, 0)));
 
 		//wyślij pozycję
 		const math::Pose& pose = model -> GetWorldPose();
@@ -198,17 +217,18 @@ private:
 	///Ustaw tarcia dla kół
 	bool SetFriction(const omnivelma_msgs::SetFriction::Request& req, omnivelma_msgs::SetFriction::Response& res)
 	{
-		pyramidRR -> SetMuPrimary(req.mu1);
-		pyramidRR -> SetMuSecondary(req.mu2);
-		pyramidRL -> SetMuPrimary(req.mu1);
-		pyramidRL -> SetMuSecondary(req.mu2);
-		pyramidFR -> SetMuPrimary(req.mu1);
-		pyramidFR -> SetMuSecondary(req.mu2);
-		pyramidFL -> SetMuPrimary(req.mu1);
-		pyramidFL -> SetMuSecondary(req.mu2);
+		wheelRRCollision -> GetSurface() -> FrictionPyramid() -> SetMuPrimary(req.mu1);
+		wheelRRCollision -> GetSurface() -> FrictionPyramid() -> SetMuSecondary(req.mu2);
+		wheelRLCollision -> GetSurface() -> FrictionPyramid() -> SetMuPrimary(req.mu1);
+		wheelRLCollision -> GetSurface() -> FrictionPyramid() -> SetMuSecondary(req.mu2);
+		wheelFRCollision -> GetSurface() -> FrictionPyramid() -> SetMuPrimary(req.mu1);
+		wheelFRCollision -> GetSurface() -> FrictionPyramid() -> SetMuSecondary(req.mu2);
+		wheelFLCollision -> GetSurface() -> FrictionPyramid() -> SetMuPrimary(req.mu1);
+		wheelFLCollision -> GetSurface() -> FrictionPyramid() -> SetMuSecondary(req.mu2);
 		ROS_DEBUG("Ustawiono tarcia: %lf %lf", req.mu1, req.mu2);
 		return true;
 	}
+	
 	///Ustaw masy, środki mas i tensor inercji.
 	bool SetInertia(const omnivelma_msgs::SetInertia::Request& req, omnivelma_msgs::SetInertia::Response& res)
 	{
@@ -289,17 +309,17 @@ private:
 	///Przedrostek modelu
 	std::string linkPrefix;
 
-	///Piramidy tarcia
-	physics::FrictionPyramidPtr pyramidRR;
-	physics::FrictionPyramidPtr pyramidRL;
-	physics::FrictionPyramidPtr pyramidFR;
-	physics::FrictionPyramidPtr pyramidFL;
-
 	///Motory kół
 	physics::JointPtr motorRR;
 	physics::JointPtr motorRL;
 	physics::JointPtr motorFR;
 	physics::JointPtr motorFL;
+	
+	//Kolizje kół
+	physics::CollisionPtr wheelRRCollision;
+	physics::CollisionPtr wheelRLCollision;
+	physics::CollisionPtr wheelFRCollision;
+	physics::CollisionPtr wheelFLCollision;
 
 	///Node dla ROSa
 	std::unique_ptr<ros::NodeHandle> rosNode;
