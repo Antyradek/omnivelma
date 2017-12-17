@@ -1,12 +1,11 @@
 Do poruszenia:
 Info, że przesunięcie środka ciężkości nie zmieniło eksperymentów.
 Napisać o tym, że zakładamy bezoporowy obrót kół, a przy wymuszonym są niespodziewane błędy, jak w rzeczywistości.
-Narysować graf połączeń elementów.
 Bullet ssie
 Gazebo bardzo dobrze działa
 
 WSTĘP:
-Opis programów wspierających (Lalkarz, rqt-multiplot, rviz, i generalnie grupa przekazujacych).
+Poprawić grafikę producenta na wektorową.
 
 MODEL:
 Struktura gwiazdowa
@@ -17,6 +16,7 @@ CZUJNIK:
 Opisać dokładnie obrazek.
 
 WSPOMAGACZE:
+Opis budowy pakietów omni, pseudo i monokl.
 
 TESTY:
 Przypadki testowe, screeny i rozwiązania.
@@ -29,3 +29,4 @@ Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
 Monokl powinien mieć także masę.
+Gałąź z ROSem Lunar.
