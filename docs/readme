@@ -1,9 +1,6 @@
 Do poruszenia:
 Info, że przesunięcie środka ciężkości nie zmieniło eksperymentów.
 Napisać o tym, że zakładamy bezoporowy obrót kół, a przy wymuszonym są niespodziewane błędy, jak w rzeczywistości.
-Napisać, że przód jest nieokreślony, dlatego został zbudowany translator
-Użyć słowa primytywy w opisie fizyki modelu
-Opis dokładny każdego elementu składowego.
 Narysować graf połączeń elementów.
 Bullet ssie
 Gazebo bardzo dobrze działa
@@ -20,8 +17,9 @@ CZUJNIK:
 Opisać dokładnie obrazek.
 
 WSPOMAGACZE:
-rqt-multiplot, rviz
-Graf przepływu informacji.
+
+TESTY:
+Przypadki testowe, screeny i rozwiązania.
 
 Do zrobienia:
 Lalkarz nie przyjmuje nazwy odbiornika, jest zdefiniowana z góry
@@ -31,4 +29,3 @@ Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
 Monokl powinien mieć także masę.
-Lalkarz może mieć globalny, niezmienny mnożnik obrotu.

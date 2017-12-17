@@ -139,8 +139,8 @@ private:
 	void OnUpdate()
 	{
 		//ustaw kierunek wektorów tarcia
-		//kierunek wektora o wększym współczynniku tarcia jest ustalony w lokalnym, dla koła, układzie współrzędnych
-		//zatem wektor należy obrócić zgodznie z modelem i odwrotnie do obrotu koła, aby wyjściowo był w płaszczyźnie platformy
+		//kierunek wektora o większym współczynniku tarcia jest ustalony w lokalnym, dla koła, układzie współrzędnych
+		//zatem wektor należy obrócić zgodnie z modelem i odwrotnie do obrotu koła, aby wyjściowo był w płaszczyźnie platformy
 		const math::Quaternion modelRot = model -> GetWorldPose().rot;
 		const math::Quaternion wheelRRRot = wheelRRCollision -> GetWorldPose().rot;
 		const math::Quaternion wheelRLRot = wheelRLCollision -> GetWorldPose().rot;

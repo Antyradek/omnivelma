@@ -143,12 +143,12 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 	\subsection{Jak największe zbliżenie do oryginału}
 		Wspomniany wyżej sposób jest najbardziej wymagającym obliczeniowo, ale także najprostszym z możliwych.
 		Wystarczy stworzyć elementy i nadać im fizyczny kształt za pomocą odpowiedniej siatki trójkątów.
-		Kształt może być także nadany poprzez przybliżenie jedną z podstawowych brył, jak sześcian, kula, łamana, walec i płaszczyzna.
+		Kształt może być także nadany poprzez przybliżenie jednym z prymitywów, jak sześcian, kula, łamana, walec i płaszczyzna.
 		Takie przybliżenie znacznie przyspiesza obliczenia, gdyż może być specjalnie traktowane przez algorytmy.
 
 		Słabym punktem tego rozwiązania jest fakt, że rolki są niestandardowym kształtem, którego dokładność jest bardzo wysoce wymagana.
 		Przybliżenie jej walcem powoduje problemy przy przenoszeniu ciężaru na kolejną rolkę, gdyż koło będzie musiało przez chwilę oprzeć się o krawędź.
-		Taki model naturalnie podskakiwałby przy ruchu zwiększając tym samym i tak duże niedokładności.
+		Taki model samoczynnie podskakiwałby przy ruchu zwiększając tym samym i tak duże niedokładności.
 
 		Przybliżenie rolki siatką jedynie zmniejsza powyższy efekt, gdyż sama siatka zbudowana jest z prostych odcinków.
 		Zwiększając jej gęstość zwiększamy jakość symulacji, ale narażamy się na olbrzymi skok ilości obliczeń.
@@ -236,7 +236,8 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 		Więcej informacji można znaleźć na stronie instrukcji maszyny symulacyjnej ODE \cite{ode_contact}.
 
 		W naszym modelu modyfikujemy kierunek wektora $F_1$, oraz współczynniki tarcia w obu kierunkach, aby przybliżyć zachowanie się rolki.
-		Ponieważ wektory $F_1$ i $F_2$ są określone w globalnym układzie współrzędnych, w każdej iteracji maszyny symulacji należy obrócić je względem aktualnej pozycji bazy.
+		Ponieważ wektory $F_1$ i $F_2$ są określone w lokalnym dla koła układzie współrzędnych, 
+		w każdej iteracji maszyny symulacji należy obrócić je względem aktualnej pozycji bazy i odwrotności obrotu koła.
 		W doskonałym przypadku rolka obraca się całkowicie bez tarcia, a ruch wzdłuż jej osi jest niemożliwy.
 		Można więc ustawić zerowy współczynnik tarcia w kierunku prostopadłym do osi, oraz nieskończenie duży dla wektora równoległego do osi.
 

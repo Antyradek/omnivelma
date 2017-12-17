@@ -4,7 +4,7 @@ Użycie: pantofelek [TWIST] [SCAN_L] [SCAR_R]
 Program ignoruje nadawane ramki tf2, w uproszczeniu przyjmuje stałe pozycje czujników na środku platformy i rotacje o 90° i -90°.
 
 Działanie:
-Robot porusza się stale w jednym z 4 kierunków, wzdłóż osi układu współrzędnych, nie zmienia swojej rotacji.
+Robot porusza się stale w jednym z 4 kierunków, wzdłuż osi układu współrzędnych, nie zmienia swojej rotacji.
 Są cztery ćwiartki, liczone tak, jak w układzie współrzędnych.
      ^   
   2  |  1
@@ -12,7 +12,7 @@ Są cztery ćwiartki, liczone tak, jak w układzie współrzędnych.
   3  |  4
      |  
 W zależności od tego, w której ćwiartce wykryta zostanie przeszkoda, robot zmieni kierunek swojej prędkości o 90° tak, aby jej uniknąć.
-Na przykład, jeśli porusza się w lewo, to wykrycie przeszkody w 2 ćwiarce spowoduje, że zacznie poruszać się w tył.
+Na przykład, jeśli porusza się w lewo, to wykrycie przeszkody w 2 ćwiartce spowoduje, że zacznie poruszać się w tył.
 
 Program nadaje wiadomości typu geometry_msgs/Twist, więc trzeba użyć Transmutatora, aby przerobić to na prędkości kół.
 

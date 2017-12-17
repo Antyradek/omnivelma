@@ -38,7 +38,15 @@ Komponenty można podzielić na trzy typy:
 Poniżej każdy pakiet opisany jest bardziej szczegółowo, ten dokument nie ma za zadanie być programistyczną dokumentacją komponentów, dlatego 
 nie zagłębia się w dokładne składy przekazywanych struktur i ich nazwy.
 
+%TODO przerobić na porządny wykres
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/comm.pdf}
+	\caption{Sekcje i komunikacja podstawowych komponentów systemu.}
+\end{figure} 
+
 Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach.
+
 \begin{description}
 	\item[\texttt{omnivelma}] Model platformy dynamicznej w sekcji \ref{sec:omnivelma}.
 	\item[\texttt{pseudovelma}] Model platformy kinematycznej w sekcji \ref{sec:pseudovelma}.
@@ -219,10 +227,47 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 	Nazwa kodowa \texttt{widelnica} jest referencją do widelca którego końcówka rozdziela się na kilka części, a także do angielskiej nazwy ,,fork'', używanej w podobnych 
 	przypadkach rozdzielania informacji.
 	
+\section{Prosty program sterujący}
+	Jest to uproszczona wersja programu, który docelowo ma być tworzony na podstawie budowanego systemu modeli.
+	Pozwala on sprawdzić, jak dla prostych zasad model będzie się zachowywał.
+	
+	Program periodycznie wysyła wiadomość typu \texttt{geometry\_msgs/Twist} o kierunku równoległym do osi współrzędnych.
+	W zależności od danych z czujników laserowych, program zmienia swój stan i obraca kierunek obrotu o 90\textdegree.
+	Ten sterownik dla uproszczenia nie generuje poleceń obrotu kątowego, model powinien być zawsze zwrócony w tę samą stronę.
+	
+	Działanie programu oparte jest na zachowaniu akcja-reakcja.
+	Dane z czujników laserowych dzielone są, w zależności od kąta pomiaru, na cztery ćwiartki lokalnego układu współrzędnych.
+	Rozpatrywane są tylko te ćwiartki w których kierunku porusza się platforma.
+	Jeśli pomiar wypadnie wystarczająco blisko platformy, kierunek jest obracany w odwrotnym do tej ćwiartki kierunku.
+	
+	Na przykład, jeśli platforma porusza się w prawo i wykryje obiekt w trzeciej ćwiartce (czyli po prawej stronie względem aktualnego kierunku poruszania się),
+	to zacznie poruszać się prosto, aby uniknąć przeszkody.
+	
+	Taki program gwarantuje omijanie przeszkód, aby platforma nie zderzyła się z jakimś obiektem.
+	
+	Nazwa kodowa \texttt{pantofelek} pochodzi z tego, że zachowuje się jak taki pierwotniak.
+	
 \section{Struktury pakietów wiadomości}
 	Ten komponent nie jest plikiem wykonywalnym, a definicjami struktur danych, używanych przez wiadomości ROSa, używane w projekcie, jeśli nie zostały zdefiniowane w standardzie.
 	Nazwa kodowa i jednocześnie przedrostek wszystkich zawartych typów wiadomości to \texttt{omnivelma\_msgs}.
 
+\section{Zewnętrzne pakiety}
+	Istnieje kilka tysięcy różnych pakietów i programów, tworzonych przez społeczność ROSa.
+	
+	\subsection{Rysownik wykresów}
+		Pakiet \texttt{rqt-multiplot} jest wtyczką do większego programu \texttt{rqt}.
+		Pozwala na generowanie dwuwymiarowych wykresów, bazując na dwóch dowolnych wartościach z odbieranych pakietów, lub czasie.
+		Można porównać różne wykresy na jednym układzie.
+		
+		W szczególności przy ustawieniach pozycji Y względem X, pobranych z pakietu pozycji, nadawanego przez obie platformy, pozwala narysować trajektorię ruchu platform.
+	\subsection{Wizualizer pomiarów}
+		Oryginalnie napisany dla robota o tej samej nazwie, \texttt{rviz} prezentuje trójwymiarową przestrzeń, na której można wyświetlać 
+		dane odebrane z pakietów.
+		
+		Pozwala to na przykład umieścić znacznik platformy i chmury punktów odebranych z czujników laserowych.
+		Jest lżejszy na zasobach w działaniu niż Gazebo i pokazuje tylko informacje z odebranych danych, a nie całe środowisko symulacji.
+		
+		
 	
 	
 	
