@@ -1,6 +1,9 @@
 Pantofelek - proste sterowanie robotem
 Użycie: pantofelek [TWIST] [SCAN_L] [SCAR_R]
 
+TWIST - wiadomość typu typu geometry_msgs/Twist
+SCAN_* - wiadomość typu sensor_msgs/LaserScan
+
 Program ignoruje nadawane ramki tf2, w uproszczeniu przyjmuje stałe pozycje czujników na środku platformy i rotacje o 90° i -90°.
 
 Działanie:

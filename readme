@@ -26,6 +26,7 @@ Widelnica			Rozdzielacz omnivelma_msgs/Vels na wiele innych topiców.
 Vreporter			Połączenie z symulatorem V-Rep.
 Vrevelma			Platforma w V-Repie.
 Dziadzio			Wyłuskanie prędkości kół z odczytu enkoderów.
+Pantifelek			Proty program sterujący
 
 Uruchomienie w ROS:
 Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to katalog roboczy.
@@ -44,6 +45,8 @@ launches/vrep
 	V-Rep musi być uruchomiony z wczytaną sceną vrep/vrevelma.ttt
 launches/reencoders
 	Pseudovelma jeździ tak, jak pokazują enkodery Omnivelmy
+launches/pantofelek
+	Omnivelma jeździ sama, sterowana pantofelkiem.
 
 Dla wywoływania akcji jak nadawanie do topicu, wykrywanie działających programów itp. w każdym nowym terminalu wywołaj lokalnie setup:
 $ source setup
@@ -92,6 +95,10 @@ Vrevelma:
 Dziadzio:
 	INTOPIC						wejście typu omnivelma_msgs/EncodersStamped
 	OUTTOPIC					wyjście typu omnivelma_msgs/Vels
+Pantofelek:
+	TWIST						wyjście typu geometry_msgs/Twist
+	SCAN_L						wejście typu sensor_msgs/LaserScan
+	SCAN_R						wejście typu sensor_msgs/LaserScan
 	
 
 	
