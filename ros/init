@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Inicjalizacja katalogu roboczego i kompilacja
-source /opt/ros/kinetic/setup.bash
+source /opt/ros/lunar/setup.bash
 cd src
 catkin_init_workspace
 cd ..

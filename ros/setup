@@ -1,5 +1,5 @@
 #!/bin/bash
 # Wczytaj wymagane zmienne środowiska. Użycie poprzez "source setup" zamiast "./setup"
 
-source /opt/ros/kinetic/setup.bash
+source /opt/ros/lunar/setup.bash
 source devel/setup.bash
