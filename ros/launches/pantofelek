@@ -8,11 +8,11 @@
 source setup
 #Ustaw ścieżkę modeli dla Gazebo
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
-roslaunch velmaverse velmaverse.launch &
+roslaunch velmaverse solovelma.launch &
 PIDGAZ=$!
 rosrun transmutator transmutator /omnivelma/vels &
 PIDTRA=$!
-rosrun pantofelek pantofelek /transmutator/twist /monokl_r/scan /monokl_l/scan &
+rosrun pantofelek pantofelek /transmutator/twist /monokl_l/scan /monokl_r/scan &
 PIDPAN=$!
 trap "kill $PIDPAN; kill $PIDTRA kill $PIDGAZ;" SIGINT 
 

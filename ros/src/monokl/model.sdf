@@ -72,7 +72,7 @@
 			</visual>
 			<sensor name="monokl" type="ray">
 				<update_rate>50</update_rate>
-				<visualize>true</visualize>
+				<visualize>false</visualize>
 				<topic>/monokl</topic>
 				<plugin name="monokl" filename="libmonokl.so"/>
 				<ray>

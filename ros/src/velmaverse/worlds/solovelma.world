@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+	<sdf version="1.6">
+	<world name="velmaverse">
+		
+		<!-- Słońce -->
+		<include>
+			<uri>model://sun</uri>
+		</include>
+
+		<!-- Podłoga -->
+		<model name="flooria">
+			<include>
+				<uri>model://flooria</uri>
+			</include>
+		</model>
+
+		<!-- Platforma dynamiczna -->
+		<model name="omnivelma">
+			<include>
+				<uri>model://omnivelma</uri>
+			</include>
+		</model>
+	</world>
+</sdf>

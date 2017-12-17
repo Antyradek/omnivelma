@@ -1,0 +1,6 @@
+<launch>
+	<!-- <param name="modelpath" value="$(optenv GAZEBO_MODEL_PATH path/to/src)" /> -->
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(find velmaverse)/worlds/solovelma.world"/>
+	</include>
+</launch> 

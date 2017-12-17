@@ -11,11 +11,15 @@ source setup
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
 roslaunch velmaverse velmaverse.launch &
 PIDGAZ=$!
-rosrun lalkarz lalkarz -v /omnivelma/vels -e /pseudovelma/vels &
+rosrun lalkarz lalkarz -v /omnivelma/vels -t /transmutator/twist -e /pseudovelma/vels &
 PIDLAL=$!
 rosrun dziadzio dziadzio /omnivelma/encoders /pseudovelma/vels &
 PIDDZI=$!
-trap "kill $PIDDZI; kill $PIDLAL; kill $PIDGAZ;" SIGINT 
+rosrun transmutator transmutator /omnivelma/vels &
+PIDTRA=$!
+rqt_multiplot --multiplot-config multiplot/gazebo.xml --multiplot-run-all &
+PIDMUL=$!
+trap "kill $PIDMUL; kill $PIDTRA; kill $PIDDZI; kill $PIDLAL; kill $PIDGAZ;" SIGINT 
 
 echo "Wciśnij ^C, aby wyłączyć procesy"
 sleep infinity
