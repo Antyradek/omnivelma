@@ -29,4 +29,6 @@ Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
 Monokl powinien mieć także masę.
-Gałąź z ROSem Lunar.
+Dodać czujnik inercji <imu>, odpytać się o dane techniczne.
+Wypróbować "laser_scan_matcher".
+Napisać gramofon.

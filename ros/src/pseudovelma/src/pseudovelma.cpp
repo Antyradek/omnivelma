@@ -12,8 +12,10 @@
 #include <omnivelma_msgs/Vels.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/TwistStamped.h>
+#include <nav_msgs/Odometry.h>
 
 #define MODEL_NAME std::string("pseudovelma")
+#define MAP_TF "map"
 
 namespace gazebo
 {
@@ -81,6 +83,13 @@ public:
 			ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "twist");
 		}
 		
+		//stwórz topic do nadawania odometrii
+		rosOdometry = rosNode -> advertise<nav_msgs::Odometry>(topicPrefix + "odometry", 1000);
+		if(!rosOdometry)
+		{
+			ROS_FATAL_STREAM("Nie udało się ustawić nadajnika " << topicPrefix + "odometry");
+		}
+		
 		//powiadom o gotowości
 		ROS_DEBUG_STREAM("Pseudovelma zainicjalizowana");
 	}
@@ -119,7 +128,7 @@ private:
 		poseMsg.pose.orientation.w = pose.rot.w;
 		poseMsg.header.seq = counter;
 		poseMsg.header.stamp = ros::Time::now();
-		poseMsg.header.frame_id = "map";
+		poseMsg.header.frame_id = MAP_TF;
 		rosPose.publish(poseMsg);
 
 		//wyślij prędkość
@@ -134,13 +143,22 @@ private:
 		twistMsg.twist.angular.z = angVel.z;
 		twistMsg.header.seq = counter;
 		twistMsg.header.stamp = ros::Time::now();
-		twistMsg.header.frame_id = "map";
+		twistMsg.header.frame_id = MAP_TF;
 		rosTwist.publish(twistMsg);
+		
+		//wyślij odometrię
+		nav_msgs::Odometry odometryMsg;
+		odometryMsg.header.seq = counter;
+		odometryMsg.header.stamp = ros::Time::now();
+		odometryMsg.header.frame_id = MAP_TF;
+		odometryMsg.pose.pose = poseMsg.pose;
+		odometryMsg.twist.twist = twistMsg.twist;
+		rosOdometry.publish(odometryMsg);
 		
 		//wyślij ramkę (zakładamy ramkę map w 0,0,0)
 		geometry_msgs::TransformStamped transMsg;
 		transMsg.header.stamp = ros::Time::now();
-		transMsg.header.frame_id = "map";
+		transMsg.header.frame_id = MAP_TF;
 		transMsg.child_frame_id = "pseudovelma";
 		transMsg.transform.translation.x = pose.pos.x;
 		transMsg.transform.translation.y = pose.pos.y;
@@ -202,6 +220,9 @@ private:
 
 	///Nadajnik prędkości
 	ros::Publisher rosTwist;
+	
+	///Nadajnik odometrii
+	ros::Publisher rosOdometry;
 
 	///Licznik kroków symulacji
 	unsigned int counter;

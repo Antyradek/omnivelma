@@ -22,6 +22,10 @@ Zwraca aktualną pozycję
 geometry_msgs/TwistStamped
 Zwraca aktualną prędkość
 
+/pseudovelma/odometry
+nav_msgs/Odometry
+Wiadomość zawierająca obie powyższe wiadomości
+
 Ramki:
 map                         Środek układu współrzędnych, środek mapy w (0,0,0)
 pseudovelma                 Środek platformy kinematycznej

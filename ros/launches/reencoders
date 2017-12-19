@@ -17,7 +17,7 @@ rosrun dziadzio dziadzio /omnivelma/encoders /pseudovelma/vels &
 PIDDZI=$!
 rosrun transmutator transmutator /omnivelma/vels &
 PIDTRA=$!
-rqt_multiplot --multiplot-config multiplot/gazebo.xml --multiplot-run-all &
+rqt_multiplot --multiplot-config $(pwd)/multiplot/gazebo.xml --multiplot-run-all &
 PIDMUL=$!
 trap "kill $PIDMUL; kill $PIDTRA; kill $PIDDZI; kill $PIDLAL; kill $PIDGAZ;" SIGINT 
 

@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   geometry_msgs
   omnivelma_msgs
+  nav_msgs
 )
 
 catkin_package(
@@ -14,12 +15,14 @@ catkin_package(
 	roscpp 
 	omnivelma_msgs
 	geometry_msgs
+	nav_msgs
 )
 
 find_package(gazebo REQUIRED)
 find_package(roscpp REQUIRED)
 find_package(omnivelma_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 set(CMAKE_CXX_FLAGS   "-Wall -Wpedantic --std=c++11")
 link_directories(${GAZEBO_LIBRARY_DIRS})

@@ -19,6 +19,7 @@
 ///Długość jest równa sqrt(2)/2 aby tworzyć kąt 45°
 #define AXIS_LENGTH 0.707106781186548
 #define CLIENT_NAME "gazebo_ros"
+#define MAP_TF "map"
 
 namespace gazebo
 {
@@ -164,7 +165,7 @@ private:
 		poseMsg.pose.orientation.w = pose.rot.w;
 		poseMsg.header.seq = counter;
 		poseMsg.header.stamp = ros::Time::now();
-		poseMsg.header.frame_id = "map";
+		poseMsg.header.frame_id = MAP_TF;
 		rosPose.publish(poseMsg);
 
 		//wyślij enkodery
@@ -194,13 +195,13 @@ private:
 		twistMsg.twist.angular.z = angVel.z;
 		twistMsg.header.seq = counter;
 		twistMsg.header.stamp = ros::Time::now();
-		twistMsg.header.frame_id = "map";
+		twistMsg.header.frame_id = MAP_TF;
 		rosTwist.publish(twistMsg);
 		
 		//wyślij ramkę (zakładamy ramkę map w 0,0,0)
 		geometry_msgs::TransformStamped transMsg;
 		transMsg.header.stamp = ros::Time::now();
-		transMsg.header.frame_id = "map";
+		transMsg.header.frame_id = MAP_TF;
 		transMsg.child_frame_id = "omnivelma";
 		transMsg.transform.translation.x = pose.pos.x;
 		transMsg.transform.translation.y = pose.pos.y;

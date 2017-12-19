@@ -64,6 +64,7 @@ Pseudovelma:
 	/pseudovelma/vels			wejście prędkości kół
 	/pseudovelma/pose			wyjście pozycji
 	/pseudovelma/twist			aktualna prędkość platformy
+	/pseudovelma/odometry		wiadomości twist i pose, złączone w jedną
 Omnivelma:
 	/omnivelma/vels				wejście prędkości kół
 	/omnivelma/pose				wyjście pozycji
