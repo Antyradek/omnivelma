@@ -229,59 +229,63 @@
 	\end{figure} 
 
 	\subsection{Zasada działania}
-	Wszystkie czujniki tego typu mają bardzo podobną zasadę działania.
-	W środku urządzenia znajduje się obrotowe lusterko, zwrócone pod kątem 45° do osi obrotu.
-	Równolegle do osi jego obrotu znajduje się laser, który emituje pulsacyjną wiązkę podczerwonego promienia co pewien okres czasu.
-	Aktualna pozycja lusterka jest wykrywana przez enkoder.
-	Obok lasera jest czujnik, który bada wysłane przez laser, odbite od lusterka, obiektu i ponownie lusterka, światło.
+		Wszystkie czujniki tego typu mają bardzo podobną zasadę działania.
+		W środku urządzenia znajduje się obrotowe lusterko, zwrócone pod kątem 45° do osi obrotu.
+		Równolegle do osi jego obrotu znajduje się laser, który emituje pulsacyjną wiązkę podczerwonego promienia co pewien okres czasu.
+		Emitowanie stałego promienia może być niebezpieczne dla wzroku obsługujących go ludzi.
+		Aktualna pozycja lusterka jest wykrywana przez enkoder.
+		Obok lasera jest czujnik, który bada wysłane przez laser, odbite od lusterka, obiektu i ponownie lusterka, światło.
 
-	Na koniec, algorytm we wbudowanym mikrokontrolerze ustala kąt i odległość czujnika od wykrytego obiektu.
-	Odpowiada także za usunięcie szumu i ewentualnych odbić promienia.
-	Komunikacja z urządzeniem odbywa się za pomocą różnych interfejsów sieciowych, zazwyczaj w architekturze typu master-slave.
-	
-	Skośna szyba, będąca wycinkiem powierzchni stożka, zabezpiecza wnętrze przed zanieczyszczeniami, jej kształt niweluje ewentualne odbicia lasera, spowodowane jej istnieniem.
-	W niektórych czujnikach montuje się także szereg dodatkowych diod podczerwieni na obrębie szyby, skierowanych w górę, oraz czujniki/reflektory z drugiej strony.
-	Pozwala to na wykrycie stopnia zanieczyszczenia szyby, aby powiadomić użytkownika o potrzebie wyczyszczenia urządzenia.
+		Na koniec, algorytm we wbudowanym mikrokontrolerze ustala kąt i odległość czujnika od wykrytego obiektu.
+		Odpowiada także za usunięcie szumu i ewentualnych odbić promienia.
+		Komunikacja z urządzeniem odbywa się za pomocą różnych interfejsów sieciowych, zazwyczaj w architekturze typu master-slave.
+		
+		Skośna szyba, będąca wycinkiem powierzchni stożka, zabezpiecza wnętrze przed zanieczyszczeniami, jej kształt niweluje ewentualne odbicia lasera, spowodowane jej istnieniem.
+		W niektórych czujnikach montuje się także szereg dodatkowych diod podczerwieni na obrębie szyby, skierowanych w górę, oraz czujniki/reflektory z drugiej strony.
+		Pozwala to na wykrycie stopnia zanieczyszczenia szyby, aby powiadomić użytkownika o potrzebie wyczyszczenia urządzenia.
 
 	\subsection{Komunikacja}
-	Wysyłając do czujnika odpowiedni ciąg bajtów, można ustawić jego tryb działania, odpytać o zebrane dane, czy wykryć konfigurację i stan.
+		Wysyłając do czujnika odpowiedni ciąg bajtów, można ustawić jego tryb działania, odpytać o zebrane dane, czy wykryć konfigurację i stan.
 
-	W przypadku naszej platformy, komunikacja odbywa się poprzez interfejs Ethernetowy.
-	Program komunikujący się bezpośrednio z urządzeniem zwraca pakiety zawierające pomiary z ostatniego obrotu czujnika, oraz dodatkowe dane 
-	opisujące sam pomiar, takie jak czas, początkowy kąt pomiaru, tryb itp.
-	Dokładne dane i cechy czujnika dostępne są na stronie producenta \cite{sick_website}.
+		W przypadku naszej platformy, komunikacja odbywa się poprzez interfejs Ethernetowy.
+		Program komunikujący się bezpośrednio z urządzeniem zwraca pakiety zawierające pomiary z ostatniego obrotu czujnika, oraz dodatkowe dane 
+		opisujące sam pomiar, takie jak czas, początkowy kąt pomiaru, tryb itp.
+		Dokładne dane i cechy czujnika dostępne są na stronie producenta \cite{sick_website}.
 
-	Urządzenie wspiera uwierzytelnianie przez hasło, wgrywanie nowego oprogramowania,
-	ustawienia czasu, oraz zmianę różnych parametrów działania.
+		Urządzenie wspiera uwierzytelnianie przez hasło, wgrywanie nowego oprogramowania,
+		ustawienia czasu, oraz zmianę różnych parametrów działania.
 
 	\subsection{Podstawowe cechy}
-	Czujnik składa się z dwóch części, głównego trzonu, oraz nakładki.
-	Połączenie tych elementów powoduje, że jego zakres pomiaru posiada martwy kąt.
-	Przedstawia to dobrze grafika producenta.
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.6\textwidth]{graphics/sick.png}
-	\caption{Wykres producenta dotyczący zasięgu czujnika.}
-	\label{fig:lidar}
-	\end{figure} 
-	
-	\begin{table}
-	\centering
-	\begin{tabular}{l r}
-	Cecha & Wartość \\
-	\hline
-	Kąt pracy & 270\textdegree \\
-	Długość fali światła lasera & 905 nm (podczerwień) \\
-	Częstotliwości skanowania & 25 Hz / 50 Hz \\
-	Maksymalna odległość obiektu & $\approx$ 20 m \\
-	Rozdzielczość kątowa & $0,25 \degree$ / $0,5 \degree $ \\
-	Systematyczny błąd pomiarowy & $\pm 0,03$ m \\
-	Przypadkowy błąd odległości & $0,012$ m \\
-	\end{tabular}
-	\caption{Podstawowe cechy czujnika laserowego.}
-	\label{tab:lidar}
-	\end{table}
-	Urządzenie jest w stanie komunikować się za pomocą portu szeregowego RS-232, połączenia Ethernetowego i sieci CAN.
+		Czujnik składa się z dwóch części, głównego trzonu, oraz nakładki.
+		Połączenie tych elementów powoduje, że jego zakres pomiaru posiada martwy kąt.
+		Przedstawia to dobrze grafika producenta.
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{graphics/sick.png}
+		\caption{Wykres producenta dotyczący zasięgu czujnika.}
+		\label{fig:lidar}
+		\end{figure} 
+		
+		\begin{table}
+		\centering
+		\begin{tabular}{l r}
+		Cecha & Wartość \\
+		\hline
+		Kąt pracy & 270\textdegree \\
+		Długość fali światła lasera & 905 nm (podczerwień) \\
+		Częstotliwości skanowania & 25 Hz / 50 Hz \\
+		Maksymalna odległość obiektu & $\approx$ 20 m \\
+		Rozdzielczość kątowa & $0,25 \degree$ / $0,5 \degree $ \\
+		Systematyczny błąd pomiarowy & $\pm 0,03$ m \\
+		Przypadkowy błąd odległości & $0,012$ m \\
+		\end{tabular}
+		\caption{Podstawowe cechy czujnika laserowego.}
+		\label{tab:lidar}
+		\end{table}
+		Na podstawie tych danych można obliczyć, że w jednym przebiegu po całym zakresie kątowym urządzenia, emitowane jest około 1080, lub 540 impulsów.
+		Taka ilość wymagana jest w symulacji, aby wiernie odwzorować działanie urządzenia.
+		
+		Urządzenie jest w stanie komunikować się za pomocą portu szeregowego RS-232, połączenia Ethernetowego i sieci CAN.
 
 \section{Składniki systemu}
 	Środowisko symulacyjne składa się z kilku odrębnych modułów, które komunikują się ze sobą poprzez specjalne interfejsy, wykorzystujące kolejki wiadomości.

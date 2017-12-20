@@ -1,94 +1,113 @@
 \chapter{Model czujnika laserowego}
 \label{sec:monokl}
-Istnieje dedykowany obiekt w standardzie SDF dla tego typu czujników.
-Również Gazebo wspiera wizualnie symulację poprzez możliwość renderowania zasymulowanych impulsów lasera.
+Ponieważ czujniki laserowe tego typu są popularnie używane w robotyce, standard SDF posiada dedykowane elementy do umieszczenia takich obiektów w symulacji.
+Również Gazebo posiada możliwość renderowania zasymulowanych impulsów lasera.
 Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{monokl}, ponieważ pozwala obserwować otoczenie, jak okular.
 
 \section{Obliczenia symulatora}
 	Czujnik laserowy jest bardzo łatwo zasymulować w przestrzeni wirtualnej za pomocą rzutowania półprostych.
-	Jest to jedna z podstawowych technik renderowania obrazu.
-	Używa się jej także przy obliczaniu symulacji fizycznej i specjalnych wydarzeń związanych, na przykład, z grami komputerowymi.
+	Ta technika używana jest w bardzo wielu aspektach komputerowego generowania obrazu i symulacji fizyki.
 
-	Półprosta jest emitowana z jakiegoś punktu w jakimś kierunku w przestrzeni trójwymiarowej.
-	Następnie system próbuje znaleźć pierwszy punkt jej kolizji z jakimś symulowanym ciałem fizycznym, posiadającym odpowiedni kolider 
-	Ponieważ zasoby komputera zawsze są ograniczone, symulacja półprostej także musi mieć pewien limit. 
-	Zwykle jest on jednak na tyle duży, że z punktu widzenia lokalnych wydarzeń, można uznać tą odległość za nieskończoną.
+	Półprosta jest emitowana z ustalonego punktu w pewnym kierunku w przestrzeni trójwymiarowej.
+	Następnie system próbuje znaleźć pierwszy punkt jej kolizji z każdym z obiektów o fizycznym kształcie, uczestniczących w symulacji.
+	
+	Ponieważ zasoby komputera zawsze są ograniczone, długość promienia także musi mieć pewien limit. 
+	Zwykle jest on jednak na tyle duży, że z punktu widzenia obiektów uczestniczących w symulacji, w opisywanym tutaj zagadnieniu, 
+	można uznać tą odległość za nieskończoną.
 
 	Algorytm obliczania kolizji z półprostą bazuje na kosztowym porównywaniu pozycji każdego obiektu fizycznego na scenie.
-	Istnieją oczywiście sposoby na zmniejszenie ilości obliczeń, na przykład metoda prostopadłościanów zawierających obiekt, ale sposób radzenia sobie z tym nie jest
+	Istnieją oczywiście sposoby na zmniejszenie ilości obliczeń, na przykład metoda prostopadłościanów zawierających obiekt, ale sposób radzenia sobie z tym zagadnieniem nie jest
 	częścią tematu pracy,
-	Wystarczy wspomnieć, że symulacja dużej ilości laserów jest operacją kosztowną.
+	Wystarczy wspomnieć, że symulacja dużej ilości laserów oraz obiektów jest operacją kosztowną.
+	
+	Testy pokazują, że samo ich renderowanie spowalnia symulację około czterokrotnie.
+	To ze względu na bardzo dużą ich ilość, mogącą przekroczyć 1000 obliczeń kolizji w jednej klatce symulacji.
 
 \section{Różnice między czujnikiem, a modelem}
-	Półprosta emitowana jest z puntu reprezentującego środek czujnika, naturalnie, model upraszcza rzeczywisty czujnik (budowa czujnika laserowego została opisana w sekcji \ref{sec:lidar}).
-	Uproszczenie polega na tym, że nie ma w środku żadnego lustra lub obracającej się części. 
-	W rzeczywistości w czujniku jest jeden laser, emitujący pulsy w określonych odstępach czasu.
-	W modelu można zatem przyjąć osobne półproste dla każdego pulsu lasera.
+	Półprosta emitowana jest z puntu reprezentującego środek czujnika.
+	Model upraszcza rzeczywisty czujnik (budowa czujnika laserowego została opisana w sekcji \ref{sec:lidar}).
+	Uproszczenie to polega na tym, iż nie ma wewnątrz zamodelowanego obiektu żadnego odpowiednika obracającego się lusterka.
+	W rzeczywistym czujniku ponadto jest jeden laser, emitujący pulsy w określonych odstępach czasu.
+	W modelu warto zatem emitować osobne półproste, dla każdego pulsu lasera.
 
-	Można zauważyć tym samym, że model wydaje się lepszym czujnikiem, niż rzeczywisty LiDAR.
-	W danej chwili model emituje promień we wszystkich kierunkach jednocześnie, podczas gdy czujnik jednym pulsem może dokonać tylko jednego pomiaru o danym w tej chwili kącie.
-	Jednakże dyskretny sposób symulacji powoduje, że w obu przypadkach dane są podawane w grupach.
-	Czujnik jest wstanie wysłać pakiet z danymi ostatniego pomiaru, podczas gdy program modelujący czujnik jest obsługiwany na zasadzie przerwań czasowych 
+	Można zauważyć tym samym, że model czujnika wydaje się funkcjonalnie lepszym, niż rzeczywisty LiDAR.
+	W danej chwili, model emituje promień we wszystkich kierunkach w zakresie jednocześnie, podczas gdy czujnik jednym pulsem może dokonać tylko jednego pomiaru,
+	i tylko o kącie w którym aktualnie znajduje się lusterko.
+	Jednakże dyskretny sposób symulacji i sposób komunikacji urządzenia z odbiornikiem danych, powodują że w obu przypadkach dane są podawane w grupach.
+	Czujnik jest wstanie wysłać pakiet z danymi z ostatniego pomiaru, podczas gdy program modelujący czujnik jest obsługiwany na zasadzie przerwań czasowych 
 	po każdej klatce i tylko wtedy może wywołać funkcje zwracające dane zasymulowanych pomiarów.
-	To oznacza, że interfejsy do ich obsługi wcale nie różnią się tak bardzo.
+	To oznacza, że interfejsy do ich obsługi zachowują się podobnie.
 
-	Drugą rzeczą, w której czujnik przoduje, jest nieskończona (z punktu widzenia symulacji) odległość pomiaru.
+	Drugą rzeczą, w której model przoduje, jest nieskończona (z punktu widzenia symulacji), odległość pomiaru.
 	Nie tylko jako najdalszy wykryty punkt, ale także i najbliższy. 
-	Czujnik nie obcina pomiarów przy określonej odległości, po prostu spada ich jakość, zmniejsza dokładność, zwiększa ilość błędów.
+	Czujnik może pomijać pomiary przypadające za blisko krawędzi dozwolonego obszaru, gdyż znacznie spada w tych miejscach dokładność pomiaru, lub zwracać niedokładne dane.
 	Symulator ma całkowitą dowolność w ustawianiu progu, dla którego obcina pomiar.
 
-	Podobnie, jak w poprzednim przypadku, symulator zawsze ma taką samą dokładność pomiaru, niezależnie od odległości punktu od czujnika.
-	Czujnik zmienia błędność danych w zależności jak daleko od niego jest obiekt.
+	Podobnie, jak w poprzednim przypadku, symulator posiada niezmienną w odległości dokładność pomiaru.
+	Czujnik zmienia swoje błędy, w zależności jak daleko od niego znajduje się obiekt.
 
-	W zależności od obciążenia komputera, model czujnika jest podatny na opóźnienia w odczytywaniu stanu.
-	Czujnik zawsze działa z tą samą częstotliwością, a jego program sterujący jest wbudowany w mikrokontroler i spełnia sztywne ramy czasowe.
+	Jednakże, w zależności od obciążenia maszyny na której uruchomiony jest symulator, model czujnika jest podatny na opóźnienia w odczytywaniu stanu.
+	Fizyczny czujnik zawsze działa z tą samą częstotliwością, a jego program sterujący jest wbudowany w mikrokontroler i spełnia sztywne ramy czasowe.
 
 \section{Komunikacja}
-	Jednakże, bazując na architekturze opisanej wcześniej na rysunku \ref{fig:agent}, należy tak zbudować system, aby program komunikował się w identyczny sposób z 
+	Bazując na architekturze opisanej wcześniej na rysunku \ref{fig:agent}, należy tak zbudować system, aby program sterujący mógł się komunikować w identyczny sposób z 
 	modelem czujnika, jak i samym czujnikiem.
-	Służą do tego specjalne pakiety ROSa, zawierające czas pomiaru, typ i dane.
-	Program obsługujący model czujnika generuje i wysyła pakiety typu \texttt{sensor\_msgs/LaserScan}.
+	Służą do tego specjalne typy wiadomości ROSa \texttt{sensor\_msgs/LaserScan}.
+	Program obsługujący model czujnika generuje i wysyła pakiety zawierające:
+	\begin{itemize}
+		\item Nagłówek z czasem pomiaru, identyfikatorem i ramką pozycji czujnika.
+		\item Kąty początkowe i końcowe pomiaru.
+		\item Odległość kątowa pomiędzy kolejnymi promieniami.
+		\item Czas pomiędzy kolejnymi emisjami lasera.
+		\item Czas pomiędzy tym, a poprzednim przebiegiem urządzenia.
+		\item Minimalny i maksymalny dystans mierzonego obiektu od czujnika.
+		\item Dane odległości.
+		\item Dane jasności (jeśli czujnik posiada taką funkcjonalność).
+	\end{itemize}
 
-	Identycznie, inny program, podłączony do czujnika za pomocą jednego z interfejsów, także powinien generować takie same pakiety.
+	Identycznie, program podłączony bezpośrednio do czujnika za pomocą jednego z interfejsów, także powinien generować takie same pakiety i udostępniać je w środowisku ROSa.
 
 \section{Model w Gazebo}
-	Tak, jak w modelu platformy, należy stworzyć odpowiedni dokument SDF. 
-	Aby umożliwić przenoszenie modelu czujnika na modele innych platform, powinien on być niezależny od implementacji platformy do której będzie przytwierdzony.
-	Dodatkowo, w końcowym modelu istnieć będą dwa takie czujniki.
+	Tak, jak w modelu platformy, należy stworzyć odpowiedni plik SDF. 
+	Warto umożliwić stosowanie modelu czujnika w modelach innych robotów. 
+	Zatem jego implementacja powinna być niezależna od implementacji platformy, do której będzie przytwierdzony.
+	Dodatkowo, w końcowym modelu istnieć będą dwa takie czujniki, budowa pliku powinna pozwolić na wielokrotne importowanie tych samych danych do tego samego modelu, 
+	ale jednak aby były interpretowane w różny sposób (gdyż nadawcy danych muszą być rozróżnialni).
 
 	Model składa się z dwóch elementów: korpusu i samego ,,mechanizmu'' urządzenia.
-	Mechanizm przytwierdzony jest w odpowiednim miejscu korpusu za pomocą stałego połączenia (elementu \texttt{joint}).
+	Mechanizm przytwierdzony jest w odpowiednim miejscu korpusu, za pomocą stałego połączenia (elementu \texttt{joint}).
 
-	Korpus posiada siatkę, reprezentującą uproszczony wygląd urządzenia, a także dwa elementy w kształcie walców, odpowiedzialne za kolizję.
-	Odpowiada za przesunięcie samego lasera względem podstawy na której całe urządzenie jest montowane i pozwala na wygodną referencję z innego modelu w celu utworzenia połączenia.
+	Korpus posiada siatkę, reprezentującą uproszczony wygląd urządzenia, a także dwa elementy ustawiające walcowate kształty, odpowiedzialne za kolizje fizyczne.
+	Teoretycznie, lepiej było by, aby model posiadał jeden walec, reprezentujący kształt urządzenia, gdyż to przyspieszyłoby symulację. 
+	Jednakże, półproste emitowane ze środka obiektu, również się by z nim zderzały od wewnątrz, a co za tym idzie, nie opuszczałyby modelu czujnika.
+	Element korpusu odpowiada także za przesunięcie samego lasera względem podstawy, na której całe urządzenie jest montowane, i 
+	pozwala na wygodną referencję z innego modelu, w celu utworzenia wiązu.
+	Jak już wcześniej wspomniano, model zawsze ma strukturę gwiazdową i więzy po stronie robota nie mogą wskazywać na element \texttt{model} czujnika, a mogą
+	na obiekt korpusu.
 
-	Główna część czujnika posiada ozdobną siatkę udającą czarną szybkę LiDARa, oraz element SDF \texttt{sensor}, odpowiedzialny za sam czujnik.
-	W kolejnych podelementach zawierają się parametry urządzenia, takie jak ilość symulowanych laserów, ich zasięg, kąt pierwszego i ostatniego lasera, oraz współczynnik błędu pomiarowego.
-	
-	Teoretycznie, lepiej aby model posiadał jeden element odpowiedzialny za kolizje, gdyż to byłoby szybsze do symulacji. 
-	Jednakże, półproste emitowane ze środka również się by z nim zderzały, a co za tym idzie, nie opuszczałyby modelu czujnika.
-	Dlatego potrzeba jest, aby w miejscu ich wychodzenia (czarna szybka) nie było żadnego koldera.
+	Główna część obiektu czujnika, skaner, posiada ozdobną siatkę, udającą czarną szybkę LiDARa, oraz element SDF \texttt{sensor}, odpowiedzialny za sam czujnik.
+	W kolejnych podelementach zawierają się parametry urządzenia, takie jak ilość symulowanych laserów, ich zasięg, kąt pierwszego i ostatniego lasera, oraz współczynnik błędu pomiarowego. Ten element celowo nie ma fizycznego kształtu, aby nie blokować wychodzących półprostych. 
+	Nie wpływa to na symulację, gdyż w środowisku, w którym znajduje się robot, i tak nie powinno dochodzić do kolizji modeli czujników z jakimikolwiek innymi modelami.
+	Również czujniki nie są wstanie wykryć siebie nawzajem, gdyż zwrócone są do siebie martwymi kątami, a co za tym idzie nie muszą symulować nieprzezroczystych brył dla
+	innych sensorów.
+	W przeciwnym wypadku, element fizycznego kształtu pośrodku urządzenia byłby wymagany.
 
 	\subsection{Połączenie modeli}
-		Jak wcześniej wspomniano,
-		%TODO gdzie?
-		model SDF ma strukturę gwiaździstą. 
-		Zagnieżdżenie modeli spowodowałoby, że powstaje inna struktura, drzewiasta.
+		Jak wcześniej wspomniano w sekcji \ref{sec:sdf},
+		model SDF ma strukturę gwiazdową. 
+		Zagnieżdżenie modeli spowodowałoby, że powstałaby inna struktura, drzewiasta.
 		Dlatego też, element \texttt{import} nie umieszcza w swoim miejscu całego modelu z innego pliku, a raczej importuje jego składowe i umieszcza równolegle do istniejących.
-		To oznacza, że zadbać trzeba także o elementy \texttt{joint}, łączące element podstawy platformy z podstawą czujnika, inaczej symulacja widziałaby dwa osobne modele.
-		Więc potrzebna jest także znajomość nazw elementów składowych importowanego modelu.
+		To oznacza, że zadbać trzeba także o więzy \texttt{joint}, łączące element podstawy platformy z podstawą czujnika, inaczej symulator uznałby łączony obiekt za dwa osobne modele.
+		Potrzebna jest zatem znajomość nazw elementów składowych importowanego modelu.
+		Element importowanego modelu jest tracony, pozostaje jedynie przedrostek nazwy w zaimportowanych składowych.
+		Zatem program sterujący czujnikiem powinien na podstawie tylko nazwy swojego obiektu ustawić przedrostek swojego interfejsu nadawania wiadomości.
 
 		Taka mechanika działania wydaje się mało zrozumiała i nieintuicyjna, jednak doskonale dba o zachowanie spójności modelu.
 		Wszystko nadal pozostaje gwiazdą i każdy element musi być odpowiednio połączony z pozostałymi, aby dokładnie określić fizykę interakcji.
-		Nie powstają sytuacje w których zachowanie jakichś elementów będzie niezrozumiałe.
+		Nie powstają niedopowiedziane sytuacje, w których zachowanie jakichś elementów byłoby nieokreślone.
 
-		Ma to także swoją wadę. Importując dwa, identyczne modele, ich składowe tracą informację o swoich wspólnych rodzicach.
-		Program sterujący czujnikiem nie ma sposoby sprawdzić, którym czujnikiem steruje, a co za tym idzie, jaką nazwę interfejsu wystawić do nadawania wiadomości.
-		Jedynym sposobem na rozwiązanie tego problemu jest nadanie importowanym elementom różnych przedrostków do nazw.
-		I także sterownik musi tylko na tej podstawie określić czujnik, w którym jest.
-
-		Alternatywnie, zawsze można stworzyć dwa, osobne modele czujników, albo wszystko umieścić od razu w jednym pliku.
-		Jednak takie rozwiązanie niszczy komponentową budowę środowiska i nie pozwala na użycie składowych w innych modelach.
+		Alternatywnie, zawsze jest możliwość stworzenia dwóch, osobnych modeli czujników, tudzież całość zapisać w jednym pliku.
+		Jednak takie rozwiązanie niszczy komponentową budowę środowiska i nie pozwala na użycie składowych modeli w innych modelach.
 		
 		\begin{figure}[h]
 		\centering
@@ -100,34 +119,38 @@ Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{monokl}, p
 	\subsection{Mechanika ramek}
 		\label{sec:frames}
 		Komunikacja poprzez pakiety wiadomości nie jest jedynym sposobem na przekazywanie informacji w środowisku ROS.
-		%TODO wspomnieć o tym wcześniej
 		Istnieje także mechanika ramek transformacji \texttt{TF2}.
-		Jest to podobna rzecz do niezaimplementowanej funkcjonalności Gazebo, ale nie jest automatyczna i nie ogranicza się tylko do jednego programu.
+		Jest to idea podobna do niezaimplementowanej funkcjonalności Gazebo, ale nie jest automatyczna i nie ogranicza się tylko do jednego programu.
 		
 		Ramka transformacji jest informacją o aktualnej pozycji i rotacji jakiegoś obiektu względem innego.
 		Polega na wysłaniu pakietu typu \texttt{geometry\_msgs/TransformStamped} prosto do demona ROS.
-		Pakiet zawiera w sobie nagłówek, informujący o czasie i identyfikatorze nadania ramki, i względem jakiego obiektu podawana jest pozycja i rotacja.
-		Następna jest nazwa nowej ramki, jej pozycja i rotacja względem nazwy obiektu podanego w nagłówku.
-		Dowolny program może nadać dowolny pakiet transformacji.
-		Demon ROSa następnie zbiera wszystkie pozycje i oblicza transformacje dla programów, które pytają się o względne pozycje elementów.
+		Pakiet zawiera:
+		\begin{itemize}
+			\item Nagłówek z czasem nadania ramki i identyfikatorem, oraz informacją względem jakiej ramki podane są poniższe dane.
+			\item Nazwa nowej ramki, jaka powstanie po zastosowaniu podanej transformacji do określonej w nagłówku ramki.
+			\item Lokalna pozycja.
+			\item Lokalna rotacja.
+		\end{itemize}
+		Demon ROSa następnie zbiera wszystkie dane ze wszystkich nadających komponentów i oblicza hierarchę transformacji obiektów.
+		Zwraca te dane na zapytania od innych komponentów.
 		
 		Przykładowo, gdyby symulacja robota nie odbywałaby się w przestrzeni wirtualnej, w maszynie symulacyjnej fizyki, 
-		informacja o dokładnym położeniu obiektu składowego w przestrzeni wcale nie musiałaby być tak łatwo dostępna.
-		To ma szczególne znaczenie dla skomplikowanych mechanizmów typu wielosegmentowe ramię manipulacyjne.
-		Obliczenie pozycji i rotacji końcówki ramienia wymagałoby informacji o aktualnych pozycjach i rotacjach wszystkich innych segmentów.
-		Która strona miałaby zajmować się obliczeniami i kto powinien posiadać i komu przekazywać te informacje?
+		informacja o dokładnym położeniu obiektu składowego w lokalnym układzie współrzędnych wcale nie musiałaby być łatwo dostępna.
+		Ma to szczególne znaczenie dla skomplikowanych mechanizmów, na przykład wielosegmentowego ramienia manipulacyjnego.
+		Obliczenie pozycji i rotacji końcówki ramienia wymagałoby informacji o aktualnych pozycjach i rotacjach wszystkich segmentów.
+		Która część systemu miałaby zajmować się obliczeniami i jaki kod powinien posiadać i gdzie przekazywać te informacje?
 		
 		Demon ROSa działa tutaj jak trzecia strona, zbierająca dane od przegubów i obliczająca pozycje i rotacje wszystkich punktów.
-		W takim przypadku, każdy segment symulacji mógłby przekazywać swój identyfikator, identyfikator obiektu którym steruje, jego pozycję i rotację.
-		Inne programy, na przykład do wizualizacji, mogłyby wtedy zapytać się demona ROSa o dokładne pozycje przegubów w przestrzeni kartezjańskiej, a on obliczyłby je i zwrócił.
+		W takim przypadku, każdy segment symulacji mógłby przekazywać swój identyfikator, identyfikator obiektu którym steruje, jego pozycję i rotację do demona ROSa.
+		Inne programy, na przykład do wizualizacji, mogłyby wtedy zapytać się demona o dokładne pozycje przegubów w przestrzeni kartezjańskiej, a on obliczyłby je i zwrócił wynik.
 		
-		W symulacji platformy wielokierunkowej mechanika ramek jest potrzebna, gdyż pakiet zwierający pomiary z czujnika laserowego nie posiada informacji o aktualnej
-		pozycji samego czujnika, a jedynie identyfikator swojej ramki. Te informacje potrzebne są programowi obliczającemu pozycję z czujników i ewentualnemu wizualizatorowi samych
-		czujników laserowych.
+		W symulacji platformy wielokierunkowej, mechanika ramek jest potrzebna, gdyż pakiet zwierający pomiary z czujnika laserowego nie posiada informacji o aktualnej
+		pozycji samego czujnika w przestrzeni, a jedynie identyfikator ramki czujnika. 
+		Pozycja potrzebna jest programowi obliczającemu pozycję z czujników i ewentualnemu wizualizatorowi samych danych.
 		
-		Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROSa pozycje i rotacje środków czujników laserowych, dla uproszczenia
+		Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROS pozycje i rotacje środków czujników laserowych, dla uproszczenia
 		względem początku układu współrzędnych, punktu (0,0,0). 
-		Program sterujący modelem samej platformy także nadaje ramkę z pozycją i rotacją platformy względem środka układu.
+		Program sterujący modelem samej platformy także nadaje ramkę z pozycją i rotacją platformy względem globalnego środka układu współrzędnych.
 		Dokładnie taki sam efekt byłby, gdyby nadawać stałą pozycję i rotację czujników laserowych, ale względem ramki platformy (nadawanej przez inny sterownik).
 		Stałą, ponieważ czujniki nie zmieniają swojej pozycji na platformie, są przytwierdzone na stałe.
 		
@@ -163,7 +186,7 @@ Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{monokl}, p
 \section{Błędy}
 	Jak podano wcześniej w tabelce \ref{tab:lidar}, wyróżnione są dwa typy błędów pomiaru, systematyczny i pomiarowy.
 	Dodatkowo istnieje także błąd gruby.
-	Model czujnika powinien uwzględniać te błędy, aby zwracać dane jak najbardziej zbliżone do LiDARa.
+	Model czujnika powinien uwzględniać wszystkie błędy, aby zwracać dane jak najbardziej zbliżone do LiDARa.
 
 	\subsection{Błąd gruby}
 		Najprostszy typ błędu polega na dużych odchyłach niektórych pomiarów od pozostałych wartości.
@@ -182,9 +205,8 @@ Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{monokl}, p
 		Ten błąd jest stałą wartością, dodaną do każdego pomiaru.
 		Spowodowany jest niedoskonałością budowy elementów pomiarowych, niewłaściwą kalibracją, zużyciem, lub otoczeniem w jakim pracuje czujnik.
 
-		Rzeczywisty czujnik powinien być skalibrowany przed użyciem właśnie po to, aby wewnętrzny program sterujący mógł obliczyć aktualne zboczenia 
-		i skorygować pomiary przed wysłaniem ich dalej. Kalibracja może być nadana na samym urządzeniu, poprzez zmianę jego parametrów działania,
-		inaczej, zmianę współczynników przy korygowaniu pomiarów, przez system wbudowany, przed wysłaniem.
+		Rzeczywisty LiDAR powinien być skalibrowany przed użyciem właśnie po to, aby wewnętrzny program sterujący mógł obliczyć aktualne zboczenia pomiarów
+		i skorygować dane przed wysłaniem ich wyżej.
 		Czujnik może także wysyłać czyste i obarczone błędami dane do programu sterującego, który samodzielnie je skoryguje.
 		Pozwoli to na zastosowanie dowolnych algorytmów oczyszczania danych, kosztem większego obciążenia programu sterującego.
 
@@ -204,8 +226,11 @@ Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{monokl}, p
 		W związku z tym, wartość podana przez producenta, podana w tabelce \ref{tab:lidar}, może być bezpośrednio zapisana do 
 		elementu odchylenia standardowego, w pliku SDF opisującym czujnik.
 		Wadą takiego rozwiązania jest niemożność modyfikacji tego parametru w trakcie wykonywania programu, gdyż Gazebo nie wystawia API do modyfikacji tej wartości.
-		Aby temu zaradzić, wystarczy obliczać błąd standardowy w programie sterującym i manualnie dodawać go do zwróconej przez symulator tablicy.
+		Aby temu zaradzić, wystarczy obliczać błąd standardowy w programie sterującym i manualnie dodawać go do zwróconej przez symulator tablicy danych.
 		Funkcje do obliczania błędu standardowego zostały wprowadzone do standardu języka C++ w 2011 roku.
+		
+		Na zrzucie ekranu \ref{fig:scan} można zobaczyć, iż punkty pomiarów, wizualizowane w RViz, nie leżą idealnie na figurach powstałych poprzez przecięcia skanowanych brył.
+		Dodany jest szum, jak gdyby rozmazujący punkty.
 
 
 
