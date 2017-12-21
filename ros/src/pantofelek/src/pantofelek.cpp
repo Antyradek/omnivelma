@@ -11,7 +11,7 @@
 #define CLOSE_DIST 0.6
 #define LOOP_RATE 10
 
-///Lista nadajników
+///Nadajnik twista
 ros::Publisher twistPublisher;
 
 ///Kierunek robota
@@ -149,9 +149,9 @@ int main(int argc, char** argv)
 	else
 	{
 		//pisz pomoc i wyjdź
-		std::cout << "Użycie: " << argv[0] << " [TWIST] [SCAN_L] [SCAN_R]" << std::endl;
+		std::cout << "Użycie: " << argv[0] << " TWIST SCAN_L SCAN_R" << std::endl;
 		std::cout << "Przyjmuje wejścia sensor_msgs/LaserScan i generuje wiadomości geometry_msgs/Twist." << std::endl;
-		return 0;
+		return -1;
 	}
 	direction = Direction::Forward;
 	ros::NodeHandle handle;
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 	twistPublisher = handle.advertise<geometry_msgs::Twist>(twistTopicName, 1);
 	if(!twistPublisher)
 	{
-		ROS_FATAL_STREAM("Nie udało się stworzyć odbiornika " << twistTopicName);
+		ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << twistTopicName);
 	}
 	
 	//odbiornik lewego
@@ -171,7 +171,7 @@ int main(int argc, char** argv)
 	
 	if(!scannerLSubscriber || !scannerRSubscriber)
 	{
-		ROS_FATAL_STREAM("Nie udało się stworzyć nadajników " << scannerRName << " " << scannerLName);
+		ROS_FATAL_STREAM("Nie udało się stworzyć odbiorników " << scannerRName << " " << scannerLName);
 	}
 	
 	ros::Rate loopRate(LOOP_RATE);

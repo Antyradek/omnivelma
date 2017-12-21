@@ -1,8 +1,9 @@
 \chapter{Komponenty systemu}
 \label{sec:components}
-Aby uruchomić system, nie wystarczy uruchomić Gazebo z modelami, należy zadbać także o odpowiednie przekazywanie informacji pomiędzy pakietami.
-Należy także przetestować modele, czy zachowują się poprawnie w prostych scenariuszach testowych, tak samo, jak testować się będzie program sterujący.
+Aby uruchomić symulację, nie wystarczy uruchomić Gazebo z modelami, należy zadbać także o odpowiednie przekazywanie informacji pomiędzy pakietami.
+Wskazane jest przetestować modele, czy zachowują się poprawnie w prostych scenariuszach testowych, tak samo, jak testować się będzie program sterujący na modelu.
 Do tego potrzebne są programy wspomagające, które łączy się w różne konfiguracje, w zależności od scenariusza testowego.
+Ze względu na niezależność komponentów od siebie, można je także użyć przy komunikacji z rzeczywistym robotem.
 
 \begin{table}
 	\centering
@@ -148,6 +149,53 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 		
 		Wszystkie dane są w jednostkach SI, tzn, efektywna prędkość koła będzie się równać liczbie podanej przy kole, pomnożonej przez aktualny bieg.
 		Dla obrotów to są $\frac{rad}{s}$, dla prędkości to $\frac{m}{s}$.
+		
+\section{Generator sterowania}
+	\label{sec:gramofon}
+	Podstawą przeprowadzania testów modelu jest powtarzalność eksperymentów oraz dokładność.
+	Potrzeba zatem jest sposobu na automatyczne wygenerowanie strumienia wiadomości z określonymi danymi.
+	
+	Program \texttt{gramofon} wczytuje plik danych, w którym znajdują się rekordy, każdy opisuje:
+	\begin{itemize}
+		\item Prędkość liniową platformy w osi X.
+		\item Prędkość liniową platformy w osi Y.
+		\item Prędkość kątową platformy w osi Z.
+		\item Czas $t$, przez który program ma generować wiadomość z podanymi wyżej danymi.
+	\end{itemize}
+	Program czyta także z argumentu okres $T$ odświeżania wiadomości.
+	
+	Korzystając z dwóch liczników systemowych, program generuje co $T$ sekund wiadomość typu \texttt{geometry\_msgs/Twist} z danymi aktualnie wykonywanej linii pliku.
+	Ta wiadomość powtarza się regularnie.
+	
+	Po upływie czasu $t$, program nadaje dodatkową wiadomość z nowymi danymi, oraz przestawia dane generowane przez wywołania pierwszego licznika.
+	
+	Po wykorzystaniu danych, algorytm nadal generuje wiadomości z zerowymi prędkościami, aby zatrzymać model platformy i podtrzymać ,,hamulec'' kół.
+	
+	W ten sposób możliwe jest proste generowanie sterowania robota, bazujące na czasie.
+	Przykładowo, program może generować sterowanie:
+	\begin{enumerate}
+		\item Ruch przez 3,2 s, z prędkością 0,2 m/s, w kierunku (2,1).
+		\item Zatrzymanie na czas 0.9 s.
+		\item Obrót przez czas 10 s, z prędkością kątową 0,02 rad/s.
+	\end{enumerate}
+	
+	Ponieważ jednak system operacyjny, na którym pracuje program i symulator, nie spełnia wymogów systemu czasu rzeczywistego, generowane wiadomości
+	nie muszą być (i nie są) wysyłane dokładnie w określonych momentach. Można przeprowadzić prosty eksperyment, aby zaprezentować ten problem.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/gramofon.pdf}
+	\caption{Czas odbioru pakietu, wysyłanego przez program działający z jednym z trzech okresów.}
+	\end{figure}
+	
+	Działa to tak samo, jakby każdą wiadomość wysyłać z losowym opóźnieniem.
+	Gdy nadań jest za dużo (górny wykres), system zaczyna je buforować, a co za tym idzie, nadaje je w grupach o losowej wielkości.
+	Pakiet po nadaniu przechodzi przez wiele procesów, każdy może nadawać losowe opóźnienie dla wiadomości.
+	System operacyjny pod dużym obciążeniem przez inne procesy będzie opóźniał i buforował wiadomości o niższych częstotliwościach.
+	
+	Aby rozwiązać ten problem, należałoby uruchomić całe środowisko ROSa na systemie operacyjnym czasu rzeczywistego.
+	Jedynym takim systemem, eksperymentalnie wspieranym przez twórców ROSa, jest OpenEmbedded.
+	Jednakże budowa i uruchomienie tego systemu jest bardzo złożone.
 		
 \section{Wyłuskanie struktury wiadomości}
 	\label{sec:dziadzio}

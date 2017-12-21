@@ -1,0 +1,14 @@
+<package format="2">
+	<name>gramofon</name>
+	<version>1.0.0</version>
+	<description>Synchroniczne i asynchroniczne generowani wiadomości z pliku</description>
+	
+	<maintainer email="antyradek@protonmail.com">Antyradek</maintainer>
+	
+	<license>GPLv3</license>
+	
+	<buildtool_depend>catkin</buildtool_depend>
+	
+    <depend>roscpp</depend>
+	<depend>geometry_msgs</depend>
+</package>

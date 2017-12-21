@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#Uruchom Gazebo
+#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
+#Widelnica dzieli Vels dla Omnivelmy i Pseudovelmy.
+#Gramofon wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
+
+source setup
+#Ustaw ścieżkę modeli dla Gazebo
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+roslaunch velmaverse velmaverse.launch &
+PIDGAZ=$!
+rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
+PIDWID=$!
+rosrun transmutator transmutator /widelnica/vels &
+PIDTRA=$!
+rosrun gramofon gramofon 0.1 gramofon/square /transmutator/twist &
+PIDGRA=$!
+rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders &
+PIDDZI=$!
+rqt_multiplot --multiplot-config $(pwd)/multiplot/gazebo.xml --multiplot-run-all &
+PIDMUL=$!
+trap "kill $PIDMUL; kill $PIDDZI; kill $PIDGRA; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+
+echo "Wciśnij ^C, aby wyłączyć procesy"
+sleep infinity

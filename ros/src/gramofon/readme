@@ -1,0 +1,27 @@
+Gramofon - synchroniczne generowanie wiadomości z pliku
+
+Użycie: gramofon INTERVAL FILE TOPIC
+
+Generuje wiadomość co INTERVAL sekund, ułamek dziesiętny.
+Wczytuje dane z pliku o nazwie FILE.
+Tworzy topic ROSa o nazwie TOPIC, na który generuje wiadomości geometry_msgs/Twist
+
+Plik składa się z danych po 4.
+TIME X Y Z
+TIME X Y Z
+TIME Z Y Z
+
+TIME to czas z jakim program generuje wiadomość z podanymi dalej danymi.
+X i Y to prędkość liniowa, Z to prędkość kątowa.
+Po skończeniu danych, program generuje wiadomość z zerami, aby podtrzymywać zatrzymanie platformy.
+
+Przykład:
+1.2  0 1 0
+3.1  2 0 0
+5    0 0 0.1
+Przez 1,2 s jedź wzdłuż osi Y z prędkością 1 m/s.
+Następnie przez 3,1 s jedź dwukrotnie szybciej wzdłuż osi X.
+Następnie przez 5 s obracaj się wokół osi z prędkością 0.1 rad/s.
+Potem stój w miejscu.
+
+Program generuje wiadomość co INTERVAL czasu, oraz na każde przełączenie danych.
