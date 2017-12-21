@@ -89,7 +89,7 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 	
 	Funkcje tłumaczące prędkości kół najwygodniej zapisać w postaci macierzowej, podobnie do tego, jak opisano w \cite{wheels}. 
 	Wzór powtarza się w wielu innych pracach naukowych, a jego dokładny kształt zależy od kolejności numerowania kół i interpretacji wymiarów.
-	Dla opisanego tutaj przypadku, (stałe zdefiniowane są w tabeli \ref{tab:dims}):
+	Dla opisanego tutaj przypadku, (stałe zdefiniowane są w tabeli \ref{tab:dims}, numerowanie kół na rysunku \ref{fig:base_dims}):
 	
 	\begin{equation}
 	\begin{bmatrix}
@@ -144,7 +144,7 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 		Komunikacja programu sterującego platformą odbywa się przez wbudowane z ROSa narzędzie \emph{topic}.
 
 		Wiadomość zawierająca dane prędkości kół czterokołowego robota nie mieści się w standardzie, zatem został stworzony specjalny typ \texttt{omnivelma\_msgs/Vels}.
-		Ta stryktura zawiera cztery wartości zmiennoprzecinkowe podwójnej precyzji, oznaczające prędkości w rad/s.
+		Ta stryktura zawiera cztery wartości zmiennoprzecinkowe podwójnej precyzji, oznaczające prędkości w $\frac{rad}{s}$.
 
 		Program w każdym cyklu symulacji nadaje wiadomości:
 		\begin{itemize}

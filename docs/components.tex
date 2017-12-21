@@ -15,20 +15,21 @@ Ze względu na niezależność komponentów od siebie, można je także użyć p
 		\texttt{omnivelma\_msgs/SetFriction} & Nadanie tarcia elementowi modelu. \\
 		\texttt{omnivelma\_msgs/SetInertia} & Nadanie mas i momentu bezwładności obiektowi. \\
 		\texttt{geometry\_msgs/Pose} & Pozycja i rotacja obiektu w przestrzeni kartezjańskiej. \\
-		\texttt{geometry\_msgs/Twist} & Prędkość względna jakiegoś obiektu. \\
+		\texttt{geometry\_msgs/Twist} & Prędkość względna obiektu. \\
 		\texttt{sensor\_msgs/LaserScan} & Jedno skanowanie LiDARa, wraz z nagłówkiem. \\
 		\texttt{omnivelma\_msgs/Relative} & Odległość i kąt pomiędzy obiektami. \\
+		\texttt{nav\_msgs/Odometry} & Transformacja obiektu z macierzą kowariancji. \\
 	\end{tabular}
 	\caption{Typy i opisy wiadomości przekazywanych pomiędzy komponentami.}
 	\label{tab:messages}
 \end{table}
 
-Niektóre typy mają dopisek \texttt{Stamped}, co oznacza że zawierają także nagłówek.
+Niektóre typy wiadomości mają dopisek \texttt{Stamped}, co oznacza że zawierają także nagłówek.
 Nagłówek posiada trzy pola:
 \begin{itemize}
-	\item Numer sekwencyjny, zwiększany przez program wysyłający za każdym pakietem.
+	\item Numer sekwencyjny, zwiększany przez program wysyłający po każdym pakiecie.
 	\item Czas nadania pakietu, z dokładnością do nanosekund.
-	\item Identyfikator ramki, według której podano dane, ramki zostały opisane dokładniej w \ref{sec:frames}.
+	\item Identyfikator ramki, według której podano dane, ramki zostały opisane dokładniej w sekcji \ref{sec:frames}.
 \end{itemize}
 
 Komponenty można podzielić na trzy typy:
@@ -37,8 +38,8 @@ Komponenty można podzielić na trzy typy:
 	\item Przekazujące i modyfikujące pakiety danych.
 	\item Zbierające pakiety danych.
 \end{itemize}
-Poniżej każdy pakiet opisany jest bardziej szczegółowo, ten dokument nie ma za zadanie być programistyczną dokumentacją komponentów, dlatego 
-nie zagłębia się w dokładne składy przekazywanych struktur i ich nazwy.
+Poniżej, każdy pakiet opisany jest bardziej szczegółowo, ten dokument nie ma za zadanie być programistyczną dokumentacją komponentów, dlatego 
+nie zagłębia się dokładnie w argumenty, algorytmy i technologie programów.
 
 %TODO przerobić na porządny wykres
 \begin{figure}[H]
@@ -47,7 +48,7 @@ nie zagłębia się w dokładne składy przekazywanych struktur i ich nazwy.
 	\caption{Sekcje i komunikacja podstawowych komponentów systemu.}
 \end{figure} 
 
-Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach.
+Komponenty modeli platform i czujnika laserowego, zostały opisane szczegółowo w poprzednich sekcjach.
 
 \begin{description}
 	\item[\texttt{omnivelma}] Model platformy dynamicznej w sekcji \ref{sec:omnivelma}.
@@ -67,14 +68,14 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 		Wykorzystując bibliotekę graficzną SFML, generuje okno z powierzchnią do rysowania na nim za pomocą OpenGL.
 		Biblioteka ta pozwala również na bezproblemowe przechwytywanie zdarzeń z klawiatury, takich jak wciśnięcie i puszczenie klawisza, a także na obsługę kontrolera go gier i myszki.
 		Za pomocą gałek kontrolera, można nadawać robotowi niebinarne prędkości kół, co jest niezbędne do płynnego i bezpiecznego kontrolowania urządzeniem.
-		Użyto także sterowania kursorem myszy, w razie gdyby ktoś nie posiadał kontrolera, a nadal potrzebował umiarkowanie płynnego sterowania.
+		Użyto także sterowania kursorem myszy, w razie gdyby użytkownik nie posiadał kontrolera.
 		
-		Aplikacja tego typu mogłaby bez większego problemu pracować z interfejsem tekstowym w terminalu aby być bardziej przenośna i lżejsza w zasobach, 
+		Aplikacja tego typu mogłaby bez większego problemu pracować z interfejsem tekstowym w terminalu, aby być bardziej przenośna i lżejsza w zasobach, 
 		lecz nie mogłaby wykrywać zdarzeń puszczenia klawisza
-		(bez bezpośredniego czytania z \texttt{/dev/input/eventX}, do czego są potrzebne prawa roota). 
-		Dodatkowo, interfejs graficzny pozwala na wyświetlenie dokładniejszych wskaźników dla prędkości kół.
+		(bez bezpośredniego czytania z urządzenia \texttt{/dev/input/eventX}, do czego są potrzebne prawa roota). 
+		Dodatkowo, interfejs graficzny pozwala na wyświetlenie dokładniejszych wskaźników i elementów wskazujących.
 		
-		Program uruchamiany jest z wiersza polecenia z argumentami dotyczącymi nazw strumieni i początkowej konfiguracji urządzenia.
+		Program uruchamiany jest z wiersza polecenia, z argumentami dotyczącymi nazw strumieni i początkowej konfiguracji urządzenia.
 	
 	\subsection{Komunikacja}
 		Program potrafi generować dwa typy wiadomości.
@@ -82,56 +83,57 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 		Pierwszą są prędkości kół \texttt{omnivelma\_msgs/Vels}, jakie w danej chwili platforma powinna przyjąć na sterowanie.
 		Pozwala to na dokładne przetestowanie zachowania się modelu platformy.
 		Można także wywołać takie prędkości, które nie powinny być używane przy rzeczywistym sterowaniu, gdyż wprowadzają duże nieścisłości ruchu 
-		(przykładowo, obracanie przednich i tylnych kół tak, aby ich wektory prędkości się znosiły będzie nadawać niedeterministyczny ruch spowodowany niedoskonałościami
+		(przykładowo, obracanie przednich i tylnych kół tak, aby ich wektory prędkości się znosiły, będzie nadawać niedeterministyczny ruch, spowodowany niedoskonałościami
 		pojedynczych rolek).
 		
 		Drugi typ wiadomości, \texttt{geometry\_msgs/Twist}, to nadana prędkość względna platformy.
-		To intuicyjny sposób w jaki użytkownik steruje platformą i w jaki sposób mógłby także sterować nią prosty program sterujący.
-		Jednak ponieważ ani model platformy, ani rzeczywisty robot nie są wstanie nadać swojej prędkości bez informacji, jakimi kołami z jaką prędkością obracać,
-		ten typ wiadomości musi być jeszcze konwertowany przez inne komponenty na zrozumiały format.
+		To intuicyjny sposób, w jaki użytkownik steruje platformą i w jaki sposób mógłby także sterować nią prosty program sterujący.
+		Jednak ponieważ ani model platformy, ani rzeczywisty robot nie są wstanie poruszać się bez informacji, jakimi kołami z jaką prędkością obracać,
+		ten typ wiadomości musi być jeszcze konwertowany przez komponent modelu kinematyki odwrotnej, opisany w sekcji \ref{sec:transmutator}.
 		
-		Program opcjonalnie przyjmuje także \texttt{omnivelma\_msgs/Vels}, aby wyświetlić dane enkoderów.
+		Program opcjonalnie przyjmuje także wiadomość \texttt{omnivelma\_msgs/Vels}, aby wyświetlić dane enkoderów.
 		Należy zauważyć, że nie przyjmuje całego pakietu \texttt{omnivelma\_msgs/EncodersStamped}, jaki jest generowany przez model platformy,
 		a jedynie mały ich wycinek, gdyż tylko te informacje jest w stanie wyświetlić i tylko takie potrzebuje.
-		Dzięki temu może być użyty niezależnie od innych komponentów i programów, jednak może wymagać dodatkowego komponentu do wyłuskania tej informacji z większego pakietu,
+		Dzięki temu może być użyty niezależnie od innych komponentów i programów. Jednak może być wymagane użycie dodatkowego komponentu do 
+		wyłuskania tej informacji z większego pakietu,
 		patrz \ref{sec:dziadzio}.
 		
 	\subsection{Tryby działania}
 		Program posiada 11 trybów działania, w których generuje różne wiadomości w różny sposób.
-		Jedne są bardziej przydatne, inne bardzo proste i służące do ogólnej prezentacji systemu, albo zabawy.
-		Globalny mnożnik wyjścia pozwala na łatwe ograniczenie generowanych danych. Spacja awaryjnie zeruje wszystkie wyjścia.
+		Jedne są bardziej przydatne, inne bardzo proste i służące do ogólnej prezentacji systemu.
+		Globalny mnożnik wyjścia pozwala na łatwe ograniczenie generowanych danych i ustawienia dokładności. Spacja awaryjnie zeruje wszystkie wyjścia.
 		\begin{enumerate}
 			\item Za pomocą ośmiu klawiszy klawiatury numerycznej, można nadać platformie określone prędkości kół.
-			W tym trybie koło może albo stać w miejscu, albo obracać się z odpowiednią prędkością w określonym kierunku. 
+			W tym trybie, koło może albo stać w miejscu, albo obracać się z odpowiednią prędkością, w określonym kierunku. 
 			Powoduje to naturalne szarpnięcia i poślizgi platformy. W trakcie braku aktywności użytkownika, platforma stoi w miejscu.
-			\item Podobnie do poprzedniego trybu, lecz przy braku naciśnięcia klawisza generuje cichą nie-liczbę, aby zachować aktualną prędkość kół modelu.
-			Ta dodatkowa funkcjonalność opisana jest szerzej w \ref{sec:model_nan}.
+			\item Podobnie do poprzedniego trybu, lecz przy braku naciśnięcia klawisza, generuje cichą nie-liczbę, aby zachować aktualną prędkość kół modelu.
+			Ta dodatkowa funkcjonalność opisana jest szerzej w sekcji \ref{sec:model_nan}.
 			\item Naciśnięcie klawisza płynnie zwiększa, lub zmniejsza prędkość koła. W trakcie braku aktywności użytkownika, platforma porusza się 
 			z ustawionymi prędkościami kół.
-			\item Podobnie, co poprzednio, lecz pozwala na schodkowe, dokładniejsze ustawienie prędkości kół. 
-			Dzięki temu możliwe jest w miarę dokładne powtórzenie manualnych testów platformy.
+			\item Podobnie, co w poprzednim trybie, lecz pozwala na schodkowe ustawienie prędkości kół co 0,1 $\frac{rad}{s}$ (pomnożone przez dokładność).
+			Dzięki temu, możliwe jest w miarę dokładne powtórzenie manualnych testów platformy.
 			\item Poprzedni tryb, lecz przy ustawieniu prędkości zerowej, generuje nie-liczbę.
 			\item Sterowanie prędkościami kół za pomocą gałek kontrolera.
-			Większość kontrolerów posiada dwa, dwuosiowe joysticki, co daje cztery osie zmieniające się w zakresie $\left<-1;1\right>$.
-			Można za ich pomocą bezpośrednio ustawiać prędkości kół, chociaż jest to dość nieintuicyjne w działaniu.
+			Większość kontrolerów posiada dwa, dwuosiowe joysticki, co daje cztery osie, zmieniające się w zakresie $\left<-1;1\right>$.
+			Można za ich pomocą bezpośrednio ustawiać prędkości kół, chociaż jest to nieintuicyjne w działaniu.
 			\item Lokalny kierunek jazdy platformy składa się z dwóch wektorów prędkości liniowej i wektora obrotu. 
 			Za pomocą klawiatury, binarnie, można nadać platformie jeden z ośmiu kierunków poruszania się i jeden z dwóch kierunków obrotu.
 			Ponownie, ta metoda sterowania powoduje skoki prędkości i poślizgi. Przypomina sterowanie pojazdami w grach komputerowych.
 			Puszczenie klawiszy powoduje zatrzymanie się platformy.
 			\item Podobny tryb do poprzedniego, ale naciśnięcie klawisza płynnie dodaje wartość do kierunku poruszania się i obrotu platformy.
 			Brak aktywności użytkownika powoduje, że model porusza się z zadaną prędkością w zadanym kierunku i z zadanym obrotem.
-			\item Połączenie dwóch poprzednich trybów, schodkowe sterowanie prędkością platformy. Pozwala na ustawienie prędkości i kierunku platformy z zadaną dokładnością.
+			\item Połączenie dwóch poprzednich trybów, schodkowe sterowanie prędkością platformy. Pozwala na ustawienie prędkości i obrotu platformy z zadaną dokładnością.
 			\item Sterowanie kierunkiem platformy za pomocą kontrolera. Trzy osie są używane, dwie do nadania prędkości, jedna do nadania obrotu.
 			Jest to prawdopodobnie najczęstszy sposób kontrolowania robotów wielokierunkowych za pomocą kontrolera.
 			Bardzo intuicyjny i używany także przez inne pakiety do manualnego sterowania robotami na kołach Mecanum.
 			\item Sterowanie za pomocą myszki, najdokładniejsze sterowanie kierunkiem, mniej dokładne obrotem.
 			Kursor myszy wskazuje końcówkę strzałki reprezentującej kierunek ruchu robota, za pomocą kółka, można dodawać, lub odejmować prędkość do obrotu wokół osi.
-			Ponieważ większość myszek ma skokowe obroty kółek, wprowadza to nieznaczne poślizgi. Można także modyfikować obrót płynnie klawiaturą.
+			Ponieważ większość myszek ma skokowe obroty kółek, wprowadza to nieznaczne poślizgi. Można także modyfikować obrót klawiaturą w płynnym trybie przyrostowym.
 		\end{enumerate}
 		
 		\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\textwidth]{graphics/lalkarz.png}
+		\includegraphics[width=\textwidth]{graphics/lalkarz.png}
 		\caption{Zrzuty ekranu dwóch trybów działania programu.}
 		\label{fig:lalkarz}
 		\end{figure}
@@ -152,7 +154,7 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 		
 \section{Generator sterowania}
 	\label{sec:gramofon}
-	Podstawą przeprowadzania testów modelu jest powtarzalność eksperymentów oraz dokładność.
+	Podstawą przeprowadzania testów modelu jest powtarzalność eksperymentów, oraz dokładność.
 	Potrzeba zatem jest sposobu na automatyczne wygenerowanie strumienia wiadomości z określonymi danymi.
 	
 	Program \texttt{gramofon} wczytuje plik danych, w którym znajdują się rekordy, każdy opisuje:
@@ -169,14 +171,14 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 	
 	Po upływie czasu $t$, program nadaje dodatkową wiadomość z nowymi danymi, oraz przestawia dane generowane przez wywołania pierwszego licznika.
 	
-	Po wykorzystaniu danych, algorytm nadal generuje wiadomości z zerowymi prędkościami, aby zatrzymać model platformy i podtrzymać ,,hamulec'' kół.
+	Po wykorzystaniu danych, algorytm nadal generuje wiadomości z zerowymi prędkościami, aby zatrzymać model platformy i podtrzymać aktywne hamowanie kół.
 	
-	W ten sposób możliwe jest proste generowanie sterowania robota, bazujące na czasie.
+	W ten sposób, możliwe jest proste generowanie sterowania robota, bazujące na czasie.
 	Przykładowo, program może generować sterowanie:
 	\begin{enumerate}
-		\item Ruch przez 3,2 s, z prędkością 0,2 m/s, w kierunku (2,1).
-		\item Zatrzymanie na czas 0.9 s.
-		\item Obrót przez czas 10 s, z prędkością kątową 0,02 rad/s.
+		\item Ruch przez 3,2 s, z prędkością 0,2 $\frac{m}{s}$, w kierunku (2,1).
+		\item Zatrzymanie na czas 0,9 s.
+		\item Obrót przez czas 10 s, z prędkością kątową 0,02 $\frac{rad}{s}$.
 	\end{enumerate}
 	
 	Ponieważ jednak system operacyjny, na którym pracuje program i symulator, nie spełnia wymogów systemu czasu rzeczywistego, generowane wiadomości
@@ -209,7 +211,6 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 	
 	Takie zjawisko występuje przy przekazywaniu informacji o pozycji i prędkości kół, generowanej przez model czujnika enkoderów, do programu
 	manualnego sterowania, opisanego w \ref{sec:lalkarz}.
-	Program jest w stanie wygodnie wyświetlić generowane prędkości kół obok zebranych wartości przez enkoder, w celu wizualnego ich porównania.
 	
 	ROS nie pozwala na automatyczne odbieranie tylko części pakietu, dlatego powstał program o nazwie kodowej \texttt{dziadzio}, niczym dziadek do orzechów.
 	Przyjmuje wiadomości typu \texttt{omnivelma\_msgs/EncodersStamped} i zwraca wiadomości typu \texttt{omnivelma\_msgs/Vels}, który to typ 
@@ -217,12 +218,12 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 
 \section{Podłoga o zmiennym współczynniku tarcia}
 	\label{sec:flooria}
-	Symulacja nie składa się jedynie z robota i czujnika, ale także z podłoża na którym musi się poruszać.
+	Symulacja nie składa się jedynie z robota i czujnika, ale także z podłoża, na którym musi się poruszać.
 	Ponieważ podłoże również wpływa na symulację, powinien istnieć sposób na ustawienie jego współczynnika tarcia.
 	Robi się to wewnętrznie w identyczny sposób, jak w przypadku kół platformy, co zostało opisane w sekcji \ref{sec:friction}.
 	
 	W tym przypadku jednak powinno się ustawić identyczne wektory tarć $F_1$ i $F_2$, aby podłoże symulowało równe tarcie we wszystkich kierunkach.
-	Tak samo, jak w przypadku modelu platformy dynamicznej, program nadający podłożu odpowiednie wektory tarcia, przyjmuje asynchroniczne wywołanie 
+	Tak samo, jak w przypadku modelu platformy dynamicznej, program nadający podłożu odpowiednie wektory tarcia przyjmuje asynchroniczne wywołanie 
 	typu \texttt{omnivelma\_msgs/SetFriction}, zawierające dwie wartości zmiennoprzecinkowe.
 	
 	Nazwa kodowa tego programu sterującego to \texttt{flooria}, od angielskiej nazwy na podłogę.
@@ -230,32 +231,56 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 	
 \section{Obserwator symulacji}
 	\label{sec:ocznica}
-	Kolejny program uruchamiany w symulatorze Gazebo, oblicza i zwraca ciąg danych reprezentujący 
+	Kolejny program uruchamiany w symulatorze Gazebo, oblicza i zwraca ciąg danych, reprezentujący 
 	odległość i kąt pomiędzy platformą dynamiczną i kinematyczną, pakiet \texttt{omnivelma\_msgs/Relative}.
 	Te dane pozwalają sprawdzić, na ile symulacja fizyczna opóźnia się względem matematycznego modelu.
 	
 	Ten program nie może być zaimplementowany jako zewnętrzny komponent, gdyż wiadomości zawierające pozycje platform będą przychodzić asynchronicznie.
 	Nie da się w takim przypadku obliczyć dokładnych odległości pomiędzy platformami w danej chwili. 
-	Wprowadzałoby to także spore opóźnienie, gdyż program musiałby czekać na odbiór obu pakietów, dodatkowo zachować pewność że oba pochodzą z tej samej klatki symulacji.
+	Wprowadzałoby to także spore opóźnienie, gdyż program musiałby czekać na odbiór obu pakietów, dodatkowo zachowując pewność że oba pochodzą z tej samej klatki symulacji.
 	
 	Nazwa kodowa tego programu to \texttt{ocznica}.
 	
 \section{Model kinematyki odwrotnej}
-	Jest to coś na kształt odwrotności modelu kinematycznego, opisanego w sekcji \ref{sec:pseuovelma}, jednak działającego bez symulatora.
+	\label{sec:transmutator}
+	Jest to model kinematyki odwrotnej, alternatywa do modelu kinematycznego, opisanego w sekcji \ref{sec:pseudovelma}, jednak działającego bez symulatora i bez możliwości 
+	całkowania prędkości (i generowania danych o aktualnej pozycji).
 	Ten komponent przyjmuje zadaną prędkość, kierunek i obrót platformy, a zwraca prędkości kół, które powinny być nadane platformie, aby wywołać taki ruch.
-	Nie całkuje tego ruchu i nie różniczkuje go, więc nie generuje informacji o aktualnej pozycji modelu platformy.
 	
-	%TODO wstawić ten wzór
+	\begin{equation}
+	\begin{bmatrix}
+	\omega_1 \\
+	\omega_2 \\
+	\omega_3 \\
+	\omega_4 \\
+	\end{bmatrix}
+	=
+	\frac{1}{r}
+	\begin{bmatrix}
+	1 & -1 & 2(a+b) \\
+	1 & 1 & -2(a+b) \\
+	1 & -1 & -2(a+b) \\
+	1 & 1 & 2(a+b) \\
+	\end{bmatrix}
+	\begin{bmatrix}
+	v_y \\
+	v_x \\
+	\omega_z \\
+	\end{bmatrix}
+	\end{equation}
 	
-	Dodatkowo, program pozwala na obrót wektora prędkości o zadany kąt prosty, lub półpełny. 
+	Stałe, użyte we wzorze zdefiniowane są w tabeli \ref{tab:dims}, a numerowanie kół na rysunku \ref{fig:base_dims}.
+	Ten wzór, podobnie jak poprzedni, pojawia się w wielu pracach, na przykład \cite{wheels}, dokładny wygląd macierzy zależy od numerowania kół i interpretacji kierunków osi.
+	
+	Dodatkowo, program pozwala na obrót wektora prędkości o kąt prosty, lub półpełny. 
 	Jest to spowodowane tym, że różne komponenty i różne modele przyjmują różną pozycję wyjściową robota.
-	Czasami przód skierowany jest w dodatnią stronę osi X, a czasami Y. W związku z tym ta funkcjonalność jest w stanie przekonwertować dane wejściowe dla innego robota.
+	Czasami przód modelu skierowany jest w dodatnią stronę osi X, a czasami Y. W związku z tym, ta funkcjonalność jest w stanie przekonwertować dane wejściowe dla innego robota.
 	
 	Nazwa kodowa to \texttt{transmutator}, wykonuje transmutację jednego typu prędkości w inny.
 	
 \section{Mapa z symulacją}
 	Symulator Gazebo przy uruchomieniu ładuje plik zawierający referencje robotów i ich początkowe pozycje, używane w symulacji.
-	Ten pakiet nie jest programem wykonywalnym, lecz prezentuje informacje dla symulatora o scenariuszu testowym.
+	Ten pakiet nie jest programem wykonywalnym, lecz prezentuje informacje dla symulatora o scenie symulacji.
 	
 	Plik typu \texttt{world} jest plikiem SDF, podobnym do tych, które służą do określenia wewnętrznej budowy robotów.
 	Posiada listę elementów \texttt{import} ze ścieżkami modeli, a także nazwy programów działających bez modelu, jak obserwator symulacji, opisany w sekcji \ref{sec:ocznica}.
@@ -267,7 +292,7 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 \section{Rozdzielacz pakietów}
 	Jeśli dwóm komponentom nadać te same nazwy interfejsów, to ROS będzie przekazywał pomiędzy nimi informacje.
 	To jednak nie zawsze jest możliwe, aby mieć całkowitą kontrolę nad nazwami interfejsów wszystkich komponentów.
-	Dlatego też potrzeby jest program do przekazywania i ewentualnego rozdzielania pakietów dla różnych komponentów.
+	Dlatego też, potrzeby jest program do przekazywania i ewentualnego rozdzielania pakietów dla różnych odbiorników.
 	
 	Ten program wykonywalny pobiera i generuje wiadomości typu \texttt{omnivelma\_msgs/Vels}, zawierające prędkości kół.
 	Pozwala to na sterowanie kilkoma robotami o identycznym interfejsie ze wspólnego źródła.
@@ -286,7 +311,7 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 	
 	Działanie programu oparte jest na zachowaniu akcja-reakcja.
 	Dane z czujników laserowych dzielone są, w zależności od kąta pomiaru, na cztery ćwiartki lokalnego układu współrzędnych.
-	Rozpatrywane są tylko te ćwiartki w których kierunku porusza się platforma.
+	Rozpatrywane są tylko te ćwiartki, w których kierunku porusza się platforma.
 	Jeśli pomiar wypadnie wystarczająco blisko platformy, kierunek jest obracany w odwrotnym do tej ćwiartki kierunku.
 	
 	Na przykład, jeśli platforma porusza się w prawo i wykryje obiekt w trzeciej ćwiartce (czyli po prawej stronie względem aktualnego kierunku poruszania się),
@@ -297,8 +322,9 @@ Komponenty modeli platform zostały opisane szczegółowo w poprzednich sekcjach
 	Nazwa kodowa \texttt{pantofelek} pochodzi z tego, że zachowuje się jak taki pierwotniak.
 	
 \section{Struktury pakietów wiadomości}
-	Ten komponent nie jest plikiem wykonywalnym, a definicjami struktur danych, używanych przez wiadomości ROSa, używane w projekcie, jeśli nie zostały zdefiniowane w standardzie.
-	Nazwa kodowa i jednocześnie przedrostek wszystkich zawartych typów wiadomości to \texttt{omnivelma\_msgs}.
+	Ten komponent nie jest plikiem wykonywalnym, a definicjami struktur danych, używanych przez wiadomości ROSa w projekcie, jeśli 
+	standard nie obejmuje potrzebnego typu wiadomości.
+	Nazwa kodowa i jednocześnie przedrostek wszystkich zawartych typów to \texttt{omnivelma\_msgs}.
 
 \section{Zewnętrzne pakiety}
 	Istnieje kilka tysięcy różnych pakietów i programów, tworzonych przez społeczność ROSa.

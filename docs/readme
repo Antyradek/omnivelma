@@ -8,7 +8,6 @@ WSTĘP:
 Poprawić grafikę producenta na wektorową.
 
 MODEL:
-Struktura gwiazdowa
 Pseudovelma jest symulowana silnikiem, więc pojedyncza precyzja.
 Zrzut ekranu
 
@@ -20,6 +19,7 @@ Opis budowy pakietów omni, pseudo i monokl.
 
 TESTY:
 Przypadki testowe, screeny i rozwiązania.
+Macierz w modelu kinematyki odwrotnej.
 
 Do zrobienia:
 Lalkarz nie przyjmuje nazwy odbiornika, jest zdefiniowana z góry
@@ -31,4 +31,5 @@ Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu.
 Monokl powinien mieć także masę.
 Dodać czujnik inercji <imu>, odpytać się o dane techniczne.
 Wypróbować "laser_scan_matcher".
-Napisać gramofon.
+Gramofon chyba powinien mieć stałą częstotliwość zapisaną w Hz.
+Narysować jak dzielone są dane w pantofelku.
