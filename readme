@@ -100,6 +100,8 @@ Pantofelek:
 	TWIST						wyjście typu geometry_msgs/Twist
 	SCAN_L						wejście typu sensor_msgs/LaserScan
 	SCAN_R						wejście typu sensor_msgs/LaserScan
+Gramofon:
+	TWIST						wyjście typu geometry_msgs/Twist
 	
 
 	

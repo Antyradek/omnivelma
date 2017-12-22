@@ -1,9 +1,9 @@
 \chapter{Model platformy}
-Pierwszym krokiem do stworzenia modelu dynamicznego, jest stworzenie modelu kinematycznego, aby móc porównać z nim tworzony model dynamiczny, oraz fizyczną platformę,
+Pierwszym krokiem do stworzenia modelu dynamicznego jest stworzenie modelu kinematycznego, aby móc porównać z nim tworzony model dynamiczny, oraz fizyczną platformę,
 w celu weryfikacji poprawności działania.
-Dzięki temu można łatwo oszacować, jak bardzo błędy symulacji, oraz błędy niedoskonałości fizycznego modelu odstają od matematycznych wyliczeń.
+Dzięki temu, można łatwo oszacować, jak bardzo błędy symulacji, oraz błędy niedoskonałości fizycznego modelu odstają od matematycznych wyliczeń.
 
-Dodatkowo, stworzenie modelu platformy kinematycznej pozwala na proste odrzucanie niedziałających implementacji modelu kinematycznego.
+Dodatkowo, stworzenie modelu platformy kinematycznej pozwala na proste odrzucanie niedziałających implementacji modelu dynamicznego.
 Model platformy kinematycznej ma także kluczowe zastosowanie w odometrii.
 
 \begin{figure}[H]
@@ -37,28 +37,28 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 	Powstał jako zamiennik poprzedniego formatu URDF ze względu na jego skomplikowaną semantykę i brak możliwości określania środowiska wokół robotów, 
 	na przykład rozmieszczenie elementów na symulowanej scenie, określania wyglądu i fizycznego zachowania się materiałów itp.
 
-	W przeciwieństwie do poprzednika zapisującego model w przestrzeni drzewiastej, SDF równolegle określa wszystkie składowe modelu, 
-	oraz zależności między nimi, jak więzy i względne pozycje.
-	Model składowych robota ma strukturę gwiazdową. Jeden element, \texttt{model}, jest nadrzędny, wszystkie składowe są logicznie rozmieszczone równolegle.
-	Specjalnie opisane więzy definiują interakcje pomiędzy elementami.
+	W przeciwieństwie do poprzednika, zapisującego model w przestrzeni drzewiastej, SDF równolegle określa wszystkie składowe modelu, 
+	oraz zależności między nimi jak więzy i względne pozycje.
+	Model składowych robota ma strukturę gwiazdową. Jeden element, \texttt{model}, jest nadrzędny, wszystkie składowe są logicznie rozmieszczone równolegle jako podelementy.
+	Specjalnie opisane więzy definiują interakcje pomiędzy składowymi.
 	Jako model, standard rozumie nie tylko roboty, ale także obiekty typu przeszkody, źródła światła, elementy animowane i tym podobne.
-	Standard jest dobrze opisany na ich stronie internetowej \cite{sdf_website}.
+	Standard jest dobrze opisany na stronie internetowej \cite{sdf_website}.
 
 	Element typu \texttt{world}, równoległy do modeli, zawiera informacje o środowisku symulacji.
 	Dodatkowo można dodać informację o ustawieniach maszyny symulującej fizykę, wyglądzie sceny, wietrze, grawitacji, polu magnetycznym itp.
 
-	W każdym z modeli, zawiera się nazwa, domyślna pozycja, sposób traktowania przez symulator i wtyczki programów obsługujących zaawansowane zachowanie modelu,
+	W każdym z modeli zawiera się nazwa, domyślna pozycja, sposób traktowania przez symulator i wtyczki programów obsługujących zaawansowane zachowanie modelu,
 	opisane w równoległych do składowych elementach, ale jako że wszystkie te mogą wystąpić tylko raz, należy traktować je jako część elementu \texttt{model}.
 	Model, lub jego fragment, może być zaimportowany z innego pliku, lecz nie zmieni to struktury gwiazdowej, a co za tym idzie, może dojść do utraty informacji.
 	Ten przypadek zachodzi przy modelach czujników laserowych, opisanych w rozdziale \ref{sec:monokl}.
 
 	Model zawiera w sobie równolegle wszystkie elementy typu \texttt{link}, każdy z nich jest osobną, kompletną częścią robota, na przykład kołem, 
 	fragmentem ramienia chwytaka, kadłubem, czujnikiem.
-	Składowa w sobie informacje o pozycji względem lokalnego środka układu współrzędnych modelu, masie, kształcie, fizycznym kształcie, materiale fizycznym i wyglądzie.
+	Składuje w sobie informacje o pozycji względem lokalnego środka układu współrzędnych modelu, masie, kształcie, fizycznym kształcie, materiale fizycznym i wyglądzie.
 	Pozwala na dodanie elementów reprezentujących źródła dźwięku, czujniki, baterie itp.
 
 	Same elementy zawierają jedynie informacje o swoim początkowym umiejscowieniu w modelu, ale nie o sposobie poruszania się i nałożonych więzach.
-	Do tego potrzebne są, równoległe do elementów modelu, typy \texttt{joint} określające typ więzów, osie, współczynniki sprężystości, wytrzymałość, siłę silników.
+	Do tego potrzebne są, równoległe do elementów \texttt{link}, typy \texttt{joint} określające typ więzów, osie, współczynniki sprężystości, wytrzymałość, czy moc silników.
 	Każde połączenie określa, między jakimi obiektami się łączy.
 	
 	\begin{figure}[H]
@@ -115,7 +115,7 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 	Uzyskane wartości należy przemnożyć przez odpowiednie wektory jednostkowe, obrócić względem lokalnego układu współrzędnych dla modelu i zastosować w funkcjach nadających prędkości bryle.
 
 	Ponieważ sterowanie pozycją modelu kinematycznego odbywa się wyłącznie poprzez wzory matematyczne, w jego symulacji nie uczestniczy maszyna symulacyjna fizyki.
-	Taki model nie reaguje na kolizje z innymi obiektami, nie reaguje na różnicę terenu i nie używa informacji o współczynnikach tarcia materiałów, jak model dynamiczny.
+	Taki model nie reaguje na kolizje z innymi obiektami, nie reaguje na różnicę terenu i nie używa informacji o współczynnikach tarcia materiałów, tak jak model dynamiczny.
 
 	Nazwa kodowa \texttt{pseudovelma} odnosi się do tego, że jest to nieprawdziwy ruch sterowany z zewnątrz, a nie prawdziwa symulacja.
 
@@ -126,7 +126,7 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 
 		Oznacza to, że wszystkie elementy typu \texttt{link}, będąc dziećmi \texttt{model}, nie zachowują swojej pozycji w lokalnym układzie współrzędnych.
 		Powoduje to, że nadając prędkość kątową modelowi za pomocą funkcji, nadajemy ją każdej składowej osobno.
-		Każde z kół i dwie części bazy, obracają się zgodnie z zadanymi wartościami, ale ich środki pozostają w miejscu w którym rozpoczęły symulację,
+		Każde z kół i dwie części bazy, obracają się zgodnie z zadanymi wartościami, ale ich środki pozostają w miejscu, w którym rozpoczęły symulację,
 		ignorując kompletnie pozycję zdefiniowaną dla elementu rodzica \texttt{model}.
 		
 		Z punktu widzenia symulacji fizycznej ma to sens, gdyż nie można zakładać że składowe modelu są w jakikolwiek sposób podłączone do jego głównej części
@@ -174,7 +174,7 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 	Robot jest bryłą, na którą składają się następujące części składowe:
 	\begin{itemize}
 	\item Główna część trzonu.
-	\item Ruchoma, mniejsza część trzonu z przodu robota.
+	\item Ruchoma, mniejsza część trzonu, z przodu robota.
 	\item 4 koła, 2 podłączone do głównej części, a 2 do przedniej.
 	\item Po 12 rolek na każdym kole.
 	\item Przegub zawiasowy, łączący dwie części podstawy.
@@ -188,7 +188,7 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 	Istnieje wiele podejść do stworzenia odpowiedniego modelu. Każde z nich było proponowane na różnych forach przez osoby symulujące podobne bazy, a także w zawartej bibliografii.
 	
 	Jednak idealne rozwiązanie nigdy nie zostało znalezione.
-	Działający w tym przypadku sposób, także nie został wcześniej sprawdzony.
+	Działający w tym przypadku sposób także nie został wcześniej sprawdzony.
 
 	\subsection{Jak największe zbliżenie do oryginału}
 		Wspomniany wyżej sposób jest najbardziej wymagającym obliczeniowo, ale także najprostszym z możliwych.
@@ -198,11 +198,11 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 
 		Słabym punktem tego rozwiązania jest fakt, że rolki są niestandardowym kształtem, opisanym dokładniej w \cite{rollers}, 
 		którego dokładność jest bardzo wysoce wymagana dla zmniejszenia niedokładności ruchów.
-		Przybliżenie jej walcem powoduje problemy przy przenoszeniu ciężaru na kolejną rolkę, gdyż koło będzie musiało przez chwilę oprzeć się o krawędź.
+		Przybliżenie jej walcem powoduje problemy przy przenoszeniu punktu podparcia na kolejną rolkę, gdyż koło będzie musiało przez chwilę oprzeć się o krawędź.
 		Taki model samoczynnie drgałby przy obrocie koła, zwiększając tym samym i tak duże niedokładności. 
 		Podejście to zostało także zaproponowane w innej pracy naukowej \cite{modelling_ways}.
 
-		Przybliżenie rolki siatką, jedynie zmniejsza powyższy efekt, gdyż sama siatka zbudowana jest z prostych odcinków.
+		Przybliżenie rolki siatką jedynie zmniejsza powyższy efekt, gdyż sama siatka zbudowana jest z prostych odcinków.
 		Zwiększając jej gęstość można teoretycznie poprawić jakość symulacji, kosztem olbrzymiego skoku ilości obliczeń, każde obarczone błędami liczbowymi.
 		Kalkulowanie kolizji fizycznej siatek jest najdroższe ze wszystkich obliczeń kolizji w maszynach symulacji fizyki.
 
@@ -250,7 +250,7 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 		Poprzedni przypadek można zmodyfikować, poprzez wyznaczanie nowej osi przegubu, łączącego wirtualne koło z kulą symulującą rolkę.
 		Takie rozwiązanie nie wymaga przywracania rotacji obiektów do poprzedniej wartości, a co za tym idzie, może być użyte w symulatorze Gazebo.
 
-		Oś wewnętrzna, podłączona jest do koła wirtualnego i obraca się razem z nim.
+		Oś wewnętrzna podłączona jest do koła wirtualnego i obraca się razem z nim.
 		W każdym cyklu należy zamienić, obróconą już w tej klatce oś, na kierunek pierwotny względem postawy platformy.
 		Spowoduje to, że kolejna iteracja fizyki będzie mogła obracać kulą reprezentującą rolkę pod odpowiednim kątem.
 
