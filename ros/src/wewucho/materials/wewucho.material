@@ -1,0 +1,16 @@
+material wewucho/base
+{
+  receive_shadows on
+  technique
+  {
+    pass
+    {
+      ambient 0.3 0.3 0.3 1
+      diffuse 0.3 0.3 0.3 1
+      specular 0.8 0.8 0.8 1
+      shading gouraud
+    }
+  }
+}
+
+

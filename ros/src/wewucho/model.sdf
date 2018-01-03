@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+	<model name="wewucho">
+		
+		<!--Korpus-->
+		<link name="base">
+			<pose>0 0 0 0 0 0</pose>
+			<visual name="base_visual">
+				<pose>0 0 0 0 0 0</pose>
+				<geometry>
+					<box>
+						<size>0.01 0.01 0.01</size>
+					</box>
+				</geometry>
+				<material>
+					<script>
+						<uri>model://wewucho/materials/wewucho.material</uri>
+						<name>wewucho/base</name>
+					</script>
+				</material>
+			</visual>
+			<sensor name="wewucho" type="imu">
+				<visualize>false</visualize>
+				<topic>/wewucho</topic>
+				<plugin name="wewucho" filename="libwewucho.so"/>
+				<imu>
+					<!-- NOTE Wartości szumu pochodzą z przykładu, nie są dokładne dla tego urządzenia -->
+					<angular_velocity>
+						<x>
+							<noise type="gaussian">
+								<mean>0.0</mean>
+								<stddev>2e-4</stddev>
+								<bias_mean>0.0000075</bias_mean>
+								<bias_stddev>0.0000008</bias_stddev>
+							</noise>
+						</x>
+						<y>
+							<noise type="gaussian">
+								<mean>0.0</mean>
+								<stddev>2e-4</stddev>
+								<bias_mean>0.0000075</bias_mean>
+								<bias_stddev>0.0000008</bias_stddev>
+							</noise>
+						</y>
+						<z>
+							<noise type="gaussian">
+								<mean>0.0</mean>
+								<stddev>2e-4</stddev>
+								<bias_mean>0.0000075</bias_mean>
+								<bias_stddev>0.0000008</bias_stddev>
+							</noise>
+						</z>
+					</angular_velocity>
+					<linear_acceleration>
+						<x>
+							<noise type="gaussian">
+								<mean>0.0</mean>
+								<stddev>1.7e-2</stddev>
+								<bias_mean>0.1</bias_mean>
+								<bias_stddev>0.001</bias_stddev>
+							</noise>
+						</x>
+						<y>
+							<noise type="gaussian">
+								<mean>0.0</mean>
+								<stddev>1.7e-2</stddev>
+								<bias_mean>0.1</bias_mean>
+								<bias_stddev>0.001</bias_stddev>
+							</noise>
+						</y>
+						<z>
+							<noise type="gaussian">
+								<mean>0.0</mean>
+								<stddev>1.7e-2</stddev>
+								<bias_mean>0.1</bias_mean>
+								<bias_stddev>0.001</bias_stddev>
+							</noise>
+						</z>
+					</linear_acceleration>
+				</imu>
+			</sensor>
+		</link>
+	</model>
+</sdf>

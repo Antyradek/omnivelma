@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#Uruchom Gazebo
+#Gazebo wczytuje Omnivelmę
+#Pantofelek wczytuje skanery i wysyła Twist do Transmutatora
+#Transmutator wysyła do Omnivelmy
+
+source setup
+#Ustaw ścieżkę modeli dla Gazebo
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+roslaunch velmaverse solovelma.launch &
+PIDGAZ=$!
+rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
+PIDWID=$!
+rosrun transmutator transmutator /widelnica/vels &
+PIDTRA=$!
+rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist &
+PIDLAL=$!
+rqt_multiplot --multiplot-config $(pwd)/multiplot/gazebo.xml --multiplot-run-all &
+PIDMUL=$!
+trap "kill $PIDMUL; kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+
+echo "Wciśnij ^C, aby wyłączyć procesy"
+sleep infinity

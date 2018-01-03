@@ -1,0 +1,11 @@
+WewUcho - czujnik inercji
+
+Komunikacja programu w formie:
+nazwa
+typ
+opis
+
+/wewucho/imu
+sensor_msgs/Imu
+Dane z czujnika
+
