@@ -40,23 +40,32 @@ Opisać wewucho
 
 	
 >>>gnuplot robi tak:
-#! /usr/bin/gnuplot
-
 set autoscale 
 unset label
 set terminal pdf
+set output "square.pdf"
 set key outside
+set datafile separator ","
+
 set grid
-set xrange [-0.5:2]
-set yrange [-0.5:2]
+set xrange [-0.25:1.5]
+set yrange [-0.25:1.5]
 set xtic auto
 set ytic auto           
 set size ratio -1
 set xlabel "Pozycja w osi X [m]"
 set ylabel "Pozycja w osi Y [m]"
-set output 'out.pdf'
-plot 'testdata' \
-	using 4:5 \
+
+plot \
+"square_pseudovelma_pose.csv" \
+	using 5:6 \
 	with lines \
-	linewidth 2 \
+	linewidth 1 \
+	title "Pseudovelma", \
+"square_omnivelma_pose.csv" \
+	using 5:6 \
+	with lines \
+	linewidth 1 \
 	title "Omnivelma"
+
+

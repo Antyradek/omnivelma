@@ -22,7 +22,7 @@ rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders &
 PIDDZI=$!
 rqt_multiplot --multiplot-config $(pwd)/multiplot/gazebo.xml --multiplot-run-all &
 PIDMUL=$!
-trap "kill $PIDMUL; kill $PIDDZI; kill $PIDGRA; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ; kill $PIDBAG;" SIGINT 
+trap "kill $PIDBAG; kill $PIDMUL; kill $PIDDZI; kill $PIDGRA; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
 
 echo "Wciśnij ^C, aby wyłączyć procesy"
 sleep infinity
