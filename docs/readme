@@ -34,6 +34,29 @@ Dodać czujnik inercji <imu>, odpytać się o dane techniczne.
 Wypróbować "laser_scan_matcher".
 Gramofon chyba powinien mieć stałą częstotliwość zapisaną w Hz.
 Narysować, jak dzielone są dane w pantofelku.
-Czujnik imu (wymyślić nazwę)
+Opisać wewucho
 	Analog devices ADIS16460AMLZ
 	10160696 PH1724
+
+	
+>>>gnuplot robi tak:
+#! /usr/bin/gnuplot
+
+set autoscale 
+unset label
+set terminal pdf
+set key outside
+set grid
+set xrange [-0.5:2]
+set yrange [-0.5:2]
+set xtic auto
+set ytic auto           
+set size ratio -1
+set xlabel "Pozycja w osi X [m]"
+set ylabel "Pozycja w osi Y [m]"
+set output 'out.pdf'
+plot 'testdata' \
+	using 4:5 \
+	with lines \
+	linewidth 2 \
+	title "Omnivelma"

@@ -8,6 +8,8 @@
 source setup
 #Ustaw ścieżkę modeli dla Gazebo
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+rosbag record /omnivelma/pose /pseudovelma/pose &
+PIDBAG=$!
 roslaunch velmaverse velmaverse.launch &
 PIDGAZ=$!
 rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
@@ -20,7 +22,7 @@ rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders &
 PIDDZI=$!
 rqt_multiplot --multiplot-config $(pwd)/multiplot/gazebo.xml --multiplot-run-all &
 PIDMUL=$!
-trap "kill $PIDMUL; kill $PIDDZI; kill $PIDGRA; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+trap "kill $PIDMUL; kill $PIDDZI; kill $PIDGRA; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ; kill $PIDBAG;" SIGINT 
 
 echo "Wciśnij ^C, aby wyłączyć procesy"
 sleep infinity
