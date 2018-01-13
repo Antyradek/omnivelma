@@ -1,0 +1,77 @@
+#! /bin/bash
+
+set -e
+EXITERR=-1
+
+#Ścieżka modeli Gazebo
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
+#Ścieżka konfiguracji rqt
+export RQT_MULTIPLOT_DIR=$(pwd)/multiplot
+
+#Sprawdź arument testu
+if [ $# -lt 1 ]
+then
+	echo "$0: TEST [ARGUMENTY]" > /dev/stderr
+	echo "Wykonaj test TEST, który jest skryptem powłoki, który definiuje tablicę commands, zawierającą kolejne komendy testu" > /dev/stderr
+	exit $EXITERR
+fi
+
+#Sprawdź czy plik isnieje
+TEST_FILE=$1
+if [ ! -f $TEST_FILE ]
+then
+	echo "$0: Plik $TEST_FILE nie istnieje" > /dev/stderr
+	exit $EXITERR
+fi
+
+#Wykonaj podany plik
+source $TEST_FILE $2 $3 $4 $5 $6
+
+#Sprawdź, czy jest definicja tablicy
+if [ ${#commands[@]} -eq 0 ]
+then
+	echo "$0: Plik $TEST_FILE nie zawiera tablicy commands, tablica powinna być zdefiniowana jako: commands=( kom1 kom2 kom3 )" > /dev/stderr
+	exit $EXITERR
+fi
+
+#Uruchom roscore i poczekaj aż zaskoczy
+source setup
+roscore &
+ROSCORE_PID=$!
+sleep 2
+
+#Funkcja zakończ komendy i roscore, wysyłając SIGINT (^C)
+function end_tests
+{
+	echo "Kończenie testu"
+	for KEY in "${!pids[@]}"
+	do
+		if ps --pid ${pids[$KEY]} > /dev/null
+		then
+			kill -SIGINT ${pids[$KEY]} &
+		fi
+	done
+	kill -SIGINT $ROSCORE_PID
+}
+
+
+#Wykonaj kolejne testy równolegle i zapisz PIDy
+pids=()
+set +e
+for KEY in "${!commands[@]}"
+do
+	${commands[$KEY]} &
+	if [ $? -ne 0 ]
+	then
+		end_tests
+		exit $EXITERR
+	fi
+	pids[$KEY]=$!
+done
+set -e
+
+#Ustaw funkcję jako obsługę sygnału
+trap end_tests SIGINT
+echo "Wciśnij ^C aby zakończyć test"
+sleep infinity
+

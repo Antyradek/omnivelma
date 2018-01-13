@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
+#Gramofon wysysła Twist do Transmutatora, a ten Vels do Omnivelmy
+#Omnivelma wysyła Enkodery do Dziadziusia, który wysyła je do Pseudovelmy
+#Inaczej: Pseudovelma jeździ po takich danych, jakie generuje Omnivelma
+
+if [ $# -ne 1 ]
+then
+	echo $0: PLIK_GRAMOFON > /dev/stderr
+	exit $EXITERR
+fi
+
+GRAMOFON_FILE=$1
+if [ ! -f $GRAMOFON_FILE ]
+then
+	echo $0: Plik $GRAMOFON_FILE nie istnieje > /dev/stderr
+	exit $EXITERR
+fi
+
+commands=(
+"rosbag record -O /tmp/bag_encoders_pose /omnivelma/pose /pseudovelma/pose"
+"roslaunch velmaverse velmaverse.launch"
+"rosrun gramofon gramofon 0.1 $GRAMOFON_FILE /transmutator/twist"
+"rosrun dziadzio dziadzio /omnivelma/encoders /pseudovelma/vels"
+"rosrun transmutator transmutator /omnivelma/vels"
+"rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/gazebo.xml --multiplot-run-all"
+)

@@ -103,7 +103,7 @@ private:
 		velX *= 0.25 * wheelRadius;
 		velY *= 0.25 * wheelRadius;
 		math::Vector3 transVect = math::Vector3(velX, velY, 0);
-		double k = 2.0/(modelWidth + modelLength);
+		double k = 2.0 / (modelWidth + modelLength);
 		double rot = frVel - flVel - rlVel + rrVel;
 		rot *= k * 0.25 * wheelRadius;
 

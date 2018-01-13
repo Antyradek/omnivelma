@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
+#Lalkarz wysysła Vels do Widelnicy, która dzieli Vels dla Omnivelmy i Pseudovelmy.
+#Lalkarz wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
+
+commands=(
+"roslaunch velmaverse velmaverse.launch"
+"rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
+"rosrun transmutator transmutator /widelnica/vels"
+"rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist -e /lalkarz/encoders"
+"rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders"
+)

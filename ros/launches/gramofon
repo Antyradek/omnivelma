@@ -1,28 +1,29 @@
 #!/bin/bash
 
-#Uruchom Gazebo
 #Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
 #Widelnica dzieli Vels dla Omnivelmy i Pseudovelmy.
 #Gramofon wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
 
-source setup
-#Ustaw ścieżkę modeli dla Gazebo
-export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
-rosbag record /omnivelma/pose /pseudovelma/pose &
-PIDBAG=$!
-roslaunch velmaverse velmaverse.launch &
-PIDGAZ=$!
-rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels &
-PIDWID=$!
-rosrun transmutator transmutator /widelnica/vels &
-PIDTRA=$!
-rosrun gramofon gramofon 0.1 gramofon/square /transmutator/twist &
-PIDGRA=$!
-rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders &
-PIDDZI=$!
-rqt_multiplot --multiplot-config $(pwd)/multiplot/gazebo.xml --multiplot-run-all &
-PIDMUL=$!
-trap "kill $PIDBAG; kill $PIDMUL; kill $PIDDZI; kill $PIDGRA; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+if [ $# -ne 1 ]
+then
+	echo $0: PLIK_GRAMOFON > /dev/stderr
+	exit $EXITERR
+fi
 
-echo "Wciśnij ^C, aby wyłączyć procesy"
-sleep infinity
+GRAMOFON_FILE=$1
+if [ ! -f $GRAMOFON_FILE ]
+then
+	echo $0: Plik $GRAMOFON_FILE nie istnieje > /dev/stderr
+	exit $EXITERR
+fi
+
+commands=(
+"rosbag record -O /tmp/bag_gramofon_pose /omnivelma/pose /pseudovelma/pose"
+"roslaunch velmaverse velmaverse.launch"
+"rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
+"rosrun transmutator transmutator /widelnica/vels"
+"rosrun gramofon gramofon 0.1 $GRAMOFON_FILE /transmutator/twist"
+"rosrun dziadzio dziadzio /omnivelma/encoders /lalkarz/encoders"
+"rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/gazebo.xml --multiplot-run-all"
+)
+
