@@ -68,7 +68,7 @@ plot \
 	linewidth 1 \
 	title "Omnivelma"
 
->>> można rozpatrzyć ustawienie tego na kołach
+>>> można rozpatrzyć ustawienie tego na kołach, do porównania z rzeczywistą bazą.
 <inertial>
 	<mass>2.0</mass>
 	<inertia>
@@ -81,3 +81,10 @@ plot \
 	</inertia>
 </inertial>
 
+Do opisania:
+X delicate.pdf
+square_3.pdf
+square_encoders.pdf
+star_encoders.pdf
+sun_3.pdf
+sun_encoders.pdf

@@ -16,7 +16,7 @@ then
 	exit $EXITERR
 fi
 
-#Sprawdź czy plik isnieje
+#Sprawdź czy plik istnieje
 TEST_FILE=$1
 if [ ! -f $TEST_FILE ]
 then
