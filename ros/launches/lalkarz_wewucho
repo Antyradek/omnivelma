@@ -4,25 +4,12 @@
 #Widelnica dzieli Vels dla Omnivelmy i Pseudovelmy.
 #Gramofon wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
 
-if [ $# -ne 1 ]
-then
-	echo $0: PLIK_GRAMOFON > /dev/stderr
-	exit $EXITERR
-fi
-
-GRAMOFON_FILE=$1
-if [ ! -f $GRAMOFON_FILE ]
-then
-	echo $0: Plik $GRAMOFON_FILE nie istnieje > /dev/stderr
-	exit $EXITERR
-fi
-
 commands=(
-"rosbag record -O /tmp/bag_wewucho /wewucho/imu"
+"rosbag record -O /tmp/bag_wewucho_pose /omnivelma/pose /wewucho/imu"
 "roslaunch velmaverse velmaverse.launch"
 "rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
 "rosrun transmutator transmutator /widelnica/vels"
-"rosrun gramofon gramofon 0.1 $GRAMOFON_FILE /transmutator/twist"
+"rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist"
 "rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/wewucho.xml --multiplot-run-all"
 )
 

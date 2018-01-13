@@ -9,7 +9,7 @@
 				<pose>0 0 0 0 0 0</pose>
 				<geometry>
 					<box>
-						<size>0.01 0.01 0.01</size>
+						<size>0.02 0.02 0.02</size>
 					</box>
 				</geometry>
 				<material>
@@ -25,6 +25,7 @@
 				<plugin name="wewucho" filename="libwewucho.so"/>
 				<imu>
 					<!-- NOTE Wartości szumu pochodzą z przykładu, nie są dokładne dla tego urządzenia -->
+					<!--
 					<angular_velocity>
 						<x>
 							<noise type="gaussian">
@@ -76,7 +77,7 @@
 								<bias_stddev>0.001</bias_stddev>
 							</noise>
 						</z>
-					</linear_acceleration>
+					</linear_acceleration>-->
 				</imu>
 			</sensor>
 		</link>

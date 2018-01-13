@@ -29,8 +29,8 @@
                                     <field>linear_acceleration/x</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>10</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>40</absolute_maximum>
+                                        <absolute_minimum>-40</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
@@ -42,8 +42,8 @@
                                     <field>linear_acceleration/y</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>10</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>40</absolute_maximum>
+                                        <absolute_minimum>-40</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
@@ -74,14 +74,37 @@
                             <subscriber_queue_size>100</subscriber_queue_size>
                             <title>Przyspieszenie liniowe</title>
                         </curve_0>
-                        <curve_1>
+                    </curves>
+                    <legend>
+                        <visible>true</visible>
+                    </legend>
+                    <plot_rate>30</plot_rate>
+                    <title>Trasa Omnivelmy i Pseudovelmy</title>
+                </column_0>
+                <column_1>
+                    <axes>
+                        <axes>
+                            <x_axis>
+                                <custom_title>Untitled Axis</custom_title>
+                                <title_type>0</title_type>
+                                <title_visible>true</title_visible>
+                            </x_axis>
+                            <y_axis>
+                                <custom_title>Untitled Axis</custom_title>
+                                <title_type>0</title_type>
+                                <title_visible>true</title_visible>
+                            </y_axis>
+                        </axes>
+                    </axes>
+                    <curves>
+                        <curve_0>
                             <axes>
                                 <x_axis>
                                     <field>angular_velocity/z</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>10</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1</absolute_maximum>
+                                        <absolute_minimum>-1</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
@@ -93,8 +116,8 @@
                                     <field>angular_velocity/x</field>
                                     <field_type>0</field_type>
                                     <scale>
-                                        <absolute_maximum>10</absolute_maximum>
-                                        <absolute_minimum>-10</absolute_minimum>
+                                        <absolute_maximum>1</absolute_maximum>
+                                        <absolute_minimum>-1</absolute_minimum>
                                         <relative_maximum>0</relative_maximum>
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>1</type>
@@ -124,14 +147,14 @@
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
                             <title>Prędkość kątowa</title>
-                        </curve_1>
+                        </curve_0>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Trasa Omnivelmy i Pseudovelmy</title>
-                </column_0>
+                    <title>Untitled Plot</title>
+                </column_1>
             </row_0>
         </plots>
         <track_points>false</track_points>
