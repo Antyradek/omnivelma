@@ -106,3 +106,55 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		Ale tutaj także jest problem z generowaniem danych, nawet jeśli wygenerowane dane opatrzone będą nagłówkiem z czasem symulatora, to i tak program obierający będzie miał
 		problem z zastosowaniem ich. Dochodzi do problemu synchronizacji programu sterującego i symulatora w niestałym czasie. 
 		Wymagałoby to stosowania marszczenia czasu i podobnych technik.
+		
+\section{Działanie enkoderów}
+	Model czujnika enkoderów zwraca aktualną prędkość i pozycję kół modelu dynamicznego.
+	W ten sposób jest możliwe dokładniejsze określenie pozycji platformy, niż bazując na modelu kinematycznym.
+	Jednakże, ta metoda także ma swoje ograniczenia, ze względu na poślizgi, zatem program sterujący nie może w pełni bazować na tych czujnikach, a jedynie powinien używać ich pomocniczo.
+	
+	Ten test ma za zadanie sprawdzić, czy gdyby poruszać platformą kinematyczną tak, jak poruszają się koła platformy dynamicznej, to jak duża była by różnica pomiędzy 
+	pozycjami platform.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{uml/encoders.pdf}
+			\caption{Połączenie komponentów w celu sprawdzenia poprawności działania enkoderów modelu dynamicznego.}
+		\label{uml:encoders}
+	\end{figure}
+	
+	Wyjście enkoderów modelu dynamicznego wyłuskane jest z wiadomości i podane dla modelu kinematycznego, model platformy kinematycznej porusza się tak, jak odbiera to model platformy dynamicznej. Nie ma znaczenia bazowy ruch platformy kinematycznej, jednakże pokazany został tutaj dla porównania i uzyskany w taki sposób, jak dla poprzednich testów. 
+	
+	Przeprowadzono dwa testy, pierwszy standardowy, podobny do powyższych, drugi nadawał prędkości kół jedynie przy zmianie kierunku ruchu modelu dynamicznego.
+	Sterowanie zostało stworzone z myślą o wywołaniu poślizgów platformy, nadana prędkość 0,5 $\frac{m}{s}$ była większa, niż w poprzednich testach.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{plots/star_encoders.pdf}
+			\caption{Ruch modeli przy ciągłym wysyłaniu pakietów, jedynie na zmiany kierunku i kinematyka bazująca na danych zebranych z enkoderów. Wykres pierwszy i trzeci są na siebie nałożone.}
+		\label{uml:encoders}
+	\end{figure}
+	
+	\subsection{Ciągłe nadawanie prędkości kół}
+		Przy ciągłym nadawaniu prędkości kołom, enkodery odczytują praktycznie dokładnie te same wartości, jakie są nadawane.
+		Co za tym idzie, działa to w taki sam sposób, w jaki działałaby platforma kinematyczna w poprzednim teście.
+		Pierwsze trzy wykresy zatem nie różnią się przebiegiem, niż gdyby je wygenerować w poprzednim podłączeniu komponentów.
+		
+		Przy pierwszej zmianie prędkości platformy, widać różnicę w pozycji modeli, spowodowaną poślizgiem.
+		Duża prędkość kątowa również powoduje poślizg kątowy, przez co różnica pomiędzy pozycjami w tym samym czasie rośnie szybciej, jak w poprzednich testach.
+		Enkodery nie są w stanie wykrywać poślizgu, dlatego ich wykres nie odstaje w momentach zmiany kierunku od wykresu modelu kinematycznego.
+		
+	\subsection{Impulsowe nadawanie prędkości kół}
+		Jedno wywołanie metody maszyny symulacyjnej fizyki nadaje prędkość kołom. Następnie, z powodu symulowanych oporów, prędkość koła naturalnie spada, aż do
+		ponownego nadania prędkości. To, jak prędkość ruchu spada, widać, gdyż segmenty przebiegu w dwóch ostatnich wykresach nie są łukami, jak ma to miejsce przy 
+		ciągłym nadawaniu prędkości. Po nadaniu ostatniej wiadomości, zatrzymującej wszystkie koła, platforma nadal wolno się porusza, pod wpływem bezwładności, a brak oporu rolek w jednym z kierunków, oraz brak oporu obrotu koła pozwalał na ciągły ruch w losowym kierunku.
+		
+		Co warto tutaj zauważyć, to to że enkodery prawidłowo starają się przekazać zmienną prędkość kół. 
+		Inaczej mówiąc, pozycja wynikająca z danych zwróconych z enkoderów jest dokładniejsza, niż wynikająca z wywołanego ruchu modelu kinematycznego w idealnym przypadku.
+		Żółty wykres jest bliżej pomarańczowego, niż fioletowy/niebieski.
+		Tutaj także widać wpływ poślizgu modelu na określanie pozycji.
+		
+		Zatem model enkoderów może mieć faktyczne zastosowanie w określaniu pozycji platformy. 
+		Okazuje się lepszy, niż kinematyka, w przypadku zewnętrznego nadania prędkości platformie, na przykład pod wpływem nagłego zatrzymania.
+		Pod warunkiem, że nie występuje poślizg. Jak już wcześniej wspomniano, platforma jest podatna na ruch w losowym kierunku przy nagłym zatrzymaniu,
+		lecz nie zawsze taki ruch może zostać niewykryty. Poślizg, a nadanie niedeterministycznej siły zewnętrznej, to dwa różne zjawiska.
+		

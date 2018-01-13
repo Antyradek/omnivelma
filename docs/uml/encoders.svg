@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="50.344574cm"
+   height="15.02921cm"
+   viewBox="360 373 990.41507 299.08128"
+   version="1.1"
+   id="svg304"
+   sodipodi:docname="encoders.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata310">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs308" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="707"
+     inkscape:window-height="524"
+     id="namedview306"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.37689863"
+     inkscape:cx="468.42069"
+     inkscape:cy="445.07407"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg304" />
+  <g
+     id="g18"
+     transform="translate(-6.2430161,-96)">
+    <polygon
+       style="fill:#ffffff"
+       points="1114,470 1114,702 1104,712 920,712 920,480 930,470 "
+       id="polygon2" />
+    <polygon
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="1114,470 1114,702 1104,712 920,712 920,480 930,470 "
+       id="polygon4" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="920"
+       y1="480"
+       x2="1104"
+       y2="480"
+       id="line6" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="1104"
+       y1="480"
+       x2="1114"
+       y2="470"
+       id="line8" />
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x1="1104"
+       y1="480"
+       x2="1104"
+       y2="712"
+       id="line10" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+       x="930"
+       y="501.89999"
+       id="text14">
+      <tspan
+         x="930"
+         y="501.89999"
+         id="tspan12">Gazebo</tspan>
+    </text>
+    <line
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:1"
+       x1="930"
+       y1="504.95001"
+       x2="978.34998"
+       y2="504.95001"
+       id="line16" />
+  </g>
+  <g
+     id="g30"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="994.575,655 1038,655 1038,660 1171,660 "
+       id="polyline20" />
+    <path
+       style="fill:#ffffff"
+       d="m 1187,660 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8 z"
+       id="path22"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 1187,660 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8"
+       id="path24"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="1067.38"
+       y="639.96802"
+       id="text28">
+      <tspan
+         x="1067.38"
+         y="639.96802"
+         id="tspan26" />
+    </text>
+  </g>
+  <g
+     id="g40"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="1325.1,635 1304,635 1304,660 1204,660 "
+       id="polyline32" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 1196,668 a 8,8 0 1 0 0,-16"
+       id="path34"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="1442.91"
+       y="666.18597"
+       id="text38">
+      <tspan
+         x="1442.91"
+         y="666.18597"
+         id="tspan36" />
+    </text>
+  </g>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+     x="1171.757"
+     y="493.90002"
+     id="text44">
+    <tspan
+       x="1171.757"
+       y="493.90002"
+       id="tspan42">Pozycja</tspan>
+  </text>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+     x="1171.757"
+     y="583.90002"
+     id="text48">
+    <tspan
+       x="1171.757"
+       y="583.90002"
+       id="tspan46">Pozycja</tspan>
+  </text>
+  <g
+     id="g60"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="1000.65,565 1064,565 1064,570 1171,570 "
+       id="polyline50" />
+    <path
+       style="fill:#ffffff"
+       d="m 1187,570 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8 z"
+       id="path52"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 1187,570 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8"
+       id="path54"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="1208.9"
+       y="532.15601"
+       id="text58">
+      <tspan
+         x="1208.9"
+         y="532.15601"
+         id="tspan56" />
+    </text>
+  </g>
+  <g
+     id="g80"
+     transform="translate(-6.2430161,-96)">
+    <rect
+       style="fill:#ffffff"
+       x="958"
+       y="516"
+       width="125.3"
+       height="70"
+       id="rect62" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="958"
+       y="516"
+       width="125.3"
+       height="70"
+       id="rect64" />
+    <rect
+       style="fill:#ffffff"
+       x="938"
+       y="530"
+       width="40"
+       height="14"
+       id="rect66" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="938"
+       y="530"
+       width="40"
+       height="14"
+       id="rect68" />
+    <rect
+       style="fill:#ffffff"
+       x="938"
+       y="558"
+       width="40"
+       height="14"
+       id="rect70" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="938"
+       y="558"
+       width="40"
+       height="14"
+       id="rect72" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+       x="986"
+       y="541.90002"
+       id="text78">
+      <tspan
+         x="986"
+         y="541.90002"
+         id="tspan74">Model</tspan>
+      <tspan
+         x="986"
+         y="557.90002"
+         id="tspan76">kinematyczny</tspan>
+    </text>
+  </g>
+  <g
+     id="g90"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="1325.1,635 1304,635 1304,570 1204,570 "
+       id="polyline82" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 1196,578 a 8,8 0 1 0 0,-16"
+       id="path84"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="1276.63"
+       y="589.61798"
+       id="text88">
+      <tspan
+         x="1276.63"
+         y="589.61798"
+         id="tspan86" />
+    </text>
+  </g>
+  <g
+     id="g102"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="532.909,679 676.455,679 676.455,730 803,730 "
+       id="polyline92" />
+    <path
+       style="fill:#ffffff"
+       d="m 819,730 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8 z"
+       id="path94"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 819,730 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8"
+       id="path96"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="714.62"
+       y="631.138"
+       id="text100">
+      <tspan
+         x="714.62"
+         y="631.138"
+         id="tspan98" />
+    </text>
+  </g>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+     x="813.75696"
+     y="655.90002"
+     id="text108">
+    <tspan
+       x="813.75696"
+       y="655.90002"
+       id="tspan104">Prędkości</tspan>
+    <tspan
+       x="813.75696"
+       y="671.90002"
+       id="tspan106">kół</tspan>
+  </text>
+  <g
+     id="g118"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="936.992,565 888.496,565 888.496,512 856,512 "
+       id="polyline110" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 848,520 a 8,8 0 1 0 0,-16"
+       id="path112"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="999.62402"
+       y="525.85999"
+       id="text116">
+      <tspan
+         x="999.62402"
+         y="525.85999"
+         id="tspan114" />
+    </text>
+  </g>
+  <g
+     id="g128"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="936.993,655 878.496,655 878.496,730 836,730 "
+       id="polyline120" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 828,738 a 8,8 0 1 0 0,-16"
+       id="path122"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="1007.06"
+       y="617.12799"
+       id="text126">
+      <tspan
+         x="1007.06"
+         y="617.12799"
+         id="tspan124" />
+    </text>
+  </g>
+  <g
+     id="g148"
+     transform="translate(-6.2430161,-96)">
+    <rect
+       style="fill:#ffffff"
+       x="1278"
+       y="578"
+       width="82.849998"
+       height="70"
+       id="rect130" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="1278"
+       y="578"
+       width="82.849998"
+       height="70"
+       id="rect132" />
+    <rect
+       style="fill:#ffffff"
+       x="1258"
+       y="592"
+       width="40"
+       height="14"
+       id="rect134" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="1258"
+       y="592"
+       width="40"
+       height="14"
+       id="rect136" />
+    <rect
+       style="fill:#ffffff"
+       x="1258"
+       y="620"
+       width="40"
+       height="14"
+       id="rect138" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="1258"
+       y="620"
+       width="40"
+       height="14"
+       id="rect140" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+       x="1306"
+       y="603.90002"
+       id="text146">
+      <tspan
+         x="1306"
+         y="603.90002"
+         id="tspan142">Zapis</tspan>
+      <tspan
+         x="1306"
+         y="619.90002"
+         id="tspan144">danych</tspan>
+    </text>
+  </g>
+  <g
+     id="g168"
+     transform="translate(-6.2430161,-96)">
+    <rect
+       style="fill:#ffffff"
+       x="420"
+       y="630"
+       width="111.9"
+       height="70"
+       id="rect150" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="420"
+       y="630"
+       width="111.9"
+       height="70"
+       id="rect152" />
+    <rect
+       style="fill:#ffffff"
+       x="400"
+       y="644"
+       width="40"
+       height="14"
+       id="rect154" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="400"
+       y="644"
+       width="40"
+       height="14"
+       id="rect156" />
+    <rect
+       style="fill:#ffffff"
+       x="400"
+       y="672"
+       width="40"
+       height="14"
+       id="rect158" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="400"
+       y="672"
+       width="40"
+       height="14"
+       id="rect160" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+       x="448"
+       y="655.90002"
+       id="text166">
+      <tspan
+         x="448"
+         y="655.90002"
+         id="tspan162">Kinematyka</tspan>
+      <tspan
+         x="448"
+         y="671.90002"
+         id="tspan164">odwrotna</tspan>
+    </text>
+  </g>
+  <g
+     id="g188"
+     transform="translate(-6.2430161,-96)">
+    <rect
+       style="fill:#ffffff"
+       x="410"
+       y="470"
+       width="106.15"
+       height="70"
+       id="rect170" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="410"
+       y="470"
+       width="106.15"
+       height="70"
+       id="rect172" />
+    <rect
+       style="fill:#ffffff"
+       x="390"
+       y="484"
+       width="40"
+       height="14"
+       id="rect174" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="390"
+       y="484"
+       width="40"
+       height="14"
+       id="rect176" />
+    <rect
+       style="fill:#ffffff"
+       x="390"
+       y="512"
+       width="40"
+       height="14"
+       id="rect178" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="390"
+       y="512"
+       width="40"
+       height="14"
+       id="rect180" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+       x="438"
+       y="495.89999"
+       id="text186">
+      <tspan
+         x="438"
+         y="495.89999"
+         id="tspan182">Generator</tspan>
+      <tspan
+         x="438"
+         y="511.89999"
+         id="tspan184">sterowania</tspan>
+    </text>
+  </g>
+  <g
+     id="g200"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="398.993,679 360.993,679 360.993,590 443,590 "
+       id="polyline190" />
+    <path
+       style="fill:#ffffff"
+       d="m 459,590 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8 z"
+       id="path192"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 459,590 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8"
+       id="path194"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="646.008"
+       y="487.86801"
+       id="text198">
+      <tspan
+         x="646.008"
+         y="487.86801"
+         id="tspan196" />
+    </text>
+  </g>
+  <g
+     id="g210"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="517.159,519 555.159,519 555.159,590 476,590 "
+       id="polyline202" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 468,598 a 8,8 0 1 0 0,-16"
+       id="path204"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="708.93799"
+       y="384.98801"
+       id="text208">
+      <tspan
+         x="708.93799"
+         y="384.98801"
+         id="tspan206" />
+    </text>
+  </g>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+     x="453.75699"
+     y="465.90002"
+     id="text216">
+    <tspan
+       x="453.75699"
+       y="465.90002"
+       id="tspan212">Prędkość i</tspan>
+    <tspan
+       x="453.75699"
+       y="481.90002"
+       id="tspan214">rotacja bazy</tspan>
+  </text>
+  <g
+     id="g228"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="994.575,655 984,655 984,638 781,638 "
+       id="polyline218" />
+    <path
+       style="fill:#ffffff"
+       d="m 765,638 c 0,-4 4,-8 8,-8 4,0 8,4 8,8 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 z"
+       id="path220"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 765,638 c 0,-4 4,-8 8,-8 4,0 8,4 8,8 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8"
+       id="path222"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="948.56"
+       y="610.26898"
+       id="text226">
+      <tspan
+         x="948.56"
+         y="610.26898"
+         id="tspan224" />
+    </text>
+  </g>
+  <g
+     id="g238"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="668.725,571.005 668.725,638 748,638 "
+       id="polyline230" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 756,630 a 8,8 0 1 0 0,16"
+       id="path232"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="776.12598"
+       y="491.34799"
+       id="text236">
+      <tspan
+         x="776.12598"
+         y="491.34799"
+         id="tspan234" />
+    </text>
+  </g>
+  <text
+     font-size="12.7998"
+     style="font-style:normal;font-weight:normal;font-size:12.79979992px;font-family:sans-serif;text-anchor:start;fill:#000000"
+     x="723.75696"
+     y="564"
+     id="text242">
+    <tspan
+       x="723.75696"
+       y="564"
+       id="tspan240">Enkodery</tspan>
+  </text>
+  <g
+     id="g254"
+     transform="translate(-6.2430161,-96)">
+    <polyline
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       points="668.725,549 732,549 732,512 823,512 "
+       id="polyline244" />
+    <path
+       style="fill:#ffffff"
+       d="m 839,512 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8 z"
+       id="path246"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       d="m 839,512 c 0,4 -4,8 -8,8 -4,0 -8,-4 -8,-8 0,-4 4,-8 8,-8 4,0 8,4 8,8"
+       id="path248"
+       inkscape:connector-curvature="0" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:monospace;text-anchor:middle;fill:#000000"
+       x="720.70502"
+       y="529.93597"
+       id="text252">
+      <tspan
+         x="720.70502"
+         y="529.93597"
+         id="tspan250" />
+    </text>
+  </g>
+  <text
+     font-size="12.8"
+     style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:middle;fill:#000000"
+     x="833.75696"
+     y="435.90002"
+     id="text260">
+    <tspan
+       x="833.75696"
+       y="435.90002"
+       id="tspan256">Prędkości</tspan>
+    <tspan
+       x="833.75696"
+       y="451.90002"
+       id="tspan258">kół</tspan>
+  </text>
+  <g
+     id="g280"
+     transform="translate(-6.2430161,-96)">
+    <rect
+       style="fill:#ffffff"
+       x="958"
+       y="606"
+       width="113.15"
+       height="70"
+       id="rect262" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="958"
+       y="606"
+       width="113.15"
+       height="70"
+       id="rect264" />
+    <rect
+       style="fill:#ffffff"
+       x="938"
+       y="620"
+       width="40"
+       height="14"
+       id="rect266" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="938"
+       y="620"
+       width="40"
+       height="14"
+       id="rect268" />
+    <rect
+       style="fill:#ffffff"
+       x="938"
+       y="648"
+       width="40"
+       height="14"
+       id="rect270" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="938"
+       y="648"
+       width="40"
+       height="14"
+       id="rect272" />
+    <text
+       font-size="12.8"
+       style="font-style:normal;font-weight:normal;font-size:12.80000019px;font-family:sans-serif;text-anchor:start;fill:#000000"
+       x="986"
+       y="631.90002"
+       id="text278">
+      <tspan
+         x="986"
+         y="631.90002"
+         id="tspan274">Model</tspan>
+      <tspan
+         x="986"
+         y="647.90002"
+         id="tspan276">dynamiczny</tspan>
+    </text>
+  </g>
+  <g
+     id="g302"
+     transform="translate(-6.2430161,-96)">
+    <rect
+       style="fill:#ffffff"
+       x="630"
+       y="500"
+       width="117.45"
+       height="70"
+       id="rect282" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="630"
+       y="500"
+       width="117.45"
+       height="70"
+       id="rect284" />
+    <rect
+       style="fill:#ffffff"
+       x="610"
+       y="514"
+       width="40"
+       height="14"
+       id="rect286" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="610"
+       y="514"
+       width="40"
+       height="14"
+       id="rect288" />
+    <rect
+       style="fill:#ffffff"
+       x="610"
+       y="542"
+       width="40"
+       height="14"
+       id="rect290" />
+    <rect
+       style="fill:none;fill-opacity:0;stroke:#000000;stroke-width:2"
+       x="610"
+       y="542"
+       width="40"
+       height="14"
+       id="rect292" />
+    <text
+       font-size="12.7998"
+       style="font-style:normal;font-weight:normal;font-size:12.79979992px;font-family:sans-serif;text-anchor:start;fill:#000000"
+       x="658"
+       y="525.90002"
+       id="text300">
+      <tspan
+         x="658"
+         y="525.90002"
+         id="tspan294">Wyłuskiwacz</tspan>
+      <tspan
+         x="658"
+         y="541.90002"
+         id="tspan296">prędkości</tspan>
+      <tspan
+         x="658"
+         y="557.90002"
+         id="tspan298">kół</tspan>
+    </text>
+  </g>
+</svg>
