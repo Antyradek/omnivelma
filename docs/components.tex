@@ -41,19 +41,28 @@ Komponenty można podzielić na trzy typy:
 Poniżej, każdy pakiet opisany jest bardziej szczegółowo, ten dokument nie ma za zadanie być programistyczną dokumentacją komponentów, dlatego 
 nie zagłębia się dokładnie w argumenty, algorytmy i technologie programów.
 
-%TODO przerobić na porządny wykres
+W ostatecznym działaniu symulatora, podłączenie komponentów będzie wyglądać następująco:
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{graphics/comm.pdf}
-	\caption{Sekcje i komunikacja podstawowych komponentów systemu.}
+	\includegraphics[width=\textwidth]{uml/final.pdf}
+	\caption{Komunikacja podstawowych komponentów systemu w trakcie testowania programu sterującego.}
 \end{figure} 
+
+Ważną rolę odgrywa tutaj algorytm określania pozycji, bazujący na odometrii, czujniku inercji i danych z czujnika laserowego.
+Odometria jest generowana za pomocą modelu kinematycznego, sterowanego danymi z enkoderów modelu dynamicznego.
+Sam model dynamiczny sterowany jest pośrednio przez program, który generuje zadane prędkości i obrót robota.
+W uproszczeniu: program sterujący wysyła sterowanie do modelu, bazując na jego pozycji, określonej z danych generowanych przez modele czujników.
+
+W każdym miejscu przepływu danych można zebrać i zwizualizować przesyłane wartości.
+Program sterujący może także korzystać z czujników laserowych w celu wykrycia przeszkody, nie tylko w celu określenia pozycji.
+Bardziej zaawansowany program sterujący mógłby generować zadane prędkości kół bezpośrednio.
 
 Komponenty modeli platform i czujnika laserowego, zostały opisane szczegółowo w poprzednich sekcjach.
 
 \begin{description}
 	\item[\texttt{omnivelma}] Model platformy dynamicznej w sekcji \ref{sec:omnivelma}.
 	\item[\texttt{pseudovelma}] Model platformy kinematycznej w sekcji \ref{sec:pseudovelma}.
-	\item[\texttt{monokl}] Model czujnika laserowego w całym rozdziale \ref{sec:monokl}.
+	\item[\texttt{monokl}] Model czujnika laserowego w sekcji \ref{sec:monokl}.
 \end{description}
 
 \section{Manualne sterowanie}

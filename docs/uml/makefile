@@ -1,5 +1,5 @@
 INKSCAPE=inkscape
-PDFS=gramofon.pdf encoders.pdf
+PDFS=gramofon.pdf encoders.pdf final.pdf
 
 all: $(PDFS)
 

@@ -6,7 +6,6 @@ Gazebo bardzo dobrze działa
 
 WSTĘP:
 Poprawić grafikę producenta SICK na wektorową.
-Opisać, że komunikacja po Ethercacie, a lasery po ethernecie.
 Sekcja o IMU.
 
 MODEL:
@@ -81,8 +80,7 @@ plot \
 	</inertia>
 </inertial>
 
-Do opisania:
-X delicate.pdf
-square_encoders.pdf
-star_encoders.pdf
-sun_encoders.pdf
+MAIL:
+1) W rozdziale 1 opisać cel i zakres pracy (co należy wykonać aby osiągnąć ten cel) . 
+5) W rozdziale opisać całą strukturę oprogramowania (z schematem blokowym) oraz poszczególne komponenty systemu
+

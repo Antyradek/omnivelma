@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="43cm" height="26cm" viewBox="512 194 858 513" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <polygon style="fill: #ffffff" points="910,410 920,400 1122,400 1122,670 1112,680 910,680 910,410 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="910,410 920,400 1122,400 1122,670 1112,680 910,680 910,410 "/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="910" y1="410" x2="1112" y2="410"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1112" y1="410" x2="1122" y2="400"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1112" y1="410" x2="1112" y2="680"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="920" y="431.9">
+      <tspan x="920" y="431.9">Gazebo</tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="920" y1="434.95" x2="968.35" y2="434.95"/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="760" y="687.9">
+    <tspan x="760" y="687.9">Prędkości </tspan>
+    <tspan x="760" y="703.9">kół</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="671.95,605 671.95,612 670,612 670,507 "/>
+    <path style="fill: #ffffff" d="M 670 491 C 674,491 678,495 678,499 C 678,503 674,507 670,507 C 666,507 662,503 662,499 C 662,495 666,491 670,491z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 670 491 C 674,491 678,495 678,499 C 678,503 674,507 670,507 C 666,507 662,503 662,499 C 662,495 666,491 670,491"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="646.008" y="487.868">
+      <tspan x="646.008" y="487.868"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="632.875,409 632.875,416 670,416 670,474 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 678,481.994 A 8,8 0 1 0 662,482.006"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="708.938" y="384.988">
+      <tspan x="708.938" y="384.988"></tspan>
+    </text>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="722" y="485.9">
+    <tspan x="722" y="485.9">Prędkość i</tspan>
+    <tspan x="722" y="501.9">rotacja bazy</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="572" y="360" width="161.75" height="70"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="572" y="360" width="161.75" height="70"/>
+    <rect style="fill: #ffffff" x="552" y="374" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="552" y="374" width="40" height="14"/>
+    <rect style="fill: #ffffff" x="552" y="402" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="552" y="402" width="40" height="14"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="600" y="385.9">
+      <tspan x="600" y="385.9">Testowany program</tspan>
+      <tspan x="600" y="401.9">sterujący</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="671.95,627.005 671.95,668 739,668 "/>
+    <path style="fill: #ffffff" d="M 755 668 C 755,672 751,676 747,676 C 743,676 739,672 739,668 C 739,664 743,660 747,660 C 751,660 755,664 755,668z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 755 668 C 755,672 751,676 747,676 C 743,676 739,672 739,668 C 739,664 743,660 747,660 C 751,660 755,664 755,668"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="630.645" y="559.907">
+      <tspan x="630.645" y="559.907"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="938.993,629 847.496,629 847.496,668 772,668 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 764,676 A 8,8 0 1 0 764,660"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="973.063" y="638.969">
+      <tspan x="973.063" y="638.969"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="996.575,629 1068,629 1068,620 1207,620 "/>
+    <path style="fill: #ffffff" d="M 1223 620 C 1223,624 1219,628 1215,628 C 1211,628 1207,624 1207,620 C 1207,616 1211,612 1215,612 C 1219,612 1223,616 1223,620z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1223 620 C 1223,624 1219,628 1215,628 C 1211,628 1207,624 1207,620 C 1207,616 1211,612 1215,612 C 1219,612 1223,616 1223,620"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1055.18" y="583.696">
+      <tspan x="1055.18" y="583.696"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1290.72,561 1345.28,561 1345.28,620 1240,620 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1232,628 A 8,8 0 1 0 1232,612"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1303.72" y="545.439">
+      <tspan x="1303.72" y="545.439"></tspan>
+    </text>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1196" y="644">
+    <tspan x="1196" y="644">Enkodery</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1224" y="447.9">
+    <tspan x="1224" y="447.9">Prędkości</tspan>
+    <tspan x="1224" y="463.9">kół</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1002.65,519 1002.65,492 980,492 980,357 "/>
+    <path style="fill: #ffffff" d="M 980 341 C 984,341 988,345 988,349 C 988,353 984,357 980,357 C 976,357 972,353 972,349 C 972,345 976,341 980,341z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 980 341 C 984,341 988,345 988,349 C 988,353 984,357 980,357 C 976,357 972,353 972,349 C 972,345 976,341 980,341"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1042.76" y="477.692">
+      <tspan x="1042.76" y="477.692"></tspan>
+    </text>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="996" y="344">
+    <tspan x="996" y="344">Odometria</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="996.575,629 996.575,596 900,596 900,357 "/>
+    <path style="fill: #ffffff" d="M 900 341 C 904,341 908,345 908,349 C 908,353 904,357 900,357 C 896,357 892,353 892,349 C 892,345 896,341 900,341z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 900 341 C 904,341 908,345 908,349 C 908,353 904,357 900,357 C 896,357 892,353 892,349 C 892,345 896,341 900,341"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="963.014" y="583.441">
+      <tspan x="963.014" y="583.441"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="996.575,629 996.575,612 820,612 820,357 "/>
+    <path style="fill: #ffffff" d="M 820 341 C 824,341 828,345 828,349 C 828,353 824,357 820,357 C 816,357 812,353 812,349 C 812,345 816,341 820,341z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 820 341 C 824,341 828,345 828,349 C 828,353 824,357 820,357 C 816,357 812,353 812,349 C 812,345 816,341 820,341"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="985.719" y="583.691">
+      <tspan x="985.719" y="583.691"></tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="960" y="580" width="113.15" height="70"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="960" y="580" width="113.15" height="70"/>
+    <rect style="fill: #ffffff" x="940" y="594" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="940" y="594" width="40" height="14"/>
+    <rect style="fill: #ffffff" x="940" y="622" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="940" y="622" width="40" height="14"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="988" y="605.9">
+      <tspan x="988" y="605.9">Model </tspan>
+      <tspan x="988" y="621.9">dynamiczny</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="960" y="470" width="125.3" height="70"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="960" y="470" width="125.3" height="70"/>
+    <rect style="fill: #ffffff" x="940" y="484" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="940" y="484" width="40" height="14"/>
+    <rect style="fill: #ffffff" x="940" y="512" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="940" y="512" width="40" height="14"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="988" y="495.9">
+      <tspan x="988" y="495.9">Model </tspan>
+      <tspan x="988" y="511.9">kinematyczny</tspan>
+    </text>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="860" y="336">
+    <tspan x="860" y="336">Czujnik</tspan>
+    <tspan x="860" y="352">laserowy</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="936" y="336">
+    <tspan x="936" y="336">Czujnik</tspan>
+    <tspan x="936" y="352">inercji</tspan>
+  </text>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="878.15,261 878.15,226 820,226 820,324 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 828,331.994 A 8,8 0 1 0 812,332.006"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="848.917" y="206.321">
+      <tspan x="848.917" y="206.321"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="878.15,261 878.15,234 900,234 900,324 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 908,331.994 A 8,8 0 1 0 892,332.006"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="901.836" y="210.483">
+      <tspan x="901.836" y="210.483"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="878.15,261 878.15,226 980,226 980,324 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 988,331.994 A 8,8 0 1 0 972,332.006"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="939.296" y="208.402">
+      <tspan x="939.296" y="208.402"></tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="816" y="212" width="164.3" height="70"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="816" y="212" width="164.3" height="70"/>
+    <rect style="fill: #ffffff" x="796" y="226" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="796" y="226" width="40" height="14"/>
+    <rect style="fill: #ffffff" x="796" y="254" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="796" y="254" width="40" height="14"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="844" y="237.9">
+      <tspan x="844" y="237.9">Algorytm określania</tspan>
+      <tspan x="844" y="253.9">pozycji</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="794.995,261 729.497,261 729.497,292 681,292 "/>
+    <path style="fill: #ffffff" d="M 665 292 C 665,288 669,284 673,284 C 677,284 681,288 681,292 C 681,296 677,300 673,300 C 669,300 665,296 665,292z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 665 292 C 665,288 669,284 673,284 C 677,284 681,288 681,292 C 681,296 677,300 673,300 C 669,300 665,296 665,292"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="833.577" y="239.877">
+      <tspan x="833.577" y="239.877"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="550.99,409 512.99,409 512.99,292 648,292 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 656,284 A 8,8 0 1 0 656,300"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="614.737" y="348.486">
+      <tspan x="614.737" y="348.486"></tspan>
+    </text>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="664" y="320.274">
+    <tspan x="664" y="320.274">Pozycja</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffffff" x="636" y="556" width="111.9" height="70"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="636" y="556" width="111.9" height="70"/>
+    <rect style="fill: #ffffff" x="616" y="570" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="616" y="570" width="40" height="14"/>
+    <rect style="fill: #ffffff" x="616" y="598" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="616" y="598" width="40" height="14"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="664" y="581.9">
+      <tspan x="664" y="581.9">Kinematyka</tspan>
+      <tspan x="664" y="597.9">odwrotna</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1290.72,561 1348,561 1348,480 1241,480 "/>
+    <path style="fill: #ffffff" d="M 1225 480 C 1225,476 1229,472 1233,472 C 1237,472 1241,476 1241,480 C 1241,484 1237,488 1233,488 C 1229,488 1225,484 1225,480z"/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1225 480 C 1225,476 1229,472 1233,472 C 1237,472 1241,476 1241,480 C 1241,484 1237,488 1233,488 C 1229,488 1225,484 1225,480"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1347.65" y="514.11">
+      <tspan x="1347.65" y="514.11"></tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1086.31,519 1155.15,519 1155.15,480 1208,480 "/>
+    <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 1216,472 A 8,8 0 1 0 1216,488"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="1050.67" y="475.22">
+      <tspan x="1050.67" y="475.22"></tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1252" y="512" width="117.45" height="70"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1252" y="512" width="117.45" height="70"/>
+    <rect style="fill: #ffffff" x="1232" y="526" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1232" y="526" width="40" height="14"/>
+    <rect style="fill: #ffffff" x="1232" y="554" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1232" y="554" width="40" height="14"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="1280" y="537.9">
+      <tspan x="1280" y="537.9">Wyłuskiwacz</tspan>
+      <tspan x="1280" y="553.9">prędkości</tspan>
+      <tspan x="1280" y="569.9">kół</tspan>
+    </text>
+  </g>
+</svg>
