@@ -19,6 +19,7 @@ Ze względu na niezależność komponentów od siebie, można je także użyć p
 		\texttt{sensor\_msgs/LaserScan} & Jedno skanowanie LiDARa, wraz z nagłówkiem. \\
 		\texttt{omnivelma\_msgs/Relative} & Odległość i kąt pomiędzy obiektami. \\
 		\texttt{nav\_msgs/Odometry} & Transformacja obiektu z macierzą kowariancji. \\
+		\texttt{sensor\_msgs/Imu} & Dane generowane przez czujnik inercji. \\
 	\end{tabular}
 	\caption{Typy i opisy wiadomości przekazywanych pomiędzy komponentami.}
 	\label{tab:messages}
@@ -237,6 +238,21 @@ Komponenty modeli platform i czujnika laserowego, zostały opisane szczegółowo
 	
 	Nazwa kodowa tego programu sterującego to \texttt{flooria}, od angielskiej nazwy na podłogę.
 	Program jest uruchamiany jako biblioteka symulatora Gazebo.
+	
+\section{Algorytm usuwania szumu z danych modelu czujnika inercji}
+	\label{sec:odszumiacz}
+	Jak wcześniej wspomniano, różniczkowanie prędkości w maszynie symulacji fizyki generuje duże błędy.
+	
+	Ten program uśrednia dane w prosty sposób, licząc średnią z określonej ilości poprzednich pomiarów.
+	Odczytuje nazwę nadajnika i odbiornika wiadomości typu \texttt{sensor\_msgs/Imu}, oraz wielkość bufora,
+	
+	Taki algorytm nie sprawdza się jednak, gdy dane są generowane naprzemiennie.
+	Na przykład, jeśli w jednej klatce symulacji maszyna do symulacji fizyki obliczy prawidłową wartość, a w drugiej zwróci zerową,
+	to ten algorytm uśredni te wyniki i zwróci wartość pośrodku.
+	
+	Jednak stworzenie tego komponentu pozwoliło sprawdzić, czy model czujnika inercji reaguje na ruch platformy z określonymi przyspieszeniami.
+	Pozwolił także na odkrycie innych cech generatora.
+	Używany jest w przeprowadzeniu testów w sekcji \ref{sec:test_imu}. Nazwa kodowa to \texttt{odszumiacz}.
 	
 \section{Obserwator symulacji}
 	\label{sec:ocznica}

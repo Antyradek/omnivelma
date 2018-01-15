@@ -270,3 +270,24 @@
 		Na podstawie tych danych można obliczyć, że w jednym przebiegu po całym zakresie kątowym urządzenia, 
 		emitowane jest około 1080, lub 540 impulsów (w zależności od trybu działania).
 		Taka ilość promieni wymagana jest w symulacji, aby wiernie odwzorować urządzenie.
+
+\section{Czujnik inercji}
+	Ten czujnik to małe urządzenie, posiadające zazwyczaj zestaw wewnętrznych czujników, przydatnych przy określaniu prędkości, rotacji i przyspieszeń modułu.
+	Dodatkowo, wiele zestawów tego typu posiada także czujniki pola magnetycznego, położenia, lub nawet termometry.
+	
+	Czujnik użyty w platformie to ADIS16460AMLZ, firmy Analog Devices. Szczegółowa dokumentacja jest dostępna na stronie producenta \cite{adis_website}.
+	
+	Urządzenie ma kształt małej kostki i komunikuje się za pomocą złącza SPI, a co za tym idzie, wymaga zewnętrznego mikrokontrolera, aby móc wysyłać wygenerowane dane
+	do sieci do innych urządzeń.
+	
+	Czujnik posiada:
+	\begin{itemize}
+		\item Trzyosiowy żyroskop.
+		\item Trzyosiowy akcelerometr.
+		\item Czujnik temperatury.
+		\item Sprzętowe wspomaganie korekcji błędów i kalibracji.
+	\end{itemize}
+	
+	Ten czujnik, podobnie jak opisany wcześniej LiDAR, również jest podatny na błędy pomiarowe, a co za tym idzie, należy dodać losowe odchylenia do generowanych danych.
+	
+	W symulacji nie jest używana informacja o temperaturze otoczenia, zatem nie ma potrzeby jej symulować.

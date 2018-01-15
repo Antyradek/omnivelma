@@ -20,6 +20,7 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 	\end{figure}
 	
 	\subsection{Ruch po kwadracie}
+		\label{sec:test_square}
 		Wywołano ruch z prędkością 0,2 $\frac{m}{s}$ po kwadracie o boku 1 m, bez nadawania prędkości kątowej.
 		Modele przejechały ścieżkę pięciokrotnie, po czym zatrzymały się. W kątach kwadratu nie było nadania prędkości zerowej.
 		
@@ -108,7 +109,7 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		problem z zastosowaniem ich. Dochodzi do problemu synchronizacji programu sterującego i symulatora w niestałym czasie. 
 		Wymagałoby to stosowania marszczenia czasu i podobnych technik.
 		
-\section{Działanie enkoderów}
+\section{Enkodery}
 	Model czujnika enkoderów zwraca aktualną prędkość i pozycję kół modelu dynamicznego.
 	W ten sposób jest możliwe dokładniejsze określenie pozycji platformy, niż bazując na modelu kinematycznym.
 	Jednakże, ta metoda także ma swoje ograniczenia, ze względu na poślizgi, zatem program sterujący nie może w pełni bazować na tych czujnikach, a jedynie powinien używać ich pomocniczo.
@@ -120,7 +121,7 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		\centering
 		\includegraphics[width=\textwidth]{uml/encoders.pdf}
 			\caption{Połączenie komponentów w celu sprawdzenia poprawności działania enkoderów modelu dynamicznego.}
-		\label{uml:encoders}
+		\label{plot:encoders}
 	\end{figure}
 	
 	Wyjście enkoderów modelu dynamicznego wyłuskane jest z wiadomości i podane dla modelu kinematycznego, model platformy kinematycznej porusza się tak, jak odbiera to model platformy dynamicznej. Nie ma znaczenia bazowy ruch platformy kinematycznej, jednakże pokazany został tutaj dla porównania i uzyskany w taki sposób, jak dla poprzednich testów. 
@@ -132,7 +133,7 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		\centering
 		\includegraphics[width=\textwidth]{plots/star_encoders.pdf}
 			\caption{Ruch modeli przy ciągłym wysyłaniu pakietów, jedynie na zmiany kierunku i kinematyka bazująca na danych zebranych z enkoderów. Wykres pierwszy i trzeci są na siebie nałożone.}
-		\label{uml:encoders}
+		\label{plot:star_encoders}
 	\end{figure}
 	
 	\subsection{Ciągłe nadawanie prędkości kół}
@@ -159,3 +160,97 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		Pod warunkiem, że nie występuje poślizg. Jak już wcześniej wspomniano, platforma jest podatna na ruch w losowym kierunku przy nagłym zatrzymaniu,
 		lecz nie zawsze taki ruch może zostać niewykryty. Poślizg, a nadanie niedeterministycznej siły zewnętrznej, to dwa różne zjawiska.
 		
+\section{Czujnik inercji}
+\label{sec:test_imu}
+	Test polega na wymuszeniu określonych prędkości i przyspieszeń na modelu bazy i zebraniu wyników.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{uml/wewucho.pdf}
+		\caption{Połączenie komponentów dla testu czujnika inercji.}
+		\label{uml:wewucho}
+	\end{figure}
+	
+	Połączenie nadające sterowanie jest podobne do poprzednich testów.
+	Dodatkowy komponent odszumia dane i zapisuje je, aby można je było wygodnie przedstawić na wykresie.
+	W tym teście nie jest wymagany model kinematyczny.
+	
+	\subsection{Czujnik prędkości kątowej}
+		Ten czujnik korzysta z żyroskopu i zwraca prędkość kątową we wszystkich trzech osiach.
+		Ponieważ jednak platforma porusza się po płaskim terenie, wymagany jest jedynie czujnik w kierunku osi Z, czyli w górę.
+		Drugą osią może być zatem czas nadania pakietu.
+		
+		Wykonano dwa testy, w pierwszym wymuszono ruch po spirali ze stałą prędkością liniową, a co za tym idzie, z nieliniowo zmieniającą się prędkością kątową platformy.
+		Prędkość platformy aktualizowana była co 0,5 s, co widać w postaci schodków na wykresie.
+		Trasa robota nie pokazywała żadnych nowych zjawisk, które nie zostały już wspomniane w poprzednich testach.
+		
+		Drugim testem jest ruch po serpentynie.
+		Prędkość liniowa platformy była stała, nadawano prędkości kątowe o rosnącej wartości. Model jeździł po łukach o coraz mniejszych promieniach.
+		
+		Testy rozpoczęły się w tym samym czasie, lecz program nadający sterowanie celowo oczekiwał po rozpoczęciu kilka sekund.
+		
+		\begin{figure}[H]
+		\centering
+			\includegraphics[width=\textwidth]{plots/wewucho_angular.pdf}
+			\caption{Test prędkości kątowej czujnika inercji.}
+			\label{plot:wewucho_angular}
+		\end{figure}
+		
+		Pierwszy wykres pokazuje, że naturalny szum prędkości kątowej jest niewielki. Należy zatem do modelu tego czujnika celowo dodać szum, podobny do tego, 
+		jaki generuje rzeczywiste urządzenie.
+		%TODO dopisać po zmianie, czy szum dodany
+		
+		Na początku generowany jest szpikulec, przy natychmiastowym nadaniu prędkości kątowej i liniowej platformie.
+		Jest to wewnętrzny szum generowany przez maszynę symulacyjną fizyki, spowodowany dużą zmianą wielu jej parametrów.
+		Również wszystkie składowe elementy modelu są symulowane oddzielnie, połączone razem za pomocą więzów.
+		Zatem informacja nadająca prędkość platformie przechodzi przez kilka warstw, zanim ustawi odpowiednie prędkości wszystkim składowym systemu.
+		
+		Widać także niewielką sprężystość modelu, objawia się ona chwilowym zmniejszeniem wartości wielkości tuż po szpikulcu.
+		Nie jest to celowo zasymulowana mechanika, a naturalne zjawisko reakcji na akcję. Jeden element składowy platformy działa na drugi, ale za chwilę drugi element także
+		zaczyna działać na pierwszy. Podobne jest to w działaniu przeregulowania regulatora.
+		
+	\subsection{Czujnik przyspieszenia liniowego}
+		Ten czujnik jest najtrudniejszy do zamodelowania.
+		Jak wcześniej wspomniano, maszyna do symulacji nie posiada wewnętrznie informacji o przyspieszeniu obiektu, gdyż działa w dyskretnych przedziałach czasowych.
+		Wartość przyspieszenia musi zostać celowo obliczona, co powodować może różne błędy.
+		
+		W tym teście platformie nadano przyspieszenie 2 $\frac{m}{s^2}$ przez czas 1 s, w kierunku osi X, w wiadomościach co 0,1 s.
+		Następnie platforma poruszała się przez 5 s z prędkością 0,2 $\frac{m}{s}$.
+		Potem nadano jej jednoczesne opóźnienie w kierunku osi X i przyspieszenie w kierunku Y, o tych samych wartościach, co na początku.
+		Po kolejnych 5 s, platforma zwolniła do zera. Kształt trasy przypominał literę L z zaokrąglonym kątem.
+		Samo przyspieszenie platformy wynika z uśrednienia wysyłanych prędkości w czasie, musi być nadawane dyskretnie, żaden z elementów symulatora nie jest w stanie
+		pracować w ciągłej domenie czasowej.
+		
+		\begin{figure}[H]
+		\centering
+			\includegraphics[width=\textwidth]{plots/wewucho_linear.pdf}
+			\caption{Test przyspieszenia czujnika inercji.}
+			\label{plot:wewucho_angular}
+		\end{figure}
+		
+		Na czystych danych nie widać, jakoby model czujnika inercji w ogóle działał. 
+		Jest to widoczne tylko przy natychmiastowej zmianie prędkości platformy, to jest przy teście \ref{sec:test_square}.
+		Jednak takie teoretycznie nieskończone przyspieszenie nie może być w żaden naukowy sposób zinterpretowane, dlatego należy przeprowadzić testy z kontrolowanym
+		przyspieszeniem.
+		
+		Po uśrednieniu danych z 10 ostatnich pomiarów, okazuje się, że środek generowanych w tym czasie danych jednak się przesuwał.
+		Co więcej, robił to w poprawnych kierunkach.
+		
+		Na początku powstał zapis w kierunku dodatnim osi X, reprezentujący przyspieszenie platformy.
+		Następnie program zanotował odchylenie pod kątem 45°, w drugiej kwadrze, co było nałożeniem się opóźnienia w osi X i przyspieszenia w osi Y.
+		Na koniec zatrzymanie się platformy generowało zapis w ujemnym kierunku osi Y.
+		
+		Jednakże wielkości zanotowanego przyspieszenia nie są poprawne, a mniejsze o ponad połowę.
+		Na szczęście, nie są losowe, gdyż przy teście o mniejszym przyspieszeniu, ich wielkości spadały proporcjonalnie.
+		
+		Wykres generowany w czasie rzeczywistym sugeruje, jakoby niektóre pakiety przekazywały zerowe przyspieszenie, co w znaczącym stopniu wpływa na 
+		ostatecznie generowane dane.
+		
+		Widać także, że wyraźnie zapisuje się tendencja danych do oscylowania na prostej pod kątem 45°.
+		
+		
+		
+		
+		
+	
+	

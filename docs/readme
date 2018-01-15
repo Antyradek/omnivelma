@@ -32,12 +32,11 @@ Monokl powinien mieć także masę.
 Wypróbować "laser_scan_matcher".
 Gramofon chyba powinien mieć stałą częstotliwość zapisaną w Hz.
 Narysować, jak dzielone są dane w pantofelku.
-Opisać wewucho
-	Analog devices ADIS16460AMLZ
-	10160696 PH1724
-Opisać uśredniacz
+Sprawdzić, czy po nadaniu inercji kołom, IMU jest mniej chaotyczne.
 
-	
+>>>numer seryjny
+	10160696 PH1724
+
 >>>gnuplot robi tak:
 set autoscale 
 unset label

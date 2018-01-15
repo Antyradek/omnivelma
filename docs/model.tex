@@ -610,4 +610,38 @@ $\omega_z$ & & Prędkość kątowa w osi Z, wektor skierowany w górę. \\
 			Na zrzucie ekranu \ref{fig:scan} można zobaczyć, iż punkty pomiarów, wizualizowane w RViz, nie leżą idealnie na figurach powstałych poprzez przecięcia skanowanych brył.
 			Dodany jest szum, jak gdyby rozmazujący punkty.
 
-%TODO tutaj opis IMU
+\section{Model czujnika inercji}
+	Ponieważ czujniki tego typu są często stosowane w robotyce, wszystkie komponenty systemu wspierają jego symulację i struktury przekazywanych danych.
+	\begin{itemize}
+		\item ROS posiada specjalną wiadomość typu \texttt{sensor\_msgs/Imu}, do przekazywania pomiarów pomiędzy komponentami.
+		\item SDF definiuje element typu \texttt{imu} w sekcji czujników, gdzie można mu zdefiniować położenie w robocie i współczynniki błędów pomiarowych.
+		\item Gazebo daje wsparcie klasy czujnika inercji z odczytem wygenerowanych przez maszynę symulacji wartości.
+	\end{itemize}
+	
+	Ten czujnik podłączony jest do platformy dynamicznej.
+	
+	Warto tutaj nadmienić, że struktura wiadomości ROSa posiada pola dla danych, które nie koniecznie mogą być wygenerowane przez czujnik rzeczywisty.
+	Takimi polami jest struktura rotacji, zapisana jako kwaternion, oraz macierze kowariancji, wyznaczane zewnętrznie eksperymentalnie.
+	
+	Macierze kowariancji definiują wpływ danych z jednej osi na drugą i mnożniki wyjścia. 
+	Nierówność pomiarów na przykład może być to spowodowana odchyleniem akcelerometrów względem kąta prostego, co powoduje że ruch w osi jednego czujnika może
+	być także wykryty przez czujniki innych osi. 
+	Podobnie jest, gdy czujniki nie generują dokładnie tych samych danych na taki sam ruch wzdłuż ich osi, co może być spowodowane niedokładnością wykonania elementów.
+	Macierz pozwala zastosować te cechy sprzętowe do danych w celu poprawy ich jakości.
+	
+	W większości programów używających przestrzeń wirtualną, rotację zapisuje się w postaci kwaterniona, jako cztery liczby.
+	Taka postać odporna jest na zjawisko utraty jednego ze stopni swobody (\emph{gimbal lock}), gdy dwie z trzech osi pokryją się, niemożliwy staje się obrót obiektu wokół trzeciej osi. Niestety, taka postać nie ma odwzorowania w rzeczywistej przestrzeni.
+	
+	Symulacja żyroskopu w maszynie symulacyjnej fizyki jest bardzo prosta, gdyż algorytm wyznaczania pozycji obiektów na podstawie nadanych sił korzysta wewnętrznie z
+	wartości prędkości dla każdego obiektu. Zatem kwestia symulacji tego sensora polega na odczycie odpowiednich struktur w maszynie symulacji.
+	Wtyczka do Gazebo, zapisana podobnie do wtyczki czujnika laserowego, zbiera w każdym cyklu maszyny symulacyjnej dane i wysyła ja za pomocą pakietu ROSa.
+	
+	Akcelerometr jest bardziej złożonym problemem, gdyż maszyna symulacji działa w czasie dyskretnym, co utrudnia różniczkowanie prędkości w celu otrzymania przyspieszenia.
+	Ta wartość nie jest także nigdzie indziej używana i musi być obliczona specjalnie dla symulacji tego czujnika.
+	Fakt, że małe odchylenia w zmianie prędkości powodują duże skoki danych przyspieszenia, wprowadza naturalny szum do generowanych danych.
+	W sekcji \ref{sec:test_imu}, sekcji testów, opisane zostały te problemy dokładniej.
+	
+	Pomimo, że odczytanie tych wartości jest tak samo proste, jak prędkości kątowej, to generowane dane różnią się jakością.
+	Szum jest większy, a co za tym idzie, potrzeba dodatkowego programu do odszumienia wygenerowanych wartości.
+	Ten komponent jest opisany w sekcji \ref{sec:odszumiacz}.
+
