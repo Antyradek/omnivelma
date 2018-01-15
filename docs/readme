@@ -29,13 +29,13 @@ Odpowiednie współczynniki inercji (obliczyć z Wikipedii)
 Monokl ma mieć interfejs do zmiany błędów grubych (lub zmienną w kodzie).
 Monokl ma mieć wprowadzony interfejs do zmiany stałego odchyłu. 
 Monokl powinien mieć także masę.
-Dodać czujnik inercji <imu>, odpytać się o dane techniczne.
 Wypróbować "laser_scan_matcher".
 Gramofon chyba powinien mieć stałą częstotliwość zapisaną w Hz.
 Narysować, jak dzielone są dane w pantofelku.
 Opisać wewucho
 	Analog devices ADIS16460AMLZ
 	10160696 PH1724
+Opisać uśredniacz
 
 	
 >>>gnuplot robi tak:

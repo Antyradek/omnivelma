@@ -7,6 +7,8 @@ EXITERR=-1
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
 #Ścieżka konfiguracji rqt
 export RQT_MULTIPLOT_DIR=$(pwd)/multiplot
+#Plik eksportu bag, jeśli jest wywoływany
+export ROSBAG_FILE=/tmp/omnivelma_bag
 
 #Sprawdź arument testu
 if [ $# -lt 1 ]

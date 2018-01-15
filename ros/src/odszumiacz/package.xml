@@ -1,0 +1,16 @@
+<package format="2">
+	<name>odszumiacz</name>
+	<version>1.0.0</version>
+	<description>Usuwanie szumu z pomiaru czujnika inercji</description>
+	
+	<maintainer email="antyradek@protonmail.com">Antyradek</maintainer>
+	
+	<license>GPLv3</license>
+	
+	<buildtool_depend>catkin</buildtool_depend>
+	
+	<depend>gazebo_ros</depend>
+	<depend>std_msgs</depend>
+	<depend>sensor_msgs</depend>
+    <depend>roscpp</depend>
+</package>

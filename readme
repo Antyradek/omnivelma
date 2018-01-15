@@ -26,7 +26,8 @@ Widelnica			Rozdzielacz omnivelma_msgs/Vels na wiele innych topiców.
 Vreporter			Połączenie z symulatorem V-Rep.
 Vrevelma			Platforma w V-Repie.
 Dziadzio			Wyłuskanie prędkości kół z odczytu enkoderów.
-Pantifelek			Proty program sterujący
+Pantifelek			Prosty program sterujący
+Gramofon			Odtwarzacz sterowania z pliku
 
 Uruchomienie w ROS:
 Stwórz gdzieś jakiś katalog, w którym chcesz uruchomić projekt, będzie to katalog roboczy.

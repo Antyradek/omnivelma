@@ -1,0 +1,18 @@
+Odszumiacz - Odszumiacz danych czujnika inercji.
+Użycie: odszumiacz TOPIC_IN TOPIC_OUT
+
+Wejściowy topic i wyjściowy, oba typu sensor_msgs/Imu.
+
+Komunikacja programu w formie:
+nazwa
+typ
+opis
+
+TOPIC_IN
+sensor_msgs/Imu
+Wejściowe dane czujnika inercji.
+
+TOPIC_OUT
+sensor_msgs/Imu
+Wyjściowe dane czujnika inercji.
+

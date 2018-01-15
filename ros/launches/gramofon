@@ -18,7 +18,7 @@ then
 fi
 
 commands=(
-"rosbag record -O /tmp/bag_gramofon_pose /omnivelma/pose /pseudovelma/pose"
+"rosbag record -O $ROSBAG_FILE /omnivelma/pose /pseudovelma/pose"
 "roslaunch velmaverse velmaverse.launch"
 "rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
 "rosrun transmutator transmutator /widelnica/vels"

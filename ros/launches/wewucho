@@ -1,8 +1,7 @@
 #!/bin/bash
 
-#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
-#Widelnica dzieli Vels dla Omnivelmy i Pseudovelmy.
-#Gramofon wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
+#Gazebo wczytuje Omnivelmę
+#Gramofon wysyła Twist do Transmutatora, który wysyła Vels do Omnivelmy
 
 if [ $# -ne 1 ]
 then
@@ -18,10 +17,10 @@ then
 fi
 
 commands=(
-"rosbag record -O /tmp/bag_wewucho /wewucho/imu"
-"roslaunch velmaverse velmaverse.launch"
-"rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
-"rosrun transmutator transmutator /widelnica/vels"
+"rosbag record -O $ROSBAG_FILE /wewucho/imu /odszumiacz/imu"
+"rosrun odszumiacz odszumiacz /wewucho/imu /odszumiacz/imu 10"
+"roslaunch velmaverse solovelma.launch"
+"rosrun transmutator transmutator /omnivelma/vels"
 "rosrun gramofon gramofon 0.1 $GRAMOFON_FILE /transmutator/twist"
 "rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/wewucho.xml --multiplot-run-all"
 )

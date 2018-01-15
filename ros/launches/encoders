@@ -19,7 +19,7 @@ then
 fi
 
 commands=(
-"rosbag record -O /tmp/bag_encoders_pose /omnivelma/pose /pseudovelma/pose"
+"rosbag record -O $ROSBAG_FILE /omnivelma/pose /pseudovelma/pose"
 "roslaunch velmaverse velmaverse.launch"
 "rosrun gramofon gramofon 0.1 $GRAMOFON_FILE /transmutator/twist"
 "rosrun dziadzio dziadzio /omnivelma/encoders /pseudovelma/vels"

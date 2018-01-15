@@ -5,7 +5,7 @@
 #Gramofon wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
 
 commands=(
-"rosbag record -O /tmp/bag_wewucho_pose /omnivelma/pose /wewucho/imu"
+"rosbag record -O $ROSBAG_FILE /omnivelma/pose /wewucho/imu"
 "roslaunch velmaverse velmaverse.launch"
 "rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
 "rosrun transmutator transmutator /widelnica/vels"
