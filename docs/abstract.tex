@@ -7,19 +7,22 @@
 		Model ten będzie służyć do wstępnych badań algorytmów planowania ruchu i sterowania robotem mobilnym.
 
 		Rozpatrzone są tutaj wymagania i problemy przy tworzeniu każdego ze składników środowiska.
-		Na system składają się wirtualne efektory i receptory obsługujące odpowiednią maszynę symulacyjną, a także komponenty wspomagające symulację.
+		Na system składają się wirtualne efektory i receptory obsługujące odpowiednią maszynę symulacyjną, a także moduły wspomagające symulację.
 		Do wykonania zadania użyto programowej struktury ramowej ROS i symulatora Gazebo.
 		
-		W ramach pracy stworzone zostały modele dynamiczne, oraz kinematyczne platformy.
-		Stworzono modele czujników laserowych, czujnika inercji, oraz czujnika enkoderów, a także narzędzia wspomagające testowanie i uruchomienie odpowiednich składników systemu.
+		W ramach pracy, stworzone zostały modele dynamiczne, oraz kinematyczne platformy.
+		Stworzono modele skanerów laserowych, jednostki inercyjnej, oraz czujnika enkoderów, a także narzędzia wspomagające testowanie i uruchomienie odpowiednich składników systemu.
 	\end{abstractsection}
 
 	\begin{abstractsection}{english}
-		%This paper describes creation of simulation environment for omnidirectional platform.
+		This paper describes creation of simulation environment for omnidirectional platform.
+		Robot, which is powered by four Mecanum wheels, is a mobile base for larger robotic manipulator.
 		
-		%The model of the platform will then be used in testing of motion-planning algorithms to later be used on robot.
-	
-		[TODO]
+		The platform model and it's sensors models will then support the development of path-planning and movement algorithms, in order to safely test them before running on
+		hardware.
 		
+		To execute the task, ROS framework and Gazebo simulator were used.
+		Simulation environment consists of dynamic and kinematic models, laser scanner, inertial measurement unit and simulated encoder. 
+		Also, many other components have been created in order to ease testing, data logging and execution of simulation.
 	\end{abstractsection}
 \end{abstractpage}
