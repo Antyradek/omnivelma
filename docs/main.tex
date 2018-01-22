@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{report}
+\documentclass[a4paper,12pt,twoside]{report}
 \usepackage[english,polish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -17,8 +17,15 @@
 \usepackage{caption}
 \usepackage{cleveref}
 \usepackage{icomma}
-\usepackage[ampersand]{easylist}
 \usepackage{dirtree}
+\usepackage{fancyhdr}
+
+\fancypagestyle{plain}{%
+\fancyhf{} % clear all header and footer fields
+\fancyfoot[LE,RO]{\thepage}}
+
+\renewcommand{\headrulewidth}{0pt}
+\pagestyle{plain}
 
 \input{macros.tex}
 
@@ -31,7 +38,7 @@
 \input{about.tex}
 \input{robot.tex}
 \input{tools.tex}
-\input{model.tex}
+\input{model.tex} 
 \input{implementation.tex}
 \input{tests.tex}
 \input{ending.tex}
