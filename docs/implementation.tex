@@ -32,3 +32,30 @@ W tym rozdziale opisane są szczegóły techniczne zastosowanych rozwiązań.
 
 
 %TODO implementacja wszystkiego
+
+% 
+% 	Skrypt kompilacji ROSa, zapisany w CMake, dba o odpowiednie podawanie ścieżek, kolejność kompilacji pakietów i załączanie nazw.
+% 	Na przykład, jeśli pakiet wymaga pliku nagłówkowego, generowanego przez kompilację innego pakietu, załącza go w kodzie tak, jakby był systemowy.
+% 	Skrypt CMake zadba o wywołanie kompilatora z odpowiednimi argumentami.
+
+%DO ROSA
+Instalacja programu na systemie operacyjnym jest złożona.
+	Z wyjątkiem odpowiednich wersji Ubuntu, nie ma łatwego sposobu na instalację go na innych systemach.
+	Na przeszkodzie stoją błędy kompilacji dla nowszych wersji kompilatorów, zależności od dokładnych wersji zewnętrznych bibliotek i 
+	inne problemy w czasie wykonywania, jak naruszenie ochrony pamięci. 
+	Instalacja alternatywnych pakietów i ręczna kompilacja niektórych części nie działa we wszystkich przypadkach.
+
+	Rozwiązaniem tego problemu jest instalacja tej platformy programistycznej na maszynie wirtualnej, lub na systemie uruchamianym z dysku zewnętrznego. 
+	Najnowszą wersją ROSa jest \emph{Lunar Loggerhead} z maja 2017, jednak nie jest to wersja długiego wsparcia, a co za tym idzie, nie posiada wszystkich
+	pakietów zewnętrznych twórców, potrzebnych przy wizualizacji symulacji.
+	Odpowiedniejszą wersją jest \emph{Kinetic Kame} z marca 2016 roku, o bardzo dobrym wsparciu.
+	Pakiety składające się na system ROS nadal są regularnie aktualizowane, lecz nie zawierają nowych funkcjonalności, a jedynie poprawki błędów.
+	Główny symulator fizyki, najważniejszy program, jest w tej samej wersji w obu dystrybucjach.
+
+	Uruchomienie platformy programistycznej na systemie wymaga wielu dodatkowych komend inicjalizujących, 
+	a także dopisywania do tworzonych projektów licznych plików konfiguracyjnych za pomocą dostarczonych skryptów.
+	Używanie modułów z linii poleceń wymaga ustawienia kilku zmiennych systemowych, poprzez wczytywanie skryptów.
+	Użycie niektórych funkcji ROS wymaga uruchomionego demona serwera w tle.
+
+	Ogólnie instalacja i używanie ROS na systemie zostawia dużo różnorodnych plików w katalogu domowym, co może nie być wskazane na codziennym systemie operacyjnym.
+	Z drugiej jednak strony, wirtualizacja systemu operacyjnego z ROS bardzo ogranicza dostępną moc obliczeniową, potrzebną takim programom w dużych ilościach.
