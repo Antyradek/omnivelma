@@ -1,19 +1,19 @@
 \chapter{Wstęp}
 \label{sec:description}
-	\section{Cel}
+	\section{Cel pracy}
 	Celem pracy inżynierskiej jest budowa środowiska symulacyjnego robota mobilnego z kołami szwedzkimi.
 	Dla realizacji tego celu należy opracować model 3D, oraz model dynamiki dookólnej bazy jezdnej z 4 kołami szwedzkimi.
 	Jednym z przyjętych założeń jest wymaganie, aby opracowany model był możliwie dokładny i jego działanie było zbliżone do rzeczywistego robota.
 	Opisywana platforma będzie używana jako baza wielokierunkowa do przemieszczania dwuramiennego robota manipulacyjnego Velma.
 
-	Celem jest stworzenie modelu, który będzie reagował na siły podobnie do rzeczywistego robota i był sterowany tak samo, jak rzeczywisty robot.
+	Celem jest stworzenie modelu, który będzie reagował na siły podobnie do rzeczywistego robota i będzie sterowany tak samo, jak rzeczywisty robot.
 	To spowoduje, że możliwe będzie stworzenie jednego wspólnego programu sterującego, do użycia zarówno w symulacji, jak i rzeczywistym robocie.
 
 	Testowanie oprogramowania sterującego na rzeczywistym obiekcie może prowadzić do jego uszkodzeń, 
 	dlatego wpierw należy się upewnić o poprawności projektowanych rozwiązań na bezpiecznym modelu wirtualnym.
 	Rzeczywistość nie pozwala także na skomplikowane scenariusze testów, które w rzeczywistości mogłyby być niemożliwe do wykonania lub koszty jego wykonania byłyby zbyt wysokie.
 	Szybciej i taniej jest stworzyć symulacyjne środowisko testowe, niż fizyczne, w dodatku błąd sterowników przy symulacji nie grozi zniszczeniem rzeczywistego robota.
-	Dopiero przy osiągnięciu satysfakcjonującej jakości sterowania w symulacji wirtualnej, 
+	Dopiero po osiągnięciu satysfakcjonującej jakości sterowania w symulacji wirtualnej, 
 	można zastosować algorytmy sterowania do rzeczywistego obiektu bez ryzyka uszkodzeń urządzenia.
 
 	Oprócz modelu bazy jezdnej, środowisko symulacyjne musi również udostępniać modele czujników, w które wyposażony jest robot. 
@@ -21,54 +21,42 @@
 	W celu możliwie wiernej symulacji działania czujników, do wartości pomiarów dodaje się szum pomiarowy i zakłócenia.
 
 
-\section{Plan pracy}
+\section{Zakres pracy}
+	Składniki systemu należy wprowadzać po kolei, aby nowe mogły wykorzystywać poprzednie do sprawdzenia ich poprawności działania.
 	\begin{enumerate}
-	\item Należy stworzyć model platformy do uruchomienia w symulatorze, zachowując wszystkie rozmiary i momenty rzeczywistej wersji.
+	\item Stworzenie obiektu w symulatorze, który będzie sterowany za pomocą wzorów kinematycznych. Jest to całkowanie w modelu kinematycznym.
+	\item Stworzyć model dynamiczny platformy do uruchomienia w symulatorze, zachowując wszystkie rozmiary i momenty rzeczywistej wersji.
 	Bryły składowe modelu muszą przypominać kształtem części z których składa się robot, należy im także ustawić parametry fizyczne, jak masę, moment bezwładności, materiał itp.
 	\item Zamodelowanie wszystkich więzów na koła, rolki i przegub, aby maszyna symulacyjna poprawnie symulowała obiekt.
 	Taki model powinien na tym stanie poprawnie reagować na wirtualne siły, lecz jego efektory nie będą jeszcze aktywne.
 	Można go prosto pobieżnie przetestować działając siłą na elementy i patrząc, czy reagują w spodziewany sposób.
 	\item Zapisanie wtyczki sterującej modelem, odczytującej odpowiednie dane z zewnątrz i wywołującej funkcje maszyny symulacyjnej, aby modyfikować ruch modelu.
 	Na tym poziomie można dobudować zamiennik programu sterującego, jedynie do podawania prostych wartości bez odczytywania pomiarów i sterowania.
-	\item Stworzenie modelu kinematycznego, aby przetestować, czy model dynamiczny zachowuje się w miarę poprawnie.
-	\item Zaprogramowanie wtyczki symulującej podstawowe czujniki, aby generowały dane z enkoderów, oraz innych urządzeń, dodawały błędy pomiarowe, a następnie przekształcały dane na format zrozumiały dla programu sterującego.
-	Czujniki nie muszą być istniejące, mogą generować dane, jak pozycja i rotacja, bardzo trudne do uzyskania rzeczywistymi czujnikami.
+	Porównanie z obiektem kinematycznym pozwala sprawdzić, czy model zachowuje się poprawnie i zgodnie z przewidywaniami.
+	\item Zaprogramowanie wtyczki symulującej czujniki enkoderów, aby generowały dane, bazując na pozycjach i prędkościach kół wirtualnych.
+	\item Dodanie czujników wirtualnych, nieistniejących w rzeczywistości, to jest pozycja i rotacja.
 	\item Wystawienie do zmiany w czasie rzeczywistym masy, momentu bezwładności, współczynników tarcia, aby pozwolić na proste testowanie działania systemu z różnymi współczynnikami.
-	\item Elementy pomagające w symulacji, jak model kinematyki odwrotnej, sterowany funkcją matematyczną, i podłoże ze zmiennym współczynnikiem tarcia.
-	\item Programy pomocnicze, zbierające i wyświetlające dane, interfejs graficzny do prostego sterowania robotem.
-	\item Model czujnika laserowego, powinien zbierać dane i przekazywać je dalej. Musi posiadać także określone kształty.
-	\item Model czujnika inercji, może być w pełni zaimplementowany jako program.
-	\item Uproszczony program sterujący, aby zbadać, czy system działa poprawnie na tyle, aby rozwinąć go w końcowy projekt.
-	\item Program sterujący w ROS. Największy i najbardziej skomplikowany element, wspólny dla obu bytów --- wirtualnego i rzeczywistego.
-	Zwykle nie jest to praca jednego człowieka, a jego rozwój nie ustaje przez długi czas.
-	Ten program dostarczy funkcji, aby wyższy sterownik robota mógł użyć tego modułu do sterowania jazdą i odczytywania danych.
+	\item Stworzenie dodatkowych programów, pomagających w symulacji i testowaniu, jak model kinematyki odwrotnej, sterowany funkcją matematyczną, i podłoże ze zmiennym współczynnikiem tarcia.
+	\item Zaprogramowanie programów pomocniczych, zbierających i wyświetlających dane, interfejs graficzny do prostego sterowania robotem.
+	\item Dodanie modelu czujnika laserowego, powinien zbierać dane i przekazywać je dalej. Musi posiadać także określone kształty.
+	\item Dodanie modelu czujnika inercji.
+	\item Stworzenie uproszczonego programu sterującego, bazującego na danych z czujników laserowych, aby zbadać, czy system działa poprawnie na tyle, aby rozwinąć go w końcowy projekt.
+	\item Przeprowadzenie testów, z porównaniem zachowania się rzeczywistej platformy w celu weryfikacji poprawności.
 	\end{enumerate}
 	
-\section{Istniejące implementacje}
-	Istnieją także inne modele jeżdżących robotów na kołach szwedzkich.
-	Można z nich brać przykład i sugerować się źródłami kodu i budową modeli.
-
-	Kuka Youbot jest popularnym robotem wielokierunkowym. Jego modele są domyślnie dostępne w różnych symulatorach, między innymi w Gazebo i V-Repie, które są dobrymi kandydatami do 
-	użycia w projekcie.
-	Tylko w przypadku V-Repa, istnieje wstępny sterownik do którego da się wysyłać odpowiednie wartości kierunku, a on nadaje takie prędkości kołom, aby poruszać modelem w zadanym kierunku.
-	Wersja dla Gazebo jest statycznym obiektem z błędnie ustanowionymi przegubami, jego efektory nie są zaimplementowane.
+	Po stworzeniu symulatora, następnym krokiem jest tworzenie głównego programu sterującego, którego testowanie opierać się będzie na powstałym środowisku symulacyjnym.
+	Program jest wspólny dla obu bytów --- wirtualnego i rzeczywistego.
+	Zwykle nie jest to praca jednego człowieka, a jego rozwój nie ustaje przez długi czas.
+	Ten program dostarczy funkcji, aby wyższy sterownik robota mógł użyć tego modułu do sterowania jazdą i odczytywania danych.
 	
-	Dodatkowo, V-Rep posiada wbudowane dwa inne pojazdy o napędach kół Mecanum i czujnikach laserowych.
-	Zewnętrzne modele także pomogą przy wstępnej weryfikacji zachowania się budowanego tutaj modelu, czy nie zachowuje się nadzwyczaj dziwnie w pierwszych fazach projektu.
 
-	Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, ważne jest aby uprościć model, poprzez zamianę niektórych składowych i dodanie sztucznych więzów.
-	Całościowy model może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
-	Dokładny model także jest znacznie trudniej poprawnie wymodelować, ze względu na liczne tarcia i poślizgi rolek.
-	Proponowane uproszczenia modeli opisane są w sekcji \ref{sec:omnivelma}.
-	
 \section{Podział tej pracy na sekcje}
 	Kolejne rozdziały kolejno opisują różne aspekty pracy.
 	\begin{description}
 		\item[\ref{sec:description}] Zawiera ogólny opis pracy i sposób jej wykonania.
-		\item[\ref{sec:tools}] Opis narzędzi programistycznych, użytych przy budowie modeli i testowaniu.
 		\item[\ref{sec:robot}] Techniczny opis rzeczywistej platformy i czujników, oraz mechaniki stojącej za zasadą ich działania.
-		\item[\ref{sec:model}] Implementacje modeli opisanych w poprzednim rozdziale, problemy i niedoskonałości z nimi związane.
-		\item[\ref{sec:components}] Opis poszczególnych dodatkowych składników systemu, używanych w symulacji, testowaniu, wizualizacji i wspomagających tworzenie.
+		\item[\ref{sec:tools}] Opis narzędzi programistycznych, użytych przy budowie modeli i testowaniu.
+		\item[\ref{sec:model}] Implementacje modeli opisanych w poprzednim rozdziale, problemy i niedoskonałości z nimi związane. Opis poszczególnych dodatkowych składników systemu, używanych w symulacji, testowaniu, wizualizacji i wspomagających tworzenie.
 		\item[\ref{sec:implementation}] Implementacje poszczególnych komponentów systemu.
 		\item[\ref{sec:tests}] Testy różnych składników systemu, wykresy i interpretacja.
 		\item[\ref{sec:ending}] Krótkie podsumowanie wykonanej pracy.

@@ -2,6 +2,24 @@
 \label{sec:implementation}
 W tym rozdziale opisane są szczegóły techniczne zastosowanych rozwiązań.
 
+\section{Istniejące implementacje}
+	Istnieją także inne modele jeżdżących robotów na kołach szwedzkich.
+	Można z nich brać przykład i sugerować się źródłami kodu i budową modeli.
+
+	Kuka Youbot jest popularnym robotem wielokierunkowym. Jego modele są domyślnie dostępne w różnych symulatorach, między innymi w Gazebo i V-Repie, które są dobrymi kandydatami do 
+	użycia w projekcie.
+	Tylko w przypadku V-Repa, istnieje wstępny sterownik do którego da się wysyłać odpowiednie wartości kierunku, a on nadaje takie prędkości kołom, aby poruszać modelem w zadanym kierunku.
+	Wersja dla Gazebo jest statycznym obiektem z błędnie ustanowionymi przegubami, jego efektory nie są zaimplementowane.
+	
+	Dodatkowo, V-Rep posiada wbudowane dwa inne pojazdy o napędach kół Mecanum i czujnikach laserowych.
+	Zewnętrzne modele także pomogą przy wstępnej weryfikacji zachowania się budowanego tutaj modelu, czy nie zachowuje się nadzwyczaj dziwnie w pierwszych fazach projektu.
+
+	Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, ważne jest aby uprościć model, poprzez zamianę niektórych składowych i dodanie sztucznych więzów.
+	Całościowy model może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
+	Dokładny model także jest znacznie trudniej poprawnie wymodelować, ze względu na liczne tarcia i poślizgi rolek.
+	Proponowane uproszczenia modeli opisane są w sekcji \ref{sec:omnivelma}.
+	
+
 \section{Ogólne typy implementacji}
 	\subsection{Program wykonywalny w ROS}
 

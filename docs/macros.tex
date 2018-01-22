@@ -1,3 +1,14 @@
 
 % Naprawa nazw z angielskiego
 \def\figureautorefname{Rysunek}
+
+%Strona streszczenia
+\newenvironment{abstractpage}
+  {\cleardoublepage\vspace*{\fill}\thispagestyle{empty}}
+  {\vfill\cleardoublepage}
+  
+%Samo streszczenie
+\newenvironment{abstractsection}[1]
+  {\bigskip\selectlanguage{#1}%
+   \begin{center}\bfseries\abstractname\end{center}}
+  {\par\bigskip}
