@@ -978,7 +978,7 @@ int main(int argc, char** argv)
 	window.setFramerateLimit(60);
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
-	while (window.isOpen())
+	while (window.isOpen() && ros::ok())
 	{
 		sf::Event event;
 		while (window.pollEvent(event))

@@ -20,6 +20,7 @@
 #define AXIS_LENGTH 0.707106781186548
 #define CLIENT_NAME "gazebo_ros"
 #define MAP_TF "map"
+#define MAX_FORCE 100.0
 
 namespace gazebo
 {
@@ -30,6 +31,10 @@ public:
 	Omnivelma()
 	{
 		counter = 0;
+		velRR = 0;
+		velFR = 0;
+		velRL = 0;
+		velFL = 0;
 	}
 
 public:
@@ -64,11 +69,17 @@ public:
 		{
 			ROS_FATAL_STREAM("Nie udało się znaleźć kolizji kół modelu");
 		}
-
+		
+		//odszukaj przeguby
 		motorRR = model -> GetJoint(linkPrefix + "motor_rr");
 		motorRL = model -> GetJoint(linkPrefix + "motor_rl");
 		motorFR = model -> GetJoint(linkPrefix + "motor_fr");
 		motorFL = model -> GetJoint(linkPrefix + "motor_fl");
+		//nadaj maksymalną siłę
+		motorRR -> SetParam("fmax", 0, MAX_FORCE);
+		motorRL -> SetParam("fmax", 0, MAX_FORCE);
+		motorFR -> SetParam("fmax", 0, MAX_FORCE);
+		motorFL -> SetParam("fmax", 0, MAX_FORCE);
 		
 		if(!motorRR || !motorRL || !motorFR || !motorFL)
 		{
@@ -136,6 +147,20 @@ public:
 
 
 private:
+	///Ustaw prędkości kół z pól
+	void SetVelocities()
+	{
+		//nadaj poprzednie prędkości kół
+		if(!std::isnan(velRR))
+			motorRR -> SetParam("vel", 0, velRR);
+		if(!std::isnan(velRL))
+			motorRL -> SetParam("vel", 0, velRL);
+		if(!std::isnan(velFR))
+			motorFR -> SetParam("vel", 0, velFR);
+		if(!std::isnan(velFL))
+			motorFL -> SetParam("vel", 0, velFL);
+	}
+
 	///Funkcja podłączana do zdarzenia aktualizacji
 	void OnUpdate()
 	{
@@ -213,6 +238,8 @@ private:
 		framePublisher.sendTransform(transMsg);
 		
 		counter++;
+		
+		SetVelocities();
 	}
 
 	///Ustaw tarcia dla kół
@@ -291,14 +318,12 @@ private:
 	///Pobierz wiadomość od ROSa
 	void OnRosMsg(const omnivelma_msgs::Vels::ConstPtr& msg)
 	{
-		if(!std::isnan(msg -> rr))
-			motorRR -> SetVelocity(0, msg -> rr);
-		if(!std::isnan(msg -> rl))
-			motorRL -> SetVelocity(0, msg -> rl);
-		if(!std::isnan(msg -> fr))
-			motorFR -> SetVelocity(0, msg -> fr);
-		if(!std::isnan(msg -> fl))
-			motorFL -> SetVelocity(0, msg -> fl);
+		velRR = msg -> rr;
+		velRL = msg -> rl;
+		velFR = msg -> fr;
+		velFL = msg -> fl;
+	
+		SetVelocities();
 	}
 
 	///Wskaźnik na model
@@ -321,6 +346,12 @@ private:
 	physics::CollisionPtr wheelRLCollision;
 	physics::CollisionPtr wheelFRCollision;
 	physics::CollisionPtr wheelFLCollision;
+	
+	//prędkości kół
+	double velRR;
+	double velRL;
+	double velFR;
+	double velFL;
 
 	///Node dla ROSa
 	std::unique_ptr<ros::NodeHandle> rosNode;
