@@ -9,3 +9,4 @@ ros/build/
 ros/devel/
 ros/.catkin_workspace
 ros/src/CMakeLists.txt
+docs/_minted-main

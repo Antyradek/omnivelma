@@ -90,6 +90,32 @@
 		\item Przesunięcie wzdłuż osi Y.
 		\item Obrót wokół osi prostopadłej do podłoża.
 	\end{itemize}
+	
+	Kierunek osi X i Y jest zgodny z ustalonymi dla programów sterujących platformą.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{graphics/base_dims.pdf}
+		\caption{Wielkości używane we wzorach.}
+		\label{fig:base_dims}
+	\end{figure} 
+
+	\begin{table}
+		\centering
+		\begin{tabular}{c c l}
+		Oznaczenie & Wartość & Opis \\
+		\hline
+		$r$ & 0,1 m & Promień koła. \\
+		$a$ & 0,76 m & Rozstaw kół na tej samej osi. \\
+		$b$ & 0,72 m & Rozstaw osi. \\
+		$\omega_i$ & & Prędkość kątowa $i$-tego koła. \\
+		$v_x$ & & Składowa prędkości liniowej wzdłuż osi X. \\
+		$v_y$ & & Składowa prędkości liniowej wzdłuż osi Y. \\
+		$\omega_z$ & & Prędkość kątowa wokół osi Z, wektor skierowany w górę. \\
+		\end{tabular}
+		\caption{Parametry i zmienne modelu.}
+		\label{tab:dims}
+	\end{table}
 
 \section{Koła szwedzkie}
 	Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie, ustawionymi pod kątem $45^\circ$ do osi koła.
@@ -148,7 +174,7 @@
 		\label{fig:wheel_vectors}
 		\end{figure} 
 
-		Ustawiając te koła w odpowiedni, pokazany na rysunku \ref{fig:base_ortho}, sposób, można wywołać odpowiednie znoszenie się składowych sił,
+		Ustawiając te koła w odpowiedni, pokazany na rysunku \ref{fig:base_dims}, sposób, można wywołać odpowiednie znoszenie się składowych sił,
 		a w efekcie pozwolić robotowi na poruszanie się w kierunkach nieosiągalnych dla pojazdów o standardowych kołach.
 		Warto nałożyć te wektory na wcześniejszy rysunek \ref{fig:mecanum_dirs}, aby dokładniej zobaczyć, 
 		dlaczego koła nadają platformie daną prędkość wypadkową przy odpowiednim obrocie kół.
@@ -297,3 +323,56 @@
 	wartość.
 	
 	W symulacji nie jest używana informacja o temperaturze otoczenia, zatem nie ma potrzeby jej symulować.
+	
+\section{Podłączenie urządzenia}
+	Platforma podłączona jest do dedykowanego komputera, który pracuje z systemem operacyjnym Ubuntu i dodatkowymi modułami, które zapewniają 
+	pracę w czasie rzeczywistym, aby urządzenie mogło poprawnie współpracować z robotem.
+	
+	Na tym systemie pracuje program, który przyjmuje komendy z innej sieci, odbierane z innego, biurowego komputera.
+	Są tutaj także uruchomione algorytmy, obliczające pozycję platformy, bazując na odometrii.
+	
+\section{Sterowanie urządzeniami}
+	Efektory robota wymagają podania odpowiedniego sterowania, a czujniki odpowiedniego odbiornika.
+	\subsection{Sterownik silników}
+		Program sterujący generuje abstrakcyjne dane, na przykład liczbę zmiennoprzecinkową, zapisaną binarnie.
+		Przykładowy silnik fizyczny nie jest w stanie działać na podstawie takich danych, do pracy potrzebuje odpowiedniego napięcia na wejściu.
+		Do tłumaczenia jednych danych na drugie, potrzebny jest sterownik niskopoziomowy.
+		Najczęściej implementowany jest w formie mikrokontrolera, lub podobnego systemu wbudowanego.
+
+		Jego zadanie to odczytanie danych, podanych przez program sterujący i na przykład generowanie na ich podstawie odpowiedniego przebiegu PWM, lub obsługa przetwornika cyfrowo-analogowego.
+		Do innych zadań może należeć kontrola, czy żądana wartość nie uszkodzi urządzenia.
+		Zazwyczaj sterownik może komunikować się z powrotem z resztą systemu, aby zgłaszać ewentualne awarie.
+
+		Taki program i powiązany z nim układ elektroniczny są najczęściej dostarczone przez producenta robota i nieznane użytkownikowi.
+		Dodatkowo, tworzy to kolejną warstwę abstrakcyjną dla sterownika głównego, który nie musi zważać na generowanie różnych danych dla różnych modeli tych samych efektorów.
+		
+	\subsection{Sterownik czujników}
+		Implementowany podobnie do sterownika silników, ma za zadanie konwertować surowe i obarczone błędami dane z czujników na format zrozumiały dla programu sterującego.
+		W tym miejscu usuwa się błędy grube, niweluje stałe na podstawie kalibracji, wygładza szum i interpretuje dane, aby pozyskać wymagane przez wyższe warstwy informacje.
+
+		Przykładowo, czujnik zwraca jedynie ciąg pomiarów, ale to do tego programu należy połączenie pomiaru z informacją o emisji promienia, na ich podstawie obliczenie odległości od przedmiotu i porównanie z innymi pomiarami w celu usunięcia błędów grubych.
+		Większość zaawansowanych receptorów posiada owe układy cyfrowe i programy wbudowane w urządzenie.
+		Dostarczone są przez producenta tak samo, jak sterowniki efektorów.
+		
+		Aby zasymulować ten element, należy zbudować program generujący dane na podstawie aktualnego stanu maszyny do symulacji, w sposób w jaki działa czujnik w rzeczywistości.
+		Na przykład, dla czujnika laserowego, silnik symulacji fizycznej emituje odpowiednią ilość promieni i oblicza ich punkty przecięcia się z wirtualnymi modelami.
+		Renderowanie obrazu pozwala na symulację kamery.
+
+		Ponieważ dane fizyczne nigdy nie są idealne, w celu przybliżenia wyjścia wirtualnego czujnika do oryginału, dodaje się szum o odpowiednim rozkładzie i błędy.
+
+	\subsection{Program sterujący}
+		W programie sterującym obliczane jest sterowanie, na podstawie dostarczonych odczytów z czujników.
+		Zazwyczaj wykorzystuje się tutaj także zewnętrzne biblioteki, dostarczające zaawansowane algorytmy.
+		Ich zadania mogą polegać na budowie wewnętrznej mapy, wyznaczaniu ścieżki, omijaniu przeszkód, odwrotnej kinematyce i tym podobnych.
+
+		Taki program zwykle działa na mocniejszych układach logicznych, niż sterowniki, ze względu na duże zapotrzebowania na moc obliczeniową
+		i niedeterministyczny czas obliczeń.
+		Jeśli robot komunikuje się z użytkownikiem, to zachodzi to w tym module. 
+
+		Programy sterujące mogą być implementowane w językach wysokopoziomowych, nawet skryptowych, gdyż wymagania czasowe nie są rygorystyczne.
+		Co więcej, często się zdarza, że odpowiednie składowe programu bazują na różnych technologiach.
+
+		Środowisko symulacyjne powinno zapewnić pełną abstrakcję komunikacji tego modułu.
+		Oznacza to, że niezależnie, czy program steruje rzeczywistym robotem, czy symulacją wirtualną, zawsze powinien móc komunikować się i otrzymywać dane w tym samym formacie.
+		W idealnym przypadku program nie powinien mieć możliwości stwierdzić, czy steruje symulacją, czy fizycznym urządzeniem.
+		

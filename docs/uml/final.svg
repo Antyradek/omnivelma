@@ -65,8 +65,8 @@
       <tspan x="1042.76" y="477.692"></tspan>
     </text>
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="996" y="344">
-    <tspan x="996" y="344">Odometria</tspan>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="992" y="340">
+    <tspan x="992" y="340">Odometria</tspan>
   </text>
   <g>
     <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="996.575,629 996.575,596 900,596 900,357 "/>
@@ -108,14 +108,6 @@
       <tspan x="988" y="511.9">kinematyczny</tspan>
     </text>
   </g>
-  <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="860" y="336">
-    <tspan x="860" y="336">Czujnik</tspan>
-    <tspan x="860" y="352">laserowy</tspan>
-  </text>
-  <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="936" y="336">
-    <tspan x="936" y="336">Czujnik</tspan>
-    <tspan x="936" y="352">inercji</tspan>
-  </text>
   <g>
     <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="878.15,261 878.15,226 820,226 820,324 "/>
     <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 828,331.994 A 8,8 0 1 0 812,332.006"/>
@@ -199,15 +191,15 @@
     <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="632.875,409 632.875,416 668,416 668,475 "/>
     <path style="fill: #ffffff" d="M 668 491 C 664,491 660,487 660,483 C 660,479 664,475 668,475 C 672,475 676,479 676,483 C 676,487 672,491 668,491z"/>
     <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 668 491 C 664,491 660,487 660,483 C 660,479 664,475 668,475 C 672,475 676,479 676,483 C 676,487 672,491 668,491"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="663.431" y="403.462">
-      <tspan x="663.431" y="403.462"></tspan>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="663.432" y="403.462">
+      <tspan x="663.432" y="403.462"></tspan>
     </text>
   </g>
   <g>
     <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="671.95,605 671.95,564 668,564 668,508 "/>
     <path style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" d="M 660,499.994 A 8,8 0 1 0 676,500.006"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="665.215" y="544.383">
-      <tspan x="665.215" y="544.383"></tspan>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="665.214" y="544.382">
+      <tspan x="665.214" y="544.382"></tspan>
     </text>
   </g>
   <g>
@@ -234,4 +226,12 @@
       <tspan x="600" y="401.9">sterujący</tspan>
     </text>
   </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="830" y="340">
+    <tspan x="830" y="340">Skaner</tspan>
+    <tspan x="830" y="356">laserowy</tspan>
+  </text>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="910" y="340">
+    <tspan x="910" y="340">Jednostka</tspan>
+    <tspan x="910" y="356">inercyjna</tspan>
+  </text>
 </svg>
