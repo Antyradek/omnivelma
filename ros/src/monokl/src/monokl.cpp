@@ -104,7 +104,9 @@ private:
 		for(int i = 0; i < sensor -> RangeCount(); i++)
 		{
 			scan.ranges.push_back(sensor -> Range(i));
+			scan.intensities.push_back(sensor -> Retro(i));
 		}
+		
 		
 		publisher.publish(scan);
 		counter++;

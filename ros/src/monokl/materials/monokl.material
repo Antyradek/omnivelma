@@ -5,8 +5,8 @@ material monokl/base
   {
     pass
     {
-      ambient 0 0.5 1 1
-      diffuse 0 0.5 1 1
+      ambient 1 0.5 0 1
+      diffuse 1 0.5 0 1
       specular 0.8 0.8 0.8 1
       shading gouraud
     }
