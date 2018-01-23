@@ -299,7 +299,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	\begin{table}
 		\centering
 		\begin{tabular}{l r}
-			Punkt ramki & Nazwa punktu \\
+			Punkt względny & Identyfikator \\
 			\hline
 			Stały środek mapy & \texttt{map} \\
 			Środek platformy & \texttt{omnivelma} \\
@@ -307,21 +307,21 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 			Emiter prawego lasera & \texttt{monokl\_r\_heart} \\
 			Emiter lewego lasera & \texttt{monokl\_l\_heart} \\
 		\end{tabular}
-		\caption{Nazwy identyfikatorów ramek, używanych w symulatorze.}
+		\caption{Nazwy identyfikatorów przekształceń, używanych w symulatorze.}
 		\label{tab:frames}
 	\end{table}
 		
 	\begin{table}
 		\centering
 		\begin{tabular}{l c r}
-			Nazwa & Punkt względny & Punkt danych \\
+			Nazwa & Punkt względny & Identyfikator \\
 			\hline
 			Pozycja i rotacja platformy & \texttt{map} & \texttt{omnivelma} \\
 			Pozycja i rotacja platformy kinematycznej & \texttt{map} & \texttt{pseudovelma} \\
 			Pozycja i rotacja prawego czujnika & \texttt{map} & \texttt{monokl\_r\_heart} \\
 			Pozycja i rotacja lewego czujnika & \texttt{map} & \texttt{monokl\_l\_heart} \\
 		\end{tabular}
-		\caption{Ramki wysyłane do demona ROS.}
+		\caption{Przekształcenia wysyłane do demona ROS.}
 		\label{tab:frame_send}
 	\end{table}
 			
@@ -540,9 +540,9 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Idealna rolka obraca się całkowicie bez tarcia, a ruch równolegle do jej osi jest niemożliwy.
 		Można więc ustawić zerowy współczynnik tarcia w kierunku prostopadłym do osi, oraz nieskończenie duży dla wektora równoległego do osi.
 
-		\begin{figure}[H]
+		\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.8\textwidth]{graphics/base_vects.pdf}
+		\includegraphics[width=0.6\textwidth]{graphics/base_vects.pdf}
 		\caption{Kierunki wektorów dla których należy nadać współczynniki tarcia przy symulacji platformy, widok z góry. Tarcie w kierunku $f_0$ powinno być nieskończone, a w $f_1$ zerowe.}
 		\end{figure} 
 
@@ -554,18 +554,18 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 
 		Podobnie, jak w poprzednich przypadkach, modeluje się tylko najniższą, dotykającą podłoża rolkę.
 		Jak wcześniej wspomniano, ma ona bardzo skomplikowany kształt, lecz można przybliżyć całe koło kulą.
-		Zatem w miejscu każdego koła zamontowana jest kula z dynamicznie modyfikowanym tarciem i siatką w kształcie koła do wizualizacji, 
+		Zatem w miejscu każdego koła ustawiona jest kula z dynamicznie modyfikowanym tarciem i siatką trójkątów w kształcie koła do wizualizacji, 
 		oraz przegub z motorem łączący odpowiednią część bazy z kołem.
 		To najprostsza budowa modelu (a zatem najszybsza) z poprzednich.
 		
 		\begin{figure}[H]
 		\dirtree{%
-		.1 kadłub\DTcomment{Podstawa bazy}.
-		.2 przegub z silnikiem\DTcomment{Nadaje moment obrotowy na żądanie}.
+		.1 korpus\DTcomment{Podstawa bazy}.
+		.2 przegub obrotowy\DTcomment{Nadaje moment obrotowy}.
 		.3 kula\DTcomment{Modyfikowane wektory tarcia}.
-		.4 siatka\DTcomment{Odpowiada za wygląd obiektu koła}.
+		.3 siatka trójkątów\DTcomment{Odpowiada za wizualizację koła}.
 		}
-		\caption{Zagnieżdżenie obiektów koła w strukturze drzewiastej z modyfikowanymi wektorami tarcia. W implementacji Gazebo przegub i kula są zagnieżdżone równolegle.}
+		\caption{Logiczne zagnieżdżenie obiektów koła w strukturze drzewiastej z modyfikowanymi wektorami tarcia. W implementacji Gazebo przegub i kula są ustawione równolegle.}
 		\label{fig:omnivelma_wheel}
 		\end{figure}
 
@@ -587,7 +587,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Przyjmowane są także dane:
 		\begin{itemize}
 		\item \texttt{omnivelma\_msgs/Vels} z zadanymi prędkościami kół.
-		\item Wywołanie ustawiające współczynniki tarcia wzdłuż wektorów $F_1$ i $F_2$.
+		\item Wywołanie ustawiające współczynniki tarcia wzdłuż wektorów $f_0$ i $f_1$.
 		\item Wywołanie ustawiające masy i momenty obrotowe niektórych elementów składowych konstrukcji.
 		\end{itemize}
 
@@ -610,14 +610,12 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Ponieważ przekształca liczby zmiennoprzecinkowe, zawarte w ROSoswych pakietach, na dane zrozumiałe przez sterownik silnika, które zazwyczaj są liczbami
 		stałoprzecinkowymi, program może zachować się nieprzewidywalnie.
 		
-	%MONOKL
-	Tak, jak model platformy, ten pakiet otrzymał nazwę kodową \texttt{monokl}, ponieważ pozwala obserwować otoczenie, jak okular.
-	
-	Ponieważ czujniki laserowe tego typu są popularnie używane w robotyce, standard SDF posiada dedykowane elementy do umieszczenia takich obiektów w symulacji.
+\section{Model skanera laserowego}
+	Ponieważ skanery laserowe tego typu są popularnie używane w robotyce, standard SDF posiada dedykowane elementy do umieszczenia takich obiektów w symulacji.
 	Również Gazebo posiada możliwość renderowania zasymulowanych impulsów lasera.
 	
 	\subsection{Obliczenia symulatora}
-		Czujnik laserowy jest bardzo łatwo zasymulować w przestrzeni wirtualnej za pomocą rzutowania półprostych.
+		Skaner laserowy jest bardzo łatwo zasymulować w przestrzeni wirtualnej za pomocą rzutowania półprostych.
 		Ta technika używana jest w bardzo wielu aspektach komputerowego generowania obrazu i symulacji fizyki.
 
 		Półprosta jest emitowana z ustalonego punktu w pewnym kierunku w przestrzeni trójwymiarowej.
@@ -632,55 +630,52 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		częścią tematu pracy,
 		Wystarczy wspomnieć, że symulacja dużej ilości laserów oraz obiektów jest operacją kosztowną.
 		
-		Testy pokazują, że samo ich renderowanie spowalnia symulację około czterokrotnie.
+		Testy pokazują, że samo ich rysowanie spowalnia symulację około czterokrotnie.
 		To ze względu na bardzo dużą ich ilość, mogącą przekroczyć 1000 obliczeń kolizji w jednej klatce symulacji.
 
 	\subsection{Różnice między czujnikiem, a modelem}
-		Półprosta emitowana jest z puntu reprezentującego środek czujnika.
-		Model upraszcza rzeczywisty czujnik (budowa czujnika laserowego została opisana w sekcji \ref{sec:lidar}).
+		Półprosta emitowana jest z puntu reprezentującego środek skanera.
+		Model upraszcza rzeczywisty czujnik (budowa skanera laserowego została opisana w sekcji \ref{sec:lidar}).
 		Uproszczenie to polega na tym, iż nie ma wewnątrz zamodelowanego obiektu żadnego odpowiednika obracającego się lusterka.
 		W rzeczywistym czujniku ponadto jest jeden laser, emitujący pulsy w określonych odstępach czasu.
 		W modelu warto zatem emitować osobne półproste, dla każdego pulsu lasera.
 
-		Można zauważyć tym samym, że model czujnika wydaje się funkcjonalnie lepszym, niż rzeczywisty LiDAR.
-		W danej chwili, model emituje promień we wszystkich kierunkach w zakresie jednocześnie, podczas gdy czujnik jednym pulsem może dokonać tylko jednego pomiaru,
+		Można zauważyć tym samym, że model skanera wydaje się funkcjonalnie lepszym, niż rzeczywisty LiDAR.
+		W danej chwili, model emituje promień we wszystkich kierunkach w zakresie jednocześnie, podczas gdy skaner jednym pulsem może dokonać tylko jednego pomiaru,
 		i tylko o kącie w którym aktualnie znajduje się lusterko.
 		Jednakże dyskretny sposób symulacji i sposób komunikacji urządzenia z odbiornikiem danych, powodują że w obu przypadkach dane są podawane w grupach.
-		Czujnik jest wstanie wysłać pakiet z danymi z ostatniego pomiaru, podczas gdy program modelujący czujnik jest obsługiwany na zasadzie przerwań czasowych 
-		po każdej klatce i tylko wtedy może wywołać funkcje zwracające dane zasymulowanych pomiarów.
+		Sterownik skanera jest wstanie wysłać pakiet z danymi z ostatniego pomiaru, podczas gdy program modelujący skaner jest obsługiwany na zasadzie przerwań czasowych 
+		po każdym kroku symulacji i tylko wtedy może wywołać funkcje zwracające dane zasymulowanych pomiarów.
 		To oznacza, że interfejsy do ich obsługi zachowują się podobnie.
 
 		Drugą rzeczą, w której model przoduje, jest nieskończona (z punktu widzenia symulacji), odległość pomiaru.
 		Nie tylko jako najdalszy wykryty punkt, ale także i najbliższy. 
-		Czujnik może pomijać pomiary przypadające za blisko krawędzi dozwolonego obszaru, gdyż znacznie spada w tych miejscach dokładność pomiaru, lub zwracać niedokładne dane.
+		Skaner może pomijać pomiary przypadające za blisko krawędzi dozwolonego obszaru, gdyż znacznie spada w tych miejscach dokładność pomiaru, lub zwracać niedokładne dane.
 		Symulator ma całkowitą dowolność w ustawianiu progu, dla którego obcina pomiar.
 
 		Podobnie, jak w poprzednim przypadku, symulator posiada niezmienną w odległości dokładność pomiaru.
-		Czujnik zmienia swoje błędy, w zależności jak daleko od niego znajduje się obiekt.
+		Błąd pomiarowy sknera laserowego zależy od odległości od mierzonego obiektu.
 
-		Jednakże, w zależności od obciążenia maszyny na której uruchomiony jest symulator, model czujnika jest podatny na opóźnienia w odczytywaniu stanu.
-		Fizyczny czujnik zawsze działa z tą samą częstotliwością, a jego program sterujący jest wbudowany w mikrokontroler i spełnia sztywne ramy czasowe.
+		Jednakże, w zależności od obciążenia maszyny na której uruchomiony jest symulator, model skanera jest podatny na opóźnienia w odczytywaniu stanu.
+		Skaner zawsze działa z tą samą częstotliwością, a jego program sterujący jest wbudowany w mikrokontroler i spełnia sztywne ramy czasowe.
 
 	\subsection{Komunikacja}
 		Bazując na architekturze opisanej wcześniej na rysunku \ref{fig:agent}, należy tak zbudować system, aby program sterujący mógł się komunikować w identyczny sposób z 
-		modelem czujnika, jak i samym czujnikiem.
+		modelem skanera, jak i samym skanerem.
 		Służą do tego specjalne typy wiadomości ROSa \texttt{sensor\_msgs/LaserScan}.
-		Program obsługujący model czujnika generuje i wysyła pakiety zawierające:
+		Program obsługujący model skanera generuje i wysyła pakiety zawierające:
 		\begin{itemize}
 			\item Nagłówek z czasem pomiaru, identyfikatorem i ramką pozycji czujnika.
 			\item Kąty początkowe i końcowe pomiaru.
 			\item Odległość kątowa pomiędzy kolejnymi promieniami.
 			\item Czas pomiędzy kolejnymi emisjami lasera.
 			\item Czas pomiędzy tym, a poprzednim przebiegiem urządzenia.
-			\item Minimalny i maksymalny dystans mierzonego obiektu od czujnika.
+			\item Minimalny i maksymalny dystans mierzonego obiektu od skanera.
 			\item Dane odległości.
 			\item Dane jasności (jeśli czujnik posiada taką funkcjonalność).
 		\end{itemize}
 
-		Identycznie, program podłączony bezpośrednio do czujnika za pomocą jednego z interfejsów, także powinien generować takie same pakiety i udostępniać je w środowisku ROSa.
-
-		
-		
+		Identycznie, program podłączony bezpośrednio do skanera za pomocą jednego z interfejsów, także powinien generować takie same pakiety i udostępniać je w środowisku ROS.
 		
 	\subsection{Model w Gazebo}
 		Tak, jak w modelu platformy, należy stworzyć odpowiedni plik SDF. 
@@ -690,17 +685,17 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		ale jednak aby były interpretowane w różny sposób (gdyż nadawcy danych muszą być rozróżnialni).
 
 		Model składa się z dwóch elementów: korpusu i samego ,,mechanizmu'' urządzenia.
-		Mechanizm przytwierdzony jest w odpowiednim miejscu korpusu, za pomocą stałego połączenia (elementu \texttt{joint}).
+		Mechanizm przytwierdzony jest w odpowiednim miejscu korpusu platformy, za pomocą stałego przegubu (elementu \texttt{joint}).
 
-		Korpus posiada siatkę, reprezentującą uproszczony wygląd urządzenia, a także dwa elementy ustawiające walcowate kształty, odpowiedzialne za kolizje fizyczne.
-		Teoretycznie, lepiej było by, aby model posiadał jeden walec, reprezentujący kształt urządzenia, gdyż to przyspieszyłoby symulację. 
+		Korpus czujnika posiada siatkę trójkątów, reprezentującą uproszczony wygląd urządzenia, a także dwa elementy ustawiające walcowate kształty, odpowiedzialne za kolizje fizyczne.
+		Teoretycznie, lepiej było by, gdyby model posiadał jeden walec, reprezentujący kształt urządzenia, gdyż to przyspieszyłoby symulację. 
 		Jednakże, półproste emitowane ze środka obiektu, również się by z nim zderzały od wewnątrz, a co za tym idzie, nie opuszczałyby modelu czujnika.
 		Element korpusu odpowiada także za przesunięcie samego lasera względem podstawy, na której całe urządzenie jest montowane, i 
-		pozwala na wygodną referencję z innego modelu, w celu utworzenia wiązu.
-		Jak już wcześniej wspomniano, model zawsze ma strukturę gwiazdową i więzy po stronie robota nie mogą wskazywać na element \texttt{model} czujnika, a mogą
+		pozwala na wygodną referencję z innego modelu, w celu utworzenia przegubu.
+		Jak już wcześniej wspomniano, model zawsze ma strukturę gwiazdową i przeguby po stronie robota nie mogą wskazywać na element \texttt{model} modelu skanera, a mogą
 		na obiekt korpusu.
 
-		Główna część obiektu czujnika, skaner, posiada ozdobną siatkę, udającą czarną szybkę LiDARa, oraz element SDF \texttt{sensor}, odpowiedzialny za sam czujnik.
+		Główna część obiektu czujnika, skaner, posiada ozdobną siatkę trójkątów, udającą czarną szybkę LiDARa, oraz element SDF \texttt{sensor}, odpowiedzialny za sam czujnik.
 		W kolejnych podelementach zawierają się parametry urządzenia, takie jak ilość symulowanych laserów, ich zasięg, kąt pierwszego i ostatniego lasera, oraz współczynnik błędu pomiarowego. Ten element celowo nie ma fizycznego kształtu, aby nie blokować wychodzących półprostych. 
 		Nie wpływa to na symulację, gdyż w środowisku, w którym znajduje się robot, i tak nie powinno dochodzić do kolizji modeli czujników z jakimikolwiek innymi modelami.
 		Również czujniki nie są wstanie wykryć siebie nawzajem, gdyż zwrócone są do siebie martwymi kątami, a co za tym idzie nie muszą symulować nieprzezroczystych brył dla
@@ -709,34 +704,27 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 
 		\subsubsection{Połączenie modeli}
 			Jak wcześniej wspomniano w sekcji \ref{sec:sdf},
-			model SDF ma strukturę gwiazdową. 
+			model SDF ma strukturę gwiaździstą. 
 			Zagnieżdżenie modeli spowodowałoby, że powstałaby inna struktura, drzewiasta.
-			Dlatego też, element \texttt{import} nie umieszcza w swoim miejscu całego modelu z innego pliku, a raczej importuje jego składowe i umieszcza równolegle do istniejących.
+			Dlatego też, element \texttt{import} nie umieszcza w swoim miejscu całego modelu z innego pliku, a raczej importuje jego ogniwa i umieszcza równolegle do istniejących.
 			To oznacza, że zadbać trzeba także o więzy \texttt{joint}, łączące element podstawy platformy z podstawą czujnika, inaczej symulator uznałby łączony obiekt za dwa osobne modele.
-			Potrzebna jest zatem znajomość nazw elementów składowych importowanego modelu.
-			Element importowanego modelu jest tracony, pozostaje jedynie przedrostek nazwy w zaimportowanych składowych.
+			Potrzebna jest zatem znajomość nazw elementów ogniw importowanego modelu.
+			Element \texttt{model} importowanego modelu jest tracony, pozostaje jedynie przedrostek nazwy w zaimportowanych składowych.
 			Zatem program sterujący czujnikiem powinien na podstawie tylko nazwy swojego obiektu ustawić przedrostek swojego interfejsu nadawania wiadomości.
 
 			Taka mechanika działania wydaje się mało zrozumiała i nieintuicyjna, jednak doskonale dba o zachowanie spójności modelu.
-			Wszystko nadal pozostaje gwiazdą i każdy element musi być odpowiednio połączony z pozostałymi, aby dokładnie określić fizykę interakcji.
-			Nie powstają niedopowiedziane sytuacje, w których zachowanie jakichś elementów byłoby nieokreślone.
+			Wszystko nadal pozostaje strukturą gwiaździstą i każdy element musi być odpowiednio połączony z pozostałymi, aby dokładnie określić fizykę interakcji.
+			Nie powstają niedopowiedziane sytuacje, w których zachowanie jakichś ogniw byłoby nieokreślone.
 
-			Alternatywnie, zawsze jest możliwość stworzenia dwóch, osobnych modeli czujników, tudzież całość zapisać w jednym pliku.
-			Jednak takie rozwiązanie niszczy komponentową budowę środowiska i nie pozwala na użycie składowych modeli w innych modelach.
+			Alternatywnie, zawsze jest możliwość stworzenia dwóch, osobnych modeli skanerów, tudzież całość zapisać w jednym pliku.
+			Jednak takie rozwiązanie niszczy pakietową budowę środowiska i nie pozwala na użycie modeli skanerów w innych modelach.
 			
-			\begin{figure}[h]
-			\centering
-			\includegraphics[width=\textwidth]{graphics/scan.png}
-			\caption{Zrzut ekranu platformy z Gazebo i wygenerowane dane, obserwowane w Rviz.}
-			\label{fig:scan}
-			\end{figure}
-			
-		Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROS pozycje i rotacje środków czujników laserowych, dla uproszczenia
-	względem początku układu współrzędnych, punktu (0,0,0). 
-	Program sterujący modelem samej platformy także nadaje ramkę z pozycją i rotacją platformy względem globalnego środka układu współrzędnych.
-	Dokładnie taki sam efekt byłby, gdyby nadawać stałą pozycję i rotację czujników laserowych, ale względem ramki platformy (nadawanej przez inny sterownik).
-	Stałą, ponieważ czujniki nie zmieniają swojej pozycji na platformie, są przytwierdzone na stałe.
-	
+			Należy zadbać o ustawienie odpowiedniej struktury macierzy przekształceń jednorodnych, opisanej w sekcji \ref{sec:frames}.
+			Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROS położenia i orientacje środków czujników laserowych, dla uproszczenia
+			względem początku układu współrzędnych, punktu (0,0,0). 
+			Program sterujący modelem samej platformy także nadaje przekształcenie z pozycją platformy względem globalnego środka układu współrzędnych.
+			Dokładnie taki sam efekt byłby, gdyby nadawać przekształcenie ze stałą pozycją czujników laserowych, ale względem platformy (której przekształcenie nadawane jest przez inny sterownik).
+			Stałą pozycją, ponieważ czujniki nie zmieniają swojej pozycji na platformie, są przytwierdzone na stałe.
 
 	\subsection{Błędy}
 		Jak podano wcześniej w tabelce \ref{tab:lidar}, wyróżnione są dwa typy błędów pomiaru, systematyczny i pomiarowy.
@@ -746,7 +734,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\subsubsection{Błąd gruby}
 			Najprostszy typ błędu polega na dużych odchyłach niektórych pomiarów od pozostałych wartości.
 			W trakcie przetwarzania odczytu, te punkty powinno się odrzucić.
-			Nie mniej jednak, to zadanie należy do programu sterującego, więc należy umożliwić mu testowanie tej funkcjonalności poprzez wprowadzenie takich błędów do zasymulowanych odczytów.
+			Pomimo, że sterownik skanera usuwa takie błędy, można łatwo dodać je do generowanych danych w celu testowania algorytmów określania pozycji.
 
 			Najczęstszym przypadkiem błędu grubego jest brak odbioru wysłanego impulsu. 
 			To skutkuje nadaniem aktualnemu pomiarowi wartości maksymalnej, co jest bardzo łatwo wykryć i usunąć.
@@ -754,7 +742,6 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 			Innym problemem może być odebranie światła niepochodzącego od emitera urządzenia, a jakiegoś zewnętrznego źródła.
 
 			Ponieważ rozkład i częstotliwość tych błędów zależy od środowiska w jakim działa czujnik, bardzo ciężko jest dobrać odpowiedni algorytm ich generacji.
-			%TODO dopisać po implementacji
 
 		\subsubsection{Błąd systematyczny}
 			Ten błąd jest stałą wartością, dodaną do każdego pomiaru.
@@ -762,11 +749,11 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 
 			Rzeczywisty LiDAR powinien być skalibrowany przed użyciem właśnie po to, aby wewnętrzny program sterujący mógł obliczyć aktualne zboczenia pomiarów
 			i skorygować dane przed wysłaniem ich wyżej.
-			Czujnik może także wysyłać czyste i obarczone błędami dane do programu sterującego, który samodzielnie je skoryguje.
+			Skaner może także wysyłać czyste i obarczone błędami dane do programu sterującego, który samodzielnie je skoryguje.
 			Pozwoli to na zastosowanie dowolnych algorytmów oczyszczania danych, kosztem większego obciążenia programu sterującego.
 
-			Symulator czujnika powinien mieć interfejs do ustawienia tej wartości, aby mógł być ,,skalibrowany'' w taki sam sposób, jak faktyczne urządzenie.
-			%TODO dopisać po implementacji
+			Symulator czujnika nie nie jest podatny na takie błędy, więc nie ma sensu dodawać interfejsu do kalibracji urządzenia.
+			Można co najwyżej symulować niepoprawnie skalibrowany skaner poprzez sztuczne dodanie takiego błędu.
 
 		\subsubsection{Błąd pomiarowy}
 			Jest to mała, losowa wartość, dodana do każdego pomiaru.
@@ -782,15 +769,15 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 			elementu odchylenia standardowego, w pliku SDF opisującym czujnik.
 			Wadą takiego rozwiązania jest niemożność modyfikacji tego parametru w trakcie wykonywania programu, gdyż Gazebo nie wystawia API do modyfikacji tej wartości.
 			Aby temu zaradzić, wystarczy obliczać błąd standardowy w programie sterującym i manualnie dodawać go do zwróconej przez symulator tablicy danych.
-			Funkcje do obliczania błędu standardowego zostały wprowadzone do standardu języka C++ w 2011 roku.
+			Funkcje do obliczania błędu standardowego zostały wprowadzone do standardu języka C++.
 			
 			Na zrzucie ekranu \ref{fig:scan} można zobaczyć, iż punkty pomiarów, wizualizowane w RViz, nie leżą idealnie na figurach powstałych poprzez przecięcia skanowanych brył.
 			Dodany jest szum, jak gdyby rozmazujący punkty.
 		
-		%WEWUCHO
-		Ponieważ czujniki tego typu są często stosowane w robotyce, wszystkie komponenty systemu wspierają jego symulację i struktury przekazywanych danych.
+\section{Model jednostki inercyjnej}
+	Ponieważ czujniki tego typu są często stosowane w robotyce, wszystkie komponenty systemu wspierają jego symulację i struktury przekazywanych danych.
 	\begin{itemize}
-		\item ROS posiada specjalną wiadomość typu \texttt{sensor\_msgs/Imu}, do przekazywania pomiarów pomiędzy komponentami.
+		\item ROS posiada specjalną wiadomość typu \texttt{sensor\_msgs/Imu}, do przekazywania pomiarów pomiędzy węzłami.
 		\item SDF definiuje element typu \texttt{imu} w sekcji czujników, gdzie można mu zdefiniować położenie w robocie i współczynniki błędów pomiarowych.
 		\item Gazebo daje wsparcie klasy czujnika inercji z odczytem wygenerowanych przez maszynę symulacji wartości.
 	\end{itemize}
@@ -805,26 +792,24 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	Macierz pozwala zastosować te cechy sprzętowe do danych w celu poprawy ich jakości.
 	
 	W większości programów używających przestrzeń wirtualną, rotację zapisuje się w postaci kwaterniona, jako cztery liczby.
-	Taka postać odporna jest na zjawisko utraty jednego ze stopni swobody (\emph{gimbal lock}), gdy dwie z trzech osi pokryją się, niemożliwy staje się obrót obiektu wokół trzeciej osi. Niestety, taka postać nie ma odwzorowania w rzeczywistej przestrzeni.
+	Taka postać odporna jest na zjawisko utraty jednego ze stopni swobody (\emph{gimbal lock}). Gdy dwie z trzech osi pokryją się, niemożliwy staje się obrót obiektu wokół trzeciej osi. Niestety, taka postać rotacji nie ma odwzorowania w rzeczywistej przestrzeni.
 	
 	Symulacja żyroskopu w maszynie symulacyjnej fizyki jest bardzo prosta, gdyż algorytm wyznaczania pozycji obiektów na podstawie nadanych sił korzysta wewnętrznie z
-	wartości prędkości dla każdego obiektu. Zatem kwestia symulacji tego sensora polega na odczycie odpowiednich struktur w maszynie symulacji.
+	wartości prędkości dla każdego obiektu. Zatem kwestia symulacji tego sensora polega na odczycie odpowiednich struktur z maszyny symulacji.
 	Wtyczka do Gazebo, zapisana podobnie do wtyczki czujnika laserowego, zbiera w każdym cyklu maszyny symulacyjnej dane i wysyła ja za pomocą pakietu ROSa.
 	
 	Akcelerometr jest bardziej złożonym problemem, gdyż maszyna symulacji działa w czasie dyskretnym, co utrudnia różniczkowanie prędkości w celu otrzymania przyspieszenia.
 	Ta wartość nie jest także nigdzie indziej używana i musi być obliczona specjalnie dla symulacji tego czujnika.
 	Fakt, że małe odchylenia w zmianie prędkości powodują duże skoki danych przyspieszenia, wprowadza naturalny szum do generowanych danych.
-	W sekcji \ref{sec:test_imu}, sekcji testów, opisane zostały te problemy dokładniej.
+	W sekcji \ref{sec:test_imu}, opisane zostały te problemy dokładniej.
 	
 	Pomimo, że odczytanie tych wartości jest tak samo proste, jak prędkości kątowej, to generowane dane różnią się jakością.
 	Szum jest większy, a co za tym idzie, potrzeba dodatkowego programu do odszumienia wygenerowanych wartości.
-	Ten komponent jest opisany w sekcji \ref{sec:odszumiacz}.
+	Ten pakiet jest opisany w sekcji \ref{sec:odszumiacz}.
 	
-	%LALKARZ
-	Ma nazwę kodową \texttt{lalkarz}, ponieważ steruje platformą, tak jak aktor steruje marionetką.
-	
+\section{Manualne sterowanie}
 	\subsection{Program}
-		Ten komponent jest plikiem wykonywalnym, skompilowanym ze źródeł w C++.
+		Ten pakiet jest plikiem wykonywalnym, skompilowanym ze źródeł w C++, w sposób opisany w sekcji \ref{sec:ros_exe}.
 		Wykorzystując bibliotekę graficzną SFML, generuje okno z powierzchnią do rysowania na nim za pomocą OpenGL.
 		Biblioteka ta pozwala również na bezproblemowe przechwytywanie zdarzeń z klawiatury, takich jak wciśnięcie i puszczenie klawisza, a także na obsługę kontrolera go gier i myszki.
 		Za pomocą gałek kontrolera, można nadawać robotowi niebinarne prędkości kół, co jest niezbędne do płynnego i bezpiecznego kontrolowania urządzeniem.
@@ -836,88 +821,39 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Dodatkowo, interfejs graficzny pozwala na wyświetlenie dokładniejszych wskaźników i elementów wskazujących.
 		
 		Program uruchamiany jest z wiersza polecenia, z argumentami dotyczącymi nazw strumieni i początkowej konfiguracji urządzenia.
+		
+		Program stworzony jest jako maszyna stanów, która odpowiada za odpowiednią interpretację naciśniętych klawiszy, w zależności od trybu w jakim się znajduje.
+		Bloki instrukcji warunkowych rysują na ekranie odpowiedni interfejs w każdym cyklu rysowania.
 	
 	\subsection{Komunikacja}
-		Program potrafi generować dwa typy wiadomości.
+		Program potrafi generować dwie typy wiadomości.
 		
 		Pierwszą są prędkości kół \texttt{omnivelma\_msgs/Vels}, jakie w danej chwili platforma powinna przyjąć na sterowanie.
 		Pozwala to na dokładne przetestowanie zachowania się modelu platformy.
-		Można także wywołać takie prędkości, które nie powinny być używane przy rzeczywistym sterowaniu, gdyż wprowadzają duże nieścisłości ruchu 
+		Można także wywołać takie prędkości, które nie powinny być używane przy rzeczywistym sterowaniu, gdyż wprowadzają duże nieścisłości ruchu na skutek poślizgów
 		(przykładowo, obracanie przednich i tylnych kół tak, aby ich wektory prędkości się znosiły, będzie nadawać niedeterministyczny ruch, spowodowany niedoskonałościami
 		pojedynczych rolek).
 		
 		Drugi typ wiadomości, \texttt{geometry\_msgs/Twist}, to nadana prędkość względna platformy.
 		To intuicyjny sposób, w jaki użytkownik steruje platformą i w jaki sposób mógłby także sterować nią prosty program sterujący.
-		Jednak ponieważ ani model platformy, ani rzeczywisty robot nie są wstanie poruszać się bez informacji, jakimi kołami z jaką prędkością obracać,
+		Jednak ponieważ model platformy, nie jest wstanie poruszać się bez informacji, jakimi kołami z jaką prędkością obracać,
 		ten typ wiadomości musi być jeszcze konwertowany przez komponent modelu kinematyki odwrotnej, opisany w sekcji \ref{sec:transmutator}.
+		Program może być bezpośrednio podłączony do robota.
 		
 		Program opcjonalnie przyjmuje także wiadomość \texttt{omnivelma\_msgs/Vels}, aby wyświetlić dane enkoderów.
-		Należy zauważyć, że nie przyjmuje całego pakietu \texttt{omnivelma\_msgs/EncodersStamped}, jaki jest generowany przez model platformy,
-		a jedynie mały ich wycinek, gdyż tylko te informacje jest w stanie wyświetlić i tylko takie potrzebuje.
-		Dzięki temu może być użyty niezależnie od innych komponentów i programów. Jednak może być wymagane użycie dodatkowego komponentu do 
-		wyłuskania tej informacji z większego pakietu,
+		Należy zauważyć, że nie przyjmuje całej wiadomości \texttt{omnivelma\_msgs/EncodersStamped}, jaka jest generowany przez model platformy,
+		a jedynie mały jej wycinek, gdyż tylko te informacje jest w stanie wyświetlić i tylko takie potrzebuje.
+		Dzięki temu może być użyty niezależnie od innych pakietów i programów. Jednak może być wymagane użycie dodatkowego programu do 
+		wyłuskania tej informacji z większej wiadomości,
 		patrz \ref{sec:dziadzio}.
 		
-	\subsection{Tryby działania}
-		Program posiada 11 trybów działania, w których generuje różne wiadomości w różny sposób.
-		Jedne są bardziej przydatne, inne bardzo proste i służące do ogólnej prezentacji systemu.
-		Globalny mnożnik wyjścia pozwala na łatwe ograniczenie generowanych danych i ustawienia dokładności. Spacja awaryjnie zeruje wszystkie wyjścia.
-		\begin{enumerate}
-			\item Za pomocą ośmiu klawiszy klawiatury numerycznej, można nadać platformie określone prędkości kół.
-			W tym trybie, koło może albo stać w miejscu, albo obracać się z odpowiednią prędkością, w określonym kierunku. 
-			Powoduje to naturalne szarpnięcia i poślizgi platformy. W trakcie braku aktywności użytkownika, platforma stoi w miejscu.
-			\item Podobnie do poprzedniego trybu, lecz przy braku naciśnięcia klawisza, generuje cichą nie-liczbę, aby zachować aktualną prędkość kół modelu.
-			Ta dodatkowa funkcjonalność opisana jest szerzej w sekcji \ref{sec:model_nan}.
-			\item Naciśnięcie klawisza płynnie zwiększa, lub zmniejsza prędkość koła. W trakcie braku aktywności użytkownika, platforma porusza się 
-			z ustawionymi prędkościami kół.
-			\item Podobnie, co w poprzednim trybie, lecz pozwala na schodkowe ustawienie prędkości kół co 0,1 $\frac{rad}{s}$ (pomnożone przez dokładność).
-			Dzięki temu, możliwe jest w miarę dokładne powtórzenie manualnych testów platformy.
-			\item Poprzedni tryb, lecz przy ustawieniu prędkości zerowej, generuje nie-liczbę.
-			\item Sterowanie prędkościami kół za pomocą gałek kontrolera.
-			Większość kontrolerów posiada dwa, dwuosiowe joysticki, co daje cztery osie, zmieniające się w zakresie $\left<-1;1\right>$.
-			Można za ich pomocą bezpośrednio ustawiać prędkości kół, chociaż jest to nieintuicyjne w działaniu.
-			\item Lokalny kierunek jazdy platformy składa się z dwóch wektorów prędkości liniowej i wektora obrotu. 
-			Za pomocą klawiatury, binarnie, można nadać platformie jeden z ośmiu kierunków poruszania się i jeden z dwóch kierunków obrotu.
-			Ponownie, ta metoda sterowania powoduje skoki prędkości i poślizgi. Przypomina sterowanie pojazdami w grach komputerowych.
-			Puszczenie klawiszy powoduje zatrzymanie się platformy.
-			\item Podobny tryb do poprzedniego, ale naciśnięcie klawisza płynnie dodaje wartość do kierunku poruszania się i obrotu platformy.
-			Brak aktywności użytkownika powoduje, że model porusza się z zadaną prędkością w zadanym kierunku i z zadanym obrotem.
-			\item Połączenie dwóch poprzednich trybów, schodkowe sterowanie prędkością platformy. Pozwala na ustawienie prędkości i obrotu platformy z zadaną dokładnością.
-			\item Sterowanie kierunkiem platformy za pomocą kontrolera. Trzy osie są używane, dwie do nadania prędkości, jedna do nadania obrotu.
-			Jest to prawdopodobnie najczęstszy sposób kontrolowania robotów wielokierunkowych za pomocą kontrolera.
-			Bardzo intuicyjny i używany także przez inne pakiety do manualnego sterowania robotami na kołach Mecanum.
-			\item Sterowanie za pomocą myszki, najdokładniejsze sterowanie kierunkiem, mniej dokładne obrotem.
-			Kursor myszy wskazuje końcówkę strzałki reprezentującej kierunek ruchu robota, za pomocą kółka, można dodawać, lub odejmować prędkość do obrotu wokół osi.
-			Ponieważ większość myszek ma skokowe obroty kółek, wprowadza to nieznaczne poślizgi. Można także modyfikować obrót klawiaturą w płynnym trybie przyrostowym.
-		\end{enumerate}
-		
-		\begin{figure}[H]
-		\centering
-		\includegraphics[width=\textwidth]{graphics/lalkarz.png}
-		\caption{Zrzuty ekranu dwóch trybów działania programu.}
-		\label{fig:lalkarz}
-		\end{figure}
-		
-		Interfejs składa się z listy trybów, wyświetlanych na górze, i nazwy aktualnego trybu.
-		Wyszarzone tryby nie mogą być aktywowane, w tym przypadku z powodu braku podłączenia kontrolera.
-		
-		Na lewym zrzucie widać zarys platformy i białe wskaźniki aktualnych prędkości kół, wraz ze współczynnikiem wypełnienia.
-		Obok nich znajdują się szare wskaźniki prędkości, zwrócone przez modele enkoderów.
-		Małe, szare znaki to nazwy klawiszy, używanych w tym trybie do modyfikowania prędkości.
-		
-		Na prawym obrazku jest tryb generowania kierunku i obrotu. Strzałka wskazuje wektor prędkości, a górny pasek obrót platformy.
-		
-		Na dole jest lista ,,biegów'' urządzenia, są to zwyczajne mnożniki wyjścia w celu wygodnego przestawiania dokładności z jaką platforma powinna się poruszać.
-		
-		Wszystkie dane są w jednostkach SI, tzn, efektywna prędkość koła będzie się równać liczbie podanej przy kole, pomnożonej przez aktualny bieg.
-		Dla obrotów to są $\frac{rad}{s}$, dla prędkości to $\frac{m}{s}$.
-		
-	%GRAMOFON
+	
+\section{Generator sterowania}
 	Program \texttt{gramofon} wczytuje plik danych, w którym znajdują się rekordy, każdy opisuje:
 	\begin{itemize}
 		\item Prędkość liniową platformy w osi X.
 		\item Prędkość liniową platformy w osi Y.
-		\item Prędkość kątową platformy w osi Z.
+		\item Prędkość obrotu platformy wokół osi Z.
 		\item Czas $t$, przez który program ma generować wiadomość z podanymi wyżej danymi.
 	\end{itemize}
 	Program czyta także z argumentu okres $T$ odświeżania wiadomości.
@@ -925,7 +861,13 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	Korzystając z dwóch liczników systemowych, program generuje co $T$ sekund wiadomość typu \texttt{geometry\_msgs/Twist} z danymi aktualnie wykonywanej linii pliku.
 	Ta wiadomość powtarza się regularnie.
 	
-	Po upływie czasu $t$, program nadaje dodatkową wiadomość z nowymi danymi, oraz przestawia dane generowane przez wywołania pierwszego licznika.
+	Pierwszy licznik nadaje regularnie aktualne sterowanie, aby podtrzymać prędkość robota, drugi licznik asynchronicznie wywołuje się na zmiany sterowania i aktualizuje wysyłane dane.
+	
+	Pomimo, że mechanika liczników czasu jest dostępna w API ROSa, użycie liczników systemowych POSIX pozwalana zastosowanie ich mechaniki bezpośredniego czasu,
+	czas nadania wiadomości jest definiowany względem stopki czasu, a nie poprzedniego wywołania.
+	Dzięki temu nie ma narastającego błędu numerycznego, jak w funkcjach ROSa. 
+	
+	Dane z wejściowego pliku wczytywane są do listy, z której po kolejnych wywołaniach licznika zdejmowane są kolejne instrukcje.
 	
 	Po wykorzystaniu danych, algorytm nadal generuje wiadomości z zerowymi prędkościami, aby zatrzymać model platformy i podtrzymać aktywne hamowanie kół.
 	
@@ -951,75 +893,46 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	Pakiet po nadaniu przechodzi przez wiele procesów, każdy może nadawać losowe opóźnienie dla wiadomości.
 	System operacyjny pod dużym obciążeniem przez inne procesy będzie opóźniał i buforował wiadomości o niższych częstotliwościach.
 	
-	Aby rozwiązać ten problem, należałoby uruchomić całe środowisko ROSa na systemie operacyjnym czasu rzeczywistego.
-	Jedynym takim systemem, eksperymentalnie wspieranym przez twórców ROSa, jest OpenEmbedded.
-	Jednakże budowa i uruchomienie tego systemu jest bardzo złożone.
+	Aby rozwiązać ten problem, należałoby uruchomić całe środowisko ROSa na systemie operacyjnym czasu rzeczywistego,
+	również z tym pakietem.
 	
-	%DZIADZIO
-	Każda wiadomość przekazywana pomiędzy komponentami jest zwykle zagnieżdżoną strukturą.
-	
-	
-	Na przykład pakiet typu \texttt{geometry\_msgs/Twist} składa się z dwóch podstruktur wektorów trójwymiarowych.
-	Jeden odpowiada za prędkość, a drugi za rotację.
-	
-	Czasami może zdarzyć się, że jakiś komponent potrzebuje jedynie wewnętrznej podstruktury pakietu.
-	Nie powinno mu się zatem przekazywać całej struktury wiadomości, gdyż to powodowałoby niepotrzebne opóźnienia, oraz nie pozwoliłoby zachować niezależności 
-	komponentu od innych.
-	
-	Takie zjawisko występuje przy przekazywaniu informacji o pozycji i prędkości kół, generowanej przez model czujnika enkoderów, do programu
-	manualnego sterowania, opisanego w \ref{sec:lalkarz}.
-	
-	ROS nie pozwala na automatyczne odbieranie tylko części pakietu, dlatego powstał program o nazwie kodowej \texttt{dziadzio}, niczym dziadek do orzechów.
-	Przyjmuje wiadomości typu \texttt{omnivelma\_msgs/EncodersStamped} i zwraca wiadomości typu \texttt{omnivelma\_msgs/Vels}, który to typ 
-	jest zawarty wewnątrz przyjmowanej struktury. Pozwala to na połączenie modelu czujnika enkoderów z wyświetlaczem prędkości kół w programie do manualnego sterowania.
-	
-	%FLOORIA
+\section{Podłoże o zmiennym współczynniku tarcia}
 	Robi się to wewnętrznie w identyczny sposób, jak w przypadku kół platformy, co zostało opisane w sekcji \ref{sec:friction}.
 	
-	W tym przypadku jednak powinno się ustawić identyczne wektory tarć $F_1$ i $F_2$, aby podłoże symulowało równe tarcie we wszystkich kierunkach.
+	W tym przypadku jednak powinno się ustawić identyczne wektory tarć $f_0$ i $f_1$, aby podłoże symulowało równe tarcie we wszystkich kierunkach.
 	Tak samo, jak w przypadku modelu platformy dynamicznej, program nadający podłożu odpowiednie wektory tarcia przyjmuje asynchroniczne wywołanie 
 	typu \texttt{omnivelma\_msgs/SetFriction}, zawierające dwie wartości zmiennoprzecinkowe.
 	
-	Nazwa kodowa tego programu sterującego to \texttt{flooria}, od angielskiej nazwy na podłogę.
-	Program jest uruchamiany jako biblioteka symulatora Gazebo.
 	
-	%Odszyumiasz
+\section{Algorytm usuwania szumu z danych jednostki inercyjnej}
 	Odczytuje nazwę nadajnika i odbiornika wiadomości typu \texttt{sensor\_msgs/Imu}, oraz wielkość bufora,
-	Używany jest w przeprowadzeniu testów w sekcji \ref{sec:test_imu}. Nazwa kodowa to \texttt{odszumiacz}.
+	Używany jest w przeprowadzeniu testów w sekcji \ref{sec:test_imu}.
+	Program działa na zasadzie listy, do którego początku dodaje dane z nowych wiadomości, a z końca usuwa dane ze starych.
+	Z każdą otrzymaną wiadomością, liczy średnią z aktualnie przechowywanych wyników.
 	
-	%OCZNICA
-	Kolejny program uruchamiany w symulatorze Gazebo, oblicza i zwraca ciąg danych, reprezentujący 
-	odległość i kąt pomiędzy platformą dynamiczną i kinematyczną, pakiet \texttt{omnivelma\_msgs/Relative}.
+\section{Obserwator symulacji}
+	Wtyczka symulatora Gazebo, oblicza i zwraca ciąg danych, reprezentujący 
+	odległość i kąt pomiędzy modelem dynamicznym, a kinematycznym, wiadomość \texttt{omnivelma\_msgs/Relative}.
 	Te dane pozwalają sprawdzić, na ile symulacja fizyczna opóźnia się względem matematycznego modelu.
 	
 	Ten program nie może być zaimplementowany jako zewnętrzny komponent, gdyż wiadomości zawierające pozycje platform będą przychodzić asynchronicznie.
 	Nie da się w takim przypadku obliczyć dokładnych odległości pomiędzy platformami w danej chwili. 
-	Wprowadzałoby to także spore opóźnienie, gdyż program musiałby czekać na odbiór obu pakietów, dodatkowo zachowując pewność że oba pochodzą z tej samej klatki symulacji.
+	Wprowadzałoby to także spore opóźnienie, gdyż program musiałby czekać na odbiór obu wiadomości, dodatkowo zachowując pewność że oba pochodzą z tego samego kroku symulacji.
 	
-	Nazwa kodowa tego programu to \texttt{ocznica}.
+\section{Model kinematyki odwrotnej}
+	Zaimplementowany jest w standardowy sposób typu akcja-reakcja.
+	Odbiera wiadomość z zadanymi prędkościami liniowymi i rotacją, a zwraca wiadomość z prędkościami kół.
 	
-	%Transmutator
-	Nazwa kodowa to \texttt{transmutator}, wykonuje transmutację jednego typu prędkości w inny.
-	
-	%VELMAVERSE
+\section{Scena z symulacją}
 	Plik typu \texttt{world} jest plikiem SDF, podobnym do tych, które służą do określenia wewnętrznej budowy robotów.
 	Posiada listę elementów \texttt{import} ze ścieżkami modeli, a także nazwy programów działających bez modelu, jak obserwator symulacji, opisany w sekcji \ref{sec:ocznica}.
 
-	Nazwa komponentu \texttt{velmaverse} jest zlepkiem słów ,,universe'' i nazwy robota manipulacyjnego.
-	
-	%WIDELNICA
+\section{Rozdzielacz wiadomości}
 	Ten program wykonywalny pobiera i generuje wiadomości typu \texttt{omnivelma\_msgs/Vels}, zawierające prędkości kół.
 	Pozwala to na sterowanie kilkoma robotami o identycznym interfejsie ze wspólnego źródła.
 	W szczególności przydaje się to przy rozdzielaniu wartości prędkości kół dla modelu platformy dynamicznej i kinematycznej.
-	
-	Nazwa kodowa \texttt{widelnica} jest referencją do widelca którego końcówka rozdziela się na kilka części, a także do angielskiej nazwy ,,fork'', używanej w podobnych 
-	przypadkach rozdzielania informacji.
-	
-	%PANTOFELEK
-	Program periodycznie wysyła wiadomość typu \texttt{geometry\_msgs/Twist} o kierunku równoległym do osi współrzędnych.
-	W zależności od danych z czujników laserowych, program zmienia swój stan i obraca kierunek obrotu o 90\textdegree.
-	Ten sterownik dla uproszczenia nie generuje poleceń obrotu kątowego, model powinien być zawsze zwrócony w tę samą stronę.
-	
+
+\section{Prosty program sterujący}
 	Działanie programu oparte jest na zachowaniu akcja-reakcja.
 	Dane z czujników laserowych dzielone są, w zależności od kąta pomiaru, na cztery ćwiartki lokalnego układu współrzędnych.
 	Rozpatrywane są tylko te ćwiartki, w których kierunku porusza się platforma.
@@ -1029,8 +942,3 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	to zacznie poruszać się prosto, aby uniknąć przeszkody.
 	
 	Taki program gwarantuje omijanie przeszkód, aby platforma nie zderzyła się z jakimś obiektem.
-	
-	Nazwa kodowa \texttt{pantofelek} pochodzi z tego, że zachowuje się jak taki pierwotniak.
-	
-	%_msgs
-	Nazwa kodowa i jednocześnie przedrostek wszystkich zawartych typów to \texttt{omnivelma\_msgs}.

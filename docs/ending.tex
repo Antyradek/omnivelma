@@ -1,5 +1,17 @@
 \chapter{Podsumowanie}
 \label{sec:ending}
 
-Wszystko ładnie pięknie.
-%TODO coś napisać
+Stworzono modele platform oraz czujników, a także system wielu innych pakietów usprawniających testowanie i sterowanie robotem.
+
+Eksperymenty przeprowadzone na platformie pokazały, że błędy lokalizacji w modelu mogą być nawet większe, niż w rzeczywistym robocie.
+Z punktu widzenia testowania programu symulacyjnego to dobrze, gdyż program sterujący przetestowany na symulatorze na pewno poprawnie określi sterowanie
+dla robota.
+Nie da się jednoznacznie stwierdzić, jak dobrze modelowana jest sama platforma bez przeprowadzenia skomplikowanych testów.
+Dodatkowo, niewielkie zmiany parametrów modelu dynamicznego, to jest nadanie mas i inercji ogniwom, powodują inną jazdę i w szczególności inne odczyty 
+przyspieszenia w modelu jednostki inercyjnej.
+
+Pakiety pomocnicze i skrypty uruchamiające okazały się przydatne w sterowaniu platformą, jednak niektóre były nadto skomplikowane.
+Stanowią one dobrą bazę do późniejszego rozwijania modelu, w celu odpowiedniego ustawienia parametrów, aby jak najdokładniej przybliżyć jej działanie do platformy.
+Pozwalają również dokładnie przetestować budowany program sterujący w niemożliwych do zrealizowania przypadkach testowych.
+
+Pisanie pracy pozwoliło na poznanie nowych narzędzi, w szczególności \LaTeX{}a i podobnych.

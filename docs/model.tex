@@ -186,6 +186,13 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Odczyt z rzeczywistego skanera pokazuje, że sztucznie wygenerowane dane są podobne do danych zebranych przez czujnik.
 	Dodatkowo, wbudowany w czujnik sterownik usuwa błędy grube z pomiarów, zatem rzeczywiste dane nie posiadają ich, więc i nie jest konieczne dodawanie ich do modelu.
 	
+	\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/scan.png}
+	\caption{Zrzut ekranu platformy z Gazebo i wygenerowane dane, obserwowane w Rviz.}
+	\label{fig:scan}
+	\end{figure}
+	
 \section{Model jednostki inercyjnej}
 	Rzeczywisty czujnik obarczony jest bardzo dużymi błędami pomiarowymi.
 	Jednakże, jego model także zwraca bardzo zaszumiony obraz.
@@ -239,6 +246,60 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	
 	Sterowanie można nadać poprzez klawiaturę, kontroler do gier, lub myszkę.
 	Program otwiera graficzne okno, w którym wyświetla aktualne dane i wskaźniki prędkości.
+	
+	\subsection{Tryby działania}
+		Program posiada 11 trybów działania, w których generuje różne wiadomości w różny sposób.
+		Jedne są bardziej przydatne, inne bardzo proste i służące do ogólnej prezentacji systemu.
+		Globalny mnożnik wyjścia pozwala na łatwe ograniczenie generowanych danych i ustawienia dokładności. Spacja awaryjnie zeruje wszystkie wyjścia.
+		\begin{enumerate}
+			\item Za pomocą ośmiu klawiszy klawiatury numerycznej, można nadać platformie określone prędkości kół.
+			W tym trybie, koło może albo stać w miejscu, albo obracać się z odpowiednią prędkością, w określonym kierunku. 
+			Powoduje to naturalne szarpnięcia i poślizgi platformy. W trakcie braku aktywności użytkownika, platforma stoi w miejscu.
+			\item Podobnie do poprzedniego trybu, lecz przy braku naciśnięcia klawisza, generuje cichą nie-liczbę, aby zachować aktualną prędkość kół modelu.
+			Ta dodatkowa funkcjonalność opisana jest szerzej w sekcji \ref{sec:model_nan}.
+			\item Naciśnięcie klawisza płynnie zwiększa, lub zmniejsza prędkość koła. W trakcie braku aktywności użytkownika, platforma porusza się 
+			z ustawionymi prędkościami kół.
+			\item Podobnie, co w poprzednim trybie, lecz pozwala na schodkowe ustawienie prędkości kół co 0,1 $\frac{rad}{s}$ (pomnożone przez dokładność).
+			Dzięki temu, możliwe jest w miarę dokładne powtórzenie manualnych testów platformy.
+			\item Poprzedni tryb, lecz przy ustawieniu prędkości zerowej, generuje nie-liczbę.
+			\item Sterowanie prędkościami kół za pomocą gałek kontrolera.
+			Większość kontrolerów posiada dwa, dwuosiowe joysticki, co daje cztery osie, zmieniające się w zakresie $\left<-1;1\right>$.
+			Można za ich pomocą bezpośrednio ustawiać prędkości kół, chociaż jest to nieintuicyjne w działaniu.
+			\item Lokalny kierunek jazdy platformy składa się z dwóch wektorów prędkości liniowej i wektora obrotu. 
+			Za pomocą klawiatury, binarnie, można nadać platformie jeden z ośmiu kierunków poruszania się i jeden z dwóch kierunków obrotu.
+			Ponownie, ta metoda sterowania powoduje skoki prędkości i poślizgi. Przypomina sterowanie pojazdami w grach komputerowych.
+			Puszczenie klawiszy powoduje zatrzymanie się platformy.
+			\item Podobny tryb do poprzedniego, ale naciśnięcie klawisza płynnie dodaje wartość do kierunku poruszania się i obrotu platformy.
+			Brak aktywności użytkownika powoduje, że model porusza się z zadaną prędkością w zadanym kierunku i z zadanym obrotem.
+			\item Połączenie dwóch poprzednich trybów, schodkowe sterowanie prędkością platformy. Pozwala na ustawienie prędkości i obrotu platformy z zadaną dokładnością.
+			\item Sterowanie kierunkiem platformy za pomocą kontrolera. Trzy osie są używane, dwie do nadania prędkości, jedna do nadania obrotu.
+			Jest to prawdopodobnie najczęstszy sposób kontrolowania robotów wielokierunkowych za pomocą kontrolera.
+			Bardzo intuicyjny i używany także przez inne pakiety do manualnego sterowania robotami na kołach Mecanum.
+			\item Sterowanie za pomocą myszki, najdokładniejsze sterowanie kierunkiem, mniej dokładne obrotem.
+			Kursor myszy wskazuje końcówkę strzałki reprezentującej kierunek ruchu robota, za pomocą kółka, można dodawać, lub odejmować prędkość do obrotu wokół osi.
+			Ponieważ większość myszek ma skokowe obroty kółek, wprowadza to nieznaczne poślizgi. Można także modyfikować obrót klawiaturą w płynnym trybie przyrostowym.
+		\end{enumerate}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/lalkarz.png}
+	\caption{Zrzuty ekranu dwóch trybów działania programu.}
+	\label{fig:lalkarz}
+	\end{figure}
+	
+	Interfejs składa się z listy trybów, wyświetlanych na górze, i nazwy aktualnego trybu.
+	Wyszarzone tryby nie mogą być aktywowane, w tym przypadku z powodu braku podłączenia kontrolera.
+	
+	Na lewym zrzucie widać zarys platformy i białe wskaźniki aktualnych prędkości kół, wraz ze współczynnikiem wypełnienia.
+	Obok nich znajdują się szare wskaźniki prędkości, zwrócone przez modele enkoderów.
+	Małe, szare znaki to nazwy klawiszy, używanych w tym trybie do modyfikowania prędkości.
+	
+	Na prawym obrazku jest tryb generowania kierunku i obrotu. Strzałka wskazuje wektor prędkości, a górny pasek obrót platformy.
+	
+	Na dole jest lista ,,biegów'' urządzenia, są to zwyczajne mnożniki wyjścia w celu wygodnego przestawiania dokładności z jaką platforma powinna się poruszać.
+	
+	Wszystkie dane są w jednostkach SI, tzn, efektywna prędkość koła będzie się równać liczbie podanej przy kole, pomnożonej przez aktualny bieg.
+	Dla obrotów to są $\frac{rad}{s}$, dla prędkości to $\frac{m}{s}$.
 	
 \section{Generator sterowania}
 	\label{sec:gramofon}
@@ -302,7 +363,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	
 	W tym pliku zawierają się także ustawienia symulacji, jak przyspieszenie grawitacyjne, typ maszyny symulacyjnej fizyki ze współczynnikami, czy ustawienia wirtualnej atmosfery.
 	
-\section{Rozdzielacz pakietów}
+\section{Rozdzielacz wiadomości}
 	Jeśli dwóm węzłom nadać te same nazwy interfejsów strumienia wiadomości, to ROS będzie przekazywał pomiędzy nimi informacje.
 	To jednak nie zawsze jest możliwe, aby mieć całkowitą kontrolę nad nazwami interfejsów wszystkich węzłów.
 	Dlatego też, potrzebny jest program do przekazywania i ewentualnego rozdzielania wiadomości dla różnych odbiorników.

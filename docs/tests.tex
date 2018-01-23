@@ -5,6 +5,10 @@ Każdy test wymaga innego podłączenia komponentów do siebie nawzajem.
 
 Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}, a następnie wyeksportowane do pliku CSV. Za pomocą programu Gnuplot narysowano wykresy.
 
+\section{Testy robota}
+	Platforma została przetestowana na trasie kwadratu w identyczny sposób, jak w eksperymencie poniżej.
+	To dało dokładne informacje o zachowaniu się czujników urządzenia, jak i o wielkości błędów.
+
 \section{Porównanie modeli dynamiki i kinematyki}
 	Posiadając model kinematyczny, którego ruch jest sterowany wzorami, można porównać jego pozycję i rotację z modelem dynamicznym.
 	Należy w tym samym momencie nadać bazom identyczne prędkości kół i zebrać dane dotyczące wzajemnej pozycji.
@@ -48,6 +52,8 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		Poślizg przy ruszaniu jest mniejszy.
 		To zjawisko nie wpływa istotnie na trasę modelu, gdyż przy testach, w których prędkość zmieniała się wolno i w których nie występowały nagłe hamowania,
 		nadal występowało takie samo zboczenie w stosunku do trasy kinematycznej.
+		
+		Testy platformy pokazały, że robot w rzeczywistości zachowuje się bardzo podobnie, również występują takie poślizgi przy nagłej zmianie kierunku prędkości.
 		
 		Za każdym obiegiem pętli narasta różnica pozycji wynikającej z kinematyki i pozycji obliczonej przez symulator.
 		Po zatrzymaniu się modelu dynamicznego, ponownie porusza się on jeszcze przez pewien czas w losowym kierunku, innym niż na początku,
@@ -196,10 +202,7 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 			\label{plot:wewucho_angular}
 		\end{figure}
 		
-		Pierwszy wykres pokazuje, że naturalny szum prędkości kątowej jest niewielki. Należy zatem do modelu tego czujnika celowo dodać szum, podobny do tego, 
-		jaki generuje rzeczywiste urządzenie.
-		%TODO dopisać po zmianie, czy szum dodany
-		
+
 		Na początku generowany jest szpikulec, przy natychmiastowym nadaniu prędkości kątowej i liniowej platformie.
 		Jest to wewnętrzny szum generowany przez maszynę symulacyjną fizyki, spowodowany dużą zmianą wielu jej parametrów.
 		Również wszystkie składowe elementy modelu są symulowane oddzielnie, połączone razem za pomocą więzów.
@@ -209,8 +212,10 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		Nie jest to celowo zasymulowana mechanika, a naturalne zjawisko reakcji na akcję. Jeden element składowy platformy działa na drugi, ale za chwilę drugi element także
 		zaczyna działać na pierwszy. Podobne jest to w działaniu przeregulowania regulatora.
 		
+		Jest to zachowanie zbliżone do odczytów z jednostki inercji robota. Tam czujnik również zwraca takie nagłe skoki prędkości w trakcie ruchów.
+		Szum w trakcie jednostajnego obrotu jest bardzo podobny.
+		
 	\subsection{Czujnik przyspieszenia liniowego}
-		Ten czujnik jest najtrudniejszy do zamodelowania.
 		Jak wcześniej wspomniano, maszyna do symulacji nie posiada wewnętrznie informacji o przyspieszeniu obiektu, gdyż działa w dyskretnych przedziałach czasowych.
 		Wartość przyspieszenia musi zostać celowo obliczona, co powodować może różne błędy.
 		
@@ -240,13 +245,13 @@ Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}
 		Następnie program zanotował odchylenie pod kątem 45°, w drugiej kwadrze, co było nałożeniem się opóźnienia w osi X i przyspieszenia w osi Y.
 		Na koniec zatrzymanie się platformy generowało zapis w ujemnym kierunku osi Y.
 		
-		Jednakże wielkości zanotowanego przyspieszenia nie są poprawne, a mniejsze o ponad połowę.
-		Na szczęście, nie są losowe, gdyż przy teście o mniejszym przyspieszeniu, ich wielkości spadały proporcjonalnie.
-		
 		Wykres generowany w czasie rzeczywistym sugeruje, jakoby niektóre pakiety przekazywały zerowe przyspieszenie, co w znaczącym stopniu wpływa na 
 		ostatecznie generowane dane.
 		
 		Widać także, że wyraźnie zapisuje się tendencja danych do oscylowania na prostej pod kątem 45°.
+		
+		Akcelerometr platformy generuje bardzo podobne dane, które również są obarczone dużym błędem.
+		Można powiedzieć zatem, że symulacja czujnika jest na dobrym poziomie.
 		
 		
 		
