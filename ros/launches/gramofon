@@ -22,7 +22,7 @@ commands=(
 "roslaunch velmaverse velmaverse.launch"
 "rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
 "rosrun transmutator transmutator /widelnica/vels"
-"rosrun gramofon gramofon 0.1 $GRAMOFON_FILE /transmutator/twist"
+"rosrun gramofon gramofon 0.02 $GRAMOFON_FILE /transmutator/twist"
 "rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/gazebo.xml --multiplot-run-all"
 )
 

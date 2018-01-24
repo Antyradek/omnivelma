@@ -8,9 +8,9 @@
 /// Nadajnik
 ros::Publisher publisher;
 
-const double wheelRadius = 0.1;
-const double modelWidth = 0.76;
-const double modelLength = 0.72;
+const double wheelRadius = 0.103;
+const double modelWidth = 0.72;
+const double modelLength = 0.76;
 
 ///Tryb rotacji wejścia
 enum Rotation

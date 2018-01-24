@@ -82,12 +82,12 @@
 		<include>
 			<uri>model://monokl</uri>
 			<name>monokl_r</name>
-			<pose>0.32 0 0.176 0 0 -1.570796</pose>
+			<pose>0.3 0 0.176 0 0 -1.570796</pose>
 		</include>
 		<include>
 			<uri>model://monokl</uri>
 			<name>monokl_l</name>
-			<pose>-0.32 0 0.176 0 0 1.570796</pose>
+			<pose>-0.3 0 0.176 0 0 1.570796</pose>
 		</include>
 		<joint name="monokl_r_fix" type="fixed">
 			<parent>base</parent>
