@@ -420,7 +420,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Komunikacja programu sterującego platformą odbywa się przez kanały komunikacyjne ROSa.
 
 		Wiadomość zawierająca dane prędkości kół czterokołowego robota nie mieści się w standardzie, zatem został stworzony specjalny typ \texttt{omnivelma\_msgs/Vels}.
-		Ta struktura zawiera cztery wartości zmiennoprzecinkowe podwójnej precyzji, oznaczające prędkości w $\frac{rad}{s}$.
+		Ta struktura zawiera cztery wartości zmiennoprzecinkowe podwójnej precyzji, oznaczające prędkości kątowe w \si{\radian\per\second}.
 
 		Program w każdym cyklu symulacji nadaje wiadomości:
 		\begin{itemize}
@@ -461,10 +461,10 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\begin{tabular}{l r}
 		Opis & Wartość \\
 		\hline
-		Główna część korpusu	&	60 kg \\
-		Przednia część korpusu	&	15 kg \\
-		Koło					&	1,6 kg \\
-		Skaner laserowy			&	1,1 kg \\
+		Główna część korpusu	&	60 \si{\kilo\gram} \\
+		Przednia część korpusu	&	15 \si{\kilo\gram} \\
+		Koło					&	1,6 \si{\kilo\gram} \\
+		Skaner laserowy			&	1,1 \si{\kilo\gram} \\
 		\end{tabular}
 		\caption{Masy ogniw przyjęte w modelu.}
 		\label{tab:masses}
@@ -507,7 +507,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		.2 przegub obrotowy z silnikiem\DTcomment{Nadaje moment obrotowy kołu}.
 		.3 wirtualne koło\DTcomment{Obiekt bez kształtu, obraca się jak koło}.
 		.4 siatka trójkątów\DTcomment{Służy do wizualizacji koła}.
-		.4 przegub 45°\DTcomment{Obrócony pod kątem 45° względem osi koła}.
+		.4 przegub 45°\DTcomment{Obrócony pod kątem \ang{45} względem osi koła}.
 		.5 kula\DTcomment{Nadaje kształt kołu}.
 		}
 		\caption{Zagnieżdżenie obiektów koła z przywracaną orientacją rolki.}
@@ -627,8 +627,8 @@ virtual bool SetParam (const std::string& key,
 		Metoda przyjmuje nazwę modyfikowanej wartości, oś przegubu (dla silników to zawsze będzie jedyna oś \texttt{0}) oraz nadawaną wartość.
 		Modyfikowane wartości to:
 		\begin{description}
-			\item[\texttt{fmax}] Maksymalny moment obrotowy w $Nm$, używany przez maszynę symulacyjną do nadania docelowej prędkości kątowej przegubowi. Ustawiany raz przy inicjalizacji modelu. Ponieważ w platformie ta wartość nigdy nie będzie osiągnięta ze względu na ograniczenia energetyczne, można założyć tutaj wysoką liczbę 100 Nm.
-			\item[\texttt{vel}] Docelowa prędkość obrotowa w $\frac{rad}{s}$, zapamiętana i ustawiana w każdym kroku symulacji, nadpisywana na odbiór nowych wartości z komunikacyjnego strumienia wiadomości.
+			\item[\texttt{fmax}] Maksymalny moment obrotowy w \si{\newton\metre}, używany przez maszynę symulacyjną do nadania docelowej prędkości kątowej przegubowi. Ustawiany raz przy inicjalizacji modelu. Ponieważ w platformie ta wartość nigdy nie będzie osiągnięta ze względu na ograniczenia energetyczne, można założyć tutaj wysoką liczbę 100 \si{\newton\metre}.
+			\item[\texttt{vel}] Docelowa prędkość obrotowa w \si{\radian\per\second} zapamiętana i ustawiana w każdym kroku symulacji, nadpisywana na odbiór nowych wartości z komunikacyjnego strumienia wiadomości.
 		\end{description}
 	
 	\subsection{Komunikacja}
@@ -931,9 +931,9 @@ virtual bool SetParam (const std::string& key,
 	W ten sposób, możliwe jest proste generowanie sterowania robota, bazujące na czasie.
 	Przykładowo, program może generować sterowanie:
 	\begin{enumerate}
-		\item Ruch przez 3,2 s, z prędkością 0,2 $\frac{m}{s}$, w kierunku (2,1).
-		\item Zatrzymanie na czas 0,9 s.
-		\item Obrót przez czas 10 s, z prędkością kątową 0,02 $\frac{rad}{s}$.
+		\item Ruch przez 3,2 \si{\second}, z prędkością 0,2 \si{\metre\per\second}, w kierunku (2,1).
+		\item Zatrzymanie na czas 0,9 \si{\second}.
+		\item Obrót przez czas 10 \si{\second}, z prędkością kątową 0,02 \si{\radian\per\second}.
 	\end{enumerate}
 	
 	Ponieważ jednak system operacyjny, na którym pracuje program i symulator, nie spełnia wymogów systemu czasu rzeczywistego, generowane wiadomości

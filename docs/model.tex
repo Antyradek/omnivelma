@@ -259,7 +259,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 			Ta dodatkowa funkcjonalność opisana jest szerzej w sekcji \ref{sec:model_nan}.
 			\item Naciśnięcie klawisza płynnie zwiększa, lub zmniejsza prędkość koła. W trakcie braku aktywności użytkownika, platforma porusza się 
 			z ustawionymi prędkościami kół.
-			\item Podobnie, co w poprzednim trybie, lecz pozwala na schodkowe ustawienie prędkości kół co 0,1 $\frac{rad}{s}$ (pomnożone przez dokładność).
+			\item Podobnie, co w poprzednim trybie, lecz pozwala na schodkowe ustawienie prędkości kół co 0,1 \si{\radian\per\second} (pomnożone przez dokładność).
 			Dzięki temu, możliwe jest w miarę dokładne powtórzenie manualnych testów platformy.
 			\item Poprzedni tryb, lecz przy ustawieniu prędkości zerowej, generuje nie-liczbę.
 			\item Sterowanie prędkościami kół za pomocą gałek kontrolera.
@@ -299,7 +299,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Na dole jest lista ,,biegów'' urządzenia, są to zwyczajne mnożniki wyjścia w celu wygodnego przestawiania dokładności z jaką platforma powinna się poruszać.
 	
 	Wszystkie dane są w jednostkach SI, tzn, efektywna prędkość koła będzie się równać liczbie podanej przy kole, pomnożonej przez aktualny bieg.
-	Dla obrotów to są $\frac{rad}{s}$, dla prędkości to $\frac{m}{s}$.
+	Dla obrotów to są \si{\radian\per\second}, dla prędkości to \si{\metre\per\second}.
 	
 \section{Generator sterowania}
 	\label{sec:gramofon}
@@ -377,7 +377,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Pozwala on sprawdzić, jak dla prostych zasad model będzie się zachowywał.
 	
 	Program periodycznie wysyła dane o zadanej prędkości.
-	W zależności od danych z czujników laserowych, program zmienia swój stan i obraca kierunek obrotu o 90\textdegree.
+	W zależności od danych z czujników laserowych, program zmienia swój stan i obraca kierunek obrotu o \ang{90}.
 	Ten sterownik dla uproszczenia nie generuje poleceń obrotu kątowego, sterowany obiekt powinien zachować swoją orientację.
 	
 	Prosty algorytm programu gwarantuje omijanie przeszkód, aby platforma nie zderzyła się z jakimś obiektem, jednak nie bierze pod uwagę celu jazdy.
@@ -413,6 +413,11 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 		Pozwala to na przykład umieścić znacznik reprezentujący pozycję platformy i chmury punktów, odebranych z czujników laserowych.
 		Jest lżejszy na zasobach w działaniu niż Gazebo i pokazuje tylko informacje z odebranych danych, a nie całe środowisko symulacji.
 		Nie posiada własnego symulatora fizyki, nie generuje żadnych danych samodzielnie.
+		
+	\subsection{Algorytm określania lokalizacji}
+		Pakiet \texttt{laser\_scan\_matcher} pozwala na określenie pozycji robota, bazując na danych ze skanera laserowego oraz opcjonalnie jednostki inercyjnej i enkoderów w
+		celu minimalizacji błędów. Bazuje na porównywaniu kolejnych odczytów chmury punktów pomiarowych.
+		Istnieją bardziej zaawansowane algorytmy określania pozycji, na przykład bazujące na modelu mapy, lecz ten jest prosty w użyciu i nie wymaga dodatkowych danych, ani kalibracji.
 		
 	\subsection{Zbieranie danych}
 		Każdy strumień wiadomości może zostać zapisany do pliku, a następnie odtworzony w ten sam sposób, w jaki został odebrany.

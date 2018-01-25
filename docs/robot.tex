@@ -105,9 +105,9 @@
 		\begin{tabular}{c c l}
 		Oznaczenie & Wartość & Opis \\
 		\hline
-		$r$ & 0,1 m & Promień koła. \\
-		$a$ & 0,76 m & Rozstaw kół na tej samej osi. \\
-		$b$ & 0,72 m & Rozstaw osi. \\
+		$r$ & 0,1 \si{\metre} & Promień koła. \\
+		$a$ & 0,76 \si{\metre} & Rozstaw kół na tej samej osi. \\
+		$b$ & 0,72 \si{\metre} & Rozstaw osi. \\
 		$\omega_i$ & & Prędkość kątowa $i$-tego koła. \\
 		$v_x$ & & Składowa prędkości liniowej wzdłuż osi X. \\
 		$v_y$ & & Składowa prędkości liniowej wzdłuż osi Y. \\
@@ -120,7 +120,7 @@
 	
 
 \section{Koła szwedzkie}
-	Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie, ustawionymi pod kątem $45^\circ$ do osi koła.
+	Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie, ustawionymi pod kątem \ang{45} do osi koła.
 	Rolki są pasywne i obracają się niezależnie od siebie. Każde koło ma 12 takich rolek, patrz rysunek \ref{fig:wheel}.
 	W platformie ich osie ustawione są w ten sposób, że osie najwyższych, lub najniższych, rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
 	Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X}, patrząc na nie z góry.
@@ -131,8 +131,8 @@
 	Ten drugi sposób także pozwala na ruch wielokierunkowy, ale nie jest tak często stosowany \cite{paletobot}.
 	
 	Koła zamontowane w platformie zostały wyprodukowane przez amerykańską firmę AndyMark \cite{andymark}.
-	Koła mają średnice o okrągłej liczbie 8 cali, czyli 20,32 cm oraz grubość 7,41 cm.
-	Każde koło waży 1,6 kg i jest w stanie udźwignąć masę ok. 200 kg.
+	Koła mają średnice o okrągłej liczbie 8 cali, czyli 20,32 \si{\centi\metre} oraz grubość 7,41 \si{\centi\metre}.
+	Każde koło waży 1,6 \si{\kilo\gram} i jest w stanie udźwignąć masę ok. 200 \si{\kilo\gram}.
 	
 	Każda rolka podzielona jest na 3 części, patrz rysunek \ref{fig:wheel}, w celu lepszego zamocowania na kole, każda część może obracać się niezależnie.
 	Teoretycznie zatem każde koło ma 36 rolek, lecz nie ma to znaczenia z punktu widzenia symulacji.
@@ -294,13 +294,13 @@
 		\begin{tabular}{l r}
 		Cecha & Wartość \\
 		\hline
-		Kąt pracy & 270\textdegree \\
-		Długość fali światła lasera & 905 nm (podczerwień) \\
-		Częstotliwości skanowania & 25 Hz / 50 Hz \\
-		Maksymalna odległość obiektu & $\approx$ 20 m \\
-		Rozdzielczość kątowa & $0,25 \degree$ / $0,5 \degree $ \\
-		Systematyczny błąd pomiarowy & $\pm 0,03$ m \\
-		Przypadkowy błąd pomiaru odległości & $0,012$ m \\
+		Kąt pracy & \ang{270} \\
+		Długość fali światła lasera & 905 \si{\nano\metre} (podczerwień) \\
+		Częstotliwości skanowania & 25 \si{\hertz} / 50 \si{\hertz} \\
+		Maksymalna odległość obiektu & $\approx$ 20 \si{\metre} \\
+		Rozdzielczość kątowa & 0,25° / 0,5° \\
+		Systematyczny błąd pomiarowy & $\pm$ 0,03 \si{\metre} \\
+		Przypadkowy błąd pomiaru odległości & 0,012 \si{\metre} \\
 		\end{tabular}
 		\caption{Podstawowe cechy czujnika laserowego.}
 		\label{tab:lidar}
