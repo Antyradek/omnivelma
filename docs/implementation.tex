@@ -49,7 +49,7 @@ W tym rozdziale opisane są szczegóły techniczne zastosowanych rozwiązań.
 
 	Dla odpowiedniej wizualizacji symulacji, można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota. Nie ma to znaczenia dla przebiegu symulacji, gdyż ta część nie bierze udziału w obliczeniach maszyny symulującej fizykę.
 
-	W środowisku wirtualnym należy stworzyć moduł o podobnym działaniu.
+	W środowisku wirtualnym należy stworzyć program o podobnym działaniu.
 	Powinien przyjmować dane w dokładnie takim samym formacie, jak opisany wyżej układ, aby był łatwo wymienialny na sterownik fizycznego urządzenia bez ingerencji w główny program sterujący.
 	Zamiast zamieniać odczytane dane na analogowe wartości, sterownik wywołuje odpowiednie funkcje maszyny symulacyjnej, aby wywołać taki sam efekt, co na rzeczywistym efektorze, lecz w wirtualnej przestrzeni symulacji.
 	Jako argumenty podaje parametry fizyczne symulowanego obiektu, oraz przyłożone siły.
@@ -341,7 +341,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 
 	Uruchomienie platformy programistycznej na systemie wymaga wielu dodatkowych komend inicjalizujących, 
 	a także dopisywania do tworzonych projektów licznych plików konfiguracyjnych za pomocą dostarczonych skryptów.
-	Używanie modułów z linii poleceń wymaga ustawienia kilku zmiennych systemowych, poprzez wczytywanie skryptów.
+	Używanie pakietów z linii poleceń wymaga ustawienia kilku zmiennych systemowych, poprzez wczytywanie skryptów.
 	Użycie niektórych funkcji ROS wymaga uruchomionego demona serwera w tle.
 
 	Ogólnie instalacja i używanie ROS na systemie zostawia dużo różnorodnych plików w katalogu domowym, co może nie być wskazane na codziennym systemie operacyjnym.
@@ -832,7 +832,7 @@ virtual bool SetParam (const std::string& key,
 			Dodany jest szum, jak gdyby rozmazujący punkty.
 		
 \section{Model jednostki inercyjnej}
-	Ponieważ czujniki tego typu są często stosowane w robotyce, wszystkie komponenty systemu wspierają jego symulację i struktury przekazywanych danych.
+	Ponieważ czujniki tego typu są często stosowane w robotyce, ROS i Gazebo wspierają jego symulację i struktury przekazywanych danych.
 	\begin{itemize}
 		\item ROS posiada specjalną wiadomość typu \texttt{sensor\_msgs/Imu}, do przekazywania pomiarów pomiędzy węzłami.
 		\item SDF definiuje element typu \texttt{imu} w sekcji czujników, gdzie można mu zdefiniować położenie w robocie i współczynniki błędów pomiarowych.
@@ -894,7 +894,7 @@ virtual bool SetParam (const std::string& key,
 		Drugi typ wiadomości, \texttt{geometry\_msgs/Twist}, to nadana prędkość względna platformy.
 		To intuicyjny sposób, w jaki użytkownik steruje platformą i w jaki sposób mógłby także sterować nią prosty program sterujący.
 		Jednak ponieważ model platformy, nie jest wstanie poruszać się bez informacji, jakimi kołami z jaką prędkością obracać,
-		ten typ wiadomości musi być jeszcze konwertowany przez komponent modelu kinematyki odwrotnej, opisany w sekcji \ref{sec:transmutator}.
+		ten typ wiadomości musi być jeszcze konwertowany przez pakiet modelu kinematyki odwrotnej, opisany w sekcji \ref{sec:transmutator}.
 		Program może być bezpośrednio podłączony do robota.
 		
 		Program opcjonalnie przyjmuje także wiadomość \texttt{omnivelma\_msgs/Vels}, aby wyświetlić dane enkoderów.
@@ -972,7 +972,7 @@ virtual bool SetParam (const std::string& key,
 	odległość i kąt pomiędzy modelem dynamicznym, a kinematycznym, wiadomość \texttt{omnivelma\_msgs/Relative}.
 	Te dane pozwalają sprawdzić, na ile symulacja fizyczna opóźnia się względem matematycznego modelu.
 	
-	Ten program nie może być zaimplementowany jako zewnętrzny komponent, gdyż wiadomości zawierające pozycje platform będą przychodzić asynchronicznie.
+	Ten program nie może być zaimplementowany jako zewnętrzny pakiet, gdyż wiadomości zawierające pozycje platform będą przychodzić asynchronicznie.
 	Nie da się w takim przypadku obliczyć dokładnych odległości pomiędzy platformami w danej chwili. 
 	Wprowadzałoby to także spore opóźnienie, gdyż program musiałby czekać na odbiór obu wiadomości, dodatkowo zachowując pewność że oba pochodzą z tego samego kroku symulacji.
 	

@@ -38,10 +38,11 @@
 	\item Wystawienie do zmiany w czasie rzeczywistym masy, momentu bezwładności, współczynników tarcia, aby pozwolić na proste testowanie działania systemu z różnymi współczynnikami.
 	\item Stworzenie dodatkowych programów, pomagających w symulacji i testowaniu, jak model kinematyki odwrotnej, sterowany funkcją matematyczną, i podłoże ze zmiennym współczynnikiem tarcia.
 	\item Zaprogramowanie programów pomocniczych, zbierających i wyświetlających dane, interfejs graficzny do prostego sterowania robotem.
-	\item Dodanie modelu czujnika laserowego, powinien zbierać dane i przekazywać je dalej. Musi posiadać także określone kształty.
-	\item Dodanie modelu czujnika inercji.
-	\item Stworzenie uproszczonego programu sterującego, bazującego na danych z czujników laserowych, aby zbadać, czy system działa poprawnie na tyle, aby rozwinąć go w końcowy projekt.
+	\item Dodanie modelu skanera laserowego, powinien zbierać dane i przekazywać je dalej. Musi posiadać także określone kształty.
+	\item Dodanie modelu jednostki inercyjnej.
+	\item Stworzenie uproszczonego programu sterującego, bazującego na danych ze skanerów laserowych, aby zbadać, czy system działa poprawnie na tyle, aby rozwinąć go w końcowy projekt.
 	\item Przeprowadzenie testów, z porównaniem zachowania się rzeczywistej platformy w celu weryfikacji poprawności.
+	\item Ustawianie parametrów modelu w celu przybliżenia go do zachowania platformy.
 	\end{enumerate}
 	
 	Po stworzeniu symulatora, następnym krokiem jest tworzenie głównego programu sterującego, którego testowanie opierać się będzie na powstałym środowisku symulacyjnym.
@@ -57,7 +58,7 @@
 		\item[\ref{sec:robot}] Techniczny opis rzeczywistej platformy i czujników, oraz mechaniki stojącej za zasadą ich działania.
 		\item[\ref{sec:tools}] Opis narzędzi programistycznych, użytych przy budowie modeli i testowaniu.
 		\item[\ref{sec:model}] Implementacje modeli opisanych w poprzednim rozdziale, problemy i niedoskonałości z nimi związane. Opis poszczególnych dodatkowych składników systemu, używanych w symulacji, testowaniu, wizualizacji i wspomagających tworzenie.
-		\item[\ref{sec:implementation}] Implementacje poszczególnych komponentów systemu.
+		\item[\ref{sec:implementation}] Implementacje poszczególnych pakietów systemu.
 		\item[\ref{sec:tests}] Testy różnych składników systemu, wykresy i interpretacja.
 		\item[\ref{sec:ending}] Krótkie podsumowanie wykonanej pracy.
 	\end{description}
