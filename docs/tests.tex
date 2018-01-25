@@ -5,159 +5,184 @@ Każdy test wymaga innego podłączenia pakietów do siebie nawzajem.
 
 Wyniki pomiarów zostały zebrane za pomocą ROSowego narzędzia \texttt{rosbag}, a następnie wyeksportowane do pliku CSV. Za pomocą programu Gnuplot narysowano wykresy.
 
-\section{Testy enkoderów}
-	Model czujnika enkoderów zwraca aktualną prędkość i pozycję kół modelu dynamicznego.
+\section{Testy odometrii}
+	\label{sec:test_odometry}
+	Model czujnika enkoderów zwraca aktualną prędkość i pozycję kół modelu dynamiki.
 	W ten sposób jest możliwe dokładniejsze określenie pozycji platformy, niż bazując na modelu kinematycznym.
 	Jednakże, ta metoda także ma swoje ograniczenia, ze względu na poślizgi, zatem program sterujący nie może w pełni bazować na tych czujnikach, a jedynie powinien używać ich pomocniczo.
 	
-	W tym teście obliczono pozycję modelu kinematyki, bazując na danych zebranych przez modele enkoderów.
-	W najlepszym przypadku, pozycje powinny być identyczne.
+	W tym teście obliczono pozycję modelu dynamiki, bazując na danych zebranych przez modele enkoderów, skorzystano z połączenia przedstawionego na rysunku \ref{uml:encoders}.
+	Platforma posiada algorytm, który wewnętrznie, korzystając z enkoderów i modelu kinematyki, oblicza pozycję, w której powinien znajdować się robot.
 	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=\textwidth]{uml/encoders.pdf}
-			\caption{Połączenie komponentów w celu sprawdzenia poprawności działania enkoderów modelu dynamicznego.}
-		\label{plot:encoders}
-	\end{figure}
-	
-	Wyjście enkoderów modelu dynamicznego wyłuskane jest z wiadomości i podane dla modelu kinematycznego, model platformy kinematycznej porusza się tak, jak odbiera to model platformy dynamicznej. 
-	
-	Przeprowadzono dwa testy, w pierwszym nadawano prędkości kołom z odpowiednią częstotliwością, drugi nadawał prędkości kół jedynie przy zmianie kierunku ruchu modelu dynamicznego.
-	Sterowanie zostało stworzone z myślą o wywołaniu poślizgów platformy, nadana prędkość 0,5 $\frac{m}{s}$ była większa, niż w poprzednich testach.
-	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=\textwidth]{plots/star_encoders.pdf}
-			\caption{Ruch modeli przy ciągłym wysyłaniu pakietów, jedynie na zmiany kierunku i kinematyka bazująca na danych zebranych z enkoderów. Wykres pierwszy i trzeci są na siebie nałożone.}
-		\label{plot:star_encoders}
-	\end{figure}
-	
-	\subsection{Ciągłe nadawanie prędkości kół}
-		Przy ciągłym nadawaniu prędkości kołom, enkodery odczytują praktycznie dokładnie te same wartości, jakie są nadawane.
-		Co za tym idzie, działa to w taki sam sposób, w jaki działałaby platforma kinematyczna w poprzednim teście.
-		Pierwsze trzy wykresy zatem nie różnią się przebiegiem, niż gdyby je wygenerować w poprzednim podłączeniu komponentów.
-		
-		Przy pierwszej zmianie prędkości platformy, widać różnicę w pozycji modeli, spowodowaną poślizgiem.
-		Duża prędkość kątowa również powoduje poślizg kątowy, przez co różnica pomiędzy pozycjami w tym samym czasie rośnie szybciej, jak w poprzednich testach.
-		Enkodery nie są w stanie wykrywać poślizgu, dlatego ich wykres nie odstaje w momentach zmiany kierunku od wykresu modelu kinematycznego.
-		
-	\subsection{Impulsowe nadawanie prędkości kół}
-		Jedno wywołanie metody maszyny symulacyjnej fizyki nadaje prędkość kołom. Następnie, z powodu symulowanych oporów, prędkość koła naturalnie spada, aż do
-		ponownego nadania prędkości. To, jak prędkość ruchu spada, widać, gdyż segmenty przebiegu w dwóch ostatnich wykresach nie są łukami, jak ma to miejsce przy 
-		ciągłym nadawaniu prędkości. Po nadaniu ostatniej wiadomości, zatrzymującej wszystkie koła, platforma nadal wolno się porusza, pod wpływem bezwładności, a brak oporu rolek w jednym z kierunków, oraz brak oporu obrotu koła pozwalał na ciągły ruch w losowym kierunku.
-		
-		Co warto tutaj zauważyć, to to że enkodery prawidłowo starają się przekazać zmienną prędkość kół. 
-		Inaczej mówiąc, pozycja wynikająca z danych zwróconych z enkoderów jest dokładniejsza, niż wynikająca z wywołanego ruchu modelu kinematycznego w idealnym przypadku.
-		Żółty wykres jest bliżej pomarańczowego, niż fioletowy/niebieski.
-		Tutaj także widać wpływ poślizgu modelu na określanie pozycji.
-		
-		Zatem model enkoderów może mieć faktyczne zastosowanie w określaniu pozycji platformy. 
-		Okazuje się lepszy, niż kinematyka, w przypadku zewnętrznego nadania prędkości platformie, na przykład pod wpływem nagłego zatrzymania.
-		Pod warunkiem, że nie występuje poślizg. Jak już wcześniej wspomniano, platforma jest podatna na ruch w losowym kierunku przy nagłym zatrzymaniu,
-		lecz nie zawsze taki ruch może zostać niewykryty. Poślizg, a nadanie niedeterministycznej siły zewnętrznej, to dwa różne zjawiska.
-		
-
-\section{Ruch platformy po kwadracie}
-	Za pomocą pakietu nadającego sterowanie z pliku, opisanego w sekcji \ref{sec:gramofon}, podano robotowi i platformie proste sterowanie.
+	Za pomocą pakietu nadającego sterowanie z pliku, opisanego w sekcji \ref{sec:gramofon}, podano robotowi i modelowi proste sterowanie.
 	Ruch odbywał się przez 10 \si{\second} z prędkością 0,1 \si{\metre\per\second} na dystansie 1 \si{\metre}, kolejno w kierunkach -X, -Y, X i Y.
 	Zmiana kierunku prędkości odbywała się natychmiastowo, powodując poślizgi.
 	W tym teście nie nadawano prędkości kątowej.
 	
-	Pozycja modelu została łatwo wygenerowana, ponieważ symulacja odbywała się w przestrzeni wirtualnej.
-	Pozycja platformy nie mogła być łatwo określona. Posłużono się algorytmem ROSowego pakietu \texttt{laser_scan_matcher}, który na podstawie 
-	danych z jednego i drugiego skanera laserowego określił aktualną pozycję platformy. Określenie pozycji jest obarczone błędem wynikającym
-	z błędów pomiarowych czujników, stąd obliczona trasa nie składa się z odcinków.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{uml/encoders.pdf}
+			\caption{Połączenie pakietów w celu sprawdzenia poprawności działania enkoderów modelu dynamiki.}
+		\label{uml:encoders}
+	\end{figure}
 	
-	
-	
-\section{Jednostka inercyjna}
-\label{sec:test_imu}
-	Test polega na wymuszeniu określonych prędkości i przyspieszeń na modelu bazy i zebraniu wyników.
+	Wyjście enkoderów modelu dynamiki wyłuskane jest z wiadomości i podane dla modelu kinematyki.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=\textwidth]{uml/wewucho.pdf}
-		\caption{Połączenie komponentów dla testu czujnika inercji.}
-		\label{uml:wewucho}
+		\includegraphics[width=\textwidth]{plots/odometry.pdf}
+			\caption{Porównanie pozycji modelu dynamiki z pozycją platformy.}
+		\label{plot:encoders}
 	\end{figure}
 	
-	Połączenie nadające sterowanie jest podobne do poprzednich testów.
-	Dodatkowy komponent odszumia dane i zapisuje je, aby można je było wygodnie przedstawić na wykresie.
-	W tym teście nie jest wymagany model kinematyczny.
+	\subsubsection{Odometria robota}
+		Pierwszą cechą wykresu jest to, że dane z algorytmu odometrii na robocie pokrywają się z zadaną trasą.
+		Jest tak prawdopodobnie, ponieważ silniki platformy dysponują dużą mocą, a także dużym oporem.
+		Potrzeba jest zatem odpowiedniej siły tarcia o podłoże w celu wymuszenia obrotu takiego koła wbrew zadanemu sterowaniu.
+		To powoduje, że koło jest niepodatne na warunki zewnętrzne w większym stopniu, niż jest to modelowane.
+		Zatem pozycja wyliczona z odometrii będzie się niemal pokrywać z pozycją na zadanej trasie.
+		
+		To nie oznacza, że wygenerowana trasa pokrywała się z rzeczywistością. Trasa obliczona na podstawie skanera laserowego znajduje się na wykresie \ref{sec:test_pose}.
+		
+	\subsubsection{Pozycja modelu}
+		Na skutek błędów numerycznych maszyny do symulacji fizyki, symulacji nie na systemie czasu rzeczywistego, braku oporów i skomplikowanej budowy modelu, następuje
+		nieprzewidywalny ruch wo kół osi Z w trakcie nagłej zmiany kierunku jazdy.
+		Za każdym skrętem dodawany jest obrót kątowy wokół osi Z do orientacji modelu platformy, który jest niewykrywalny przez modele enkoderów, a zatem być może powstaje na skutek
+		poślizgu.
+		Dlatego też różnica pomiędzy pozycją na zadanej trasie, a pozycją modelu zwiększa się w czasie.
+		
+		Model także przejechał większą odległość, niż zadana. Być może jest to spowodowane sposobem liczenia kolizji w maszynie symulacyjnej fizyki, rzeczywista odległość pomiędzy osią koła i podłożem jest większa od promienia koła. Poślizg nie wpływa na to zjawisko, gdyż w testach bez nagłego hamowania nadal występuje i jest wykrywany przez model kinematyki.
+		
+\section{Pozycja obliczona ze skanerów laserowych}
+	\label{sec:test_pose}
+	Pozycja modelu została łatwo wygenerowana, ponieważ symulacja odbywała się w przestrzeni wirtualnej.
+	Pozycja platformy nie mogła być łatwo określona. Posłużono się algorytmem ROSowego pakietu \texttt{laser\_scan\_matcher}, który na podstawie 
+	danych z jednego i drugiego skanera laserowego i odometrii określił aktualną pozycję platformy. Określenie pozycji jest obarczone błędem wynikającym
+	z błędów pomiarowych czujników, stąd obliczona trasa nie składa się z odcinków i posiada szum.
 	
-	\subsection{Czujnik prędkości kątowej}
-		Ten czujnik korzysta z żyroskopu i zwraca prędkość kątową we wszystkich trzech osiach.
-		Ponieważ jednak platforma porusza się po płaskim terenie, wymagany jest jedynie czujnik w kierunku osi Z, czyli w górę.
-		Drugą osią może być zatem czas nadania pakietu.
+	To jest ten sam eksperyment co w sekcji \ref{sec:test_odometry}.
+	Pakiety zostały połączone w prostszy sposób, jak na rysunku \ref{uml:test_pose}, model kinematyczny generuje trasę na podstawie zadanych prędkości.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{uml/gramofon.pdf}
+		\caption{Połączenie pakietów dla testu pozycji modelu.}
+		\label{uml:test_pose}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{plots/matcher.pdf}
+		\caption{Pozycja robota, obliczona z jednego lub drugiego skanera laserowego i model.}
+		\label{plot:pose}
+	\end{figure}
+	
+	\subsubsection{Powtarzalność jazdy modelu}
+		Jak wcześniej wspomniano, poślizgi nadają modelowi nieprzewidywalne kąty w trakcie nagłej zmiany prędkości. 
+		Dlatego też trasy modelu platformy w tym i wcześniejszym teście z sekcji \ref{sec:test_odometry} różnią się. 
+	\subsubsection{Wyznaczenie pozycji}
+		Duże podobieństwo pozycji wyznaczonej przez jeden i drugi skaner wskazuje, że algorytm działa dobrze i daje przewidywalne wyniki.
+		Trasa przejazdu również jest prawdopodobna.
+	\subsubsection{Trasa robota}
+		Robot jadąc równolegle do osi X, jechał w bok i pokonał krótszą trasę niż przy jeździe równolegle do osi Y. Jak wspomniano w sekcji \ref{sec:robot_movement}, powodowało to większy obrót rolek
+		niż przy jeździe na wprost, co powodowało większy opór ruchu i w efekcie przejazd wolniej od zadanej prędkości i po krótszej trasie.
+		Model nie jest podany na tę właściwość, gdyż kule, symulujące koła, są symetryczne.
+	
+\section{Ruch obrotowy}
+	\label{sec:test_rotation}
+	W tym teście pakiety zostały podłączone tak samo, jak wcześniej, według wykresu \ref{uml:test_pose}.
+	
+	Test polegał na jeździe w bok z prędkością 0,1 \si{\metre\per\second}, tak samo jak w poprzednim teście, następnie obrocie wokół osi Z o 90° przez 10 \si{\second} z prędkością $\frac{\pi}{20}$ \si{\radian\per\second} i ponownej jeździe w bok. Tak 4 razy, dla każdego boku kwadratu.
+	Pozycja robota została wyznaczona z czujników laserowych i odometrii w taki sam sposób, jak w teście \ref{sec:test_pose}.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{plots/rotation_matcher.pdf}
+		\caption{Pozycja robota, obliczona z jednego lub drugiego skanera laserowego i model.}
+		\label{plot:rotation}
+	\end{figure}
+	
+	\subsubsection{Trasa robota}
+		Na początku eksperymentu nastąpił poślizg, który obrócił platformę o nieznaczny kąt.
+		Przez to trasa jest obrócona względem zaplanowanej.
+	\subsubsection{Trasa modelu}
+		Właściwość modelu powodująca, że pokonuje większą trasę, niż zadana objawia się także w trakcie obrotu, gdzie wykonuje większy kąt niż prosty.
+		Dlatego kolejne segmenty trasy są coraz mniej równoległe do osi układu współrzędnych.
+		Na kątach widać także, że model nie obraca się wokół swojego środka (początku lokalnego układu współrzędnych), tylko od lekko przesuniętego w bok
+		punktu ciężkości. Pomimo, że wartości ogniw zostały dobrane symetrycznie, jak widać nie wszystkie wartości się równoważą.
+		Jest to cecha charakterystyczna dla maszyn symulacji fizyki w czasie rzeczywistym.
 		
-		Wykonano dwa testy, w pierwszym wymuszono ruch po spirali ze stałą prędkością liniową, a co za tym idzie, z nieliniowo zmieniającą się prędkością kątową platformy.
-		Prędkość platformy aktualizowana była co 0,5 s, co widać w postaci schodków na wykresie.
-		Trasa robota nie pokazywała żadnych nowych zjawisk, które nie zostały już wspomniane w poprzednich testach.
-		
-		Drugim testem jest ruch po serpentynie.
-		Prędkość liniowa platformy była stała, nadawano prędkości kątowe o rosnącej wartości. Model jeździł po łukach o coraz mniejszych promieniach.
-		
-		Testy rozpoczęły się w tym samym czasie, lecz program nadający sterowanie celowo oczekiwał po rozpoczęciu kilka sekund.
+\section{Jednostka inercyjna}
+\label{sec:test_imu}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{uml/wewucho.pdf}
+		\caption{Połączenie pakietów dla testu jednostki inercyjnej.}
+		\label{uml:test_imu}
+	\end{figure}
+	\subsection{Akcelerometr}
+		Dane zostały zebrane w trakcie testu \ref{sec:test_pose}.
+		Połączenie pakietów w sposób pokazany na rysunku \ref{uml:test_imu}.
+		Dane wygenerowane przez ten czujnik są obarczone bardzo dużym błędem.
 		
 		\begin{figure}[H]
-		\centering
-			\includegraphics[width=\textwidth]{plots/wewucho_angular.pdf}
-			\caption{Test prędkości kątowej czujnika inercji.}
-			\label{plot:wewucho_angular}
+			\centering
+			\includegraphics[width=\textwidth]{plots/wewucho.pdf}
+			\caption{Odczyt akcelerometra z jednostki inercyjnej i jej modelu.}
+			\label{plot:imu}
 		\end{figure}
 		
+		\subsubsection{Impulsy na wykresie modelu}
+			W trakcie testu następowały kolejne przyspieszenia i opóźnienia bazy w zadanych kierunkach, to widać jako impulsy na wykresie.
+			Na początku platforma zaczęła poruszać się w kierunku -X i w tą stronę zostało nadane pierwsze przyspieszenie.
+			Nie jest znana jego wielkość, gdyż było to wysłanie jednej wiadomości, bez płynnego narastania prędkości.
+			
+			Następnie zadziałało przyspieszenie zmieniające prędkość liniową platformy o 90°, co oznacza że impuls jest obrócony o 45° względem układu współrzędnych.
+			Impuls wystąpił w kierunku (X,-Y). 
+			
+			Podobna zmiana prędkości nastąpiła jeszcze dwa razy, generując kolejne, symetryczne impulsy.
+			
+			Platforma zatrzymała się, generując opóźnienie w kierunku -Y, co także widać na wykresie.
+			
+			Przeprowadzanie podobnych testów pokazuje, że nawet jeśli ustawić zaplanowane przyspieszenie modelu, to i tak czujnik nie zwraca poprawnych amplitud.
+			Jedyne, co wiadomo to to, że generuje proporcjonalnie większe wartości dla większych przyspieszeń.
+			Również istnieje korelacja pomiędzy osiami, na przykład natychmiastowe zatrzymanie się w jednym z kierunków powoduje inne przyspieszenie, niż w innym kierunku.
+			Co zresztą jest logiczne, gdyż osie kół stawiają większy opór, gdy działający na nie moment siły jest skierowany prostopadle do osi, niż równolegle. 
+			Zatem większe opóźnienie będzie przy hamowaniu z jazdy w bok, niż jazdy w przód.
+			
+			Szum spowodowany jest potrzebą różniczkowania prędkości obliczanej dyskretnie. Wartości mas i momentów inercji ogniw modelu mocno wpływają na kształt, kolerację
+			osi i szum na wykresie. Nie jest technologicznie możliwe zamodelować doskonałej jednostki inercyjnej ze względu na błędy numeryczne, algorytmy użyte w maszynie
+			symulującej fizykę i system operacyjny na którym pracuje symulator.
+			
+		\subsubsection{Wykres czujnika}
+			Porównując te dwa wykresy razem, nie widać zależności, jednak zastosowanie prostego uśrednienia powoduje, że impulsy wygenerowane przez robota również są widoczne.
+			Aby użyć tego czujnika do obliczania pozycji, trzeba wpierw użyć zaawansowanego algorytmu odszumiającego i wyprowadzić eksperymentalnie zależności pomiędzy czujnikami
+			osi (macierz kowariancji).
+			Dopiero wtedy można wprowadzić dodatkowy szum do modelu jednostki inercyjnej w celu przybliżenia jej wyjścia do rzeczywistego urządzenia.
 
-		Na początku generowany jest szpikulec, przy natychmiastowym nadaniu prędkości kątowej i liniowej platformie.
-		Jest to wewnętrzny szum generowany przez maszynę symulacyjną fizyki, spowodowany dużą zmianą wielu jej parametrów.
-		Również wszystkie składowe elementy modelu są symulowane oddzielnie, połączone razem za pomocą więzów.
-		Zatem informacja nadająca prędkość platformie przechodzi przez kilka warstw, zanim ustawi odpowiednie prędkości wszystkim składowym systemu.
-		
-		Widać także niewielką sprężystość modelu, objawia się ona chwilowym zmniejszeniem wartości wielkości tuż po szpikulcu.
-		Nie jest to celowo zasymulowana mechanika, a naturalne zjawisko reakcji na akcję. Jeden element składowy platformy działa na drugi, ale za chwilę drugi element także
-		zaczyna działać na pierwszy. Podobne jest to w działaniu przeregulowania regulatora.
-		
-		Jest to zachowanie zbliżone do odczytów z jednostki inercji robota. Tam czujnik również zwraca takie nagłe skoki prędkości w trakcie ruchów.
-		Szum w trakcie jednostajnego obrotu jest bardzo podobny.
-		
-	\subsection{Czujnik przyspieszenia liniowego}
-		Jak wcześniej wspomniano, maszyna do symulacji nie posiada wewnętrznie informacji o przyspieszeniu obiektu, gdyż działa w dyskretnych przedziałach czasowych.
-		Wartość przyspieszenia musi zostać celowo obliczona, co powodować może różne błędy.
-		
-		W tym teście platformie nadano przyspieszenie 2 $\frac{m}{s^2}$ przez czas 1 s, w kierunku osi X, w wiadomościach co 0,1 s.
-		Następnie platforma poruszała się przez 5 s z prędkością 0,2 $\frac{m}{s}$.
-		Potem nadano jej jednoczesne opóźnienie w kierunku osi X i przyspieszenie w kierunku Y, o tych samych wartościach, co na początku.
-		Po kolejnych 5 s, platforma zwolniła do zera. Kształt trasy przypominał literę L z zaokrąglonym kątem.
-		Samo przyspieszenie platformy wynika z uśrednienia wysyłanych prędkości w czasie, musi być nadawane dyskretnie, żaden z elementów symulatora nie jest w stanie
-		pracować w ciągłej domenie czasowej.
+			
+\subsection{Żyroskop}
+		\label{sec:test_ang}
+		Czujnik prędkości kątowej korzysta z żyroskopu i zwraca prędkość kątową we wszystkich trzech osiach.
+		Ponieważ jednak platforma porusza się po płaskim terenie, wymagany jest jedynie czujnik mierzący obrót wokół osi Z, czyli w górę.
+		Drugą osią wykresu może być zatem czas nadania pakietu. Te dane zostały zebrane w trakcie testu \ref{sec:test_pose}.
 		
 		\begin{figure}[H]
-		\centering
-			\includegraphics[width=\textwidth]{plots/wewucho_linear.pdf}
-			\caption{Test przyspieszenia czujnika inercji.}
-			\label{plot:wewucho_angular}
+			\centering
+			\includegraphics[width=\textwidth]{plots/wewucho_ang.pdf}
+			\caption{Odczyt żyroskopu z jednostki inercyjnej i jej modelu.}
+			\label{plot:ang}
 		\end{figure}
 		
-		Na czystych danych nie widać, jakoby model czujnika inercji w ogóle działał. 
-		Jest to widoczne tylko przy natychmiastowej zmianie prędkości platformy, to jest przy teście \ref{sec:test_square}.
-		Jednak takie teoretycznie nieskończone przyspieszenie nie może być w żaden naukowy sposób zinterpretowane, dlatego należy przeprowadzić testy z kontrolowanym
-		przyspieszeniem.
+		Ponieważ maszyna do symulacji fizyki wewnętrznie posiada informację o prędkościach obiektów, model tego czujnika po prostu zwraca gotowe dane. 
+		To powoduje, że praktycznie pozbawiony jest szumu. 
+		Aby zatem polepszyć jakość symulacji, dodano sztuczny szum do generowanych danych, zgodnie z tabelą \ref{tab:imu_noise}.
+		W ten sposób wykresy są do siebie bardziej zbliżone.
 		
-		Po uśrednieniu danych z 10 ostatnich pomiarów, okazuje się, że środek generowanych w tym czasie danych jednak się przesuwał.
-		Co więcej, robił to w poprawnych kierunkach.
-		
-		Na początku powstał zapis w kierunku dodatnim osi X, reprezentujący przyspieszenie platformy.
-		Następnie program zanotował odchylenie pod kątem 45°, w drugiej kwadrze, co było nałożeniem się opóźnienia w osi X i przyspieszenia w osi Y.
-		Na koniec zatrzymanie się platformy generowało zapis w ujemnym kierunku osi Y.
-		
-		Wykres generowany w czasie rzeczywistym sugeruje, jakoby niektóre pakiety przekazywały zerowe przyspieszenie, co w znaczącym stopniu wpływa na 
-		ostatecznie generowane dane.
-		
-		Widać także, że wyraźnie zapisuje się tendencja danych do oscylowania na prostej pod kątem 45°.
-		
-		Akcelerometr platformy generuje bardzo podobne dane, które również są obarczone dużym błędem.
-		Można powiedzieć zatem, że symulacja czujnika jest na dobrym poziomie.
-		
-		
+		Jednak niektórych własności czujnika nie da się zamodelować tak łatwo. Po pierwsze, szum czujnika nie do końca ma rozkład normalny.
+		Z wykresu można zobaczyć, że dane prawdopodobnie korelują z częstotliwościami obrotu kół.
+		Dodatkowo, nagła zmiana prędkości kątowej powoduje zauważalny skok na wykresie, co w symulatorze jest znacznie mniej widoczne.
+		Ta cecha wykresu zależy od ustawień mas i inercji ogniw modelu, lecz z kolei inne ustawienia inercji powodują większe błędy przy poruszaniu się platformy.
 		
 		
 		

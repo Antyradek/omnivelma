@@ -603,6 +603,11 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		
 		Środki mas zostały obliczone, bazując na uproszczonych kształtach ogniw, przy założeniu jednorodnego rozkładu gęstości w korpusie.
 		
+		Jeśli dane mas i momentów bezwładności nie są logicznie ustawione, lub zostawione na domyślnych wartościach, model może powodować błędy maszyny symulacyjnej.
+		Występują wtedy ,,glitche'', czyli losowy ruch i obrót obiektu w różnych kierunkach. Model wpada w taki stan i leci w losowym kierunku. 
+		Taki efekt czasami występuje w grach komputerowych. Jest to spowodowane tym, że dochodzi do błędów obliczeń numerycznych z powodu za dużych różnic w parametrach obiektów
+		i obliczeń kolizji.
+		
 	\subsection{Model silników}
 		Platforma wyposażona jest w cztery niezależne serwomotory. 
 		Model takiego obiektu jest przegubem obrotowym, któremu należy nadawać odpowiednią prędkość, w zależności od odebranych pakietów.
@@ -854,6 +859,20 @@ virtual bool SetParam (const std::string& key,
 	Symulacja żyroskopu w maszynie symulacyjnej fizyki jest bardzo prosta, gdyż algorytm wyznaczania pozycji obiektów na podstawie nadanych sił korzysta wewnętrznie z
 	wartości prędkości dla każdego obiektu. Zatem kwestia symulacji tego sensora polega na odczycie odpowiednich struktur z maszyny symulacji.
 	Wtyczka do Gazebo, zapisana podobnie do wtyczki czujnika laserowego, zbiera w każdym cyklu maszyny symulacyjnej dane i wysyła ja za pomocą pakietu ROSa.
+	
+	Na podstawie testu opisanego w sekcji \ref{sec:test_ang}, wyznaczono w tabeli \ref{tab:imu_noise} parametry dodatkowego szumu, dodawanego do odczytów w celu dokładniejszego zamodelowania błędów pomiarowych.
+	
+	\begin{table}
+		\centering
+		\begin{tabular}{l r}
+		Opis & Wartość \\
+		\hline
+		Średnia					&	0 \\
+		Odchylenie standardowe	&	0,003 \si{\radian\per\second} \\
+		\end{tabular}
+		\caption{Wartości szumu o rozkładzie Gaussa, zastosowanego w modelu czujnika prędkości kątowej.}
+		\label{tab:imu_noise}
+	\end{table}
 	
 	Akcelerometr jest bardziej złożonym problemem, gdyż maszyna symulacji działa w czasie dyskretnym, co utrudnia różniczkowanie prędkości w celu otrzymania przyspieszenia.
 	Ta wartość nie jest także nigdzie indziej używana i musi być obliczona specjalnie dla symulacji tego czujnika.
