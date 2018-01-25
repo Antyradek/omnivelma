@@ -26,7 +26,7 @@ Nagłówek ma trzy pola:
 	\begin{tabular}{l r}
 		Typ & Opis \\
 		\hline
-		\texttt{omnivelma\_msgs/Encoders} & Prędkości i pozycje kół z enkodera. \\
+		\texttt{omnivelma\_msgs/Encoders} & Prędkości kątowe i kąty obrotu kół z enkodera. \\
 		\texttt{omnivelma\_msgs/Vels} & Prędkości kół. \\
 		\texttt{omnivelma\_msgs/SetFriction} & Nadanie tarcia elementowi modelu. \\
 		\texttt{omnivelma\_msgs/SetInertia} & Nadanie mas i momentu bezwładności obiektowi. \\
@@ -97,9 +97,9 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 
 	Modelowanie receptora, tak jak w przypadku efektora, polega na wygenerowaniu odpowiednich danych, używając odpowiednich funkcji w przestrzeni wirtualnej.
 	Mogą one polegać na emitowaniu półprostych, symulujących laser, lub wręcz renderowaniu obiektów, aby uzyskać obraz z wirtualnej kamery.
-	Receptor symulowany ma pełną wiedzę o symulowanym świecie, dokładne pozycje i prędkości wszystkich obiektów, dane o kolizjach itp. 
+	Receptor symulowany ma pełną wiedzę o symulowanym świecie, dokładne położenia i orientacje wszystkich obiektów, dane o kolizjach itp. 
 	Pozwala to na łatwe symulowanie receptorów nie mogących mieć odwzorowania w rzeczywistości, co przydatne jest w pierwszych stadiach testowania i wyznaczaniu statystyk.
-	Takim przykładem jest model czujnika dokładnej pozycji, rotacji i prędkości w kartezjańskim układzie współrzędnych. 
+	Takim przykładem jest model czujnika dokładnego położenia, orientacji i prędkości w kartezjańskim układzie współrzędnych. 
 	Czujniki typu GPS, lub żyroskopy nie generują tak dokładnych pomiarów.
 
 
@@ -320,7 +320,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Nie powinno mu się zatem przekazywać całej struktury wiadomości, gdyż to powodowałoby niepotrzebne opóźnienia, oraz nie pozwoliłoby zachować niezależności 
 	pakietu od innych.
 	
-	Takie zjawisko występuje przy przekazywaniu informacji o pozycji i prędkości kół, generowanej przez model czujnika enkoderów, do programu
+	Takie zjawisko występuje przy przekazywaniu informacji o prędkości kątowej i kącie obrotu kół, generowanej przez model czujnika enkoderów, do programu
 	manualnego sterowania, lub przekazywanie danych z enkoderów do modelu kinematycznego.
 	
 	ROS nie pozwala na automatyczne odbieranie tylko części pakietu, dlatego powstał ten program.
@@ -389,8 +389,8 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	
 	Dodatkowo zdefiniowane typy wiadomości to:
 	\begin{itemize}
-		\item Dane prędkości i rotacji kół, zwracane przez model enkoderów.
-		\item Dane o względnej pozycji i rotacji obiektów na scenie.
+		\item Dane prędkości kątowej i kącie obrotu kół, zwracane przez model enkoderów.
+		\item Dane o względnym położeniu i orientacji obiektów na scenie.
 		\item Zadane prędkości kół.
 		\item Asynchroniczne wywołanie do ustawienia inercji ogniw modelu.
 		\item Asynchroniczne wywołanie do ustawienia współczynników tarcia.
@@ -404,7 +404,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 		Pozwala na generowanie dwuwymiarowych wykresów, bazując na dwóch dowolnych wartościach z odbieranych pakietów, lub czasie.
 		Można porównać różne wykresy na jednym układzie.
 		
-		W szczególności, przy ustawieniach pozycji Y względem X, pobranych z pakietu pozycji, nadawanego przez obie platformy, pozwala narysować trajektorię ruchu platform.
+		W szczególności, przy ustawieniach położenia Y względem X, pobranych z pakietu pozycji, nadawanego przez obie platformy, pozwala narysować trajektorię ruchu platform.
 		
 	\subsection{Wizualizer pomiarów}
 		Oryginalnie napisany dla robota o tej samej nazwie, \texttt{rviz} prezentuje trójwymiarową przestrzeń, na której można wyświetlać 

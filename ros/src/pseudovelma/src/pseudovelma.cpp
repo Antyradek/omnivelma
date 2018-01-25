@@ -33,7 +33,7 @@ public:
 		rrVel = 0;
 
 		//z modelu
-		wheelRadius = 0.103;
+		wheelRadius = 0.1016;
 		modelWidth = 0.76;
 		modelLength = 0.72;
 

@@ -116,6 +116,8 @@
 		\caption{Parametry i zmienne modelu.}
 		\label{tab:dims}
 	\end{table}
+	
+	
 
 \section{Koła szwedzkie}
 	Koła szwedzkie, zwane także kołami Mecanum, to specjalne koła z dodatkowymi rolkami na obwodzie, ustawionymi pod kątem $45^\circ$ do osi koła.
@@ -127,6 +129,13 @@
 	Istnieje również odwrotna odmiana ustawienia kół, w której rolki tworzą literę \emph{O}, 
 	czyli oś przednia jest zamieniona z tylną, lub jakby cała platforma była odwrócona.
 	Ten drugi sposób także pozwala na ruch wielokierunkowy, ale nie jest tak często stosowany \cite{paletobot}.
+	
+	Koła zamontowane w platformie zostały wyprodukowane przez amerykańską firmę AndyMark \cite{andymark}.
+	Koła mają średnice o okrągłej liczbie 8 cali, czyli 20,32 cm oraz grubość 7,41 cm.
+	Każde koło waży 1,6 kg i jest w stanie udźwignąć masę ok. 200 kg.
+	
+	Każda rolka podzielona jest na 3 części, patrz rysunek \ref{fig:wheel}, w celu lepszego zamocowania na kole, każda część może obracać się niezależnie.
+	Teoretycznie zatem każde koło ma 36 rolek, lecz nie ma to znaczenia z punktu widzenia symulacji.
 
 	\begin{figure}[H]
 	\centering
@@ -162,7 +171,7 @@
 		zostanie przyłożona wzdłuż osi obrotu koła, czy równolegle do płaszczyzny podłoża i płaszczyzny rolki.
 		
 		Specjalne koło Mecanum wywołuje tarcie kierunku obróconym o 45° w stosunku do osi obrotu koła, zależnie od typu koła (prawoskrętne lub lewoskrętne). 
-		To oznacza, że przy nadaniu momentu siły $I$, wektor tarcia koła o powierzchnię $T$ będzie obrócony w stosunku do osi obrotu koła o 45°.
+		To oznacza, że przy nadaniu momentu siły $M$, wektor tarcia koła o powierzchnię $T$ będzie obrócony w stosunku do osi obrotu koła o 45°.
 		Z kolei tarcie nada kołu siłę $F$ o przeciwnym zwrocie do wektora tarcia.
 		Tarcie w kierunku $f_0$, prostopadłym do $F$, czyli zgodnie z obrotem najniżej położonej rolki, jest w idealnym przypadku zerowe.
 		Z kolei wypadkowa siła od wszystkich kół nadaje platformie przyspieszenie i prędkość w odpowiednim kierunku.

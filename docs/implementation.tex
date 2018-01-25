@@ -270,7 +270,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	Istnieje także mechanika macierzy transformacji \texttt{TF2}.
 	Jest to idea podobna do niezaimplementowanej funkcjonalności Gazebo, ale nie jest automatyczna i nie ogranicza się tylko do jednego programu.
 	
-	Macierz transformacji jest informacją o aktualnej pozycji i rotacji jakiegoś obiektu względem innego.
+	Macierz transformacji jest informacją o aktualnym położeniu i orientacji jakiegoś obiektu względem innego.
 	Polega na wysłaniu pakietu typu \texttt{geometry\_msgs/TransformStamped} prosto do demona ROS.
 	Pakiet zawiera:
 	\begin{itemize}
@@ -316,10 +316,10 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\begin{tabular}{l c r}
 			Nazwa & Punkt względny & Identyfikator \\
 			\hline
-			Pozycja i rotacja platformy & \texttt{map} & \texttt{omnivelma} \\
-			Pozycja i rotacja platformy kinematycznej & \texttt{map} & \texttt{pseudovelma} \\
-			Pozycja i rotacja prawego czujnika & \texttt{map} & \texttt{monokl\_r\_heart} \\
-			Pozycja i rotacja lewego czujnika & \texttt{map} & \texttt{monokl\_l\_heart} \\
+			Położenie i orientacja platformy & \texttt{map} & \texttt{omnivelma} \\
+			Położenie i orientacja platformy kinematycznej & \texttt{map} & \texttt{pseudovelma} \\
+			Położenie i orientacja prawego czujnika & \texttt{map} & \texttt{monokl\_r\_heart} \\
+			Położenie i orientacja lewego czujnika & \texttt{map} & \texttt{monokl\_l\_heart} \\
 		\end{tabular}
 		\caption{Przekształcenia wysyłane do demona ROS.}
 		\label{tab:frame_send}
@@ -424,7 +424,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 
 		Program w każdym cyklu symulacji nadaje wiadomości:
 		\begin{itemize}
-		\item \texttt{geometry\_msgs/PoseStamped} z aktualną pozycją i rotacją platformy, oraz nagłówkiem z identyfikatorem i czasem nadania pakietu.
+		\item \texttt{geometry\_msgs/PoseStamped} z aktualnym położeniem i orientacją platformy, oraz nagłówkiem z identyfikatorem i czasem nadania pakietu.
 		\item \texttt{geometry\_msgs/TwistStamped} z aktualną prędkością platformy, oraz identycznym nagłówkiem.
 		\item \texttt{nav\_msgs/Odometry} z obiema powyższymi danymi i nagłówkiem. Służy przy obliczaniu ruchów platformy na podstawie enkoderów kół.
 		\end{itemize}
@@ -456,7 +456,27 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		służący do graficznego renderowania sceny, działający na innym wątku, jednak w żaden sposób nie wpływa na ruch modelu bazy.
 		
 \section{Model dynamiki}
-	Jest wiele sposobów na modelowanie tego obiektu.
+	\begin{table}
+		\centering
+		\begin{tabular}{l r}
+		Opis & Wartość \\
+		\hline
+		Główna część korpusu	&	60 kg \\
+		Przednia część korpusu	&	15 kg \\
+		Koło					&	1,6 kg \\
+		Skaner laserowy			&	1,1 kg \\
+		\end{tabular}
+		\caption{Masy ogniw przyjęte w modelu.}
+		\label{tab:masses}
+	\end{table}
+	
+	W modelu dynamiki przyjęto masy ogniw zgodne z tabelą \ref{tab:masses}.
+	Masy przegubów są pomijalnie małe w porównaniu do najcięższych elementów.
+	Momenty bezwładności ogniw są przybliżone prostopadłościanami dla korpusu oraz walcami dla kół i skanerów.
+	Założono identyczną gęstość obu części korpusu.
+	
+	Jest wiele sposobów na zamodelowanie takiego obiektu, poniżej przykładowe implementacje oraz wybrana.
+	
 	\subsection{Wierność modelu}
 		Należy zamodelować wszystkie ogniwa modelu i nadać im kształt za pomocą odpowiednich modeli 3D.
 		Kształt obiektów może być także przybliżony jednym prymitywów, jak sześcian, kula, łamana, walec, czy płaszczyzna.
@@ -509,6 +529,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 
 	\subsection{Modyfikacja kierunków i wartości wektorów tarcia}
 		\label{sec:friction}
+		Ta implementacja została wybrana dla dynamicznego modelu platformy.
 		Dla zrozumienia niżej wymienionych problemów należy opisać w jaki sposób są interpretowane dotyk i kolizja w maszynie symulującej dynamikę.
 
 		\begin{figure}[h]
@@ -573,14 +594,50 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Wymaga, aby symulator używał maszyny ODE, co zmniejsza przenośność modelu. ODE jest domyślnym symulatorem w Gazebo.
 		Maszyna Bullet również liczy kolizje w ten sposób i ma modyfikowalne wektory, 
 		lecz nie daje podobnych wyników. Być może jest to spowodowane brakiem odpowiedniej konfiguracji, lub innym wewnętrznym traktowaniem modelu.
-
+		
+	\subsection{Ustawienie mas i momentów bezwładności}
+		W standardzie SDF zdefiniowano element \texttt{inertial}, który definiuje w sobie masę oraz macierz inercji. 
+		Dla uproszczenia wszystkie ogniwa mają ustawione swoje środki w punktach środków mas, co oznacza, że każda z macierzy inercji jest macierzą przekątną.
+		Masy zostały nadane zgodnie z danymi z tabeli \ref{tab:masses}, a macierze inercji obliczone ze wzorów na macierze inercji prostopadłościanu lub walca.
+		Gazebo pozwala na wizualizację nadanych parametrów w formie narysowanych prostopadłościanów.
+		
+		Środki mas zostały obliczone, bazując na uproszczonych kształtach ogniw, przy założeniu jednorodnego rozkładu gęstości w korpusie.
+		
+	\subsection{Model silników}
+		Platforma wyposażona jest w cztery niezależne serwomotory. 
+		Model takiego obiektu jest przegubem obrotowym, któremu należy nadawać odpowiednią prędkość, w zależności od odebranych pakietów.
+		Ponieważ każda maszyna symulacyjna fizyki inaczej interpretuje tę wartość, należy zwrócić szczególną uwagę na sposób nadawania prędkości obiektom.
+		
+		Przede wszystkim, prędkość jest zawsze reakcją na przyłożoną siłę lub moment obrotowy. W rzeczywistości nie istnieje sposób na natychmiastowe nadanie prędkości obiektowi.
+		Pomimo że maszyna posiada wewnętrzną informację o aktualnej prędkości,
+		jej bezpośrednia modyfikacja może wprowadzać nietypowe zachowania. Przede wszystkim należy brać pod uwagę reakcję ze strony połączonego obiektu, w tym przypadku korpusu,
+		a także czasu nadania tej prędkości. Powinna być zsynchronizowana z krokami symulacji a nie częstotliwością odbioru wiadomości ze strumienia.
+		
+		Najlepsze efekty daje nie nadawanie prędkości obiektom, a nadanie docelowej prędkości i maksymalnego momentu obrotowego.
+		Maszyna symulacji fizyki wtedy odpowiednio zinterpretuje dane, obliczając również reakcję na obu końcach przegubu.
+		Jest także możliwość ustawienia algorytmu sterownika, na przykład PID, ale takiemu należy także nadać odpowiednie parametry do pracy.
+		
+		W modelu odwołano się bezpośrednio do zmiennych maszyny symulacyjnej ODE za pomocą interfejsu symulatora Gazebo.
+		Jest to metoda wirtualna, implementowana do komunikacji z każdą maszyną symulacyjną osobno.
+		\begin{minted}{cpp}
+virtual bool SetParam (const std::string& key,
+	unsigned int index,
+	const boost::any& value)
+		\end{minted}
+		Metoda przyjmuje nazwę modyfikowanej wartości, oś przegubu (dla silników to zawsze będzie jedyna oś \texttt{0}) oraz nadawaną wartość.
+		Modyfikowane wartości to:
+		\begin{description}
+			\item[\texttt{fmax}] Maksymalny moment obrotowy w $Nm$, używany przez maszynę symulacyjną do nadania docelowej prędkości kątowej przegubowi. Ustawiany raz przy inicjalizacji modelu. Ponieważ w platformie ta wartość nigdy nie będzie osiągnięta ze względu na ograniczenia energetyczne, można założyć tutaj wysoką liczbę 100 Nm.
+			\item[\texttt{vel}] Docelowa prędkość obrotowa w $\frac{rad}{s}$, zapamiętana i ustawiana w każdym kroku symulacji, nadpisywana na odbiór nowych wartości z komunikacyjnego strumienia wiadomości.
+		\end{description}
+	
 	\subsection{Komunikacja}
 		Ze względu na wiele ustawień elementów bazy, należy stworzyć bogaty interfejs.
 		W każdym cyklu symulacji, program sterujący modelem platformy nadaje wiadomości:
 		\begin{itemize}
-		\item \texttt{geometry\_msgs/PoseStamped} z aktualną pozycją i rotacją platformy, oraz nagłówek z czasem i identyfikatorem.
+		\item \texttt{geometry\_msgs/PoseStamped} z aktualnym położeniem i orientacją platformy, oraz nagłówek z czasem i identyfikatorem.
 		\item \texttt{geometry\_msgs/TwistStamped} z aktualną prędkością platformy i nagłówkiem.
-		\item \texttt{omnivelma\_msgs/EncodersStamped} z odczytaną ze stanu obiektów kół aktualną rotacją i pozycją, z nagłówkiem. 
+		\item \texttt{omnivelma\_msgs/EncodersStamped} z odczytaną ze stanu obiektów kół aktualną prędkością kątową i kątem obrotu, z nagłówkiem. 
 		To jest symulator enkoderów wbudowanych w silniki platformy.
 		\end{itemize}
 		
@@ -665,7 +722,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Służą do tego specjalne typy wiadomości ROSa \texttt{sensor\_msgs/LaserScan}.
 		Program obsługujący model skanera generuje i wysyła pakiety zawierające:
 		\begin{itemize}
-			\item Nagłówek z czasem pomiaru, identyfikatorem i ramką pozycji czujnika.
+			\item Nagłówek z czasem pomiaru, numerem sekwencyjnym i identyfikatorem macierzy przekształcenia jednorodnego pozycji czujnika.
 			\item Kąty początkowe i końcowe pomiaru.
 			\item Odległość kątowa pomiędzy kolejnymi promieniami.
 			\item Czas pomiędzy kolejnymi emisjami lasera.

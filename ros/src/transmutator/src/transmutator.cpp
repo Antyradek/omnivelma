@@ -8,7 +8,7 @@
 /// Nadajnik
 ros::Publisher publisher;
 
-const double wheelRadius = 0.103;
+const double wheelRadius = 0.1016;
 const double modelWidth = 0.72;
 const double modelLength = 0.76;
 
