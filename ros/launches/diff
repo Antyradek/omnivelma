@@ -1,25 +1,31 @@
 #!/bin/bash
 
-#Uruchom wzystkie trzy platformy porównując je
-#Gazebo wczytuje dwa modele, Omnivelmę i Pseudovelmę
-#V-Rep wczytuje Vrevelmę
-#Lalkarz wysysła Vels do Widelnicy, która dzieli Vels dla Omnivelmy, Pseudovelmy i Vrevelmy
-#Lalkarz wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
+#Gazebo wczytuje trzy modele, Omnivelmę, Pseudovelmę i Enkovelmę
+#Widelnica dzieli Vels dla Omnivelmy i Pseudovelmy.
+#Gramofon wysyła Twist do Transmutatora, który wysyła Vels do Widelnicy
+#Omnivelma wysyła Enkodery do Dziadziusia, który wysyła je do Enkovelmy
 
-source setup
-#Ustaw ścieżkę modeli dla Gazebo
-export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
-roslaunch velmaverse velmaverse.launch &
-PIDGAZ=$!
-rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels /vrevelma/vels &
-PIDWID=$!
-rosrun transmutator transmutator /widelnica/vels &
-PIDTRA=$!
-rosrun lalkarz lalkarz -v /widelnica/vels -t /transmutator/twist &
-PIDLAL=$!
-rqt_multiplot --multiplot-config $(pwd)/multiplot/diff.xml --multiplot-run-all &
-PIDMUL=$!
-trap "kill $PIDMUL; kill $PIDLAL; kill $PIDTRA; kill $PIDWID; kill $PIDGAZ;" SIGINT 
+if [ $# -ne 1 ]
+then
+	echo $0: PLIK_GRAMOFON > /dev/stderr
+	exit $EXITERR
+fi
 
-echo "Wciśnij ^C, aby wyłączyć procesy"
-sleep infinity
+GRAMOFON_FILE=$1
+if [ ! -f $GRAMOFON_FILE ]
+then
+	echo $0: Plik $GRAMOFON_FILE nie istnieje > /dev/stderr
+	exit $EXITERR
+fi
+
+commands=(
+"rosbag record -O $ROSBAG_FILE /omnivelma/pose /pseudovelma/pose /enkovelma/pose /omnicznica/relative /enkocznica/relative" 
+"roslaunch velmaverse triplevelma.launch"
+"rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
+"rosrun transmutator transmutator /widelnica/vels"
+"rosrun dziadzio dziadzio /omnivelma/encoders /enkovelma/vels"
+"rosrun gramofon gramofon 0.02 $GRAMOFON_FILE /transmutator/twist"
+"rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/triple.xml --multiplot-run-all"
+)
+
+

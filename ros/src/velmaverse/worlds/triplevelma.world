@@ -1,9 +1,13 @@
 <?xml version="1.0" ?>
 	<sdf version="1.6">
 	<world name="velmaverse">
-		<plugin name="ocznica" filename="libocznica.so">
+		<plugin name="omnicznica" filename="libocznica.so">
+			<target1>pseudovelma</target1>
+			<target2>omnivelma</target2>
+		</plugin>
+		<plugin name="enkocznica" filename="libocznica.so">
 			<target1>omnivelma</target1>
-			<target2>pseudovelma</target2>
+			<target2>enkovelma</target2>
 		</plugin>
 		
 		<!-- Słońce -->
@@ -24,6 +28,13 @@
 				<uri>model://omnivelma</uri>
 			</include>
 		</model>
+		
+		<!-- Platforma enkoderowa -->
+		<model name="enkovelma">
+			<include>
+				<uri>model://pseudovelma</uri>
+			</include>
+		</model>
 
 		<!-- Platforma kinematyczna -->
 		<model name="pseudovelma">
@@ -31,5 +42,6 @@
 				<uri>model://pseudovelma</uri>
 			</include>
 		</model>
+		
 	</world>
 </sdf>

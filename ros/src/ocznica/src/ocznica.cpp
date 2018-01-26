@@ -30,32 +30,42 @@ public:
 			char **argv = NULL;
 			ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
 		}
+		
+		//znajdź argumenty
+		if(!sdfElement -> HasElement("target1") || !sdfElement -> HasElement("target2"))
+		{
+			ROS_FATAL("Brak elementów <target1> i <target2> w elemencie <plugin>");
+			return;
+		}
+		std::string target1 = sdfElement -> GetElement("target1") -> GetValue() -> GetAsString();
+		std::string target2 = sdfElement -> GetElement("target2") -> GetValue() -> GetAsString();
+				
+		//znajdź nazwę
+		std::string pluginName = sdfElement -> GetAttribute("name") -> GetAsString();
+		std::string topicPrefix = std::string("/").append(pluginName).append("/");
 
 		//stwórz Node dla ROSa
 		rosNode.reset(new ros::NodeHandle());
-		isCorrect = true;
 
 		//stwórz topic do nadawania wiadomości
-		rosPub = rosNode -> advertise<omnivelma_msgs::RelativeStamped>("/ocznica/relative", 1000);
+		rosPub = rosNode -> advertise<omnivelma_msgs::RelativeStamped>(topicPrefix + "relative", 1000);
 		if(!rosPub)
 		{
-			ROS_FATAL("Nie udało się stworzyć nadajnika /ocznica/relative");
+			ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << topicPrefix << "relative");
+			return;
 		}
 
 		//znajdź modele
-		omnivelma = world -> GetModel("omnivelma");
-		pseudovelma = world -> GetModel("pseudovelma");
-		if(!omnivelma || !pseudovelma)
+		model1 = world -> GetModel(target1);
+		model2 = world -> GetModel(target2);
+		if(!model1 || !model2)
 		{
-			ROS_ERROR("Nie udało się znaleźć Omnivelmy lub Pseudovelmy");
-			isCorrect = false;
+			ROS_FATAL_STREAM("Nie udało się znaleźć wskazanych modeli");
+			return;
 		}
 
-		if(isCorrect)
-		{
-			//podłączenie do wydarznia aktualizacji
-			updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
-		}
+		//podłączenie do wydarznia aktualizacji
+		updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&Ocznica::OnUpdate, this));
 		
 		//powiadom o gotowości
 		ROS_DEBUG_STREAM("Ocznica zainicjalizowana");
@@ -65,11 +75,11 @@ private:
 	///Funkcja podłączana do zdarzenia aktualizacji
 	void OnUpdate()
 	{
-		const math::Pose& omniPose = omnivelma -> GetWorldPose();
-		const math::Pose& pseudoPose = pseudovelma -> GetWorldPose();
-		double dist = omniPose.pos.Distance(pseudoPose.pos);
+		const math::Pose& model1Pose = model1 -> GetWorldPose();
+		const math::Pose& model2Pose = model2 -> GetWorldPose();
+		double dist = model1Pose.pos.Distance(model2Pose.pos);
 		//to działa jedynie dla małych kątów!
-		double angle = sqrt(pow(omniPose.rot.x - pseudoPose.rot.x,2) + pow(omniPose.rot.y - pseudoPose.rot.y,2) + pow(omniPose.rot.z - pseudoPose.rot.z,2) + pow(omniPose.rot.w - pseudoPose.rot.w,2));
+		double angle = model1Pose.rot.GetAsEuler().z - model2Pose.rot.GetAsEuler().z;
 
 		omnivelma_msgs::RelativeStamped msg;
 		msg.relative.distance = dist;
@@ -90,14 +100,11 @@ private:
 	///Nadajnik pozycji
 	ros::Publisher rosPub;
 
-	///Wskaźnik na model dynamiczny
-	physics::ModelPtr omnivelma;
+	///Wskaźnik na model 1
+	physics::ModelPtr model1;
 
-	///wskaźnik na model kinematyczny
-	physics::ModelPtr pseudovelma;
-
-	///Czy udało się działać
-	bool isCorrect;
+	///wskaźnik na model 2
+	physics::ModelPtr model2;
 
 	///Licznik kroków
 	unsigned int counter;

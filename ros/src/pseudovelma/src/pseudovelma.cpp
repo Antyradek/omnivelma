@@ -26,7 +26,6 @@ public:
 	///Konstruktor dba, aby prędkość początkowa była 0
 	Pseudovelma()
 	{
-		//zmienne napisane tak, jak ustawione są koła
 		flVel = 0;
 		frVel = 0;
 		rlVel = 0;
@@ -44,7 +43,6 @@ public:
 	void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
 	{
 		model = parent;
-
 		linkPrefix = std::string(model -> GetName()).append("::").append(MODEL_NAME).append("::");
 		std::string topicPrefix = std::string("/").append(model -> GetName()).append("/");
 
@@ -55,8 +53,8 @@ public:
 		if (!ros::isInitialized())
 		{
 			int argc = 0;
-			char **argv = NULL;
-			ros::init(argc, argv, "gazebo_ros", ros::init_options::NoSigintHandler);
+			char **argv = nullptr;
+			ros::init(argc, argv, std::string(model -> GetName()), ros::init_options::NoSigintHandler);
 		}
 
 		//stwórz Node dla ROSa
