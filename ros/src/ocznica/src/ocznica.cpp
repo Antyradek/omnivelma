@@ -77,7 +77,9 @@ private:
 	{
 		const math::Pose& model1Pose = model1 -> GetWorldPose();
 		const math::Pose& model2Pose = model2 -> GetWorldPose();
-		double dist = model1Pose.pos.Distance(model2Pose.pos);
+		double dist = std::sqrt((model1Pose.pos.x - model2Pose.pos.x) * (model1Pose.pos.x - model2Pose.pos.x) + (model1Pose.pos.y - model2Pose.pos.y) * (model1Pose.pos.y - model2Pose.pos.y));
+		
+		model1Pose.pos.Distance(model2Pose.pos);
 		//to działa jedynie dla małych kątów!
 		double angle = model1Pose.rot.GetAsEuler().z - model2Pose.rot.GetAsEuler().z;
 

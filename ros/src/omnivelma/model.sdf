@@ -3,7 +3,7 @@
 	<model name="omnivelma">
 		<plugin name="omnivelma" filename="libomnivelma.so"/>
 		<plugin name="omnivelma" filename="libmonokl_chain.so"/>
-		<pose>0 0 0.101 0 0 0</pose>
+		<pose>0 0 0.1035 0 0 0</pose>
 		<static>false</static>
 		
 		<!--Baza całości-->
@@ -115,7 +115,7 @@
 			<collision name="wheel_rr_collision">
 				<geometry>
 					<sphere>
-						<radius>0.103</radius>
+						<radius>0.1016</radius>
 					</sphere>
 				</geometry>
 				<surface>
@@ -180,7 +180,7 @@
 			<collision name="wheel_rl_collision">
 				<geometry>
 					<sphere>
-						<radius>0.103</radius>
+						<radius>0.1016</radius>
 					</sphere>
 				</geometry>
 				<surface>
@@ -245,7 +245,7 @@
 			<collision name="wheel_fr_collision">
 				<geometry>
 					<sphere>
-						<radius>0.103</radius>
+						<radius>0.1016</radius>
 					</sphere>
 				</geometry>
 				<surface>
@@ -310,7 +310,7 @@
 			<collision name="wheel_fl_collision">
 				<geometry>
 					<sphere>
-						<radius>0.103</radius>
+						<radius>0.1016</radius>
 					</sphere>
 				</geometry>
 				<surface>
@@ -388,12 +388,7 @@
 			<pose>-0.036 0 0 0 0 0</pose>
 			<axis>
 				<xyz>-1 0 0</xyz>
-			</axis><!--
-			<physics>
-				<ode>
-					<velocity>10</velocity>
-				</ode>
-			</physics>-->
+			</axis>
 		</joint>
 		
 		<joint name="motor_rl" type="revolute">

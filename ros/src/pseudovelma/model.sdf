@@ -2,7 +2,7 @@
 <sdf version="1.6">
     <model name="pseudovelma">
 		<plugin name="pseudovelma" filename="libpseudovelma.so"/>
-        <pose>0 0 0.101 0 0 0</pose>
+        <pose>0 0 0.1035 0 0 0</pose>
         <static>false</static>
         <!--Baza całości-->
         <link name="base">
@@ -10,7 +10,7 @@
             <kinematic>true</kinematic>
             <gravity>false</gravity>
             <visual name="base_visual">
-                <pose>0 0 0 0 0 0</pose>
+                <pose>0 -0.081 0.019 0 0 0</pose>
                 <geometry>
                     <mesh>
                         <uri>model://pseudovelma/meshes/visual/base.dae</uri>
@@ -25,7 +25,7 @@
             </visual>
             <!-- Przód -->
             <visual name="front_visual">
-                <pose>0 0 0 0 0 0</pose>
+                <pose>0 0.364 0.018 0 0 0</pose>
                 <geometry>
                     <mesh>
                         <uri>model://pseudovelma/meshes/visual/front.dae</uri>
