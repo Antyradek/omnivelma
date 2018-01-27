@@ -21,8 +21,8 @@ fi
 commands=(
 "rosbag record -O $ROSBAG_FILE /omnivelma/pose /pseudovelma/pose"
 "roslaunch velmaverse velmaverse.launch"
-"rosrun gramofon gramofon 0.02 $GRAMOFON_FILE /transmutator/twist"
 "rosrun dziadzio dziadzio /omnivelma/encoders /pseudovelma/vels"
+"rosrun gramofon gramofon 0.02 $GRAMOFON_FILE /transmutator/twist"
 "rosrun transmutator transmutator /omnivelma/vels"
 "rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/gazebo.xml --multiplot-run-all"
 )

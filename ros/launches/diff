@@ -23,6 +23,7 @@ commands=(
 "roslaunch velmaverse triplevelma.launch"
 "rosrun widelnica widelnica /omnivelma/vels /pseudovelma/vels"
 "rosrun transmutator transmutator /widelnica/vels"
+"rosrun gramofon gramofon 0.02 $GRAMOFON_FILE /transmutator/twist"
 "rosrun dziadzio dziadzio /omnivelma/encoders /enkovelma/vels"
 "rqt_multiplot --multiplot-config $RQT_MULTIPLOT_DIR/triple.xml --multiplot-run-all"
 )
