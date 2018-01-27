@@ -82,6 +82,7 @@ private:
 		model1Pose.pos.Distance(model2Pose.pos);
 		//to działa jedynie dla małych kątów!
 		double angle = model1Pose.rot.GetAsEuler().z - model2Pose.rot.GetAsEuler().z;
+		angle = std::fmod(angle, 2 * 3.141592653589793);
 
 		omnivelma_msgs::RelativeStamped msg;
 		msg.relative.distance = dist;

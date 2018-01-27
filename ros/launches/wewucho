@@ -17,7 +17,7 @@ then
 fi
 
 commands=(
-"rosbag record -O $ROSBAG_FILE /wewucho/imu /odszumiacz/imu"
+"rosbag record -O $ROSBAG_FILE /wewucho/imu /odszumiacz/imu /omnivelma/twist"
 "rosrun odszumiacz odszumiacz /wewucho/imu /odszumiacz/imu 10"
 "roslaunch velmaverse solovelma.launch"
 "rosrun transmutator transmutator /omnivelma/vels"
