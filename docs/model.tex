@@ -1,19 +1,13 @@
 \chapter{Środowisko symulacyjne}
 \label{sec:model}
-W tym rozdziale opisane są stworzone składniki systemu, czyli modele dynamiczne i kinematyczne, modele czujników, oraz pakiety wspomagające testowanie.
+W tym rozdziale opisane są stworzone składniki systemu, czyli modele dynamiki i kinematyki, modele czujników oraz pakiety wspomagające testowanie.
 
-Aby uruchomić symulację, nie wystarczy uruchomienie symulatora z modelami, należy zadbać także o odpowiednie przekazywanie informacji do i z symulowanych obiektów.
-Wskazane jest przetestować modele, czy zachowują się poprawnie w prostych scenariuszach testowych, tak samo, jak testować się będzie program sterujący na modelu.
-Do tego potrzebne są programy wspomagające, które łączy się w różne konfiguracje, w zależności od scenariusza testowego.
-Ze względu na niezależność pakietów od siebie, można ich także użyć przy komunikacji z rzeczywistym robotem.
+Aby uruchomić symulację, nie wystarczy uruchomienie symulatora Gazebo z modelami, należy zadbać także o nadawanie sterowania i odbieranie danych.
+Do tego potrzebne są programy wspomagające w formie pakietów ROS, które łączy się w różne konfiguracje, w zależności od scenariusza testowego.
+Ze względu na niezależność pakietów od siebie, można ich także użyć przy komunikacji z robotem.
 
-Środowisko symulacyjne składa się z kilku odrębnych pakietów, które komunikują się ze sobą poprzez specjalne interfejsy, wykorzystujące kolejki wiadomości.
-Taka implementacja komunikacji pozwala zmieniać i reimplementować poszczególne elementy, używać różnych języków programowania, oraz
-zachowywać jednolitą komunikację między składnikami i nie tracąc na kompatybilności między pakietami.
-Możliwe jest także przesyłanie wiadomości przez sieć, co pozwala na rozproszenie systemu.
-
-Niektóre typy wiadomości posiadają wbudowany nagłówek, inne istnieją w dwóch wersjach, z nagłówkiem i bez. 
-Dopisek \texttt{Stamped} określa istnienie tej dodatkowej informacji.
+Niektóre typy wiadomości ROS posiadają wbudowany nagłówek, inne istnieją w dwóch wersjach, z nagłówkiem i bez. 
+Dopisek \texttt{Stamped} informuje o posiadaniu nagłówka.
 Nagłówek ma trzy pola:
 \begin{itemize}
 	\item Numer sekwencyjny, zwiększany przez program wysyłający po każdej wysłanej wiadomości.
@@ -27,7 +21,7 @@ Nagłówek ma trzy pola:
 		Typ & Opis \\
 		\hline
 		\texttt{omnivelma\_msgs/Encoders} & Prędkości kątowe i kąty obrotu kół z enkodera. \\
-		\texttt{omnivelma\_msgs/Vels} & Prędkości kół. \\
+		\texttt{omnivelma\_msgs/Vels} & Prędkości kątowe kół. \\
 		\texttt{omnivelma\_msgs/SetFriction} & Nadanie tarcia elementowi modelu. \\
 		\texttt{omnivelma\_msgs/SetInertia} & Nadanie mas i momentu bezwładności obiektowi. \\
 		\texttt{geometry\_msgs/Pose} & Pozycja obiektu w przestrzeni kartezjańskiej. \\
@@ -37,28 +31,30 @@ Nagłówek ma trzy pola:
 		\texttt{nav\_msgs/Odometry} & Pozycja obiektu z macierzą kowariancji. \\
 		\texttt{sensor\_msgs/Imu} & Dane generowane przez jednostkę inercyjną. \\
 	\end{tabular}
-	\caption{Typy wiadomości przekazywanych pomiędzy pakietami.}
+	\caption{Typy wiadomości przekazywanych pomiędzy węzłami.}
 	\label{tab:messages}
 \end{table}
 
-Pakiety można podzielić na trzy typy:
+Węzły można podzielić na trzy typy:
 \begin{itemize}
 	\item Generujące dane.
-	\item Przekazujące i modyfikujące dane.
+	\item Przekazujące filtrujące dane.
 	\item Zbierające dane.
 \end{itemize}
-Poniżej, każdy pakiet opisany jest bardziej szczegółowo, wraz z jego interfejsem.
 
-W trakcie testowania symulatora, podłączenie pakietów będzie wyglądać następująco:
+W tym rozdziale każdy pakiet opisany jest bardziej szczegółowo, wraz z jego interfejsem.
+W trakcie testowania symulatora, podłączenie pakietów będzie wyglądać jak na rysunku \ref{uml:final}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{uml/final.pdf}
 	\caption{Komunikacja podstawowych pakietów systemu w trakcie testowania programu sterującego.}
+	\label{uml:final}
 \end{figure}
 
 Ważną rolę odgrywa tutaj algorytm określania pozycji, bazujący na odometrii, jednostce inercyjnej i danych ze skanera laserowego.
-Odometria jest generowana za pomocą modelu kinematycznego, sterowanego danymi z enkoderów modelu dynamicznego.
-Sam model dynamiczny sterowany jest pośrednio przez program, który generuje zadane prędkości i obrót robota.
+Odometria jest generowana za pomocą modelu kinematyki, sterowanego danymi z enkoderów modelu dynamiki.
+Sam model dynamiki sterowany jest pośrednio przez program, który generuje zadane prędkości liniowe i prędkość kątową robota.
 W uproszczeniu: program sterujący wysyła sterowanie do modelu, bazując na jego pozycji, określonej z danych generowanych przez modele czujników.
 
 W każdym miejscu przepływu danych można zebrać i zwizualizować przesyłane wartości.
@@ -71,14 +67,14 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Te wirtualne byty będą dalej przekazywać informacje zarówno do modeli, jak i do robota w taki sposób, że
 	główny program sterujący nie będzie miał żadnej informacji o tym, do czego jest podłączony. 
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.8\textwidth]{graphics/agent.pdf}
 		\caption{Struktura agenta upostaciowionego.}
 		\label{fig:agent}
 	\end{figure} 
 
-	Można to przedstawić za pomocą zapisu agentowego, rysunek \ref{fig:agent}.
+	Można to przedstawić za pomocą zapisu agentowego (rysunek \ref{fig:agent}).
 	Agent upostaciowiony składa się z kilku modułów, komunikujących się ze sobą za pomocą różnych interfejsów.
 
 	Nadrzędnym modułem jest układ sterowania, który na podstawie odczytów z czujników generuje sterowanie dla efektorów.
@@ -97,24 +93,27 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 
 	Modelowanie receptora, tak jak w przypadku efektora, polega na wygenerowaniu odpowiednich danych, używając odpowiednich funkcji w przestrzeni wirtualnej.
 	Mogą one polegać na emitowaniu półprostych, symulujących laser, lub wręcz renderowaniu obiektów, aby uzyskać obraz z wirtualnej kamery.
-	Receptor symulowany ma pełną wiedzę o symulowanym świecie, dokładne położenia i orientacje wszystkich obiektów, dane o kolizjach itp. 
+	Receptor symulowany ma pełną wiedzę o symulowanym świecie, dokładne położenia i orientacje wszystkich obiektów, dane o kolizjach, itp. 
 	Pozwala to na łatwe symulowanie receptorów nie mogących mieć odwzorowania w rzeczywistości, co przydatne jest w pierwszych stadiach testowania i wyznaczaniu statystyk.
 	Takim przykładem jest model czujnika dokładnego położenia, orientacji i prędkości w kartezjańskim układzie współrzędnych. 
 	Czujniki typu GPS, lub żyroskopy nie generują tak dokładnych pomiarów.
 
 
-\section{Model kinematyczny}
+\section{Model kinematyki}
 	\label{sec:pseudovelma}
 	Kinematyka opisuje ruch obiektów bez rozważania sił powodujących ten ruch.
-	Nie uwzględnia się przy opisie ruchu takich czynników, jak masa, moment bezwładności, czy siły.
+	Nie uwzględnia się przy opisie ruchu takich czynników jak masa, moment bezwładności, czy siły.
+	
+	Ten program jest wtyczką symulatora Gazebo oraz modelem w przestrzeni wirtualnej.
+	Dzięki temu pozwala na obliczanie i wizualizację pozycji.
 	
 	Model kinematyki określa równania prostego zadania kinematyki. 
 	Rozwiązanie tego zadania polega na obliczeniu prędkości liniowej i kątowej bazy mobilnej na podstawie aktualnych prędkości kół.
 	Symulator pozwala również na całkowanie tych prędkości, aby uzyskać aktualną pozycję platformy, z dokładnością do pozycji startowej.
 	
-	Równania modelu kinematyki najwygodniej przedstawić w postaci macierzowej, podobnej do tego, jak opisano w \cite{wheels}. 
+	Równania modelu kinematyki najwygodniej przedstawić w postaci macierzowej \cite{wheels}. 
 	Dokładna podstać wzoru zależy od kolejności numerowania kół i interpretacji wymiarów.
-	Dla opisanego tutaj przypadku, (stałe zdefiniowane są w tabeli \ref{tab:dims}, numeracja kół jest pokazane na rysunku \ref{fig:base_dims}):
+	Dla opisanego tutaj przypadku, (stałe zdefiniowane są w tabeli \ref{tab:dims}, numeracja kół jest pokazana na rysunku \ref{fig:base_dims}):
 	
 	\begin{equation}
 	\begin{bmatrix}
@@ -146,13 +145,14 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 		Platforma ignoruje inne obiekty znajdujące się na scenie,
 		Po nadaniu stałych prędkości kół, następuje ruch zgodnie z rysunkiem \ref{fig:mecanum_dirs}.
 
-		Program sterujący co każdy krok symulacji (okres zależy od zasobów procesorowych komputera) zwraca aktualne położenie i orientację, oraz prędkość liniową i kątową. 
+		Program sterujący co każdy krok symulacji (okres zależy od zasobów procesorowych komputera) zwraca aktualne położenie i orientację oraz prędkość liniową i kątową obiektu.
 
-\section{Model dynamiczny}
+\section{Model dynamiki}
 	\label{sec:omnivelma}
-	Maszyna do symulacji dynamiki używa informacji o kształtach, masach i złączach pomiędzy ogniwami robota.
-	Należy zatem stworzyć obiekt, złożony z modeli ogniw i samych ogniw i umieścić w symulatorze.
-	Potem należy nadać obiektom odpowiednie siły, aby otrzymać wyniki przybliżone do tego, jak zachowywałaby się rzeczywista baza mobilna.
+	Maszyna do symulacji fizyki używa informacji o kształtach, masach i złączach pomiędzy ogniwami robota.
+	Należy zatem stworzyć obiekt, złożony z modeli ogniw, i umieścić w symulatorze.
+	Wtyczka Gazebo będzie nadawać prędkość kątową kołom i odczytywać dane z czujników.
+	Potem należy nadać przegubom odpowiednie siły, aby otrzymać wyniki przybliżone do tego, jak zachowywałaby się rzeczywista baza mobilna.
 
 	Baza mobilna jest bryłą, na którą składają się następujące części składowe:
 	\begin{itemize}
@@ -163,17 +163,27 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	\item Przegub obrotowy, łączący dwie części korpusu.
 	\item 4 przeguby obrotowe z silnikami, łączące części bazy z kołami.
 	\item 12 przegubów obrotowych na każdym kole, łączących koła z rolkami.
+	\item Dwa skanery laserowe, przytwierdzone do głównej części korpusu.
+	\item Mała jednostka inercyjna.
 	\end{itemize}
 
-	Jest to dość złożony obiekt do symulacji, dlatego należy dążyć do uproszczenia modelu, w celu zmniejszenia ilości obliczeń symulatora.
+	Jest to dość złożony obiekt do symulacji, dlatego należy dążyć do uproszczenia modelu w celu zmniejszenia ilości obliczeń symulatora.
 	Istnieje wiele podejść do stworzenia odpowiedniego modelu, na przykład jak najdokładniejsze odwzorowanie budowy platformy 
 	za pomocą wzorów różniczkowych \cite{braking} \cite{modelling_ways}.
+	
+	Dodatkową funkcjonalnością jest brak nadawania prędkości kołom w przypadku odebrania pakietu zawierającego ciche nie-liczby (NaN).
+	To jest charakterystyczne tylko dla modelu platformy (patrz sekcja \ref{sec:model_nan}).
+	
+	W tym przypadku umieszczono model o odpowiednich parametrach w symulatorze, aby jego maszyna do symulacji fizyki obliczała prędkości i pozycje obiektów.
+	Sam pakiet nie posiada modelu jednostki inercji i skanerów laserowych, a importuje je z innych pakietów.
 	
 	\subsection{Zachowanie}
 		Model reaguje na siły przyłożone do jego ogniw, porusza się, reagując na otoczenie.
 		Bierze udział w kolizjach, nadaje prędkości innym obiektom.
 		Współczynniki tarcia podłoża i kół mają znaczenie w symulacji.
 		Powstają niedokładności wyznaczania pozycji, spowodowane dużą ilością zmiennych, uczestniczących w symulacji i precyzją symulatora.
+		
+		Zachowanie modelu silnie zależy od jego parametrów, a zwłaszcza od mas i momentów obrotowych ogniw.
 	
 \section{Model skanera laserowego}
 	\label{sec:monokl}
@@ -185,8 +195,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Model symuluje zarówno pomiary odległości od obiektu, jak i ich intensywność.
 	
 	Odczyt z rzeczywistego skanera pokazuje, że sztucznie wygenerowane dane są podobne do danych zebranych przez czujnik.
-	Dodatkowo, wbudowany w czujnik sterownik usuwa błędy grube z pomiarów, zatem rzeczywiste dane nie posiadają ich, więc i nie jest konieczne dodawanie ich do modelu.
-	
+
 	\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{graphics/scan.png}
@@ -194,19 +203,29 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	\label{fig:scan}
 	\end{figure}
 	
+	Ten pakiet składa się z wtyczki obsługującej model skanera i pliku opisującego parametry samego skanera, jak i również wygląd fizyczny, kształt, masę, moment obrotowy obudowy.
+	Dane z tego pakietu importowane są przez pakiet modelu dynamiki i umieszczane w odpowiednim miejscu modelu robota z odpowiednim przegubem.
+	
 \section{Model jednostki inercyjnej}
 	Rzeczywisty czujnik obarczony jest bardzo dużymi błędami pomiarowymi.
-	Jednakże, jego model także zwraca bardzo zaszumiony obraz.
+	Model symuluje przyspieszenie oraz prędkość kątową robota.
+	Dodaje sztuczny szum do wygenerowanych danych, aby przybliżyć zachowanie modelu do jednostki inercyjnej.
+	
+	Niestety, ponieważ ten czujnik jest bardzo czuły na drgania robota, nie wszystkie jego cechy da się poprawnie zasymulować.
+	Dodatkowo, wygenerowane dane w dużym stopniu zależą od momentów bezwładności ogniw robota.
+	
+	Podobnie, jak pakiet modelu skanera laserowego, jest on zaimplementowany jako model umieszczany w symulacji i wtyczka, importowane przez model dynamiki.
 	
 \section{Model kinematyki odwrotnej}
 	\label{sec:transmutator}
-	Jest to model kinematyki odwrotnej, alternatywa do modelu kinematycznego, opisanego w sekcji \ref{sec:pseudovelma}, jednak działającego bez symulatora i bez możliwości 
-	całkowania prędkości (i generowania danych o aktualnej pozycji).
-	Całkowanie prędkości kół i tak nie ma większego sensu, ponieważ pozwoliłaby jedynie obliczyć aktualną ich pozycję.
-	Z wyjątkiem porównania tych danych z danymi z enkoderów, nie ma to zastosowania.
+	Model kinematyki odwrotnej jest przeciwieństwem modelu kinematyki, opisanego w sekcji \ref{sec:pseudovelma}.
+	Ten program przyjmuje prędkość liniową i kątową platformy, następnie oblicza prędkości kątowe kół, wymagane aby nadać platformie zadaną prędkość.
 	
-	Ten pakiet przyjmuje zadaną prędkość, kierunek i obrót platformy, a zwraca prędkości kół, które powinny być nadane platformie, aby wywołać taki ruch.
-	Wzory mogą być przedstawione w postaci macierzowej.
+	Ten model działa bez symulatora, jako węzeł ROS, filtrujący wiadomości i nie posiada możliwości całkowania wygenerowanych prędkości.
+	Całkowanie prędkości kół i tak nie ma większego sensu, ponieważ pozwoliłoby to jedynie obliczyć ich aktualny kąt obrotu.
+	Z wyjątkiem porównania tych danych z danymi z enkoderów, nie ma to innego zastosowania.
+	
+	Wzory kinematyki odwrotnej mogą być przedstawione w postaci macierzowej \cite{wheels} (stałe zdefiniowane są w tabeli \ref{tab:dims}, numeracja kół jest pokazana na rysunku \ref{fig:base_dims}).
 	
 	\begin{equation}
 	\begin{bmatrix}
@@ -229,56 +248,54 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	\omega_z \\
 	\end{bmatrix}
 	\end{equation}
-	
-	Stałe, użyte we wzorze zdefiniowane są w tabeli \ref{tab:dims}, a numerowanie kół na rysunku \ref{fig:base_dims}.
-	Ten wzór, podobnie jak poprzedni, pojawia się w wielu pracach, na przykład \cite{wheels}, dokładny wygląd macierzy zależy od numerowania kół i interpretacji kierunków osi.
-	
-	Dodatkowo, program pozwala na obrót wektora prędkości o kąt prosty, lub półpełny. 
-	Jest to spowodowane tym, że różne pakiety i różne modele przyjmują różną pozycję wyjściową robota.
+
+	Dodatkowo, program pozwala na obrót wektora wejściowej prędkości o kąt prosty lub półpełny. 
+	Jest to spowodowane tym, że różne pakiety i różne modele robotów przyjmują różną orientację wyjściową robota.
 	Czasami przód modelu skierowany jest w dodatnią stronę osi X, a czasami Y. W związku z tym, ta funkcjonalność jest w stanie przekonwertować dane wejściowe dla innego robota tak,
-	aby mogły być użyte do sterowania opisywanym tutaj robotem.
+	aby mogły być użyte do sterowania modelem platformy.
 	
 
 \section{Manualne sterowanie}
 \label{sec:lalkarz}
-	To zaawansowany program do manualnego generowania zadanych prędkości kół, lub prędkości liniowej i kątowej platformy.
+	To zaawansowany program do manualnego generowania zadanych prędkości kół lub prędkości liniowej i kątowej platformy.
+	Zaimplementowany jako pakiet ROS.
 	Ponieważ jest niezależny od reszty systemu, może być użyty do sterowania rzeczywistym robotem.
 	Pozwala także na wyświetlanie aktualnych prędkości kół, generowanych przez enkodery.
 	
-	Sterowanie można nadać poprzez klawiaturę, kontroler do gier, lub myszkę.
+	Sterowanie można nadać poprzez klawiaturę, kontroler do gier lub myszkę.
 	Program otwiera graficzne okno, w którym wyświetla aktualne dane i wskaźniki prędkości.
 	
 	\subsection{Tryby działania}
 		Program posiada 11 trybów działania, w których generuje różne wiadomości w różny sposób.
-		Jedne są bardziej przydatne, inne bardzo proste i służące do ogólnej prezentacji systemu.
-		Globalny mnożnik wyjścia pozwala na łatwe ograniczenie generowanych danych i ustawienia dokładności. Spacja awaryjnie zeruje wszystkie wyjścia.
+		Globalny mnożnik wyjścia pozwala na łatwe ograniczenie generowanych danych i ustawienia dokładności. Naciśnięcie klawisza spacji awaryjnie zeruje wszystkie wyjścia.
 		\begin{enumerate}
 			\item Za pomocą ośmiu klawiszy klawiatury numerycznej, można nadać platformie określone prędkości kół.
-			W tym trybie, koło może albo stać w miejscu, albo obracać się z odpowiednią prędkością, w określonym kierunku. 
-			Powoduje to naturalne szarpnięcia i poślizgi platformy. W trakcie braku aktywności użytkownika, platforma stoi w miejscu.
+			W tym trybie koło może albo stać w miejscu, albo obracać się z odpowiednią prędkością kątową.
+			Takie sterowanie powoduje poślizgi platformy. W trakcie braku aktywności użytkownika, generowane jest zerowe sterowanie.
 			\item Podobnie do poprzedniego trybu, lecz przy braku naciśnięcia klawisza, generuje cichą nie-liczbę, aby zachować aktualną prędkość kół modelu.
 			Ta dodatkowa funkcjonalność opisana jest szerzej w sekcji \ref{sec:model_nan}.
-			\item Naciśnięcie klawisza płynnie zwiększa, lub zmniejsza prędkość koła. W trakcie braku aktywności użytkownika, platforma porusza się 
-			z ustawionymi prędkościami kół.
-			\item Podobnie, co w poprzednim trybie, lecz pozwala na schodkowe ustawienie prędkości kół co 0,1 \si{\radian\per\second} (pomnożone przez dokładność).
-			Dzięki temu, możliwe jest w miarę dokładne powtórzenie manualnych testów platformy.
+			\item Naciśnięcie klawisza płynnie zwiększa lub zmniejsza prędkość koła. W trakcie braku aktywności użytkownika, generowane jest stałe sterowanie, bazujące na aktualnym ustawieniu programu.
+			\item Podobnie, co w poprzednim trybie, lecz pozwala na schodkowe ustawienie prędkości kół co 0,1 \si{\radian\per\second} (pomnożone przez mnożnik wyjścia).
+			Dzięki temu możliwe jest w miarę dokładne powtórzenie manualnych testów platformy.
 			\item Poprzedni tryb, lecz przy ustawieniu prędkości zerowej, generuje nie-liczbę.
 			\item Sterowanie prędkościami kół za pomocą gałek kontrolera.
 			Większość kontrolerów posiada dwa, dwuosiowe joysticki, co daje cztery osie, zmieniające się w zakresie $\left<-1;1\right>$.
-			Można za ich pomocą bezpośrednio ustawiać prędkości kół, chociaż jest to nieintuicyjne w działaniu.
-			\item Lokalny kierunek jazdy platformy składa się z dwóch wektorów prędkości liniowej i wektora obrotu. 
-			Za pomocą klawiatury, binarnie, można nadać platformie jeden z ośmiu kierunków poruszania się i jeden z dwóch kierunków obrotu.
-			Ponownie, ta metoda sterowania powoduje skoki prędkości i poślizgi. Przypomina sterowanie pojazdami w grach komputerowych.
+			Można za ich pomocą bezpośrednio ustawiać prędkości kół. Ten tryb jest nieintuicyjny w działaniu.
+			\item Ten tryb generuje zadaną prędkość liniową i kątową, a nie prędkości kątowe kół, jak poprzednie tryby.
+			Za pomocą klawiatury można nadać platformie jeden z ośmiu kierunków poruszania się i jeden z dwóch kierunków obrotu wokół osi Z.
+			Ta metoda sterowania powoduje skoki prędkości i poślizgi. Przypomina sterowanie pojazdami w grach komputerowych.
 			Puszczenie klawiszy powoduje zatrzymanie się platformy.
-			\item Podobny tryb do poprzedniego, ale naciśnięcie klawisza płynnie dodaje wartość do kierunku poruszania się i obrotu platformy.
-			Brak aktywności użytkownika powoduje, że model porusza się z zadaną prędkością w zadanym kierunku i z zadanym obrotem.
-			\item Połączenie dwóch poprzednich trybów, schodkowe sterowanie prędkością platformy. Pozwala na ustawienie prędkości i obrotu platformy z zadaną dokładnością.
-			\item Sterowanie kierunkiem platformy za pomocą kontrolera. Trzy osie są używane, dwie do nadania prędkości, jedna do nadania obrotu.
+			\item Podobny tryb do poprzedniego, ale naciśnięcie klawisza płynnie dodaje wartość do prędkości liniowej i kątowej platformy
+			Brak aktywności użytkownika powoduje, że generowane jest stałe sterowanie.
+			\item Schodkowe sterowanie prędkością platformy w krokach co 0,1 \si{\metre\per\second}. Pozwala na ustawienie prędkości i obrotu platformy z zadaną dokładnością
+			i dokładniejsze manualne przeprowadzanie testów.
+			\item Sterowanie prędkością liniową i kątową platformy za pomocą kontrolera. Trzy osie są używane, dwie do nadania prędkości liniowej, jedna do nadania prędkości kątowej.
 			Jest to prawdopodobnie najczęstszy sposób kontrolowania robotów wielokierunkowych za pomocą kontrolera.
-			Bardzo intuicyjny i używany także przez inne pakiety do manualnego sterowania robotami na kołach Mecanum.
-			\item Sterowanie za pomocą myszki, najdokładniejsze sterowanie kierunkiem, mniej dokładne obrotem.
-			Kursor myszy wskazuje końcówkę strzałki reprezentującej kierunek ruchu robota, za pomocą kółka, można dodawać, lub odejmować prędkość do obrotu wokół osi.
-			Ponieważ większość myszek ma skokowe obroty kółek, wprowadza to nieznaczne poślizgi. Można także modyfikować obrót klawiaturą w płynnym trybie przyrostowym.
+			Sposób bardzo intuicyjny i używany także przez inne pakiety do manualnego sterowania robotami na kołach Mecanum.
+			\item Sterowanie za pomocą myszki, najdokładniejsze sterowanie zadaną prędkością liniową i kątową robota.
+			Kursor myszy wskazuje końcówkę strzałki reprezentującej kierunek ruchu robota, za pomocą kółka można ustawiać zadaną prędkość kątową robota wokół osi Z.
+			Ponieważ większość myszek ma skokowe obroty kółek, wprowadza to nieznaczne poślizgi w nadawanej prędkości kątowej. 
+			Można także modyfikować tę wartość klawiaturą w płynnym trybie przyrostowym.
 		\end{enumerate}
 	
 	\begin{figure}[H]
@@ -288,44 +305,46 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	\label{fig:lalkarz}
 	\end{figure}
 	
-	Interfejs składa się z listy trybów, wyświetlanych na górze, i nazwy aktualnego trybu.
+	Interfejs graficzny (patrz rysunek \ref{fig:lalkarz}) składa się z listy trybów, wyświetlanych na górze, i nazwy aktualnego trybu.
 	Wyszarzone tryby nie mogą być aktywowane, w tym przypadku z powodu braku podłączenia kontrolera.
 	
 	Na lewym zrzucie widać zarys platformy i białe wskaźniki aktualnych prędkości kół, wraz ze współczynnikiem wypełnienia.
-	Obok nich znajdują się szare wskaźniki prędkości, zwrócone przez modele enkoderów.
+	Obok nich znajdują się szare wskaźniki prędkości kątowych kół, zwrócone przez modele enkoderów.
 	Małe, szare znaki to nazwy klawiszy, używanych w tym trybie do modyfikowania prędkości.
 	
-	Na prawym obrazku jest tryb generowania kierunku i obrotu. Strzałka wskazuje wektor prędkości, a górny pasek obrót platformy.
+	Na prawym rysunku jest tryb generowania kierunku i obrotu. Strzałka wskazuje wektor prędkości liniowej, a górny pasek prędkość kątową platformy.
 	
 	Na dole jest lista ,,biegów'' urządzenia, są to zwyczajne mnożniki wyjścia w celu wygodnego przestawiania dokładności z jaką platforma powinna się poruszać.
 	
 	Wszystkie dane są w jednostkach SI, tzn, efektywna prędkość koła będzie się równać liczbie podanej przy kole, pomnożonej przez aktualny bieg.
 	Dla obrotów to są \si{\radian\per\second}, dla prędkości to \si{\metre\per\second}.
 	
+	Jeszcze jeden parametr pozwala na ustawienie częstotliwości z jaką wysyłane mają być wiadomości przez strumień komunikacyjny.
+	
 \section{Generator sterowania}
 	\label{sec:gramofon}
 	Podstawą przeprowadzania testów modelu jest powtarzalność eksperymentów oraz dokładność nadanego sterowania.
-	Potrzeba zatem jest sposobu na automatyczne wygenerowanie strumienia wiadomości z określonymi danymi.
+	Potrzeba zatem jest sposobu na automatyczne wygenerowanie przesyłanych wiadomości z określonymi danymi.
 	
-	Ten pakiet generuje powtarzalne sterowanie, bazując na wczytanym pliku tekstowym.
+	Ten pakiet ROS generuje powtarzalne sterowanie, bazując na wczytanym pliku tekstowym i podanej częstotliwości wysyłania pakietów.
 	Wyjściem są zadane prędkości liniowe i prędkość kątowa bazy.
 	
 	Dane zapisane są w formie wierszy, w którym każdy określa czas i dane, które program ma nadawać.
-	Po zakończeniu wykonywania instrukcji, pakiet generuje wiadomość o zerowych parametrach w celu zatrzymania bazy.
+	Po zakończeniu wykonywania instrukcji, węzeł generuje wiadomość o zerowych parametrach w celu zatrzymania bazy.
 	
 		
-\section{Wyłuskanie struktury wiadomości}
+\section{Wyłuskanie podwiadomości}
 	\label{sec:dziadzio}
 	Każda wiadomość przekazywana pomiędzy węzłami jest zwykle zagnieżdżoną strukturą.
+	Ten pakiet ROS działa jak filtr dla strumienia wiadomości.
 	
 	Czasami może zdarzyć się, że jakiś węzeł potrzebuje jedynie wewnętrznej podstruktury wiadomości.
-	Nie powinno mu się zatem przekazywać całej struktury wiadomości, gdyż to powodowałoby niepotrzebne opóźnienia, oraz nie pozwoliłoby zachować niezależności 
-	pakietu od innych.
+	Mógłby subskrybować całą wiadomość, lecz to powodowałoby potrzebę przesyłania dodatkowych, nieużywanych danych oraz nie pozwoliłoby na zachowanie niezależności pakietu od innych.
 	
 	Takie zjawisko występuje przy przekazywaniu informacji o prędkości kątowej i kącie obrotu kół, generowanej przez model czujnika enkoderów, do programu
-	manualnego sterowania, lub przekazywanie danych z enkoderów do modelu kinematycznego.
+	manualnego sterowania lub do modelu kinematyki. 
 	
-	ROS nie pozwala na automatyczne odbieranie tylko części pakietu, dlatego powstał ten program.
+	ROS nie pozwala na automatyczne przesłanie tylko części pakietu pomiędzy węzłami, dlatego powstał ten program.
 
 \section{Podłoże o zmiennym współczynniku tarcia}
 	\label{sec:flooria}
@@ -339,31 +358,29 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	\label{sec:odszumiacz}
 	Jak wcześniej wspomniano, jednostka inercyjna i jej model zwracają bardzo duże błędy pomiarowe.
 	
-	Ten program uśrednia dane w prosty sposób, licząc średnią z określonej ilości poprzednich pomiarów.
-	Taki algorytm nie sprawdza się jednak, gdy dane są generowane naprzemiennie.
-	Na przykład, jeśli w jednej klatce symulacji maszyna do symulacji fizyki obliczy prawidłową wartość, a w drugiej zwróci zerową,
-	to ten algorytm uśredni te wyniki i zwróci wartość pośrodku. Działa to bardzo dobrze przy uśrednianiu 
-	szumu przy zerowym przyspieszeniu, w trakcie ruchu robota z prędkością jednostajną.
+	Ten filtr uśrednia dane w prosty sposób, licząc średnią z określonej ilości poprzednich pomiarów.
+	Działa to bardzo dobrze przy uśrednianiu szumu przy zerowym przyspieszeniu lub w trakcie ruchu robota z prędkością jednostajną.
+	Nie sprawdza się jednak przy odczycie faktycznego przyspieszenia, gdyż może generować zaniżone wartości.
 	
 	W przyszłości zastosować trzeba będzie bardziej zaawansowany algorytm uśredniania odczytów.
 	Może on być również testowany na tym modelu.
 	
-	Stworzenie tego programu pozwoliło zbadać, czy model jednostki inercyjnej reaguje na ruch platformy w odpowiednim kierunku, gdyż
+	Stworzenie tego programu pozwoliło zbadać, czy model jednostki inercyjnej oraz jednostka inercyjna platformy reagują na ruch w odpowiednim kierunku, gdyż
 	pomiary są obarczone tak dużymi błędami, że wizualizacja odczytów na wykresie nie daje gwarancji upewnienia się o działaniu modelu.
 	
 \section{Obserwator symulacji}
 	\label{sec:ocznica}
 	Wtyczka uruchamiana w symulatorze.
 	Oblicza i zwraca statystyki międzymodelowe w przestrzeni symulacji, takie jak odległość i kąt.
-	Pozwala zbadać, jak model dynamiki zachowuje się w stosunku do modelu kinematycznego, to znaczy, 
-	czy pozycja, obliczone przez maszynę symulacyjną fizyki jest zbliżona do pozycji obliczonej równaniami kinematycznymi po całkowaniu.
+	Pozwala zbadać, jak model dynamiki zachowuje się w stosunku do modelu kinematyki, to znaczy, 
+	czy pozycja, obliczona przez maszynę symulacyjną fizyki jest zbliżona do pozycji obliczonej równaniami kinematycznymi po scałkowaniu.
 	
 \section{Scena z symulacją}
-	Symulator Gazebo przy uruchomieniu ładuje plik zawierający referencje robotów i ich początkowe pozycje, używane w symulacji.
-	Ten pakiet nie jest programem wykonywalnym, lecz prezentuje informacje dla symulatora o scenie symulacji.
+	Symulator Gazebo przy uruchomieniu ładuje plik opisujący symulację.
+	Ten pakiet nie jest programem wykonywalnym, a zestawem kilku plików czytanych przez Gazebo.
+	W tych plikach zawierają się także ustawienia symulacji, jak przyspieszenie grawitacyjne, typ maszyny symulacyjnej fizyki ze współczynnikami, czy ustawienia wirtualnej atmosfery.
 	
-	
-	W tym pliku zawierają się także ustawienia symulacji, jak przyspieszenie grawitacyjne, typ maszyny symulacyjnej fizyki ze współczynnikami, czy ustawienia wirtualnej atmosfery.
+	Zapisane są tutaj nazwy modeli importowanych z innych pakietów.
 	
 \section{Rozdzielacz wiadomości}
 	Jeśli dwóm węzłom nadać te same nazwy interfejsów strumienia wiadomości, to ROS będzie przekazywał pomiędzy nimi informacje.
@@ -374,42 +391,44 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Pozwala to na sterowanie kilkoma robotami o identycznym interfejsie ze wspólnego źródła.
 	W szczególności przydaje się to przy rozdzielaniu wartości prędkości kół dla modelu platformy dynamicznej i kinematycznej.
 	
+	Ten pakiet może być zastąpiony przez kilkukrotne uruchomienie wbudowanego w ROS narzędzia \texttt{relay}, które przekazuje pakiet z jednego strumienia komunikacyjnego do innego.
+	
 \section{Prosty program sterujący}
 	Jest to uproszczona wersja programu, który docelowo ma być tworzony na podstawie budowanego systemu modeli.
-	Pozwala on sprawdzić, jak dla prostych zasad model będzie się zachowywał.
 	
-	Program periodycznie wysyła dane o zadanej prędkości.
+	Program periodycznie wysyła dane o zadanej prędkości, zależnej od aktualnego stanu.
 	W zależności od danych z czujników laserowych, program zmienia swój stan i obraca kierunek obrotu o \ang{90}.
 	Ten sterownik dla uproszczenia nie generuje poleceń obrotu kątowego, sterowany obiekt powinien zachować swoją orientację.
 	
-	Prosty algorytm programu gwarantuje omijanie przeszkód, aby platforma nie zderzyła się z jakimś obiektem, jednak nie bierze pod uwagę celu jazdy.
+	Prosty algorytm programu gwarantuje omijanie przeszkód, jednak nie bierze pod uwagę celu jazdy.
 	To znaczy, że platforma będzie poruszać się od przeszkody do przeszkody w losowy sposób.
 	
 \section{Struktury pakietów wiadomości}
-	Ten pakiet nie jest plikiem wykonywalnym, a definicjami struktur danych, używanych przez wiadomości ROSa w projekcie, jeśli 
+	Ten pakiet nie jest plikiem wykonywalnym, a definicjami struktur danych, używanymi przez wiadomości ROSa w projekcie, jeśli 
 	standard nie obejmuje potrzebnego typu wiadomości.
 	
 	Dodatkowo zdefiniowane typy wiadomości to:
 	\begin{itemize}
 		\item Dane prędkości kątowej i kącie obrotu kół, zwracane przez model enkoderów.
 		\item Dane o względnym położeniu i orientacji obiektów na scenie.
-		\item Zadane prędkości kół.
-		\item Asynchroniczne wywołanie do ustawienia inercji ogniw modelu.
-		\item Asynchroniczne wywołanie do ustawienia współczynników tarcia.
+		\item Zadane prędkości kątowe kół.
+		\item Asynchroniczne wywołanie do ustawienia mas i momentów bezwładności ogniw modelu.
+		\item Asynchroniczne wywołanie do ustawienia współczynników tarcia obiektu.
 	\end{itemize}
 
 \section{Zewnętrzne pakiety ROSa}
 	Istnieje kilka tysięcy różnych pakietów i programów, tworzonych przez społeczność ROSa.
+	Te zostały użyte w projekcje.
 	
 	\subsection{Rysownik wykresów}
 		Pakiet \texttt{rqt-multiplot} jest wtyczką do większego programu \texttt{rqt}.
-		Pozwala na generowanie dwuwymiarowych wykresów, bazując na dwóch dowolnych wartościach z odbieranych pakietów, lub czasie.
-		Można porównać różne wykresy na jednym układzie.
+		Pozwala na generowanie dwuwymiarowych wykresów, bazując na dwóch dowolnych wartościach z odbieranych pakietów, łącznie z czasem nadania.
+		Pozwala porównać różne wykresy na jednym układzie.
 		
-		W szczególności, przy ustawieniach położenia Y względem X, pobranych z pakietu pozycji, nadawanego przez obie platformy, pozwala narysować trajektorię ruchu platform.
+		W szczególności, przy ustawieniach wyświetlania składowych położenia Y względem X, pobranych z pakietu pozycji, pozwala narysować trajektorię ruchu platform.
 		
 	\subsection{Wizualizer pomiarów}
-		Oryginalnie napisany dla robota o tej samej nazwie, \texttt{rviz} prezentuje trójwymiarową przestrzeń, na której można wyświetlać 
+		Oryginalnie napisany dla robota o tej samej nazwie, \texttt{rviz} prezentuje trójwymiarową przestrzeń, w której można wyświetlać 
 		dane odebrane z innych węzłów.
 		
 		Pozwala to na przykład umieścić znacznik reprezentujący pozycję platformy i chmury punktów, odebranych z czujników laserowych.
@@ -419,16 +438,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	\subsection{Algorytm określania lokalizacji}
 		Pakiet \texttt{laser\_scan\_matcher} pozwala na określenie pozycji robota, bazując na danych ze skanera laserowego oraz opcjonalnie jednostki inercyjnej i enkoderów w
 		celu minimalizacji błędów. Bazuje na porównywaniu kolejnych odczytów chmury punktów pomiarowych.
-		Istnieją bardziej zaawansowane algorytmy określania pozycji, na przykład bazujące na modelu mapy, lecz ten jest prosty w użyciu i nie wymaga dodatkowych danych, ani kalibracji.
-		
-	\subsection{Zbieranie danych}
-		Każdy strumień wiadomości może zostać zapisany do pliku, a następnie odtworzony w ten sam sposób, w jaki został odebrany.
-		Wbudowane w ROSa narzędzie \texttt{rosbag} pozwala ,,nagrać'' i odtworzyć dane.
-		Zapisuje to w formie pliku binarnego, wraz z dokładnymi parametrami działania nadajnika wiadomości, takimi jak nazwy ścieżek, ilość odebranych wiadomości, czas.
-		
-		Korzystając z pomocniczego narzędzia do zarządzania węzłami, \texttt{rostopic},
-		możliwe jest również wydrukowanie danych do pliku tekstowego w formacie CSV (\emph{Comma Separated Values}),
-		aby mogły być następnie wykorzystane w dowolny sposób przez inne programy jak Gnuplot, Calc (Exel), czy Matlab.
+		Istnieją bardziej zaawansowane algorytmy określania pozycji, na przykład bazujące na modelu mapy, lecz ten pakiet jest prosty w użyciu i nie wymaga dodatkowych danych, ani kalibracji.
 		
 	
 	
