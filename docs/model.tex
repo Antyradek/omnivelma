@@ -303,14 +303,15 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	
 \section{Generator sterowania}
 	\label{sec:gramofon}
-	Podstawą przeprowadzania testów modelu jest powtarzalność eksperymentów, oraz dokładność nadanego sterowania.
+	Podstawą przeprowadzania testów modelu jest powtarzalność eksperymentów oraz dokładność nadanego sterowania.
 	Potrzeba zatem jest sposobu na automatyczne wygenerowanie strumienia wiadomości z określonymi danymi.
 	
 	Ten pakiet generuje powtarzalne sterowanie, bazując na wczytanym pliku tekstowym.
-	Zwraca zadane prędkości liniowe i prędkość kątową bazy.
+	Wyjściem są zadane prędkości liniowe i prędkość kątowa bazy.
 	
-	Podłączono go do rzeczywistego robota, aby poruszał platformą po kwadracie i obracał wokół osi.
-	Eksperyment przebiegł pomyślnie.
+	Dane zapisane są w formie wierszy, w którym każdy określa czas i dane, które program ma nadawać.
+	Po zakończeniu wykonywania instrukcji, pakiet generuje wiadomość o zerowych parametrach w celu zatrzymania bazy.
+	
 		
 \section{Wyłuskanie struktury wiadomości}
 	\label{sec:dziadzio}
@@ -351,9 +352,9 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	
 \section{Obserwator symulacji}
 	\label{sec:ocznica}
-	Model uruchamiany w symulatorze.
+	Wtyczka uruchamiana w symulatorze.
 	Oblicza i zwraca statystyki międzymodelowe w przestrzeni symulacji, takie jak odległość i kąt.
-	Pozwala zbadać, jak model dynamiczny zachowuje się w stosunku do modelu kinematycznego, to znaczy, 
+	Pozwala zbadać, jak model dynamiki zachowuje się w stosunku do modelu kinematycznego, to znaczy, 
 	czy pozycja, obliczone przez maszynę symulacyjną fizyki jest zbliżona do pozycji obliczonej równaniami kinematycznymi po całkowaniu.
 	
 \section{Scena z symulacją}

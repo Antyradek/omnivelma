@@ -125,6 +125,13 @@
 	W platformie ich osie ustawione są w ten sposób, że osie najwyższych, lub najniższych, rolek dwóch kół z tej samej strony robota przecinają się pod kątem prostym.
 	Innymi słowy, robot ma identycznie ustawione koła na przeciwległych wierzchołkach, i razem ustawione są w kształt litery \emph{X}, patrząc na nie z góry.
 	Należy pamiętać, iż oś aktualnie dolnej rolki jest prostopadła do osi górnej rolki.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{graphics/bases.pdf}
+	\caption{Dwa sposoby ustawienia kół, zezwalające platformie na jazdę wielokierunkową.}
+	\label{fig:bases}
+	\end{figure} 
 
 	Istnieje również odwrotna odmiana ustawienia kół, w której rolki tworzą literę \emph{O}, 
 	czyli oś przednia jest zamieniona z tylną, lub jakby cała platforma była odwrócona.
@@ -223,6 +230,7 @@
 		Odpowiednio skomplikowany algorytm sterowania może brać pod uwagę tą mechanikę kół.
 
 \section{Enkodery}
+	\label{sec:encoders}
 	Każde koło posiada wbudowany w silnik enkoder. To urządzenie wykrywa aktualny ruch koła i zwraca jego aktualną prędkość i rotację.
 	Korzystając z modelu kinematyki, można obliczyć z tych danych wypadkową prędkość robota, a następnie, za pomocą całkowania, wyznaczyć aktualną
 	pozycję w stosunku do punktu startowego.
@@ -230,7 +238,7 @@
 	W opisywanym robocie, silniki kół mają na tyle dużą moc, że wartość prędkości, wykrytej przez enkodery, bardzo niewiele odstaje od prędkości zadanej.
 	Oznacza to, że teoretycznie, można nadawać kołom bardzo duże momenty sił, a koło rzeczywiście wykona zadaną akcję.
 	Jednakże eksperymenty pokazały, że zasilacz robota może nie móc pracować przy takim poborze prądu i awaryjnie się odłączyć, co jest głównym powodem dla którego 
-	należy ograniczać nadawanie zbyt dużych przyspieszeń platformie.
+	należy ograniczać nadawanie zbyt dużych przyspieszeń platformie. Trasa obliczona z odometrii jest bardzo zbliżona do zadanej trasy.
 
 	Poślizg kół powoduje jednak, że odometria, bazująca na danych generowanych przez czujniki enkoderów, obarczona jest błędami losowymi i nie może być 
 	użyta jako jedyna metoda wyznaczania pozycji względnej w trakcie jazdy robota \cite{heavy}. Zatem dodano do urządzenia także inne czujniki.

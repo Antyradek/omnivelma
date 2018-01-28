@@ -995,6 +995,11 @@ virtual bool SetParam (const std::string& key,
 	Nie da się w takim przypadku obliczyć dokładnych odległości pomiędzy platformami w danej chwili. 
 	Wprowadzałoby to także spore opóźnienie, gdyż program musiałby czekać na odbiór obu wiadomości, dodatkowo zachowując pewność że oba pochodzą z tego samego kroku symulacji.
 	
+	Z punktu widzenia symulacji, program nie steruje modelem, a całą symulacją. Jest umieszczany w elemencie \texttt{word} pliku opisującego symulację,
+	a nie w elemencie \texttt{model}. W związku z tym nie posiada symulowanej pozycji i prędkości. 
+	Jednakże, bazując na nazwie, może sterować dowolnym obiektem w przestrzeni symulacji.
+	W związku z tym, na diagramie \ref{uml:comparison}, został przedstawiony jako niezależny element uczestniczący w symulacji.
+	
 \section{Model kinematyki odwrotnej}
 	Zaimplementowany jest w standardowy sposób typu akcja-reakcja.
 	Odbiera wiadomość z zadanymi prędkościami liniowymi i rotacją, a zwraca wiadomość z prędkościami kół.

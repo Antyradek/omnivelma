@@ -1,8 +1,8 @@
-\documentclass[a4paper,12pt,twoside]{report}
+\documentclass[a4paper,11pt,twoside]{report}
 \usepackage[english,polish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{fullpage}
+\usepackage[inner=3cm,outer=2cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{polski}
 \usepackage{lipsum}
 \usepackage{graphicx}
@@ -22,12 +22,15 @@
 \usepackage{minted}
 \usepackage{siunitx}
 
+%numercja stron
 \fancypagestyle{plain}{%
 \fancyhf{} % clear all header and footer fields
 \fancyfoot[LE,RO]{\thepage}}
-
 \renewcommand{\headrulewidth}{0pt}
 \pagestyle{plain}
+
+%czcionka bezszeryfowa
+\renewcommand{\familydefault}{\sfdefault}
 
 \input{macros.tex}
 

@@ -1,28 +1,36 @@
- \begin{abstractpage}
-	\begin{abstractsection}{polish}
-		Praca opisuje projektowanie i budowę środowiska symulacyjnego dla wielokierunkowej platformy mobilnej, poruszającej się za pomocą kół szwedzkich.
-		Platforma jest bazą mobilną dla dwuramiennego robota Velma. 
-		
-		Celem pracy jest stworzenie możliwie dokładnego modelu symulacyjnego rzeczywistej bazy mobilnej.
-		Model ten będzie służyć do wstępnych badań algorytmów planowania ruchu i sterowania robotem mobilnym.
+{\centering\Large\bfseries Streszczenie \\}
+\noindent{\bfseries Tytuł: } Symulacja dookólnej bazy mobilnej \\
+\noindent{\bfseries Słowa kluczowe: } \texttt{symulacja}, \texttt{Gazebo}, \texttt{ROS}, \texttt{koła Mecanum}, \texttt{wielokierunkowa platforma mobilna}, \texttt{robot Velma}, \texttt{model dynamiki}, \texttt{ODE}.
 
-		Rozpatrzone są tutaj wymagania i problemy przy tworzeniu każdego ze składników środowiska.
-		Na system składają się wirtualne efektory i receptory obsługujące odpowiednią maszynę symulacyjną, a także pakiety wspomagające symulację.
-		Do wykonania zadania użyto programowej struktury ramowej ROS i symulatora Gazebo.
-		
-		W ramach pracy, stworzone zostały modele dynamiczne, oraz kinematyczne platformy.
-		Stworzono modele skanerów laserowych, jednostki inercyjnej, oraz czujnika enkoderów, a także narzędzia wspomagające testowanie i uruchomienie odpowiednich składników systemu.
-	\end{abstractsection}
+Niniejsza praca dotyczy projektowania i budowy środowiska symulacyjnego dla wielokierunkowej platformy mobilnej, poruszającej się za pomocą kół szwedzkich.
+Platforma jest bazą mobilną dla dwuramiennego robota Velma. 
 
-	\begin{abstractsection}{english}
-		This paper describes creation of simulation environment for omnidirectional platform.
-		Robot, which is powered by four Mecanum wheels, is a mobile base for larger robotic manipulator.
-		
-		The platform model and it's sensors models will then support the development of path-planning and movement algorithms, in order to safely test them before running on
-		hardware.
-		
-		To execute the task, ROS framework and Gazebo simulator were used.
-		Simulation environment consists of dynamic and kinematic models, laser scanner, inertial measurement unit and simulated encoder. 
-		Also, many other components have been created in order to ease testing, data logging and execution of simulation.
-	\end{abstractsection}
-\end{abstractpage}
+Celem pracy jest stworzenie możliwie dokładnego modelu symulacyjnego rzeczywistej bazy mobilnej.
+Model ten będzie służyć do wstępnych badań algorytmów planowania ruchu i sterowania robotem mobilnym.
+
+Rozpatrzone są wymagania i problemy przy tworzeniu każdego ze składników środowiska.
+Na system składają się wirtualne efektory i receptory obsługujące odpowiednią maszynę symulacyjną, a także pakiety wspomagające symulację.
+Do wykonania zadania użyto programowej struktury ramowej ROS i symulatora Gazebo.
+
+W ramach pracy, stworzone zostały modele dynamiczne, oraz kinematyczne platformy.
+Stworzono modele skanerów laserowych, jednostki inercyjnej, oraz enkoderów, a także narzędzia wspomagające testowanie i uruchomienie odpowiednich składników systemu.
+
+Wykonano również szereg testów, mających na celu weryfikację działania opracowanego modelu.
+
+{\centering\Large\bfseries Abstract \\}
+\noindent{\bfseries Title: } Simulation of an omnidirectional mobile base \\
+\noindent{\bfseries Keywords: } \texttt{simulation}, \texttt{ROS}, \texttt{Gazebo}, \texttt{Mecanum wheels}, \texttt{omnidirectional mobile base}, \texttt{Velma robot}, \texttt{dynamic model}, \texttt{ODE physics engine}
+
+This thesis describes design and implementation of a simulation environment for omnidirectional mobile platform with four Mecanum wheels.
+This platform is a mobile base for a two-arm robot Velma.
+
+The platform model and it's sensors models will then support the development of path-planning and movement algorithms, in order to safely test them before running on
+hardware.
+
+The main goal of this thesis is to create a dynamic model of the real mobile platform.
+
+To execute the task, ROS framework and Gazebo simulator were used.
+Simulation environment consists of dynamic and kinematic models, laser scanner, inertial measurement unit and simulated encoder. 
+Also, many other components have been created in order to ease testing, data logging and execution of simulation.
+
+In order to verify the correctness of the implemented model, a set of tests has been performed.
