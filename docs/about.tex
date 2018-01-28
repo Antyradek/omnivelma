@@ -2,18 +2,18 @@
 \label{sec:description}
 	\section{Cel pracy}
 	Celem pracy inżynierskiej jest budowa środowiska symulacyjnego robota mobilnego z kołami szwedzkimi.
-	Dla realizacji tego celu należy opracować model 3D, oraz model dynamiki dookólnej bazy jezdnej z 4 kołami szwedzkimi.
+	Dla realizacji tego celu należy opracować model 3D oraz model dynamiki dookólnej bazy jezdnej z 4 kołami szwedzkimi.
 	Jednym z przyjętych założeń jest wymaganie, aby opracowany model był możliwie dokładny i jego działanie było zbliżone do rzeczywistego robota.
 	Opisywana platforma będzie używana jako baza wielokierunkowa do przemieszczania dwuramiennego robota manipulacyjnego Velma.
 
 	Celem jest stworzenie modelu, który będzie reagował na siły podobnie do rzeczywistego robota i będzie sterowany tak samo, jak rzeczywisty robot.
-	To spowoduje, że możliwe będzie stworzenie jednego wspólnego programu sterującego, do użycia zarówno w symulacji, jak i rzeczywistym robocie.
+	To spowoduje, że możliwe będzie stworzenie jednego wspólnego programu sterującego, do użycia zarówno w symulacji, jak i w robocie.
 
 	Testowanie oprogramowania sterującego na rzeczywistym obiekcie może prowadzić do jego uszkodzeń, 
 	dlatego wpierw należy się upewnić o poprawności projektowanych rozwiązań na bezpiecznym modelu wirtualnym.
-	Rzeczywistość nie pozwala także na skomplikowane scenariusze testów, które w rzeczywistości mogłyby być niemożliwe do wykonania lub koszty jego wykonania byłyby zbyt wysokie.
-	Szybciej i taniej jest stworzyć symulacyjne środowisko testowe, niż fizyczne, w dodatku błąd sterowników przy symulacji nie grozi zniszczeniem rzeczywistego robota.
-	Dopiero po osiągnięciu satysfakcjonującej jakości sterowania w symulacji wirtualnej, 
+	Środowisko symulacyjne pozwala także na skomplikowane scenariusze testów, które w rzeczywistości mogłyby być niemożliwe do wykonania lub koszty jego wykonania byłyby zbyt wysokie.
+	Szybciej i taniej jest przeprowadzić symulacje, niż fizyczne eksperymenty, w dodatku błąd działania programu sterującego przy symulacji nie grozi zniszczeniem rzeczywistego robota.
+	Dopiero po osiągnięciu satysfakcjonującej jakości sterowania w symulacji, 
 	można zastosować algorytmy sterowania do rzeczywistego obiektu bez ryzyka uszkodzeń urządzenia.
 
 	Oprócz modelu bazy jezdnej, środowisko symulacyjne musi również udostępniać modele czujników, w które wyposażony jest robot. 
@@ -22,43 +22,35 @@
 
 
 \section{Zakres pracy}
-	Składniki systemu należy wprowadzać po kolei, aby nowe mogły wykorzystywać poprzednie do sprawdzenia ich poprawności działania.
+	Do realizacji calu postawionego w pracy, należy wykonać następujące czynności:
 	\begin{enumerate}
-	\item Stworzenie obiektu w symulatorze, który będzie sterowany za pomocą wzorów kinematycznych. Jest to całkowanie w modelu kinematycznym.
-	\item Stworzyć model dynamiczny platformy do uruchomienia w symulatorze, zachowując wszystkie rozmiary i momenty rzeczywistej wersji.
-	Bryły składowe modelu muszą przypominać kształtem części z których składa się robot, należy im także ustawić parametry fizyczne, jak masę, moment bezwładności, materiał itp.
-	\item Zamodelowanie wszystkich więzów na koła, rolki i przegub, aby maszyna symulacyjna poprawnie symulowała obiekt.
-	Taki model powinien na tym stanie poprawnie reagować na wirtualne siły, lecz jego efektory nie będą jeszcze aktywne.
-	Można go prosto pobieżnie przetestować działając siłą na elementy i patrząc, czy reagują w spodziewany sposób.
-	\item Zapisanie wtyczki sterującej modelem, odczytującej odpowiednie dane z zewnątrz i wywołującej funkcje maszyny symulacyjnej, aby modyfikować ruch modelu.
+	\item Opracować model kinematyczny dookólnej bazy mobilnej z czterema kołami szwedzkimi.
+	\item Stworzyć model dynamiczny platformy do uruchomienia w symulatorze, zachowując wartości wszystkich parametrów rzeczywistego robota.
+	Bryły składowe modelu muszą przypominać kształtem części z których składa się robot, należy im także ustawić parametry fizyczne, jak masę, moment bezwładności, materiał, itp.
+	\item Opracowanie modeli więzów dla koła, rolek oraz przegubu, aby maszyna symulacyjna poprawnie symulowała obiekt.
+	Taki model powinien na tym stanie poprawnie reagować na wirtualne siły.
+	\item Opracowanie wtyczki symulatora, sterującej modelem, odczytującej odpowiednie dane z zewnątrz i wywołującej funkcje maszyny symulacyjnej, aby modyfikować ruch modelu.
 	Na tym poziomie można dobudować zamiennik programu sterującego, jedynie do podawania prostych wartości bez odczytywania pomiarów i sterowania.
-	Porównanie z obiektem kinematycznym pozwala sprawdzić, czy model zachowuje się poprawnie i zgodnie z przewidywaniami.
-	\item Zaprogramowanie wtyczki symulującej czujniki enkoderów, aby generowały dane, bazując na pozycjach i prędkościach kół wirtualnych.
-	\item Dodanie czujników wirtualnych, nieistniejących w rzeczywistości, to jest położenie i orientacja.
-	\item Wystawienie do zmiany w czasie rzeczywistym masy, momentu bezwładności, współczynników tarcia, aby pozwolić na proste testowanie działania systemu z różnymi współczynnikami.
-	\item Stworzenie dodatkowych programów, pomagających w symulacji i testowaniu, jak model kinematyki odwrotnej, sterowany funkcją matematyczną, i podłoże ze zmiennym współczynnikiem tarcia.
-	\item Zaprogramowanie programów pomocniczych, zbierających i wyświetlających dane, interfejs graficzny do prostego sterowania robotem.
-	\item Dodanie modelu skanera laserowego, powinien zbierać dane i przekazywać je dalej. Musi posiadać także określone kształty.
+	Porównanie z obiektem kinematycznym pozwala sprawdzić, czy model zachowuje się zgodnie z przewidywaniami.
+	\item Stworzenie wtyczki symulującej enkodery, aby generowały dane, bazując na pozycjach i prędkościach kół wirtualnych.
+	\item Dodanie czujników wirtualnych, zarówno tych, mających swoje odpowiedniki w rzeczywistości, jak i również całkowicie symulacyjnych.
+	\item Stworzenie interfejsów do zmiany różnych parametrów działania modelu.
+	\item Opracowanie programów pomocniczych, zbierających i wyświetlających dane oraz wspomagających przeprowadzanie testów.
+	\item Dodanie modelu skanera laserowego.
 	\item Dodanie modelu jednostki inercyjnej.
-	\item Stworzenie uproszczonego programu sterującego, bazującego na danych ze skanerów laserowych, aby zbadać, czy system działa poprawnie na tyle, aby rozwinąć go w końcowy projekt.
-	\item Przeprowadzenie testów, z porównaniem zachowania się rzeczywistej platformy w celu weryfikacji poprawności.
+	\item Przeprowadzenie testów, z porównaniem działania modeli i robota, w celu weryfikacji poprawności opracowanych rozwiązań.
 	\item Ustawianie parametrów modelu w celu przybliżenia go do zachowania platformy.
 	\end{enumerate}
 	
-	Po stworzeniu symulatora, następnym krokiem jest tworzenie głównego programu sterującego, którego testowanie opierać się będzie na powstałym środowisku symulacyjnym.
+	Po stworzeniu symulatora, następnym krokiem jest tworzenie głównego programu sterującego, którego testowanie będzie przeprowadzone na opracowywanym środowisku symulacyjnym.
 	Program jest wspólny dla obu bytów --- wirtualnego i rzeczywistego.
-	Zwykle nie jest to praca jednego człowieka, a jego rozwój nie ustaje przez długi czas.
-	Ten program dostarczy funkcji, aby wyższy sterownik robota mógł użyć tego modułu do sterowania jazdą i odczytywania danych.
-	
 
 \section{Podział tej pracy na sekcje}
 	Kolejne rozdziały kolejno opisują różne aspekty pracy.
-	\begin{description}
-		\item[\ref{sec:description}] Zawiera ogólny opis pracy i sposób jej wykonania.
-		\item[\ref{sec:robot}] Techniczny opis rzeczywistej platformy i czujników, oraz mechaniki stojącej za zasadą ich działania.
-		\item[\ref{sec:tools}] Opis narzędzi programistycznych, użytych przy budowie modeli i testowaniu.
-		\item[\ref{sec:model}] Implementacje modeli opisanych w poprzednim rozdziale, problemy i niedoskonałości z nimi związane. Opis poszczególnych dodatkowych składników systemu, używanych w symulacji, testowaniu, wizualizacji i wspomagających tworzenie.
-		\item[\ref{sec:implementation}] Implementacje poszczególnych pakietów systemu.
-		\item[\ref{sec:tests}] Testy różnych składników systemu, wykresy i interpretacja.
-		\item[\ref{sec:ending}] Krótkie podsumowanie wykonanej pracy.
-	\end{description}
+	Rozdział \ref{sec:description} zawiera ogólny opis pracy.
+	W rozdziale \ref{sec:robot} opisano konstrukcję rzeczywistej platformy i czujników oraz zasadę jej działania.
+	Następnie w rozdziale \ref{sec:tools}, opisano narzędzia programistyczne, użyte przy tworzeniu modeli i przeprowadzaniu testów.
+	W rozdziale \ref{sec:model} opisano działanie opracowanych modeli i innych pakietów składających się na środowisko.
+	Rozdział \ref{sec:implementation} zawiera opis implementacji opracowanych modeli, problemy i niedoskonałości z nimi związane. Opis poszczególnych dodatkowych składników systemu, używanych w symulacji, testowaniu, wizualizacji i wspomagających tworzenie.
+	W rozdziale \ref{sec:tests} przedstawiono wyniki badań oraz wnioski.
+	W ostatnim rozdziale \ref{sec:ending} zamieszczono podsumowanie pracy i dalsze możliwości rozwoju.

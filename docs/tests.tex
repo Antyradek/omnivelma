@@ -9,8 +9,8 @@ Wiadomości przesyłane w odpowiednich strumieniach zostały zapisane do pliku z
 Za pomocą narzędzia \texttt{rostopic}, wyeksportowano dane z plików do pliku rekordów, gdzie każde pole oddzielone jest przecinkiem (\emph{Comma Separated Value}(CSV)).
 Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, które następnie załączono poniżej.
 
-\section{Weryfikacja działania modelu kinematyki}
-	W tym teście porównano działanie modelu kinematyki oraz jej enkoderów w stosunku do zadanego sterowania.
+\section{Weryfikacja działania modelu dynamiki}
+	W tym teście porównano działanie modelu dynamiki oraz jej enkoderów w stosunku do zadanego sterowania.
 	W tym celu uruchomiono scenę posiadającą dwa modele kinematyki i jeden dynamiki oraz obserwator symulacji, patrz rysunek \ref{uml:comparison}.
 	Jeden model kinematyki użyto do przekształcania zadanych prędkości kół do prędkości liniowej i kątowej platformy, którą to za pomocą symulatora scałkowano w celu określenia zadanej trasy robota. Drugi model, korzystając z enkoderów, realizował mechanikę odometrii, wyznaczał trasę na podstawie danych o obrotach kół.
 	Wiadomości, zawierające dane ich pozycje w czasie, były zapisywane do pliku.
@@ -109,72 +109,49 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 			Można zauważyć, że różnica między orientacją modelu dynamiki, a orientacją wyliczoną na podstawie odometrii zwykle zmienia się mniej dynamicznie od 
 			różnicy między modelem dynamiki, a zadaną pozycją.
 			
-			
-			
-			
-			
 	\subsection{Powtarzalność testów}
-			
-			
-% \section{Pozycja obliczona ze skanerów laserowych}
-% 	\label{sec:test_pose}
-% 	Pozycja modelu została łatwo wygenerowana, ponieważ symulacja odbywała się w przestrzeni wirtualnej.
-% 	Pozycja platformy nie mogła być łatwo określona. Posłużono się algorytmem ROSowego pakietu \texttt{laser\_scan\_matcher}, który na podstawie 
-% 	danych z jednego i drugiego skanera laserowego i odometrii określił aktualną pozycję platformy. Określenie pozycji jest obarczone błędem wynikającym
-% 	z błędów pomiarowych czujników, stąd obliczona trasa nie składa się z odcinków i posiada szum.
-% 	
-% 	To jest ten sam eksperyment co w sekcji \ref{sec:test_odometry}.
-% 	Pakiety zostały połączone w prostszy sposób, jak na rysunku \ref{uml:test_pose}, model kinematyczny generuje trasę na podstawie zadanych prędkości.
-% 	
-% 	\begin{figure}[H]
-% 		\centering
-% 		\includegraphics[width=\textwidth]{uml/gramofon.pdf}
-% 		\caption{Połączenie pakietów dla testu pozycji modelu.}
-% 		\label{uml:test_pose}
-% 	\end{figure}
-% 	
-% 	\begin{figure}[H]
-% 		\centering
-% 		\includegraphics[width=\textwidth]{plots/matcher.pdf}
-% 		\caption{Pozycja robota, obliczona z jednego lub drugiego skanera laserowego i model.}
-% 		\label{plot:pose}
-% 	\end{figure}
-% 	
-% 	\subsubsection{Powtarzalność jazdy modelu}
-% 		Jak wcześniej wspomniano, poślizgi nadają modelowi nieprzewidywalne kąty w trakcie nagłej zmiany prędkości. 
-% 		Dlatego też trasy modelu platformy w tym i wcześniejszym teście z sekcji \ref{sec:test_odometry} różnią się. 
-% 	\subsubsection{Wyznaczenie pozycji}
-% 		Duże podobieństwo pozycji wyznaczonej przez jeden i drugi skaner wskazuje, że algorytm działa dobrze i daje przewidywalne wyniki.
-% 		Trasa przejazdu również jest prawdopodobna.
-% 	\subsubsection{Trasa robota}
-% 		Robot jadąc równolegle do osi X, jechał w bok i pokonał krótszą trasę niż przy jeździe równolegle do osi Y. Jak wspomniano w sekcji \ref{sec:robot_movement}, powodowało to większy obrót rolek
-% 		niż przy jeździe na wprost, co powodowało większy opór ruchu i w efekcie przejazd wolniej od zadanej prędkości i po krótszej trasie.
-% 		Model nie jest podany na tę właściwość, gdyż kule, symulujące koła, są symetryczne.
-% 	
-% \section{Ruch obrotowy}
-% 	\label{sec:test_rotation}
-% 	W tym teście pakiety zostały podłączone tak samo, jak wcześniej, według wykresu \ref{uml:test_pose}.
-% 	
-% 	Test polegał na jeździe w bok z prędkością 0,1 \si{\metre\per\second}, tak samo jak w poprzednim teście, następnie obrocie wokół osi Z o 90° przez 10 \si{\second} z prędkością $\frac{\pi}{20}$ \si{\radian\per\second} i ponownej jeździe w bok. Tak 4 razy, dla każdego boku kwadratu.
-% 	Pozycja robota została wyznaczona z czujników laserowych i odometrii w taki sam sposób, jak w teście \ref{sec:test_pose}.
-% 	
-% 	\begin{figure}[H]
-% 		\centering
-% 		\includegraphics[width=\textwidth]{plots/rotation_matcher.pdf}
-% 		\caption{Pozycja robota, obliczona z jednego lub drugiego skanera laserowego i model.}
-% 		\label{plot:rotation}
-% 	\end{figure}
-% 	
-% 	\subsubsection{Trasa robota}
-% 		Na początku eksperymentu nastąpił poślizg, który obrócił platformę o nieznaczny kąt.
-% 		Przez to trasa jest obrócona względem zaplanowanej.
-% 	\subsubsection{Trasa modelu}
-% 		Właściwość modelu. powodująca że pokonuje on większą trasę, niż zadana, objawia się także w trakcie obrotu, gdzie wykonuje większy kąt niż prosty.
-% 		Dlatego kolejne segmenty trasy są coraz mniej równoległe do osi układu współrzędnych.
-% 		Na kątach widać także, że model nie obraca się wokół swojego środka (początku lokalnego układu współrzędnych), tylko od lekko przesuniętego w bok
-% 		punktu ciężkości. Pomimo, że wartości ogniw zostały dobrane symetrycznie, jak widać nie wszystkie wartości się równoważą.
-% 		Jest to cecha charakterystyczna dla maszyn symulacji fizyki w czasie rzeczywistym.
-% 		
+		Zadano modelowi jazdę z różnymi prędkościami po trasie kwadratu, wyznaczona trasa została przedstawiona na rysunku \ref{plot:repetitions_xy}.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\textwidth]{plots/repetitions_xy.pdf}
+				\caption{Trasa modeli platformy, poruszających się z różną prędkością liniową po trasie kwadratu. W tym eksperymencie nie nadano prędkości kątowej.}
+			\label{plot:repetitions_xy}
+		\end{figure}
+		
+		Eksperyment pokazuje, że zależnie od prędkości przejazdu, mogą występować niedokładności ruchu. Dzieje się to głównie w kierunku Y, gdyż ruch
+		platformy w bok jest zawsze podobny. Im wolniej platforma się porusza, tym mniejszą odległość pokonuje w odpowiednio dłuższym czasie. 
+		 %TODO Dlaczego?
+		 
+\section{Porównanie modelu z robotem}
+	Za pomocą generatora sterowania, zadano platformie ruch po trasie kwadratu w prędkością 0,1 \si{\metre\per\second}.
+	Zapisano dane generowane przez enkodery, obliczaną odometrię, pomiary skanerów laserowych oraz samo sterowanie.
+	Następnie, używając tych samych danych, przeprowadzono identyczny eksperyment na modelu, łącząc pakiety w sposób pokazany na rysunku \ref{uml:comparison}.
+	Korzystając z pakietu \texttt{laser\_scan\_matcher}, obliczono rzeczywistą pozycję platformy, korzystając z danych skanerów laserowych.
+	Określenie pozycji jest obarczone błędem, wynikającym
+	z błędów pomiarowych czujników, stąd obliczona trasa nie składa się z odcinków i posiada szum.
+	Trasy modeli i platformy pokazano na wykresie \ref{plot:velmobil_xy}.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\textwidth]{plots/velmobil_xy.pdf}
+			\caption{Trasa modeli robota przy jeździe po trasie kwadratu.}
+		\label{plot:velmobil_xy}
+	\end{figure}
+	
+	Charakterystyczną cechą wykresu jest to, że robot przejechał mniejszą odległość wzdłuż osi X, niż wzdłuż osi Y.
+	Może być to spowodowane różnicą w wyjściowym współczynniku tarcia kół w zależności od wyjściowego wektora prędkości kół.
+	Zgodnie z cechą kół, opisaną w sekcji \ref{sec:robot_movement}, rolki kół obracają się z największą prędkością przy ruchu w bok, a co za tym idzie, w ruchu ma udział także
+	ich tarcie obrotowe. Przy ruchu w przód, rolki nie obracają się, więc i to dodatkowe tarcie nie wpływa na ruch platformy.
+	Dlatego też platforma pokonała mniejszą odległość w jednym z kierunków.d
+	
+	%TODO dlaczego enkodery tego nie wykryły?
+	
+	
+	
+	
+	
+		
 % \section{Jednostka inercyjna}
 % \label{sec:test_imu}
 % 	\begin{figure}[H]
