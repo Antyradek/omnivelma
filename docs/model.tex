@@ -178,10 +178,11 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 \section{Model skanera laserowego}
 	\label{sec:monokl}
 	Symulator generuje odpowiednie dane, emitując promienie w przestrzeni wirtualnej.
-	Następnie maszyna symulacyjna fizyki oblicza kolizje promieni z obiektami na scenie.
+	Następnie maszyna symulacyjna fizyki oblicza kolizje promieni z obiektami na scenie, biorąc pod uwagę także ich albedo, sprecyzowane w parametrach modelu. 
 	Jest to operacja bardzo kosztowna obliczeniowo.
 	
 	Do położeń punków dodawany szum o rozkładzie normalnym, aby symulować błędy pomiarowe, powstałe przy odczycie odbicia lasera.
+	Model symuluje zarówno pomiary odległości od obiektu, jak i ich intensywność.
 	
 	Odczyt z rzeczywistego skanera pokazuje, że sztucznie wygenerowane dane są podobne do danych zebranych przez czujnik.
 	Dodatkowo, wbudowany w czujnik sterownik usuwa błędy grube z pomiarów, zatem rzeczywiste dane nie posiadają ich, więc i nie jest konieczne dodawanie ich do modelu.

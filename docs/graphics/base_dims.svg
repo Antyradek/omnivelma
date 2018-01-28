@@ -16,7 +16,7 @@
    height="4443.875"
    viewBox="0 0 4949.6279 4443.875"
    sodipodi:docname="base_dims.svg"
-   inkscape:version="0.92.1 r"><metadata
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
@@ -91,7 +91,7 @@
        inkscape:collect="always"><path
          id="path32732"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         style="fill:#ff6600;fill-opacity:1;fill-rule:evenodd;stroke:#ff6600;stroke-width:1.00000003pt;stroke-opacity:1"
+         style="fill:#c31717;fill-opacity:1;fill-rule:evenodd;stroke:#c31717;stroke-width:1.00000003pt;stroke-opacity:1"
          transform="matrix(0.4,0,0,0.4,4,0)"
          inkscape:connector-curvature="0" /></marker><marker
        inkscape:stockid="Arrow1Lstart"
@@ -128,7 +128,7 @@
        inkscape:collect="always"><path
          id="path28948"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         style="fill:#ff6600;fill-opacity:1;fill-rule:evenodd;stroke:#ff6600;stroke-width:1.00000003pt;stroke-opacity:1"
+         style="fill:#c31717;fill-opacity:1;fill-rule:evenodd;stroke:#c31717;stroke-width:1.00000003pt;stroke-opacity:1"
          transform="matrix(0.4,0,0,0.4,4,0)"
          inkscape:connector-curvature="0" /></marker><marker
        inkscape:stockid="Arrow1Mend"
@@ -239,13 +239,13 @@
      inkscape:window-height="2032"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="0.32676206"
-     inkscape:cx="849.92869"
-     inkscape:cy="2300.6969"
+     inkscape:zoom="0.46211134"
+     inkscape:cx="2767.535"
+     inkscape:cy="1633.5298"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="1920"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="g31883"
      inkscape:snap-midpoints="true"
      inkscape:snap-intersection-paths="true"
      inkscape:snap-bbox="true"

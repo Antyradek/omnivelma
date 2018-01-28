@@ -63,7 +63,7 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 			
 			Różnice w pozycji zadanej, a pozycji obliczonej za pomocą danych wygenerowanych przez enkodery biorą się z tego, że
 			silniki mogą nie mieć wystarczającej mocy, aby nadać kołom odpowiednie prędkości i przeciwdziałać oporom.
-			Ponieważ założono dużą moc silników, jak zostało to opisane w sekcji \ref{sec:encoders}, modelowane koła są mniej podatne na opory, a co za tym idzie, 
+			Ponieważ założono dużą moc silników, jak zostało to opisane w sekcji \ref{sec:motors}, modelowane koła są mniej podatne na opory, a co za tym idzie, 
 			ich prędkość będzie bardziej zbliżona do prędkości zadanej i także trasa wyznaczona w ten sposób z odometrii będzie niemalże pokrywać się z zadaną trasą.
 			
 			Zauważalne różnice pomiędzy przebiegami trasy odometrycznej i zadanej pojawiają się przy wywoływaniu dużych przyspieszeń i poślizgów na modelu platformy.
@@ -124,6 +124,7 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 		 %TODO Dlaczego?
 		 
 \section{Porównanie modelu z robotem}
+	\label{sec:test_velmobil}
 	Za pomocą generatora sterowania, zadano platformie ruch po trasie kwadratu w prędkością 0,1 \si{\metre\per\second}.
 	Zapisano dane generowane przez enkodery, obliczaną odometrię, pomiary skanerów laserowych oraz samo sterowanie.
 	Następnie, używając tych samych danych, przeprowadzono identyczny eksperyment na modelu, łącząc pakiety w sposób pokazany na rysunku \ref{uml:comparison}.
