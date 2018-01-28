@@ -1,7 +1,6 @@
 \chapter{Testy środowiska symulacyjnego}
 \label{sec:tests}
 W tym rozdziale przedstawione są różne konfiguracje pakietów, wraz z wykresami ruchów platform, oraz wnioski płynące z tych zachowań.
-Każdy test wymaga innego podłączenia pakietów do siebie nawzajem.
 
 Uruchomiono odpowiednią konfigurację pakietów i połączono je strumieniami konfiguracyjnymi.
 Wiadomości przesyłane w odpowiednich strumieniach zostały zapisane do pliku za pomocą narzędzia
@@ -34,21 +33,21 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 		\end{enumerate}
 		Powyższe akcje wykonał czterokrotnie.
 		
-		\begin{figure}[H]
+		\begin{figure}[h]
 			\centering
 			\includegraphics[width=\textwidth]{plots/comparison_xy.pdf}
 				\caption{Trasa modelu platformy w teście porównującym modele. Różnica między zadaną trasą, a trasą wyznaczoną przez enkodery, jest niewielka.}
 			\label{plot:comparison_xy}
 		\end{figure}
 		
-		\begin{figure}[H]
+		\begin{figure}[h]
 			\centering
 			\includegraphics[width=\textwidth]{plots/comparison_xt.pdf}
 				\caption{Składowa pozycji modelu wzdłuż osi X w czasie.}
 			\label{plot:comparison_xt}
 		\end{figure}
 		
-		\begin{figure}[H]
+		\begin{figure}[h]
 			\centering
 			\includegraphics[width=\textwidth]{plots/comparison_yt.pdf}
 				\caption{Składowa pozycji modelu wzdłuż osi Y w czasie.}
@@ -56,8 +55,9 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 		\end{figure}
 		
 		\subsubsection{Dokładność odometrii}
-			Trasa obliczana na podstawie obrotu kół byłaby identyczna do zadanej trasy w przypadku gdyby koła obracałyby się dokładnie z zadanymi prędkościami.
-			To wymagałoby, aby silniki kół posiadały nieskończony moment obrotowy, lub na tyle duży, aby opór obrotu, spowodowany tarciem, nie wpływał 
+			\label{sec:test_odometry}
+			Trasa obliczana na podstawie prędkości kątowej kół, byłaby identyczna do zadanej trasy w przypadku gdyby koła obracałyby się dokładnie z zadanymi prędkościami kątowymi.
+			To wymagałoby, aby silniki kół posiadały nieskończony moment siły, lub na tyle duży, aby opór obrotu, spowodowany tarciem, nie wpływał 
 			znacząco na ich prędkość kątową. Innymi słowy, nawet jeśli platforma uderzyłaby w przeszkodę, koła nadal powinny obracać się zgodnie z zadanymi wartościami.
 			To nie oznacza, że rzeczywista trasa robota jest zgodna z obliczoną z odometrii, gdyż uwzględnia także poślizgi kół, czego enkodery nie są w stanie wykryć.
 			
@@ -70,10 +70,10 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 			
 		\subsubsection{Trasa modelu dynamiki}
 			Różnica pomiędzy położeniem modelu dynamiki, a kinematyki (położenia zgodnego z zadaną trasą), rośnie w czasie.
-			Jest tak na skutek błędów numerycznych maszyny do symulacji fizyki, braku systemu operacyjnego czasu rzeczywistego, braku wszystkich oporów i skomplikowanej budowy modelu.
-			Ten model także uwzględnia współczynniki tarcia kół o podłoże i jest w stanie modelować ich poślizgi.
+			Jest tak na skutek błędów numerycznych maszyny do symulacji fizyki, braku systemu operacyjnego czasu rzeczywistego, braku zamodelowania wszystkich oporów i skomplikowanej budowy modelu.
+			Model dynamiki uwzględnia współczynniki tarcia kół o podłoże i jest w stanie modelować ich poślizgi.
 			
-			\begin{figure}[H]
+			\begin{figure}[h]
 				\centering
 				\includegraphics[width=\textwidth]{plots/comparison_dt.pdf}
 					\caption{Różnica pomiędzy położeniem modelu dynamiki i modelem kinematyki modelującym zadaną pozycję i pozycję odometryczną.}
@@ -87,16 +87,17 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 				\label{plot:comparison_at}
 			\end{figure}
 			
-		\subsubsection{Zachowanie modelu dynamiki}
-			Na wykresie \ref{plot:comparison_dt} zamieszczono różnice między pozycjami odpowiednich modeli.
-			Różnice nie zmieniają się monotonicznie ze względu na zmiany kierunków prędkości robota i jego obrót wokół osi Z.
+		\subsubsection{Zachowanie się modelu dynamiki}
+			Na wykresie \ref{plot:comparison_dt} zamieszczono różnice między położeniami odpowiednich modeli.
+			Różnice nie zmieniają się monotonicznie ze względu na zmiany kierunków prędkości liniowej robota i jego prędkości kątowej wokół osi Z.
 			Dlatego też, zdarzają się przypadki w których model dynamiki zbliża się do modelu kinematyki (zadanej pozycji) po tym gdy oddalił się od niej już wcześniej.
 			
-			Oba wykresy zmieniają się w podobny sposób, gdyż na obie różnice wpływają poślizgi kół w trakcie trasy, jednak wykres odometrii jest podatny na te poślizgi.
-			Różnice pomiędzy wykresami powstają na skutek modelowania tarcia kół o podłoże. 
-			Enkodery są wstanie wykryć zwiększone tarcie kół na skutek obliczenia różnicy zadanego obrotu a faktycznego.
-			Takie tarcie towarzyszy nagłym zmianom prędkości platformy, lecz to nie powoduje że są w stanie wykryć poślizg.
-			Inaczej mówiąc, przyspieszenia platformy powodują trudności w obrocie kołami na skutek tarcia i możliwe poślizgi, lecz enkodery są w stanie wykryć i obliczyć tylko różnice w obrocie, co nie powoduje możliwości wykrycia poślizgów.
+			Różnica pomiędzy wykresami jest mała, gdyż na obie wartości wpływają poślizgi kół w trakcie pokonywania trasy.
+			Enkodery są wstanie wykryć zwiększoną siłę tarcia kół o podłoże na skutek obliczenia różnicy zadanego obrotu, a faktycznego.
+			Taka zwiększona siła tarcia towarzyszy nagłym zmianom prędkości platformy, tak samo jak poślizg, lecz to nie powoduje że na
+			podstawie pomiarów z enkoderów da się bezpośrednio wyznaczyć wartości poślizgu.
+			Inaczej mówiąc, przyspieszenia platformy powodują poślizgi i trudności w obrocie kołami na skutek sił tarcia, lecz korzystając z danych z enkoderów można wyznaczyć
+			jedynie opory obrotu kół.
 			
 			Przykładowe różnice pomiędzy wykresami występują na przykład w 15 sekundzie ruchu. 
 			W tym miejscu nastąpił nagły zwrot bazy, który spowodował tarcie, a co za tym idzie i zwiększony opór ruchu obrotowego kół.
@@ -104,7 +105,7 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 			Dlatego też różnica między pozycją odometryczną, a pozycją modelu dynamiki wzrosła mniej, niż różnica pomiędzy pozycją modelu dynamiki, a pozycją wynikającą z zadanej trasy.
 			
 			Na wykresie \ref{plot:comparison_at} są pokazane różnice pomiędzy kątem obrotu wokół osi Z tych modeli.
-			Podobnie, jak w przypadku położenia, enkodery są w stanie wykryć część zmian kierunku ruchu platformy.
+			Podobnie, jak w przypadku położenia, bazując na danych z enkoderów, można obliczyć zmiany kierunku ruchu platformy.
 			Na zmianę różnicy kąta obrotu nie wpływają jedynie zmiany prędkości kątowej, a również losowy kąt obrotu nadany platformie w przypadku poślizgów.
 			Można zauważyć, że różnica między orientacją modelu dynamiki, a orientacją wyliczoną na podstawie odometrii zwykle zmienia się mniej dynamicznie od 
 			różnicy między modelem dynamiki, a zadaną pozycją.
@@ -112,7 +113,7 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 	\subsection{Powtarzalność testów}
 		Zadano modelowi jazdę z różnymi prędkościami po trasie kwadratu, wyznaczona trasa została przedstawiona na rysunku \ref{plot:repetitions_xy}.
 		
-		\begin{figure}[h]
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=\textwidth]{plots/repetitions_xy.pdf}
 				\caption{Trasa modeli platformy, poruszających się z różną prędkością liniową po trasie kwadratu. W tym eksperymencie nie nadano prędkości kątowej.}
@@ -124,31 +125,105 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 		 %TODO Dlaczego?
 		 
 \section{Porównanie modelu z robotem}
-	\label{sec:test_velmobil}
-	Za pomocą generatora sterowania, zadano platformie ruch po trasie kwadratu w prędkością 0,1 \si{\metre\per\second}.
-	Zapisano dane generowane przez enkodery, obliczaną odometrię, pomiary skanerów laserowych oraz samo sterowanie.
-	Następnie, używając tych samych danych, przeprowadzono identyczny eksperyment na modelu, łącząc pakiety w sposób pokazany na rysunku \ref{uml:comparison}.
-	Korzystając z pakietu \texttt{laser\_scan\_matcher}, obliczono rzeczywistą pozycję platformy, korzystając z danych skanerów laserowych.
-	Określenie pozycji jest obarczone błędem, wynikającym
-	z błędów pomiarowych czujników, stąd obliczona trasa nie składa się z odcinków i posiada szum.
-	Trasy modeli i platformy pokazano na wykresie \ref{plot:velmobil_xy}.
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=\textwidth]{plots/velmobil_xy.pdf}
-			\caption{Trasa modeli robota przy jeździe po trasie kwadratu.}
-		\label{plot:velmobil_xy}
-	\end{figure}
-	
-	Charakterystyczną cechą wykresu jest to, że robot przejechał mniejszą odległość wzdłuż osi X, niż wzdłuż osi Y.
-	Może być to spowodowane różnicą w wyjściowym współczynniku tarcia kół w zależności od wyjściowego wektora prędkości kół.
-	Zgodnie z cechą kół, opisaną w sekcji \ref{sec:robot_movement}, rolki kół obracają się z największą prędkością przy ruchu w bok, a co za tym idzie, w ruchu ma udział także
-	ich tarcie obrotowe. Przy ruchu w przód, rolki nie obracają się, więc i to dodatkowe tarcie nie wpływa na ruch platformy.
-	Dlatego też platforma pokonała mniejszą odległość w jednym z kierunków.d
-	
-	%TODO dlaczego enkodery tego nie wykryły?
-	
-	
+	\subsection{Trasa bez rotacji}
+		\label{sec:test_velmobil}
+		Za pomocą generatora sterowania, zadano platformie ruch po trasie kwadratu w prędkością 0,1 \si{\metre\per\second}, zaczynając od ruchu wzdłuż osi X.
+		Zapisano dane generowane przez enkodery, obliczaną odometrię, pomiary skanerów laserowych oraz samo sterowanie.
+		Następnie, używając tych samych danych, przeprowadzono identyczny eksperyment na modelu, łącząc pakiety w sposób pokazany na rysunku \ref{uml:comparison}.
+		Korzystając z pakietu \texttt{laser\_scan\_matcher}, obliczono rzeczywistą pozycję platformy, korzystając z danych skanerów laserowych.
+		Określenie pozycji jest obarczone błędem, wynikającym
+		z błędów pomiarowych czujników, stąd obliczona trasa nie składa się z odcinków i posiada szum.
+		Trasy modeli i platformy pokazano na wykresie \ref{plot:velmobil_xy}.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_xy.pdf}
+				\caption{Trasa modeli robota przy jeździe po trasie kwadratu.}
+			\label{plot:velmobil_xy}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_xt.pdf}
+				\caption{Składowa pozycji modeli wzdłuż osi X.}
+			\label{plot:velmobil_xt}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_yt.pdf}
+				\caption{Składowa pozycji modeli wzdłuż osi Y.}
+			\label{plot:velmobil_yt}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_xy_s.pdf}
+				\caption{Przybliżenie wykresu \ref{plot:velmobil_xy}}
+			\label{plot:velmobil_xy_s}
+		\end{figure}
+		
+		Charakterystyczną cechą wykresu jest to, że robot przejechał mniejszą odległość wzdłuż osi X, niż wzdłuż osi Y.
+		Może być to spowodowane różnicą w wyjściowym współczynniku tarcia kół w zależności od wyjściowego wektora prędkości kół.
+		Zgodnie z cechą kół, opisaną w sekcji \ref{sec:robot_movement}, rolki kół obracają się z największą prędkością przy ruchu w bok, a co za tym idzie, w ruchu ma udział także
+		ich tarcie obrotowe. Przy ruchu w przód, rolki nie obracają się, więc i to dodatkowe tarcie nie wpływa na ruch platformy.
+		Dlatego też platforma pokonała mniejszą odległość w jednym z kierunków.
+		
+		Model dynamiki doznał poślizgu w trakcie 30 sekundy ruchu, która nadała mu niespodziewaną zmianę orientacji, przez co różnica w odległości od zadanej trasy znacząco wzrosła.
+		
+		\subsubsection{Nagła zmiana kierunku jazdy}
+			Na wykresie \ref{plot:velmobil_xy_s} przedstawiono przybliżenie trasy modeli i robota w trakcie drugiego skrętu.
+			Opisane niżej cechy są szczególnie dobrze widoczne na wektorowych wykresach w przypadku dokumentu elektronicznego.
+			\begin{description}
+				\item[Zadana trasa] nie pokrywa się dokładnie z przewidzianą trasą kwadratu, następują jej nieznaczne odchylenia.
+				Jest to spowodowane działaniem symulacji i programu generującego sterowanie na systemie operacyjnym, który nie był systemem czasu rzeczywistego.
+				Dodatkowo, pakiety sieciowe, zawierające wiadomości ROSa, przesyłane były przez sieć Ethernet, która nie gwarantuje przesyłu w deterministycznym czasie.
+				To powoduje, że obliczona trasa nie koniecznie pokrywa się z zadaną trasą. Co więcej, na skutek niedeterministycznego przekazywania wiadomości przez strumienie komunikacyjne w czasie symulacji, każdy model i platforma mogły otrzymać nieco inne sterowanie, a co za tym idzie, różnice pomiędzy ich położeniami mogły być spowodowane tym efektem.
+				\item[Odometria modelu] Jak wspomniano w sekcji \ref{sec:test_odometry}, trasa obliczona na jej podstawie niemal pokrywa się z zadaną trasą. 
+				Jednakże, w trakcie nagłej zmiany kierunku ruchu, tarcie kół spowodowało nieznaczną różnicę prędkości kół od zadanych wartości, co jest 
+				wykryte jako ścięcie wykresu w kierunku Y. W przypadku modelu jest ono bardzo niewielkie, ale w tym samym kierunku, jak obliczone przez odometrię robota.
+				To oznacza, że model enkoderów działa poprawnie, lecz być może jego parametry, czyli moment siły kół lub tarcie rolek nie są odpowiednio dobrane.
+				\item[Model dynamiki] wykazał bezwładność w trakcie ruchu, to znaczy, jego prędkość liniowa w kierunku osi Y nie wzrosła natychmiastowo,
+				lecz pod wpływem przyspieszenia, tak samo prędkość w kierunku X, która także nie spadła natychmiast.
+				Opóźnienie w kierunku X było większe, niż przyspieszenie w kierunku Y, tzn. model szybciej wyhamował składową X prędkości liniowej, niż nadał zadaną składową Y prędkości liniowej, co się objawia jako wydłużenie trasy w danym kącie. Takie samo zachowanie wykazały trasy odometrii.
+				\item[Skaner laserowy] Ponieważ pomiar z tego czujnika jest obarczony dużym błędem oraz małą częstotliwością pomiarów, nie można jednoznacznie określić bezpośredniego zachowania platformy w trakcie skrętu.
+				\item[Odometria robota] Korzystając z enkoderów, program sterujący platformą obliczył jej pozycję. Nie jest to dokładna pozycja platformy, jaka jest określona przez skaner laserowy, lecz trasa wyznaczona tym sposobem jest zbliżona do zadanej trasy tak samo, jak trasa odometrii modelu. 
+				Wykazuje takie same własności w trakcie skrętu, jak jej model, tylko w większym stopniu. Różnica w przyspieszeniu i opóźnieniu robota wskazuje, że 
+				robot szybciej hamuje w kierunku X, niż przyspiesza w kierunku Y. Taki sam efekt występuje po drugiej stronie trasy, przy trzecim skręcie, lecz nie w drugim skręcie.
+			\end{description}
+
+	\subsection{Trasa z rotacją}
+		Sterowanie robotem odbyło się w sposób podobny do testu \ref{sec:test_velmobil}, z tą różnicą, że przy wcześniejszej zmianie kierunku prędkości liniowej obracano platformą o 90° wokół osi Z. To znaczy, że platforma poruszała się w prawo, a następnie obróciła i ponownie poruszała się w prawo.
+		Trasa takiego przejazdu została przedstawiona na wykresie \ref{plot:velmobil_rot_xy}.
+		Można na niej zauważyć poślizg przy ruszaniu platformy, który nadał jej losowy kąt obrotu.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_rot_xy.pdf}
+				\caption{Trasa modeli robota przy jeździe po trasie kwadratu z nadaniem prędkości kątowej wokół osi Z.}
+			\label{plot:velmobil_rot_xy}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_rot_xt.pdf}
+				\caption{Składowa pozycji modeli wzdłuż osi X.}
+			\label{plot:velmobil_rot_xt}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_rot_yt.pdf}
+				\caption{Składowa pozycji modeli wzdłuż osi Y.}
+			\label{plot:velmobil_rot_yt}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/velmobil_rot_xy_s.pdf}
+				\caption{Przybliżenie wykresu \ref{plot:velmobil_rot_xy}}
+			\label{plot:velmobil_rot_xy_s}
+		\end{figure}
 	
 	
 	

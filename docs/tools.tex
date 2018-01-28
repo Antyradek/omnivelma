@@ -1,59 +1,63 @@
-\chapter{Środowiska programistyczne} 
+\chapter{Środowisko programistyczne} 
 \label{sec:tools}
 W tym rozdziale opisane są narzędzia użyte do wykonania zadania.
 
-Środowisko symulacji składa się z maszyny symulującej fizykę, odpowiedzialnej za obliczenia fizyczne, a także API do obsługi całej symulacji.
-Zaawansowana maszyna symulacyjna powinna dobrze obsługiwać tarcia, więzy na ruch obiektów, przyłożone siły, materiały fizyczne dla określania tarcia i sprężystości obiektów, 
+Środowisko symulacji składa się z symulatora, który posiada maszynę do symulacji fizyki, odpowiedzialną za obliczenia fizyczne, a także API do obsługi całej symulacji.
+Oprócz symulatora istnieją także pakiety generujące dane, filtrujące dane i zapisujące dane.
+
+Zaawansowana maszyna symulacyjna fizyki powinna poprawnie modelować tarcia, więzy na ruch obiektów, przyłożone siły, materiały fizyczne dla określania tarcia i sprężystości obiektów
 oraz wszystko to, co potrzebne do jak najwierniejszego odtworzenia zachowania rzeczywistego obiektu.
 
-Na rynku jest wiele różnych maszyn, zarówno do symulacji w czasie rzeczywistym, jak i do wyznaczania pozycji obiektów po długich obliczeniach.
-Istnieją technologie otwartoźródłowe, inne są własnościowe. Mogą używać tylko procesora, lub też być wspomagane przez kartę graficzną (na przykład \emph{PhysiX}).
+Istnieje wiele różnych maszyn, zarówno do symulacji w czasie rzeczywistym, jak i wsadowym.
+Istnieją technologie otwartoźródłowe oraz o zamkniętym kodzie. 
+Mogą używać tylko procesora, lub też być wspomagane przez kartę graficzną (na przykład \emph{PhysiX}).
 Niektóre maszyny symulują, prócz zderzeń obiektów, także rozpływ cieczy, dymy, płótna, ciała sprężyste i strukturę wewnętrzną brył, 
 lecz te funkcjonalności nie są potrzebne dla symulacji opisywanej platformy. Nazywa się je czasami ,,silnikami symulacji fizyki'', co jest bezpośrednim tłumaczeniem nazwy
-\emph{physics engine} z języka angielskiego.
+\emph{physics engine} z języka angielskiego. W projekcie użyto maszyny dostępnej domyślnie w symulatorze Gazebo.
 
 \section{\emph{Robot Operating System} (ROS)}
-	Nazwa tego programu jest myląca.
-	Nie jest to system operacyjny, lecz programowa struktura ramowa (\emph{framework}), zawierająca odpowiednie biblioteki i narzędzia do tworzenia programów sterujących \cite{ros_website}.
-	Są tu algorytmy wyznaczania tras, budowy map, manipulowania robotycznymi ramionami, itp. 
+	ROS nie jest to systemem operacyjnym, lecz programową strukturą ramową (\emph{framework}), zawierająca odpowiednie biblioteki i narzędzia do tworzenia programów sterujących \cite{ros_website}.
+	Dostępne są algorytmy wyznaczania tras, budowy map, manipulowania robotycznymi ramionami, wizualizacji danych, itp. 
 
-	Programy w środowisku ROS pisze się w C++ lub Pythonie i integruje z robotem za pomocą kilku gotowych struktur kolejek wiadomości.
-	Ta struktura ramowa zawiera także pakiety do wizualizacji odbieranych danych w formie graficznej.
+	System składa się z demona ROS, odpowiedzialnego za działanie systemu, węzłów, które są programami wykonywalnymi oraz strumieni komunikacyjnych, które 
+	pozwalają na wymianę informacji pomiędzy węzłami.
+	W kanałach komunikacyjnych przesyła się wiadomości określonego typu.
+	Zainteresowany węzeł zgłasza chęć publikacji lub subskrybowania danego typu wiadomości na dany temat, a demon automatycznie kieruje dane pomiędzy procesami.
+	Nie jest wymagane istnienie nadawcy, aby zainicjalizować odbiorcę i nie musi istnieć odbiorca nadawanej wiadomości.
 
-	Działanie systemu jest oparte o pakiety.
-	Każdy taki pakiet jest katalogiem zawierającym w sobie pliki opisujące jego parametry i skrypty CMake, używane do kompilacji.
-	Pakiet może zawierać programy wykonywalne, dane, definicje, lub inne dowolne pliki.
-	W symulacji opisywanej platformy, modele są pakietami, zawierającymi biblioteki ładowane dynamicznie, uruchamiane przez jeszcze inny pakiet symulatora.
-	Pakiety mogą być zależne od siebie, osobno w kwestii kompilacji, jak i uruchomienia.
+	Struktura danych oparta jest o pakiety. Każdy pakiet może zawierać programy wykonywalne, dane, lub definicje. Pakiety są zależne od siebie w kwestii wykonania lub kompilacji.
+	Programy mogą być pisane w C++ lub Pythonie i mogą używać funkcji bibliotecznych dostarczanych przez system.
+	
+	Pakiet jest katalogiem zawierającym w sobie pliki opisujące jego parametry i skrypty CMake, używane do kompilacji.
+	W symulacji opisywanej platformy, modele są pakietami, zawierającymi biblioteki ładowane dynamicznie i opisy budowy modeli, uruchamiane przez jeszcze inny pakiet symulatora Gazebo.
 	
 	ROS potrzebuje także działającego demona w tle. Odpowiada on za komunikację i kontroluje stany wszystkich węzłów.
 	Z punktu widzenia konstrukcji systemu, można porównać go do jądra systemu operacyjnego, a węzły do działających procesów.
 	Dlatego też nazwa \emph{Robot Operating System} nie jest przypadkowa.
 		
-	Na stronie internetowej ROSa, znajduje się bogata biblioteka pakietów, stworzonych przez inne osoby.
-	Każdy może także umieścić tam swój własny pakiet, aby inni mogli go ściągnąć i wykorzystać w swoich projektach.
+	Na stronie internetowej ROSa znajduje się bogata biblioteka pakietów.
+	Każdy może także umieścić tam swój własny pakiet, aby mógł być on wykorzystany w projektach tworzonych przez inne osoby.
 
-	Komunikacja pomiędzy programami odbywa się w sposób ciągły przez kolejki wiadomości, lub pojedyncze asynchroniczne wywołania, zwracające wynik.
-	Program(węzeł) może nadawać strumień wiadomości do kanału komunikacyjnego, ale niekoniecznie musi istnieć w tym czasie odbiornik.
-	Można buforować wiadomości, podglądać strumienie, tworzyć wykresy z danych, podłączać nadajnik do kilku odbiorników, podglądać graf komunikacji pomiędzy węzłami, itp.
+	Komunikacja pomiędzy programami odbywa się w sposób ciągły przez strumienie wiadomości lub pojedyncze asynchroniczne wywołania, zwracające wynik, jak odwołanie się klienta do serwera.
+	Można buforować wiadomości, podglądać strumienie, podłączać nadawcę do kilku odbiorników, podglądać graf komunikacji pomiędzy węzłami, itp.
 	Do wszystkiego służy bogaty zestaw komend i wbudowanych narzędzi.
 	
 	Używane wbudowane narzędzia z tej struktury ramowej to:
 	\begin{description}
-		\item[\texttt{rosbag}] Narzędzie do zbierania i odtwarzania danych, wysyłanych przez kanał komunikacyjny.
+		\item[\texttt{rosbag}] Narzędzie do zbierania i odtwarzania danych, przesyłanych przez kanał komunikacyjny.
 		\item[\texttt{catkin}] System budujący pakiety, działający na skryptach CMake.
-		\item[\texttt{roslaunch}] Program do wykonywania skryptu uruchamiającego pakiet.
+		\item[\texttt{roslaunch}] Program do wykonywania skryptu uruchamiającego węzeł w określony sposób.
 		\item[\texttt{rosrun}] Program do uruchamiania pliku wykonywalnego z pakietu.
-		\item[\texttt{rostopic}] Narzędzie do zarządzania węzłami, wysyłania i podglądania strumieni komunikacyjnych.
+		\item[\texttt{rostopic}] Narzędzie do zarządzania węzłami, wysyłania i odbierania wiadomości i podglądania strumieni komunikacyjnych.
 		\item[\texttt{roscore}] Demon ROS, zarządzający wszystkimi węzłami.
 	\end{description}
 	Dodatkowo, używane funkcjonalności funkcji bibliotecznych:
 	\begin{itemize}
 		\item Rejestracja nowego węzła w demonie ROS.
-		\item Stworzenie nadajnika strumienia wiadomości.
-		\item Stworzenie odbiornika strumienia wiadomości.
-		\item Powiadomienia.
-		\item Nadawanie macierzy przekształceń jednorodnych.
+		\item Nadawanie danych do strumienia wiadomości.
+		\item Odbieranie danych od strumienia wiadomości.
+		\item Zapisywanie danych do dziennika (wysyłanie wpisów do logów).
+		\item Zarządzanie funkcją macierzy przekształceń jednorodnych.
 		\item Zawieszenie programu.
 	\end{itemize}
 
@@ -66,72 +70,72 @@ lecz te funkcjonalności nie są potrzebne dla symulacji opisywanej platformy. N
 
 	Program wykonuje symulację z wykorzystaniem podanych modeli, używając jednego z czterech popularnych maszyn symulacyjnych: ODE, Bullet, Simbody lub DART.
 	Wszystkie te symulatory są wolnym oprogramowaniem i używane są także w innych programach, na przykład w edytorze Blender.
+	Zmiana maszyny w symulatorze wiąże się z rekompilacją całego programu.
 
 	Symulator oprócz tego ma wbudowany edytor modeli, w którym można składać i ustawiać odpowiednie obiekty razem w przestrzeni trójwymiarowej
 	i generować plik opisujący symulację.
-	Edytor budynków pozwala na stawianie wirtualnych ścian, korytarzy, drzwi i ogólnego otoczenia, w którym roboty mogą pracować i być symulowane.
 	Funkcjonalność tych edytorów jest bardzo ograniczona, brak jest tak podstawowych funkcji, jak cofanie ruchu.
 	Dlatego lepiej jest zdefiniować model w pliku tekstowym.
 	Również tworząc modele poza edytorem, posiada się nad nimi większą kontrolę, a parametry składowych da się ustawiać z dowolną dokładnością.
 
-	Gazebo przyjmuje modele w specjalnym formacie SDF. Jest to standaryzowany, zdefiniowany niezależnie od symulatora format, do opisywania budowy robotów i czujników.
+	Gazebo przyjmuje definicje modeli w specjalnym formacie SDF. Jest to standaryzowany, zdefiniowany niezależnie od symulatora format do opisywania budowy robotów i czujników.
 	Dzięki temu plik SDF może być użyty w innej symulacji, w innym programie, pod warunkiem przestrzegania standardu.
-	Składnia jest zgodna ze standardowym językiem XML, co znaczy, że może być tworzona na dowolnym edytorze tekstowym.
+	Składnia jest zgodna ze standardowym językiem XML, co znaczy że może być tworzona na dowolnym edytorze tekstowym.
 
 	Wtyczka do sterowania modelem jest skompilowaną biblioteką, dołączaną na starcie programu.
-	Tworzy się ją w C++ lub Pythonie, jako klasę dziedziczącą po abstrakcyjnej klasie dostarczonej przez Gazebo.
-	Dzięki temu może korzystać ze wszystkich funkcji systemu operacyjnego, jak na przykład komunikacja za pomocą pamięci współdzielonej.
-	Gazebo dostarcza także swój własny mechanizm kolejek wiadomości, który sprawdza się w jednolitej komunikacji z zewnętrznymi programami, korzystającymi z symulatora Gazebo, jednak jest niezależny od podobnej mechaniki ROSa. Z punktu widzenia ROSa, programy uruchamiane w Gazebo są jednym węzłem, który posiada wiele strumieni komunikacyjnych,
-	zarówno dostarczonych przez sam symulator, jak i wczytanych wtyczek.
+	Tworzy się ją w C++ lub Pythonie jako klasę dziedziczącą po abstrakcyjnej klasie dostarczonej przez Gazebo.
+	Dzięki temu może korzystać z wielu funkcji systemu operacyjnego.
+	Z punktu widzenia ROSa, programy uruchamiane w Gazebo są osobnymi węzłami, które komunikują się z węzłem symulatora za pomocą dodatkowych kanałów komunikacyjnych.
 
 	Program jest w pełni wspierany na dystrybucji GNU/Linuksa Ubuntu ale bez problemu można go także skompilować na innych dystrybucjach.
 	Nie wspiera innych systemów operacyjnych.
 	Interfejs jest dopracowany i przestrzega systemowych ustawień DPI, lecz nie korzysta z dedykowanych bibliotek do tworzenia 
-	interfejsów typu Qt, lub GTK.
+	interfejsów typu Qt lub GTK.
 	Uruchamianie programu jest proste i nie wymaga dodatkowych ustawień, wywoływania skryptów inicjalizujących, 
 	tworzenia odpowiednich katalogów, czy definiowania zmiennych systemowych.
-	Podobnie jak inne programy, tworzy ukryty katalog w katalogu domowym użytkownika, gdzie składuje wszystkie modele i logi.
+	Tworzy ukryty katalog w katalogu domowym użytkownika, gdzie składuje wszystkie dostarczone modele, ustawienia i pliki dziennika.
 
-	Gazebo może także być składnikiem systemu ROS, kod źródłowy jest dzielony w ramach wspólnej organizacji.
+	Gazebo jest dystrybuowany także jako pakiet ROS.
 	Kolejne wersje Gazebo są powiązane z kolejnymi wersjami ROSa, nie można użyć przestarzałej wersji Gazebo z nowszym ROSem i odwrotnie.
-	Symulator można zainstalować osobno lub jako jeden z pakietów ROSa.
-	Jednakże, ze względu na chęć zachowania wysokiej kompatybilności pakietów ROSa, nie zawsze najnowsza wersja symulatora jest dostarczana razem z najnowszą wersją programowalnej struktury ramowej.
+	Ze względu na chęć zachowania wysokiej kompatybilności pakietów ROSa, nie zawsze najnowsza wersja symulatora jest dostarczana razem z najnowszą wersją programowalnej struktury ramowej.
 	
-	Gazebo implementuje prawie wszystkie elementy standardu SDF, ale tylko niektóre będą używane. Posiada także kilka narzędzi do wizualizacji wygenerowanych danych, ale i ROS je posiada.
+	Gazebo implementuje prawie wszystkie elementy standardu SDF, ale tylko niektóre będą używane. Posiada także kilka narzędzi do wizualizacji wygenerowanych danych, lecz będą użyte te narzędzia, które zostały dostarczone przez środowisko ROS.
+	
 	\begin{itemize}
 		\item Symulacja fizyki za pomocą maszyny do symulacji ODE.
-		\item Całkowanie prędkości poprzez umieszczenie obiektu kinematycznego w przestrzeni wirtualnej i nadawanie mu prędkości.
-		\item Możliwość modyfikacji wektorów tarcia.
+		\item Całkowanie prędkości poprzez umieszczenie obiektu kinematycznego w przestrzeni wirtualnej.
+		\item Możliwość modyfikacji wektorów tarcia obiektom.
 		\item Dane o prędkościach i pozycjach wszystkich obiektów na scenie.
 		\item Symulacja skanera laserowego.
 		\item Symulacja jednostki inercyjnej.
-		\item Wizualizacja obiektów za pomocą siatki trójkątów i kolorów.
+		\item Wizualizacja modeli za pomocą siatki trójkątów i kolorów.
 		\item Wizualizacja kolizji, kształtów i inercji obiektów.
-		\item Wizualizacja pozycji i rotacji poszczególnych obiektów, ich lokalne układy współrzędnych.
+		\item Wizualizacja położenia i orientacji poszczególnych obiektów, ich lokalne układy współrzędnych.
 	\end{itemize}
 
 \section{V-Rep}
-	V-Rep \cite{vrep_website}, to duże i złożone środowisko, reklamujące się wieloma zaawansowanymi mechanizmami i funkcjami.
-	Pomimo otwartego kodu, użycie komercyjne jest płatne. Dla zastosowań akademickich program jest bezpłatny.
+	V-Rep \cite{vrep_website}, to duże i złożone środowisko, reklamowane posiadaniem zaawansowanych mechanizmów i funkcji przydatnych w robotyce.
+	Pomimo otwartego kodu, użycie komercyjne jest płatne. Dla zastosowań akademickich użycie jest bezpłatne.
 	Bogaty interfejs graficzny zakłada budowę i symulację wszystkiego w tym jednym programie.
 
 	W środowisku używa się dwóch z maszyn symulacyjnych, wykorzystywanych w Gazebo, czyli ODE i Bullet, oraz dodatkowo Vortex i Newton. Z tej czwórki tylko Vortex ma zamknięty kod.
 
-	Głównym mankamentem programu jest zapisywanie utworzonych w systemie modeli.
-	Program tworzy drzewiastą strukturę modelu, w pliku binarnym własnego formatu, co uniemożliwia edycję i wizualizację modelu bez uruchamiania całego programu 
+	Głównym mankamentem programu jest sposób zapisywania modeli.
+	Program tworzy pliki binarne własnego formatu, co uniemożliwia edycję i wizualizację modelu bez uruchamiania całego programu 
 	i importowania modelu do symulacji.
 	Brak przenośności, czy wsparcia systemu kontroli wersji dla takich nietekstowych plików także jest problemem.
 
 	Pisanie wtyczek najczęściej odbywa się w języku Lua. Poprzez komunikację sieciową, są też też dostępne inne języki, jak C, Matlab, Java, itp.
 	Komunikacja z innymi programami odbywa się poprzez specjalne wtyczki do środowiska.
-	API pozwala stworzyć mały, wbudowany interfejs graficzny do sterowania symulacją poprzez przyciski i suwaki.
+	API pozwala stworzyć mały, wbudowany w edytor interfejs graficzny do sterowania symulacją poprzez przyciski i suwaki.
 
 	Ze strony producenta pobrać można gotowe archiwum z programem, który nie wymaga żadnej instalacji i posiada wszystkie potrzebne zasoby do pracy i nauki, 
 	jak przykładowe modele istniejących komercyjnych robotów.
 	Program działa w trzech najpopularniejszych systemach operacyjnych --- Windows, Linux i OS X.
 	
 	Przy wykonywaniu zadania, użyty będzie jeden z gotowych modeli robotów wielokierunkowych, wspomniana wcześniej Kuka Youbot, aby na jego podstawie zbudować model opisywanej platformy. Zostanie zapisany skrypt w Lua, który będzie używał wbudowanych mechanik do komunikacji ze strukturą ramową ROS. 
-	Symulator ODE, ten sam co w Gazebo, będzie zastosowany w symulacji, ponieważ daje najlepsze wyniki. Interfejs graficzny do sterowania robotem nie będzie używany.
+	Maszyna do symulacji fizyki ODE, ta sam co w Gazebo, będzie zastosowana w symulacji, ponieważ daje najlepsze wyniki w porównaniu z innymi. 
+	Interfejs graficzny do sterowania robotem nie będzie używany.
 
 \section{Pozostałe narzędzia}
 	Do tworzenia oprogramowania na systemach Unixowych można użyć dowolnych edytorów, gdyż standardowo wszystko jest potem kompilowane za pomocą narzędzi wiersza poleceń i skryptów.
@@ -139,12 +143,19 @@ lecz te funkcjonalności nie są potrzebne dla symulacji opisywanej platformy. N
 	\begin{description}
 	\item[CMake] to popularny i używany przez ROS i Gazebo system budowy kodu. Program tworzy na podstawie swoich plików konfiguracyjnych plik \texttt{makefile} do kompilacji źródeł i łączenia bibliotek.
 	\item[GCC] będzie użyty do kompilacji, gdyż jest to najpopularniejszy tego typu program używany w GNU/Linux. Same symulatory zostały w nim skompilowane.
-	\item[KDevelop] jest graficznym edytorem tekstowym i nadaje się do pisania kompilowalnego kodu wtyczek. Można podłączyć je pod komendę \texttt{make} i korzystać z mechanizmów interpretacji błędnych linii kodu, graficznego debugowania i podobnych.
+	\item[KDevelop] jest graficznym edytorem tekstowym i nadaje się do pisania kompilowalnego kodu wtyczek.
+	Posiada mechanizm interpretacji błędnych linii kodu przed kompilacją, debugowania i podobne.
 	\item[Bash] będący bardzo popularnym językiem skryptowym nadaje się do automatyzacji pracy i uruchamiania testów w kontrolowany i prosty sposób.
-	Uniwersalne narzędzie pomagające w wielu miejscach.
 	\item[Git] jest narzędziem kontroli wersji, używanym przy bardzo wielu projektach informatycznych. Pozwala na łatwe umieszczenie kodu w repozytorium GitHub.
+	\item[FreeCAD i Blender] służyły do zarządzania modelem CAD bazy w celu wygenerowania kształtów modeli i siatek trójkątów do wizualizacji.
+	\end{description}
+	Dodatkowo, narzędzia użyte w tworzeniu tej pracy naukowej:
+	\begin{description}
 	\item[Gnuplot] służy do generowania wykresów z danych, zapisanych w pliku tekstowym.
 	\item[Dia] to graficzny edytor do tworzenia diagramów UML.
+	\item[\LaTeX] jest systemem do tworzenia dokumentów.
+	\item[Kile] to edytor kodu \LaTeX a.
+	\item[Inkscape] to program do edycji rysunków wektorowych, użyty do stworzenia większości obrazków.
 	\end{description}
 
 
