@@ -138,7 +138,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	
 	Uzyskane wartości należy zastosować w funkcjach symulatora, aby nadać obiektom wirtualnym odpowiednie prędkości.
 	
-	Sterowanie pozycją modelu kinematycznego odbywa się wyłącznie poprzez powyższy wzór, zatem w jego symulacji nie uczestniczy maszyna symulacyjna fizyki.
+	Sterowanie pozycją modelu kinematyki odbywa się wyłącznie poprzez powyższy wzór, zatem w jego symulacji nie uczestniczy maszyna symulacyjna fizyki.
 	Ten model nie reaguje na kolizje z innymi obiektami, nie reaguje na różnicę terenu i nie używa informacji o współczynnikach tarcia materiałów.
 
 	\subsection{Zachowanie}
@@ -183,7 +183,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 		Współczynniki tarcia podłoża i kół mają znaczenie w symulacji.
 		Powstają niedokładności wyznaczania pozycji, spowodowane dużą ilością zmiennych, uczestniczących w symulacji i precyzją symulatora.
 		
-		Zachowanie modelu silnie zależy od jego parametrów, a zwłaszcza od mas i momentów obrotowych ogniw.
+		Zachowanie modelu silnie zależy od jego parametrów, a zwłaszcza od mas i momentów bezwładności ogniw.
 	
 \section{Model skanera laserowego}
 	\label{sec:monokl}
@@ -203,7 +203,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	\label{fig:scan}
 	\end{figure}
 	
-	Ten pakiet składa się z wtyczki obsługującej model skanera i pliku opisującego parametry samego skanera, jak i również wygląd fizyczny, kształt, masę, moment obrotowy obudowy.
+	Ten pakiet składa się z wtyczki obsługującej model skanera i pliku opisującego parametry samego skanera, jak i również wygląd fizyczny, kształt, masę, moment bezwładności obudowy.
 	Dane z tego pakietu importowane są przez pakiet modelu dynamiki i umieszczane w odpowiednim miejscu modelu robota z odpowiednim przegubem.
 	
 \section{Model jednostki inercyjnej}
@@ -389,7 +389,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	
 	Ten program wykonywalny pobiera i generuje wiadomości zawierające zadane prędkości kół.
 	Pozwala to na sterowanie kilkoma robotami o identycznym interfejsie ze wspólnego źródła.
-	W szczególności przydaje się to przy rozdzielaniu wartości prędkości kół dla modelu platformy dynamicznej i kinematycznej.
+	W szczególności przydaje się to przy rozdzielaniu wartości prędkości kół dla modelu platformy dynamiki i kinematyki.
 	
 	Ten pakiet może być zastąpiony przez kilkukrotne uruchomienie wbudowanego w ROS narzędzia \texttt{relay}, które przekazuje pakiet z jednego strumienia komunikacyjnego do innego.
 	
@@ -397,7 +397,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 	Jest to uproszczona wersja programu, który docelowo ma być tworzony na podstawie budowanego systemu modeli.
 	
 	Program periodycznie wysyła dane o zadanej prędkości, zależnej od aktualnego stanu.
-	W zależności od danych z czujników laserowych, program zmienia swój stan i obraca kierunek obrotu o \ang{90}.
+	W zależności od danych ze skanerów laserowych, program zmienia swój stan i obraca kierunek obrotu o \ang{90}.
 	Ten sterownik dla uproszczenia nie generuje poleceń obrotu kątowego, sterowany obiekt powinien zachować swoją orientację.
 	
 	Prosty algorytm programu gwarantuje omijanie przeszkód, jednak nie bierze pod uwagę celu jazdy.
@@ -431,7 +431,7 @@ Bardziej zaawansowany program sterujący mógłby generować zadane prędkości 
 		Oryginalnie napisany dla robota o tej samej nazwie, \texttt{rviz} prezentuje trójwymiarową przestrzeń, w której można wyświetlać 
 		dane odebrane z innych węzłów.
 		
-		Pozwala to na przykład umieścić znacznik reprezentujący pozycję platformy i chmury punktów, odebranych z czujników laserowych.
+		Pozwala to na przykład umieścić znacznik reprezentujący pozycję platformy i chmury punktów, odebranych ze skanerów laserowych.
 		Jest lżejszy na zasobach w działaniu niż Gazebo i pokazuje tylko informacje z odebranych danych, a nie całe środowisko symulacji.
 		Nie posiada własnego symulatora fizyki, nie generuje żadnych danych samodzielnie.
 		

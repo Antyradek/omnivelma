@@ -9,7 +9,7 @@ W tym rozdziale opisane są szczegóły techniczne zastosowanych rozwiązań.
 	Kuka Youbot jest popularnym robotem wielokierunkowym. Jego modele są domyślnie dostępne w różnych symulatorach, między innymi w Gazebo i V-Repie. 
 	Tylko w przypadku V-Repa, istnieje wstępny sterownik do którego da się wysyłać odpowiednie wartości zadanej prędkości liniowej i kątowej, a on nadaje odpowiednie prędkości kołom, aby odpowiednio poruszać modelem (zawiera model kinematyki).
 	Wersja dla Gazebo jest statycznym obiektem z błędnie ustanowionymi przegubami, jego efektory nie są zaimplementowane.
-	Dodatkowo, V-Rep posiada modele dwóch innych pojazdów o napędach kół Mecanum i czujnikach laserowych.
+	Dodatkowo, V-Rep posiada modele dwóch innych pojazdów o napędach kół Mecanum i posiadające skanery laserowe.
 
 	Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, ważne jest aby uprościć model poprzez zamianę niektórych ogniw i dodanie sztucznych więzów.
 	Model zbliżony do budowy platformy może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
@@ -506,7 +506,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\begin{figure}[H]
 		\dirtree{%
 		.1 korpus\DTcomment{Podstawa bazy jezdnej}.
-		.2 przegub obrotowy z silnikiem\DTcomment{Nadaje moment obrotowy kołu}.
+		.2 przegub obrotowy z silnikiem\DTcomment{Nadaje moment siły kołu}.
 		.3 wirtualne koło\DTcomment{Obiekt bez kształtu, obraca się jak koło}.
 		.4 siatka trójkątów\DTcomment{Służy do wizualizacji koła}.
 		.4 przegub 45°\DTcomment{Obrócony pod kątem \ang{45} względem osi koła}.
@@ -520,7 +520,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Przez następny krok symulacji, model zachowuje się poprawnie, aż pod wpływem obrotu koła, druga oś przestaje być równoległa do osi dolnej rolki
 		co zaczyna negatywnie wpływać na symulację.
 		Zanim jednak ten efekt się nasili, orientacja koła wirtualnego jest przywracana do pozycji początkowej, razem z kierunkiem drugiej osi.
-		Ponieważ jest to powodowane nadpisaniem poprzedniej orientacji, a nie nadaniem momentu obrotowego obiektowi, 
+		Ponieważ jest to powodowane nadpisaniem poprzedniej orientacji, a nie nadaniem momentu siły obiektowi, 
 		maszyna symulacyjna nie bierze w takim przypadku pod uwagę sił tarcia kuli o podłoże. 
 
 		Niestety, nie jest możliwe zastosowanie tego rozwiązania wprost w Gazebo, gdyż struktura drzewiasta obiektów nie jest zaimplementowana, jak to wcześniej zostało opisane.
@@ -584,7 +584,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\begin{figure}[H]
 		\dirtree{%
 		.1 korpus\DTcomment{Podstawa bazy}.
-		.2 przegub obrotowy\DTcomment{Nadaje moment obrotowy}.
+		.2 przegub obrotowy\DTcomment{Nadaje moment siły}.
 		.3 kula\DTcomment{Modyfikowane wektory tarcia}.
 		.3 siatka trójkątów\DTcomment{Odpowiada za wizualizację koła}.
 		}
@@ -623,7 +623,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		a także momentów ustawiania tej prędkości.
 		Ustawianie zadanej prędkości powinno być zsynchronizowane z krokami symulacji a nie częstotliwością odbioru wiadomości ze strumienia komunikacyjnego.
 		
-		Najlepsze efekty daje nie nadawanie prędkości obiektom, a nadanie docelowej prędkości i maksymalnego momentu obrotowego.
+		Najlepsze efekty daje nie nadawanie prędkości obiektom, a nadanie docelowej prędkości i maksymalnego momentu siły.
 		Maszyna symulacji fizyki wtedy odpowiednio zinterpretuje dane, obliczając również reakcję na obu końcach przegubu.
 		Jest także możliwość ustawienia algorytmu sterownika, na przykład PID, ale takiemu należy określić odpowiednie parametry do pracy.
 		
@@ -637,8 +637,8 @@ virtual bool SetParam (const std::string& key,
 		Metoda przyjmuje nazwę modyfikowanej wartości, oś przegubu (dla silników to zawsze będzie jedyna oś \texttt{0}) oraz nadawaną wartość.
 		Modyfikowane wartości to:
 		\begin{description}
-			\item[\texttt{fmax}] Maksymalny moment obrotowy w \si{\newton\metre}, używany przez maszynę symulacyjną do nadania docelowej prędkości kątowej przegubowi. Ustawiany raz przy inicjalizacji modelu. Ponieważ w platformie ta wartość nigdy nie będzie osiągnięta ze względu na ograniczenia energetyczne, można założyć tutaj wysoką liczbę 100 \si{\newton\metre}.
-			\item[\texttt{vel}] Docelowa prędkość obrotowa w \si{\radian\per\second} zapamiętana i ustawiana w każdym kroku symulacji, nadpisywana na odbiór nowych wartości z komunikacyjnego strumienia wiadomości.
+			\item[\texttt{fmax}] Maksymalny moment siły w \si{\newton\metre}, używany przez maszynę symulacyjną do nadania docelowej prędkości kątowej przegubowi. Ustawiany raz przy inicjalizacji modelu. Ponieważ w platformie ta wartość nigdy nie będzie osiągnięta ze względu na ograniczenia energetyczne, można założyć tutaj wysoką liczbę 100 \si{\newton\metre}.
+			\item[\texttt{vel}] Docelowa prędkość kątowa w \si{\radian\per\second} zapamiętana i ustawiana w każdym kroku symulacji, nadpisywana na odbiór nowych wartości z komunikacyjnego strumienia wiadomości.
 		\end{description}
 	
 	\subsection{Komunikacja}
@@ -655,7 +655,7 @@ virtual bool SetParam (const std::string& key,
 		\begin{itemize}
 		\item \texttt{omnivelma\_msgs/Vels} z zadanymi prędkościami kół.
 		\item Wywołanie ustawiające współczynniki tarcia wzdłuż wektorów $f_0$ i $f_1$.
-		\item Wywołanie ustawiające masy i momenty obrotowe niektórych elementów składowych konstrukcji.
+		\item Wywołanie ustawiające masy i momenty bezwładności niektórych elementów składowych konstrukcji.
 		\end{itemize}
 
 	\subsection{Rozszerzenie modelu}
@@ -783,7 +783,7 @@ virtual bool SetParam (const std::string& key,
 			Jednak takie rozwiązanie niszczy pakietową budowę środowiska i nie pozwala na użycie modeli skanerów w innych modelach.
 			
 			Należy zadbać o ustawienie odpowiedniej struktury macierzy przekształceń jednorodnych, opisanej w sekcji \ref{sec:frames}.
-			Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROS położenia i orientacje środków czujników laserowych, dla uproszczenia
+			Symulator platformy zawiera drugi program, który w każdym cyklu symulacji nadaje demonowi ROS położenia i orientacje środków skanerów laserowych, dla uproszczenia
 			względem początku układu współrzędnych, punktu (0,0,0). 
 			Program sterujący modelem samej platformy także nadaje przekształcenie z pozycją platformy względem globalnego środka układu współrzędnych.
 			Dokładnie taki sam efekt byłby, gdyby nadawać przekształcenie ze stałą pozycją czujników laserowych, ale względem platformy (której przekształcenie nadawane jest przez inny sterownik).
@@ -842,7 +842,7 @@ virtual bool SetParam (const std::string& key,
 	\begin{itemize}
 		\item ROS posiada specjalną wiadomość typu \texttt{sensor\_msgs/Imu}, do przekazywania pomiarów pomiędzy węzłami.
 		\item SDF definiuje element typu \texttt{imu} w sekcji czujników, gdzie można mu zdefiniować położenie w robocie i współczynniki błędów pomiarowych.
-		\item Gazebo daje wsparcie klasy czujnika inercji z odczytem wygenerowanych przez maszynę symulacji wartości.
+		\item Gazebo posiada klasy modelu jednostki inercji z odczytem wygenerowanych przez maszynę symulacji wartości.
 	\end{itemize}
 	
 	Warto tutaj nadmienić, że struktura wiadomości ROSa posiada pola dla danych, które nie koniecznie mogą być wygenerowane przez czujnik rzeczywisty.
@@ -979,7 +979,7 @@ virtual bool SetParam (const std::string& key,
 	Robi się to wewnętrznie w identyczny sposób, jak w przypadku kół platformy, co zostało opisane w sekcji \ref{sec:friction}.
 	
 	W tym przypadku jednak powinno się ustawić identyczne wektory tarć $f_0$ i $f_1$, aby podłoże symulowało równe tarcie we wszystkich kierunkach.
-	Tak samo, jak w przypadku modelu platformy dynamicznej, program nadający podłożu odpowiednie wektory tarcia przyjmuje asynchroniczne wywołanie 
+	Tak samo, jak w przypadku modelu dynamiki, program nadający podłożu odpowiednie wektory tarcia przyjmuje asynchroniczne wywołanie 
 	typu \texttt{omnivelma\_msgs/SetFriction}, zawierające dwie wartości zmiennoprzecinkowe.
 	
 	
@@ -1021,7 +1021,7 @@ virtual bool SetParam (const std::string& key,
 \section{Rozdzielacz wiadomości}
 	Ten program wykonywalny pobiera i generuje wiadomości typu \texttt{omnivelma\_msgs/Vels}, zawierające prędkości kół.
 	Pozwala to na sterowanie kilkoma robotami o identycznym interfejsie ze wspólnego źródła.
-	W szczególności przydaje się to przy rozdzielaniu wartości prędkości kół dla modelu platformy dynamicznej i kinematycznej.
+	W szczególności przydaje się to przy rozdzielaniu wartości prędkości kół dla modelu platformy dynamiki i kinematyki.
 	
 	Może być zastąpiony przez wbudowane narzędzie, lecz ten jest zaimplementowany w C++, a gotowe narzędzia korzystają z wolniejszego języka interpretowanego Python.
 
