@@ -6,25 +6,22 @@ W tym rozdziale opisane są szczegóły techniczne zastosowanych rozwiązań.
 	Istnieją także inne modele jeżdżących robotów na kołach szwedzkich.
 	Można z nich brać przykład i sugerować się źródłami kodu i budową modeli.
 
-	Kuka Youbot jest popularnym robotem wielokierunkowym. Jego modele są domyślnie dostępne w różnych symulatorach, między innymi w Gazebo i V-Repie, które są dobrymi kandydatami do 
-	użycia w projekcie. Tylko w przypadku V-Repa, istnieje wstępny sterownik do którego da się wysyłać odpowiednie wartości zadanej prędkości liniowej i kątowej, a on nadaje odpowiednie prędkości kołom, aby odpowiednio poruszać modelem.
+	Kuka Youbot jest popularnym robotem wielokierunkowym. Jego modele są domyślnie dostępne w różnych symulatorach, między innymi w Gazebo i V-Repie. 
+	Tylko w przypadku V-Repa, istnieje wstępny sterownik do którego da się wysyłać odpowiednie wartości zadanej prędkości liniowej i kątowej, a on nadaje odpowiednie prędkości kołom, aby odpowiednio poruszać modelem (zawiera model kinematyki).
 	Wersja dla Gazebo jest statycznym obiektem z błędnie ustanowionymi przegubami, jego efektory nie są zaimplementowane.
-	
-	Dodatkowo, V-Rep posiada wbudowane dwa inne pojazdy o napędach kół Mecanum i czujnikach laserowych.
-	Zewnętrzne modele także pomogą przy wstępnej weryfikacji zachowania się budowanego tutaj modelu, czy nie zachowuje się nadzwyczaj dziwnie w pierwszych fazach projektu.
+	Dodatkowo, V-Rep posiada modele dwóch innych pojazdów o napędach kół Mecanum i czujnikach laserowych.
 
-	Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, ważne jest aby uprościć model, poprzez zamianę niektórych składowych i dodanie sztucznych więzów.
-	Całościowy model może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
-	Dokładny model także jest znacznie trudniej poprawnie wymodelować, ze względu na liczne tarcia i poślizgi rolek.
+	Ze względu na niezwykle zaawansowany obiekt kół i kształt rolek, ważne jest aby uprościć model poprzez zamianę niektórych ogniw i dodanie sztucznych więzów.
+	Model zbliżony do budowy platformy może być zbyt skomplikowany, aby maszyny symulacji mogły go obliczać w czasie rzeczywistym.
 	Proponowane uproszczenia modeli opisane są w sekcji \ref{sec:omnivelma}.
 	
 \section{Model 3D}
-	Model 3D bazy mobilnej, opisany równaniami matematycznymi, powinien mieć zachowanie zbliżone do oryginału, najbardziej jak to tylko możliwe.
-	Musi uwzględniać masy i momenty bezwładności elementów składowych, a także wszystkie tarcia.
-	Model obejmuje więzy na ruchome elementy, takie jak koła i rolki, aby umożliwić symulację przegubów.
+	Model 3D bazy mobilnej, opisany równaniami matematycznymi, powinien mieć zachowanie zbliżone do oryginału najbardziej jak to tylko możliwe.
+	Musi uwzględniać masy i momenty bezwładności składowych ogniw, a także wszystkie tarcia.
+	Model obejmuje więzy na ruchome ogniwa, takie jak koła i rolki, aby umożliwić symulację przegubów.
 
-	Model składa się z elementów, odwzorowujących rzeczywiste części składowe bazy mobilnej.
-	Elementy posiadają takie cechy, jak:
+	Model składa się z ogniw, odwzorowujących rzeczywiste części składowe bazy mobilnej.
+	Posiadają one takie cechy, jak:
 	\begin{itemize}
 		\item Pozycja w modelu.
 		\item Masa.
@@ -34,45 +31,40 @@ W tym rozdziale opisane są szczegóły techniczne zastosowanych rozwiązań.
 		\item Wygląd.
 	\end{itemize}
 
-	Dodatkowo, należy uwzględnić wszystkie więzy, w postaci symulowanych przegubów.
-	W przypadku tej bazy istnieje typ więzów o jednym stopniu swobody, używany przy połączeniu przedniej i tylnej części platformy, oraz 
-	jako piasty kół i rolek. Można także uznać, że więzy bez stopni swobody używane są do trwałego połączenia czujników z platformą i transportowanym robotem.
-	Więzy mogą oddziaływać siłą na elementy do których są podłączone, symulując silniki.
+	Dodatkowo, należy uwzględnić wszystkie więzy w postaci symulowanych przegubów.
+	W przypadku tej bazy, istnieje typ przegubów o jednym stopniu swobody, używany przy połączeniu przedniej i tylnej części platformy oraz 
+	jako piasty kół i rolek. Przeguby bez stopni swobody używane są do trwałego połączenia czujników z platformą i transportowanym robotem dwuramiennym.
+	Więzy mogą oddziaływać momentem siły na elementy do których są podłączone, symulując silniki.
 
-	Elementy składowe i symulowane przeguby oddziałują bezpośrednio z maszyną do symulacji fizycznej. 
+	Ogniwa i symulowane przeguby oddziałują bezpośrednio z maszyną do symulacji fizycznej. 
 	To kształt, masy i momenty bezwładności brył są argumentami funkcji liczących.
-	Maszyna symulacyjna oblicza odpowiednie prędkości i nadaje je podanym obiektom w podobny sposób, jak ma to miejsce w rzeczywistości.
+	Maszyna symulacyjna oblicza odpowiednie prędkości i nadaje je podanym obiektom.
 
 	Do modelu doczepia się wirtualne czujniki, generujące odpowiednie dane na podstawie symulacji i rozkładu losowego.
 	Nie są to pełne dane o stanie modelu, jakie posiada maszyna do symulacji, gdyż czujniki fizyczne również nigdy nie mają pełnej informacji o stanie urządzenia.
 	Należy dodać losowy szum i błędy, aby przybliżyć ich zachowanie do rzeczywistych czujników.
 
-	Dla odpowiedniej wizualizacji symulacji, można wykorzystać istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do fizycznego robota. Nie ma to znaczenia dla przebiegu symulacji, gdyż ta część nie bierze udziału w obliczeniach maszyny symulującej fizykę.
+	Dla odpowiedniej wizualizacji symulacji wykorzystano istniejący model CAD do stworzenia siatki trójwymiarowej i nadania symulowanemu obiektowi wyglądu zbliżonego do robota.
 
-	W środowisku wirtualnym należy stworzyć program o podobnym działaniu.
-	Powinien przyjmować dane w dokładnie takim samym formacie, jak opisany wyżej układ, aby był łatwo wymienialny na sterownik fizycznego urządzenia bez ingerencji w główny program sterujący.
-	Zamiast zamieniać odczytane dane na analogowe wartości, sterownik wywołuje odpowiednie funkcje maszyny symulacyjnej, aby wywołać taki sam efekt, co na rzeczywistym efektorze, lecz w wirtualnej przestrzeni symulacji.
-	Jako argumenty podaje parametry fizyczne symulowanego obiektu, oraz przyłożone siły.
-
-	
 \section{Ogólne typy pakietów}
 	Pakiety można podzielić na kilka typów, w zależności od sposobu implementacji.
-	Wszystkie programy napisane są w języku C++ i korzystają z nowoczesnych rozwiązań języka jak referencje i sprytne wskaźniki.
+	Wszystkie programy napisane są w języku C++ i korzystają z nowoczesnych funkcji języka, jak referencje i sprytne wskaźniki.
 	
 	\subsection{Program wykonywalny w ROS}
 		\label{sec:ros_exe}
 		Jest to prosty program, który korzysta z kilku funkcji ROSa, między innymi:
 		\begin{itemize}
 			\item Inicjalizacja węzła.
-			\item Stworzenie nadajnika strumienia wiadomości.
-			\item Stworzenie odbiornika strumienia wiadomości.
+			\item Subskrypcja strumienia wiadomości.
+			\item Publikowanie danych do strumienia wiadomości.
 			\item Zawieszenie procesu.
-			\item Generowanie logów, jak informacje i ostrzeżenia.
+			\item Generowanie wpisów dziennika, jak informacje pomocnicze, błędy i ostrzeżenia.
 		\end{itemize}
 		
 		\subsubsection{Inicjalizacja}
 			Na początku głównej funkcji programu \mintinline{cpp}{int main(int argc, char** argv)}, należy podać argumenty wywołania programu
-			do funkcji inicjalizującej ROSa. Ta funkcja odczytuje argumenty dotyczące tej programowalnej struktury ramowej i modyfikuje zmienne w razie problemów, usuwając niektóre argumenty, aby reszta programu parsowała poprawne dane.
+			do funkcji inicjalizującej ROSa. To, ponieważ program może być uruchomiony z dodatkowymi parametrami, które dotyczą działania ROSa, a nie samego działania programu.
+			Ta funkcja odczytuje odpowiednie parametry i modyfikuje zmienne w razie problemów, usuwając niektóre argumenty, aby reszta kodu parsowała dane przeznaczone dla programu.
 			\begin{minted}{cpp}
 void ros::init (int& argc, 
 	char** argv, 
@@ -81,15 +73,13 @@ void ros::init (int& argc,
 			\end{minted}
 			Ta funkcja przyjmuje także nazwę nowego węzła, jaka zostanie zgłoszona do demona ROS oraz flagi opisujące inicjalizację.
 			Nazwa musi być unikalna dla całego systemu, nie mogą działać dwa węzły o tej samej nazwie.
-			Flagi opisują, czy program powinien mieć zawieszone wypisywanie logów, czy nazwa powinna być anonimowa (co pozwala na uruchomienie wielu instancji tego samego programu)
-			oraz czy program powinien się zakończyć na otrzymanie sygnału systemowego \texttt{SIGINT}.
+			Flagi opisują, czy program powinien mieć zawieszone wypisywanie logów, czy nazwa powinna posiadać losowy dopisek (co pozwala na uruchomienie wielu instancji tego samego programu)
+			oraz czy program powinien się zakończyć na otrzymanie sygnału systemowego \texttt{SIGINT}, czy w programie zdefiniowana jest funkcja obsługująca odebranie tego sygnału.
 			
-			Następnie program parsuje argumenty wywołania, w zależności od tego, jakie zadanie ma wykonywać.
-			
-		\subsubsection{Stworzenie nadajnika}
+		\subsubsection{Nadawanie wiadomości do strumienia}
 			Kolejnym krokiem jest otwarcie komunikacji poprzez strumienie wiadomości z innymi węzłami.
 			W tym celu tworzy się obiekt węzła, obiekt klasy \mintinline{cpp}{ros::NodeHandle}, którego konstruktor nie przyjmuje argumentów.
-			Ten obiekt służy do komunikacji ze środowiskiem ROSa, pozwala na tworzenie nadajników i odbiorników.
+			Ten obiekt służy do komunikacji ze środowiskiem ROSa, pozwala na tworzenie publikatorów i subskrybentów danych.
 			Programista musi jedynie się upewnić, aby zachować referencję do obiektu przez cały czas życia programu, gdyż destrukcja obiektu odłącza 
 			program od demona ROSa.
 			\begin{minted}{cpp}
@@ -98,22 +88,27 @@ Publisher ros::NodeHandle::advertise (const std::string& topic,
 	uint32_t queue_size,
 	bool latch = false)	
 			\end{minted}
-			Korzystając z obiektu węzła, można zarejestrować, za pomocą powyższej funkcji, nowe nadajniki strumienia wiadomości.
-			Jest to metoda szablonowa, to oznacza, że przy wywołaniu należy podać typ wiadomości, jaką węzeł powinien nadawać.
-			Następne argumenty to nazwa strumienia, wielkość bufora wysłanych wiadomości, oraz opcjonalny argument, decydujący o tym czy ostatnia nadana wiadomość powinna
-			być buforowana i wysłana natychmiast na podłączenie się nowego odbiorcy do tego strumienia. Metoda zwraca obiekt nadajnika który to może być użyty do nadawania wiadomości.
+			Korzystając z obiektu węzła można zarejestrować, za pomocą powyższej funkcji, nowego publikatora do strumienia wiadomości.
+			Jest to metoda szablonowa, to oznacza że przy wywołaniu należy podać typ wiadomości, jaką węzeł powinien nadawać.
+			
+			Za pomocą operatora negacji można sprawdzić, czy stworzenie obiektu przebiegło pomyślnie, a jeśli nie, poinformować użytkownika i zakończyć program.
+			
+			Ponieważ kod jest kompilowany, programy w C++, w przeciwieństwie do programów w Pythonie, nie są w stanie dynamicznie odbierać i wysyłać wiadomości różnych typów.
+			To znaczy, że każdy węzeł zaimplementowany w tym języku będzie działał jedynie z określonymi wcześniej danymi.
+			
+			Następne argumenty to nazwa strumienia, wielkość bufora wysłanych wiadomości oraz opcjonalny argument, decydujący o tym czy ostatnia nadana wiadomość powinna
+			być buforowana. Metoda zwraca obiekt publikatora, który to może być użyty do nadawania wiadomości.
 			\begin{minted}{cpp}
 template<class M>
 void ros::Publisher::publish(const M& message) const
 			\end{minted}		
-			Za pomocą operatora negacji można sprawdzić, czy stworzenie obiektu przebiegło pomyślnie, a jeśli nie, poinformować użytkownika i zakończyć program.
 			
-			Wysłanie wiadomości to stworzenie nowego obiektu klasy wiadomości i podanie go do metody obiektu nadajnika.
+			Wysłanie wiadomości to stworzenie nowego obiektu klasy wiadomości i podanie go do powyższej metody publikatora.
 			To także jest funkcja szablonowa, korzystająca z typu podanego przy tworzeniu obiektu.
 			
-		\subsubsection{Stworzenie odbiornika}
-			W nieco inny sposób należy stworzyć odbiornik strumienia wiadomości.
-			Po każdej odebranej wiadomości, wywoływana jest podana w argumencie funkcja, która przyjmuje i parsuje wiadomość.
+		\subsubsection{Odbiór wiadomości ze strumienia}
+			W nieco inny sposób należy stworzyć subskrybenta strumienia wiadomości.
+			Przy każdej odebranej wiadomości, wywoływana jest podana w argumencie funkcja.
 			Można to porównać do działania przerwań systemowych.
 			\begin{minted}{cpp}
 template<class M>
@@ -124,17 +119,16 @@ Subscriber ros::NodeHandle::subscribe(const std::string& topic,
 			\end{minted}
 			Podana metoda, podobnie, jak w nadajniku, jest metodą obiektu węzła.
 			Przyjmuje nazwę strumienia wiadomości, wielkość bufora, wskaźnik na funkcję obsługi oraz opcjonalnie informacje dotyczące połączenia.
-			Te informacje to takie jak typ używanego protokołu (datagramowy, czy połączeniowy), wielkość pakietu sieciowego, itp.
 			
 			Metoda posiada wiele różnych odmian, w zależności od sposobu podania funkcji obsługującej. Zamiast funkcji, może być to na przykład funktor.
-			Wywołanie tworzy nowy obiekt odbiornika, na którym przy normalnym działaniu nie trzeba wywoływać żadnych metod.
+			Wywołanie tworzy nowy obiekt subskrybenta, na którym przy normalnym działaniu nie trzeba wywoływać żadnych metod.
 			Jednakże, nadal należy posiadać referencję do niego, gdyż destrukcja obiektu automatycznie zamyka połączenie.
 			
-			Jeśli strumień wiadomości o takiej nazwie nie istnieje, metoda nie zwraca błędu. To ponieważ nadal może w przyszłości pojawić się
-			nadajnik o odpowiedniej nazwie. Dodatkowo to utrudniałoby jednoczesne uruchamianie kilku węzłów zależnych od siebie, gdyż należałoby się upewnić, że
+			Jeśli strumień wiadomości o takiej nazwie nie istnieje, metoda nie zwraca błędu. Tak jest, ponieważ nadal może w przyszłości pojawić się
+			nadajnik o odpowiedniej nazwie. Dodatkowo, to utrudniałoby jednoczesne uruchamianie kilku węzłów zależnych od siebie, gdyż należałoby się upewnić, że
 			nadajniki uruchomią się pierwsze. A także nie pozwalałoby na połączenie strumieni wiadomości w cykle.
 			
-		\subsubsection{Wypisywanie logów}
+		\subsubsection{Zapisywanie danych do dziennika}
 			Pomimo, że program może zwracać dane na standardowe wyjście i błąd, użycie funkcji ROSa pozwala na selektywne ustawienie minimalnej ważności zwracanych powiadomień.
 			ROS także koloruje tekst i dodaje przedrostek z czasem nadania powiadomienia.
 			
@@ -156,13 +150,14 @@ ROS_INFO_STREAM(...)
 			Wywołanie \mintinline{cpp}{ros::spin()} powoduje zawieszenie się głównego wątku programu. 
 			W ten sposób program będzie działał jedynie na odbiór wiadomości.
 			Istnieją funkcje systemowe, które pozwalają na dokonanie tego samego, lecz API ROSa jest prostsze w użyciu, a także może wykonywać dodatkowe akcje
-			związane z demonem.
+			związane z obsługą demona.
 			
 		\subsubsection{Przykład}
 			Przykładowe użycie powyższych metod przy implementacji prostego filtra wiadomości. 
-			Ten kod tworzy nadajnik i odbiornik wiadomości, zawierającej prędkość liniową i kątową, a następnie na odbiór każdej wiadomości,
-			przekazuje dalej jedynie prędkość liniową w płaszczyźnie platformy i prędkość kątową wokół osi Z, skierowanej w górę.
-			Dzięki temu robot nie otrzyma sterowania w niemożliwym do poruszania się kierunku.
+			Ten kod tworzy publikatora i subskrybenta wiadomości, zawierającej prędkość liniową i kątową, a następnie na odbiór każdej wiadomości,
+			przekazuje dalej jedynie prędkość liniową w płaszczyźnie platformy i prędkość kątową wokół osi Z.
+			Dzięki temu robot nie otrzyma sterowania w niemożliwym do poruszania się kierunku. Ten kod nie jest użyty w żadnym z pakietów, model 
+			ignoruje dane z nieistotnych pól.
 			
 			Następnie wątek główny zostaje uśpiony, gdyż program działa jedynie w systemie akcja-reakcja.
 			Wysyła wiadomość jedynie po otrzymaniu innej.
@@ -170,13 +165,14 @@ ROS_INFO_STREAM(...)
 			\begin{minted}{cpp}
 #include <iostream>
 #include <string>
+//nagłówek głównego API ROSa
 #include <ros/ros.h>
-//nagłówek dla funkcji wypisujących powiadomienia
+//nagłówek dla funkcji piszących do dziennika
 #include <ros/console.h>
-//nagłówek z klasą wiadomości
+//nagłówek z typem wiadomości
 #include <geometry_msgs/Twist.h>
 			
-//obiekt nadajnika
+//obiekt publikatora
 ros::Publisher publisher;
 			
 //funkcja obsługi odbioru wiadomości
@@ -208,25 +204,26 @@ int main(int argc, char** argv)
 	//obiekt węzła
 	ros::NodeHandle handle;
 	
-	//stworzenie nadajnika wiadomości
+	//stworzenie publikatora
 	publisher = handle.advertise<geometry_msgs::Twist>(outTopic, 1000);
 	if(!publisher)
 	{
-		ROS_FATAL_STREAM("Nie udało się stworzyć nadajnika " << outTopic);
+		ROS_FATAL_STREAM("Nie udało się stworzyć publikatora " << outTopic);
 		return -1;
 	}
 	
-	//stworzenie odbiornika wiadomości
+	//stworzenie subskrybenta
 	ros::Subscriber subscriber;
 	subscriber = handle.subscribe<geometry_msgs::Twist>(inTopic, 
 		1000, callbackFun);
 	if(!subscriber)
 	{
-		ROS_FATAL_STREAM("Nie udało się stworzyć odbiornika " << inTopic);
+		ROS_FATAL_STREAM("Nie udało się stworzyć subskrybenta " << inTopic);
 		return -1;
 	}
 
 	//zawieszenie wykonywania głównego wątku
+	//ROS obsłuży sygnał SIGINT i odblokuje program
 	ros::spin();
 	return 0;
 }
@@ -234,48 +231,51 @@ int main(int argc, char** argv)
 			
 	\subsection{Wtyczka Gazebo}
 		\label{sec:gazebo_bib}
-		Wtyczka do symulatora Gazebo jest klasą, dziedziczącą po klasie \texttt{ModelPlugin}, lub
-		w przypadku modelu czujnika po \texttt{SensorPlugin}.
+		Wtyczka do symulatora Gazebo jest klasą, w przypadku modeli dziedziczącą po \texttt{ModelPlugin},
+		w przypadku modelu czujnika po \texttt{SensorPlugin} lub dla wtyczki obsługującej symulację --- \texttt{WorldPlugin}.
 		Jest kompilowana do postaci biblioteki i ładowana dynamicznie przy uruchomieniu symulatora.
-		Gazebo, prócz wywołania ewentualnego konstruktora, wywołuje metodę wirtualną
+		Gazebo, prócz wywołania ewentualnego konstruktora, wywołuje metodę wirtualną, zależną od typu wtyczki.
 		\begin{minted}{cpp}
 void Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
+void Load(sensors::SensorPtr parent, sdf::ElementPtr sdf)
+void Load(physics::WorldPtr world, sdf::ElementPtr sdf)
 		\end{minted}
-		która to posiada argument typu sprytny wskaźnik na obiekt modelu, który obsługuje ta wtyczka, oraz wskaźnik na element pliku SDF, opisujący go.
+		która to posiada argument typu sprytny wskaźnik na obiekt, który obsługuje ta wtyczka oraz wskaźnik na element pliku SDF, odpowiedzialny za załadowanie programu do symulatora.
+		Przez drugi argument można przekazać dodatkowe dane do programu. Jeśli plik ma zdefiniowane dodatkowe elementy w tym miejscu, można ich wartości odczytać.
 		
 		Jeśli chodzi o komunikację z ROSem, to może ona być zrealizowana identycznie, jak w sekcji \ref{sec:ros_exe}, 
 		z tą różnicą, że nie jest wymagana inicjalizacja, gdyż logicznie cały symulator działa jak jeden węzeł.
 		Również, jeśli chodzi o referencje do obiektów, to należy je zachować po opuszczeniu metody \texttt{Load}, to znaczy
-		że obiekty węzła, nadawców i odbiorców powinny być przechowywane jako pola stworzonej klasy.
+		że obiekty węzła, nadawców i odbiorców powinny być przechowywane jako pola stworzonej klasy, inaczej węzeł odłączy się od demona i strumieni wiadomości zaraz po inicjalizacji.
 
 		\subsubsection{Wywołanie na kroki symulacji}
 			Główną mechaniką używaną u wtyczek jest periodyczne wywołanie kodu co każdy krok symulacji.
 			Pozwala to na przykład nadawać aktualną pozycję modelu.
 			Gazebo obsługuje kilka zdarzeń, wywoływanych na różne części symulacji.
-			Ten, do którego należy się podłączyć to \texttt{WorldUpdateBegin}, połączenie się do tego zdarzenia wywołuje następującą metodę:
+			Można się podłączyć do odpowiedniego zdarzenia za pomocą funktora w poniższej metodzie.
+			Ta metoda jest implementowana osobno dla każdego typu zdarzenia.
 			\begin{minted}{cpp}
 ConnectionPtr Connect(const boost::function< T > & _subscriber)	
 			\end{minted}
-			Oznacza to tyle, że do podłączenia można użyć funktorów z biblioteki \texttt{boost}, lub lepiej, ze standardu C++.
-			Przykładowe podłączenie do własnej zdefiniowanej metody \texttt{OnUpdate} może wyglądać w ten sposób:
+			Przykładowe podłączenie do własnej zdefiniowanej metody \texttt{OnUpdate} do zdarzenia \texttt{WorldUpdateBegin} może wyglądać w ten sposób:
 			\begin{minted}{cpp}
 event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	std::bind(&MyModelDriver::OnUpdate, this));
 			\end{minted}
-			Należy zatrzymać zwrócony sprytny wskaźnik do połączenia.
+			Należy zatrzymać referencję do zwróconego obiektu.
 			
-\section{Mechanika macierzy przekształceń jednorodnych}
+\section{Mechanika przekształceń układów współrzędnych}
 	\label{sec:frames}
 	Komunikacja poprzez pakiety wiadomości nie jest jedynym sposobem na przekazywanie informacji w środowisku ROS.
-	Istnieje także mechanika macierzy transformacji \texttt{TF2}.
+	Istnieje także mechanika macierzy przekształceń jednorodnych \texttt{TF2}.
 	Jest to idea podobna do niezaimplementowanej funkcjonalności Gazebo, ale nie jest automatyczna i nie ogranicza się tylko do jednego programu.
 	
-	Macierz transformacji jest informacją o aktualnym położeniu i orientacji jakiegoś obiektu względem innego.
-	Polega na wysłaniu pakietu typu \texttt{geometry\_msgs/TransformStamped} prosto do demona ROS.
+	Macierz przekształcenia jest informacją o aktualnym położeniu i orientacji jakiegoś obiektu względem innego.
+	Polega na wysłaniu pakietu typu \texttt{geometry\_msgs/TransformStamped} prosto do demona ROS, tworząc odpowiedni obiekt publikatora.
 	Pakiet zawiera:
 	\begin{itemize}
-		\item Nagłówek z czasem nadania wiadomości i identyfikatorem, oraz informacją względem jakiej pozycji podane są poniższe dane.
-		\item Nazwa nowej pozycji, jaka powstanie po zastosowaniu podanej transformacji do określonej w nagłówku pozycji.
+		\item Nagłówek z czasem nadania wiadomości i identyfikatorem oraz nazwą przekształcenia względem którego podane są poniższe dane.
+		\item Nazwa nowej pozycji, jaka powstanie po zastosowaniu podanego przekształcenia do tego określonego w nagłówku.
 		\item Lokalne położenie.
 		\item Lokalna orientacja.
 	\end{itemize}
@@ -292,7 +292,7 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	W takim przypadku, każdy segment symulacji mógłby przekazywać swój identyfikator, identyfikator obiektu którym steruje i jego pozycję do demona ROSa.
 	Inne programy, na przykład do wizualizacji, mogłyby wtedy zapytać się demona o dokładne pozycje przegubów w przestrzeni kartezjańskiej, a on obliczyłby je i zwrócił wynik.
 	
-	W symulacji platformy wielokierunkowej, mechanika przekształceń jednorodnych jest potrzebna, gdyż wiadomość zwierająca pomiary z czujnika laserowego nie posiada informacji o aktualnej pozycji samego czujnika w przestrzeni, a jedynie wspomniany identyfikator. 
+	W symulacji platformy wielokierunkowej mechanika przekształceń układów współrzędnych jest potrzebna, gdyż wiadomość zwierająca pomiary z czujnika laserowego nie posiada informacji o aktualnej pozycji samego czujnika w przestrzeni, a jedynie wspomniany identyfikator. 
 	Orientacja i położenie potrzebne są programowi obliczającemu pozycję z czujników i ewentualnemu wizualizatorowi samych danych.
 	
 	
@@ -302,10 +302,10 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 			Punkt względny & Identyfikator \\
 			\hline
 			Stały środek mapy & \texttt{map} \\
-			Środek platformy & \texttt{omnivelma} \\
-			Środek platformy kinematycznej & \texttt{pseudovelma} \\
-			Emiter prawego lasera & \texttt{monokl\_r\_heart} \\
-			Emiter lewego lasera & \texttt{monokl\_l\_heart} \\
+			Środek modelu dynamiki & \texttt{omnivelma} \\
+			Środek modelu kinematyki & \texttt{pseudovelma} \\
+			Pozycja lusterka prawego skanera laserowego & \texttt{monokl\_r\_heart} \\
+			Pozycja lusterka lewego skanera laserowego & \texttt{monokl\_l\_heart} \\
 		\end{tabular}
 		\caption{Nazwy identyfikatorów przekształceń, używanych w symulatorze.}
 		\label{tab:frames}
@@ -316,10 +316,10 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\begin{tabular}{l c r}
 			Nazwa & Punkt względny & Identyfikator \\
 			\hline
-			Położenie i orientacja platformy & \texttt{map} & \texttt{omnivelma} \\
-			Położenie i orientacja platformy kinematycznej & \texttt{map} & \texttt{pseudovelma} \\
-			Położenie i orientacja prawego czujnika & \texttt{map} & \texttt{monokl\_r\_heart} \\
-			Położenie i orientacja lewego czujnika & \texttt{map} & \texttt{monokl\_l\_heart} \\
+			Położenie i orientacja modelu dynamiki & \texttt{map} & \texttt{omnivelma} \\
+			Położenie i orientacja modelu kinematyki & \texttt{map} & \texttt{pseudovelma} \\
+			Położenie i orientacja prawego skanera & \texttt{map} & \texttt{monokl\_r\_heart} \\
+			Położenie i orientacja lewego skanera & \texttt{map} & \texttt{monokl\_l\_heart} \\
 		\end{tabular}
 		\caption{Przekształcenia wysyłane do demona ROS.}
 		\label{tab:frame_send}
@@ -327,25 +327,23 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 			
 \section{Instalacja ROSa}
 	Instalacja programu na systemie operacyjnym jest złożona.
-	Z wyjątkiem odpowiednich wersji Ubuntu, nie ma łatwego sposobu na instalację go na innych systemach.
+	Z wyjątkiem wersji Ubuntu długiego wsparcia, nie ma łatwego sposobu na instalację tej programowej struktury ramowej na innych dystrybucjach.
 	Na przeszkodzie stoją błędy kompilacji dla nowszych wersji kompilatorów, zależności od dokładnych wersji zewnętrznych bibliotek i 
 	inne problemy w czasie wykonywania, jak naruszenie ochrony pamięci. 
-	Instalacja alternatywnych pakietów i ręczna kompilacja niektórych części nie działa we wszystkich przypadkach.
 
-	Rozwiązaniem tego problemu jest instalacja tej platformy programistycznej na maszynie wirtualnej, lub na systemie uruchamianym z dysku zewnętrznego. 
+	Rozwiązaniem tego problemu jest instalacja odpowiedniego systemu operacyjnego na zewnętrznym nośniku danych, aby mógł być uruchomiony niezależnie od domyślnego 
+	systemu operacyjnego komputera, na tym systemie można wtedy prosto zainstalować środowisko ROS.
+	
 	Najnowszą wersją ROSa jest \emph{Lunar Loggerhead} z maja 2017, jednak nie jest to wersja długiego wsparcia, a co za tym idzie, nie posiada wszystkich
 	pakietów zewnętrznych twórców, potrzebnych przy wizualizacji symulacji.
-	Odpowiedniejszą wersją jest \emph{Kinetic Kame} z marca 2016 roku, o bardzo dobrym wsparciu.
+	Odpowiedniejszą wersją jest \emph{Kinetic Kame} z marca 2016 roku o bardzo dobrym wsparciu.
 	Pakiety składające się na system ROS nadal są regularnie aktualizowane, lecz nie zawierają nowych funkcjonalności, a jedynie poprawki błędów.
-	Główny symulator fizyki, najważniejszy program, jest w tej samej wersji w obu dystrybucjach.
+	Symulator Gazebo jest w tej samej wersji na obu dystrybucjach, co też oznacza że przeniesienie projektu na najnowszą wersję ROSa jest trywialne.
 
 	Uruchomienie platformy programistycznej na systemie wymaga wielu dodatkowych komend inicjalizujących, 
 	a także dopisywania do tworzonych projektów licznych plików konfiguracyjnych za pomocą dostarczonych skryptów.
-	Używanie pakietów z linii poleceń wymaga ustawienia kilku zmiennych systemowych, poprzez wczytywanie skryptów.
+	Używanie pakietów z linii poleceń wymaga ustawienia kilku zmiennych systemowych.
 	Użycie niektórych funkcji ROS wymaga uruchomionego demona serwera w tle.
-
-	Ogólnie instalacja i używanie ROS na systemie zostawia dużo różnorodnych plików w katalogu domowym, co może nie być wskazane na codziennym systemie operacyjnym.
-	Z drugiej jednak strony, wirtualizacja systemu operacyjnego z ROS bardzo ogranicza dostępną moc obliczeniową, potrzebną takim programom w dużych ilościach.
 	
 	\subsection{Tworzenie pakietów}
 		Każdy pakiet jest katalogiem, w którym obowiązkowo znajdują się pliki \texttt{package.xml} i \texttt{CMakeLists.txt}.
@@ -354,58 +352,63 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		Posiada także listę zależności od innych pakietów.
 		
 		Drugi jest skryptem programu CMake, który definiuje sposób budowy pakietu i także definiuje zależności.
-		Oba pliki posiadają wspólne dane, skrypt kompilacyjny zgłosi błąd, jeśli nie będą się zgadzać między sobą.
+		Oba pliki posiadają te same dane, skrypt kompilacyjny zgłosi błąd, jeśli nie będą się zgadzać między sobą.
 		
-		W zewnętrznym katalogu uruchamia się skrypt kompilacyjny, który kolejno sprawdza zawartość katalogów i wywołuje ich skrypty.
-		Sprawdza również wszystkie nazwy i wersje. Tworzy dwa osobne katalogi, jeden z wygenerowanymi definicjami, drugi z plikami powstałymi w trakcie kompilacji.
-		Dba o odpowiednie podawanie ścieżek do programów, kolejność kompilacji pakietów i załączanie nazw.
+		W zewnętrznym katalogu uruchamia się skrypt kompilacyjny \texttt{catkin}, który kolejno sprawdza zawartość katalogów i wywołuje ich skrypty \texttt{CMakeLists.txt}.
+		Tworzy dwa osobne katalogi, jeden z wygenerowanymi definicjami, drugi z plikami powstałymi w trakcie kompilacji.
+		Dba o odpowiednie podawanie ścieżek do kompilatora i kolejność kompilacji pakietów, uwzględniając zależności.
 		Na przykład, jeśli pakiet wymaga pliku nagłówkowego, generowanego przez kompilację innego pakietu, plik ten może być załączony w kodzie tak, jakby był systemowy.
-		CMake zadba o wywołanie kompilatora z odpowiednimi argumentami, aby odszukał wszystkie potrzebne pliki.
-		Ważne tutaj jest zadbanie o odpowiednią kolejność kompilacji, aby nie próbować kompilować pliku, dla którego nagłówki nie zostały jeszcze wygenerowane.
-
+		CMake zadba o wywołanie kompilatora z odpowiednimi argumentami, aby skompilować program wykonywalny lub bibliotekę.
+		
+		Następnie, aby uruchomić program, wywołuje się komendę \texttt{rosrun} która odczytuje wygenerowane w trakcie kompilacji metadane, aby określić położenie 
+		bibliotek ładowanych dynamicznie i plików wykonywalnych.
+		
 \section{Format SDF}
 	\label{sec:sdf}
-	\emph{Simulation Description Format} (SDF) \cite{sdf_website} jest formatem XML, pozwalającym na określenie elementów i zależności pomiędzy nimi w przestrzeni trójwymiarowej, 
+	\emph{Simulation Description Format} (SDF) \cite{sdf_website} jest formatem XML, pozwalającym na zdefiniowanie modeli i zależności pomiędzy nimi w przestrzeni trójwymiarowej, 
 	w szczególności budowy i rozmieszczenia robotów.
-	Powstał jako zamiennik poprzedniego formatu URDF, ze względu na jego skomplikowaną semantykę i brak możliwości określania środowiska w którym poruszają się roboty,
-	na przykład rozmieszczenie elementów na symulowanej scenie, określania wyglądu, fizycznego zachowania się materiałów, itp.
+	Powstał jako zamiennik poprzedniego formatu URDF, ze względu na jego skomplikowaną semantykę i brak możliwości określania środowiska w którym poruszają się roboty.
 
-	W przeciwieństwie do poprzednika, w którym model był zapisany w strukturze drzewiastej, SDF określa wszystkie ogniwa modelu na tej samej wysokości zagnieżdżenia, 
-	oraz zależności między nimi, jak więzy i względne pozycje.
-	Model składowych robota ma strukturę gwiaździstą. Jeden element, \texttt{model}, jest nadrzędny, wszystkie składowe są logicznie rozmieszczone równolegle jako jego dzieci.
-	Specjalnie opisane więzy definiują interakcje pomiędzy ogniwami.
-	Jako model, w tym standardzie rozumie się nie tylko roboty, ale także obiekty typu przeszkody, źródła światła, elementy animowane i tym podobne.
-
-	Element typu \texttt{world} zawiera informacje o środowisku symulacji.
-	Dodatkowo, można dodać informację o ustawieniach maszyny symulującej fizykę, wyglądzie sceny, wietrze, grawitacji, polu magnetycznym, itp.
-
-	Każdy model zawiera nazwę, domyślną pozycję, sposób symulacji i wtyczki programów obsługujących zaawansowane zachowanie modelu.
-	Model, lub jego fragment, może być zaimportowany z innego pliku, lecz nie zmieni to struktury gwiazdowej, a co za tym idzie, może dojść do utraty informacji.
-	Jest tak ponieważ to nie cały model jest umieszczany wewnątrz pierwszego modelu, a jedynie jego ogniwa. Zatem cała informacja zawarta w elemencie \texttt{model}
-	importowanego pliku jest tracona, z wyjątkiem przedrostków nazw ogniw.
-	Ten przypadek zachodzi przy modelach czujników laserowych, opisanych w rozdziale \ref{sec:monokl}.
-
-	Model zawiera w sobie równolegle wszystkie elementy typu \texttt{link}, każdy z nich jest osobną, kompletną częścią robota, na przykład kołem, 
-	fragmentem ramienia chwytaka, kadłubem, czujnikiem.
-	Składuje w sobie informacje o pozycji względem lokalnego środka układu współrzędnych modelu, masie, kształcie, fizycznym kształcie, materiale fizycznym i wyglądzie.
-	Pozwala na dodanie elementów reprezentujących źródła dźwięku, czujniki, baterie itp.
-
-	Same elementy zawierają jedynie informacje o swoim początkowym umiejscowieniu w modelu, ale nie o sposobie poruszania się i nałożonych więzach.
-	Do tego potrzebne są, równoległe do elementów \texttt{link}, typy \texttt{joint} określające typ więzów, osie, współczynniki sprężystości, wytrzymałość, czy moc silników.
-	Każde połączenie określa, między jakimi obiektami się łączy.
+	W przeciwieństwie do poprzednika, w którym model był zapisany w strukturze drzewiastej, SDF określa wszystkie ogniwa modelu na tej samej wysokości zagnieżdżenia w strukturze gwiaździstej. Za ogniwo uznaje się część składową modelu, a także przegub.
 	
+	Element typu \texttt{world} zawiera informacje o środowisku symulacji oraz elementy modeli biorących udział w symulacji.
+	Dodatkowo, można dodać informację o ustawieniach maszyny symulującej fizykę, wyglądzie sceny, wietrze, grawitacji, polu magnetycznym, itp.
+	
+	Element \texttt{model} definiuje model, wszystkie definicje ogniw tego modelu są logicznie rozmieszczone równolegle, jako jego dzieci tego elementu.
+	Elementy więzów definiują interakcje pomiędzy ogniwami.
+	Każdy model zawiera nazwę, początkową pozycję, sposób symulacji i wtyczki programów obsługujących zaawansowane zachowanie modelu.
+
+	Poprzez model w tym standardzie rozumie się nie tylko robota, ale także obiekty typu przeszkody, źródła światła, elementy animowane i tym podobne.
+
+	Elementy typu \texttt{link}, definiują normalne ogniwa modelu. 
+	Każdy z nich jest osobną, kompletną częścią robota, na przykład kołem, fragmentem ramienia chwytaka, kadłubem, czujnikiem.
+	Składuje w sobie informacje o pozycji względem lokalnego środka układu współrzędnych modelu, masie, kształcie, fizycznym kształcie, materiale fizycznym i wyglądzie.
+	
+	Ogniwa zawierają jedynie informacje o swoim początkowym umiejscowieniu w modelu, ale nie o sposobie poruszania się i nałożonych więzach.
+	Do tego potrzebne są elementy \texttt{joint} określające przeguby.
+	Każdy przegub określa, między jakimi obiektami się łączy.
+	
+	Model lub jego fragment mogą być zaimportowane z innego pliku, lecz nie zmieni to struktury gwiazdowej, a co za tym idzie, może dojść do utraty informacji.
+	Jest tak, ponieważ to nie cały importowany model jest umieszczany wewnątrz pierwszego modelu, a jedynie jego ogniwa. 
+	Zatem cała informacja zawarta w elemencie \texttt{model} importowanego pliku jest tracona, z wyjątkiem przedrostków nazw ogniw.
+	Ten przypadek zachodzi przy modelach skanerów laserowych, opisanych w rozdziale \ref{sec:monokl}.
+
 	\begin{figure}[h]
 	\dirtree{%
 	.1 sdf.
 	.2 world\DTcomment{Opis przestrzeni świata symulacji}.
+	.2 plugin\DTcomment{Wtyczka sterująca symulacją}.
 	.2 model\DTcomment{Model w przestrzeni}.
-	.3 plugin\DTcomment{Program sterujący modelem}.
+	.3 plugin\DTcomment{Wtyczka sterująca modelem}.
 	.3 link\DTcomment{Ogniwo modelu}.
 	.4 collision\DTcomment{Kształt ogniwa}.
-	.4 visual\DTcomment{Definicja wyglądu ogniwa}.
+	.4 visual\DTcomment{Definicja wizualizacji ogniwa}.
 	.4 sensor\DTcomment{Czujnik w ogniwie}.
-	.5 plugin\DTcomment{Program sterujący czujnikiem}.
+	.5 plugin\DTcomment{Wtyczka sterująca czujnikiem}.
+	.3 link\DTcomment{Kolejne ogniwo modelu}.
 	.3 joint\DTcomment{Przegub pomiędzy ogniwami}.
+	.3 joint\DTcomment{Kolejny przegub}.
+	.2 model\DTcomment{Kolejny model}.
 	}
 	\caption{Najważniejsze elementy formatu SDF.}
 	\label{fig:sdf_dir}
@@ -424,35 +427,33 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 
 		Program w każdym cyklu symulacji nadaje wiadomości:
 		\begin{itemize}
-		\item \texttt{geometry\_msgs/PoseStamped} z aktualnym położeniem i orientacją platformy, oraz nagłówkiem z identyfikatorem i czasem nadania pakietu.
-		\item \texttt{geometry\_msgs/TwistStamped} z aktualną prędkością platformy, oraz identycznym nagłówkiem.
+		\item \texttt{geometry\_msgs/PoseStamped} z aktualnym położeniem i orientacją platformy oraz nagłówkiem z identyfikatorem i czasem nadania pakietu.
+		\item \texttt{geometry\_msgs/TwistStamped} z aktualną prędkością liniową platformy oraz podobnym nagłówkiem.
 		\item \texttt{nav\_msgs/Odometry} z obiema powyższymi danymi i nagłówkiem. Służy przy obliczaniu ruchów platformy na podstawie enkoderów kół.
 		\end{itemize}
 		Ponadto program przyjmuje dane:
 		\begin{itemize}
-		\item \texttt{omnivelma\_msgs/Vels} z zadanymi prędkościami kół.
+		\item \texttt{omnivelma\_msgs/Vels} z zadanymi prędkościami kątowymi kół.
 		\end{itemize}
 	
 	\subsection{Problemy implementacji}
 		Gazebo nie ma zaimplementowanego pełnego wsparcia dla standardu SDF.
-		W szczególności nie działa struktura elementów \texttt{frame}, odpowiadająca za przekształcenia obiektów względem innych obiektów.
+		W szczególności nie działa struktura elementów \texttt{frame}.
 		Jest to mechanika macierzy przekształceń jednorodnych, podobna do ROSowego systemu, opisanego w sekcji \ref{sec:frames}.
 		Nie jest to opisane w dokumentacji, a jedynie zgłoszone od kilku lat w systemie kontroli wersji jako błędy.
 
 		Oznacza to, że wszystkie elementy typu \texttt{link}, będąc dziećmi \texttt{model}, nie zachowują swojej pozycji w lokalnym układzie współrzędnych.
 		Powoduje to, że nadając prędkość kątową modelowi, nadajemy ją każdemu ogniwu osobno.
-		Każde z kół i dwie części bazy, obracają się zgodnie z zadanymi wartościami, wokół osi Z, ale ich środki pozostają w miejscu, w którym rozpoczęły symulację,
-		ignorując kompletnie pozycję zdefiniowaną dla elementu rodzica \texttt{model}.
 		
-		Z punktu widzenia symulacji fizycznej ma to sens, gdyż nie można zakładać, że ogniwa modelu są w jakikolwiek sposób podłączone do jego głównej części, 
-		to wprowadzałoby także nieścisłości w typie przegubów, niektóre elementy powinny być ruchome.
+		Z punktu widzenia symulacji fizycznej ma to sens, gdyż nie można zakładać, że ogniwa modelu są w jakikolwiek sposób podłączone. 
+		To wprowadzałoby także nieścisłości w typie zastosowanych domyślnie przegubów.
 
-		Aby przeciwdziałać temu zjawisku, należy przenieść zawartość elementów \texttt{link} do elementu \texttt{model} i ustawić je jako \texttt{visual} elementu \texttt{model}.
+		Aby przeciwdziałać temu zjawisku, należy umieścić wszystkie ogniwa jako fragmenty siatki trójkątów, używanej przy wizualizacji.
 		To znaczy, ustawić je nie jako dane używane przez maszynę symulacyjną fizyki, ale jako dane służące do rysowania obiektów na ekranie.
 		W ten sposób traktowane są jako jedna całość, a nie osobne składowe.
 		Nie można użyć tutaj więzów statycznych, gdyż te są wykorzystywane przez maszynę symulacyjną fizyki i ignorowane przy kinematycznym ruchu.
 
-		Powstała niedogodność jest taka, że trudniej jest sterować obrotem elementów \texttt{visual}, gdyż są zarządzane przez kompletnie inny system symulatora,
+		Powstała niedogodność jest taka, że trudniej jest sterować obrotem obiektów kół, gdyż są zarządzane przez kompletnie inny system symulatora,
 		służący do graficznego renderowania sceny, działający na innym wątku, jednak w żaden sposób nie wpływa na ruch modelu bazy.
 		
 \section{Model dynamiki}
@@ -471,35 +472,36 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 	\end{table}
 	
 	W modelu dynamiki przyjęto masy ogniw zgodne z tabelą \ref{tab:masses}.
-	Masy przegubów są pomijalnie małe w porównaniu do najcięższych elementów.
-	Momenty bezwładności ogniw są przybliżone prostopadłościanami dla korpusu oraz walcami dla kół i skanerów.
+	Masy przegubów i jednostki inercji są pomijalnie małe w porównaniu do najcięższych elementów.
+	Momenty bezwładności ogniw zostały wyznaczone jak dla podstawowych brył, prostopadłościanów dla korpusu oraz walców dla kół i skanerów.
 	Założono identyczną gęstość obu części korpusu.
 	
-	Jest wiele sposobów na zamodelowanie takiego obiektu, poniżej przykładowe implementacje oraz wybrana.
+	Jest wiele sposobów na zamodelowanie takiego obiektu, poniżej przykładowe implementacje.
 	
 	\subsection{Wierność modelu}
 		Należy zamodelować wszystkie ogniwa modelu i nadać im kształt za pomocą odpowiednich modeli 3D.
-		Kształt obiektów może być także przybliżony jednym prymitywów, jak sześcian, kula, łamana, walec, czy płaszczyzna.
+		Kształt obiektów może być także przybliżony jednym z prymitywów jak sześcian, kula, łamana, walec, czy płaszczyzna.
 		Takie przybliżenie znacznie przyspiesza obliczenia, gdyż może być specjalnie traktowane przez algorytmy obliczeń fizyki
 		w maszynie symulacyjnej.
 
-		Niestety, rolki mają złożony kształt, opisany szczegółowo w \cite{rollers}.
-		Przybliżenie takiego kształtu walcem powoduje problemy przy przenoszeniu punktu podparcia na kolejną rolkę, gdyż koło będzie musiało przez chwilę oprzeć się o krawędź.
-		Taki model wprowadzałby drgania, zwiększając tym samym i tak duże niedokładności symulacji.
+		Niestety, rolki mają złożony kształt \cite{rollers}.
+		Przybliżenie takiego kształtu walcem powoduje problemy przy przenoszeniu punktu podparcia na kolejną rolkę, gdyż koło będzie musiało przez chwilę oprzeć się o krawędź rolki.
+		Taki model wprowadzałby także drgania, zwiększając tym samym i tak duże niedokładności symulacji.
 		Podejście to zostało także zaproponowane w pracach \cite{modelling_ways} i \cite{braking}.
 
 		Przybliżenie rolki siatką trójkątów jedynie zmniejsza powyższy efekt, gdyż sama siatka zbudowana jest z prostych krawędzi.
-		Zwiększając jej gęstość można teoretycznie poprawić jakość symulacji, kosztem olbrzymiego skoku ilości obliczeń, każde obarczone błędami numerycznymi.
-		Obliczenia związane z wykryciem kolizji obiektów modelowanych za pomocą siatek trójkątów są najbardziej obliczeniochłonne ze wszystkich metod wykrywania kolizji. 
+		Zwiększając jej gęstość można teoretycznie poprawić jakość symulacji, kosztem olbrzymiego skoku ilości obliczeń.
+		Obliczenia związane z wykryciem kolizji obiektów modelowanych za pomocą siatek trójkątów są najbardziej zasobożerne ze wszystkich metod wykrywania kolizji. 
 
 	\subsection{Model koła z przywracaną orientacją}
 		Sposób symulowania koła w ten sposób został użyty w modelach w symulatorze V-Rep.
 
-		Polega on na tym, iż koło, podłączone do korpusu za pomocą przegubu obrotowego, posiada drugi przegub obrotowy, 
-		obrócony pod kątem 45° w stosunku do osi koła (i pierwszego przegubu), tak aby był równolegle do osi obrotu dolnej rolki, mającej kontakt z podłożem.
-		Do tego przegubu jest podłączony obiekt kuli oddziałującej z podłożem, który to w każdej iteracji symulacji należy zresetować do orientacji wyjściowej, razem z
-		orientacją drugiego przegubu.
+		Polega on na tym, iż koło, podłączone do korpusu za pomocą przegubu obrotowego, posiada drugi przegub obrotowy.
+		Drugi przegub obrócony pod kątem 45° w stosunku do osi koła.
+		Jego obrót jest zgodny z obrotem dolnej rolki koła, mającej kontakt z podłożem.
+		Do drugiego przegubu jest podłączony obiekt kuli oddziałującej z podłożem, odpowiedzialny za kolizje.
 		Zastosowano kulę, gdyż jest prymitywem geometrycznym i obliczenia jej kolizji są najmniej wymagające obliczeniowo dla maszyny symulacyjnej.
+		Orientacja kuli jest przywracana do orientacji początkowej w każdym kroku symulacji.
 
 		\begin{figure}[H]
 		\dirtree{%
@@ -514,12 +516,12 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\label{fig:vrep_wheel}
 		\end{figure}
 
-		Wywołuje to takie działanie, jak gdyby koło w danej chwili mogło jednocześnie obracać się w dwóch kierunkach, wokół osi obrotu dolnej rolki, oraz wokół osi koła.
+		Wywołuje to takie działanie, jak gdyby koło w danej chwili mogło jednocześnie obracać się w dwóch kierunkach, wokół osi obrotu dolnej rolki oraz wokół osi koła.
 		Przez następny krok symulacji, model zachowuje się poprawnie, aż pod wpływem obrotu koła, druga oś przestaje być równoległa do osi dolnej rolki
 		co zaczyna negatywnie wpływać na symulację.
 		Zanim jednak ten efekt się nasili, orientacja koła wirtualnego jest przywracana do pozycji początkowej, razem z kierunkiem drugiej osi.
 		Ponieważ jest to powodowane nadpisaniem poprzedniej orientacji, a nie nadaniem momentu obrotowego obiektowi, 
-		maszyna symulacyjna nie bierze w takim przypadku pod uwagę tarcia kuli o podłoże. 
+		maszyna symulacyjna nie bierze w takim przypadku pod uwagę sił tarcia kuli o podłoże. 
 
 		Niestety, nie jest możliwe zastosowanie tego rozwiązania wprost w Gazebo, gdyż struktura drzewiasta obiektów nie jest zaimplementowana, jak to wcześniej zostało opisane.
 		Co więcej, metody natychmiastowo zmieniające pozycje obiektu nie działają poprawnie.
@@ -550,12 +552,12 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		gdyż zazwyczaj powierzchnie symulowanych obiektów mają jednakowe współczynniki tarcia w każdym kierunku.
 		Jednakże modyfikując te wektory statycznie, lub dynamicznie, można uzyskać bardzo interesujące efekty.
 		Instrukcja silnika symulacji podaje przykład, w którym aby zamodelować tarcie opon samochodu na zakręcie, prostopadle do kierunku jazdy, 
-		należy dynamicznie zmieniać współczynnik tarcia dla wektora $f_0$, lub $f_1$ w kierunku promienia koła.
+		należy dynamicznie zmieniać współczynnik tarcia dla wektora $f_0$, lub $f_1$ w kierunku osi koła.
 		Ten współczynnik tarcia, prostopadły do kierunku jazdy, może być liniowo zależny od prędkości.
 		Spowoduje to, że im większa prędkość samochodu, tym boczna siła odśrodkowa bardziej wpłynie na tor jego jazdy, co ma odwzorowanie w rzeczywistości.
 		Więcej informacji można znaleźć na stronie instrukcji maszyny symulacyjnej ODE \cite{ode_contact}.
 
-		W opisywanym tutaj modelu, modyfikuje się wektor $f_0$, oraz współczynniki tarcia dla obu wektorów, aby przybliżyć zachowanie się rolki.
+		W opisywanym tutaj modelu, modyfikuje się kierunek wektora $f_0$ oraz współczynniki tarcia dla obu wektorów, aby przybliżyć zachowanie się rolki do rzeczywistości.
 		Ponieważ wektory $f_0$ i $f_1$ są określone w lokalnym dla koła układzie współrzędnych, 
 		w każdej iteracji maszyny symulacji należy obrócić je względem aktualnej pozycji bazy i odwrotności obrotu koła.
 		Idealna rolka obraca się całkowicie bez tarcia, a ruch równolegle do jej osi jest niemożliwy.
@@ -568,9 +570,9 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		\end{figure} 
 
 		Niestety, w rzeczywistości rolki wykonane są ze śliskiego plastiku, który zezwala na poślizg kół wzdłuż ich osi.
-		Osie kolek również nie obracają się płynnie, trzeba użyć dużej siły, aby obrócić dowolną z nich, pod naciskiem platformy tarcie jest jeszcze większe.
+		Osie kolek również nie obracają się płynnie, pod naciskiem platformy tarcie jest jeszcze większe.
 		Każda rolka obraca się z innym tarciem wprowadzając kolejne zakłócenia.
-		Podłoże po którym porusza się robot także nie jest tu bez znaczenia.
+		Podłoże, po którym porusza się robot, także nie jest tu bez znaczenia.
 		Należy zatem wystawić interfejs do łatwej zmiany współczynników tarcia, aby później dobierać odpowiednie wartości na podstawie zachowania rzeczywistego robota.
 
 		Podobnie, jak w poprzednich przypadkach, modeluje się tylko najniższą, dotykającą podłoża rolkę.
@@ -586,14 +588,14 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		.3 kula\DTcomment{Modyfikowane wektory tarcia}.
 		.3 siatka trójkątów\DTcomment{Odpowiada za wizualizację koła}.
 		}
-		\caption{Logiczne zagnieżdżenie obiektów koła w strukturze drzewiastej z modyfikowanymi wektorami tarcia. W implementacji Gazebo przegub i kula są ustawione równolegle.}
+		\caption{Logiczne zagnieżdżenie obiektów koła w strukturze drzewiastej z modyfikowanymi wektorami tarcia.}
 		\label{fig:omnivelma_wheel}
 		\end{figure}
 
 		Takie rozwiązanie wiąże się z pewnym ryzykiem.
 		Wymaga, aby symulator używał maszyny ODE, co zmniejsza przenośność modelu. ODE jest domyślnym symulatorem w Gazebo.
-		Maszyna Bullet również liczy kolizje w ten sposób i ma modyfikowalne wektory, 
-		lecz nie daje podobnych wyników. Być może jest to spowodowane brakiem odpowiedniej konfiguracji, lub innym wewnętrznym traktowaniem modelu.
+		Maszyna Bullet również liczy kolizje w podobny sposób i ma modyfikowalne wersory tarcia i współczynniki, 
+		lecz nie daje podobnych wyników. Być może jest to spowodowane brakiem odpowiedniej konfiguracji lub innym wewnętrznym traktowaniem modelu.
 		
 	\subsection{Ustawienie mas i momentów bezwładności}
 		W standardzie SDF zdefiniowano element \texttt{inertial}, który definiuje w sobie masę oraz macierz inercji. 
@@ -603,24 +605,27 @@ event::ConnectionPtr connection = event::Events::ConnectWorldUpdateBegin(
 		
 		Środki mas zostały obliczone, bazując na uproszczonych kształtach ogniw, przy założeniu jednorodnego rozkładu gęstości w korpusie.
 		
-		Jeśli dane mas i momentów bezwładności nie są logicznie ustawione, lub zostawione na domyślnych wartościach, model może powodować błędy maszyny symulacyjnej.
+		Jeśli dane mas i momentów bezwładności nie są poprawnie ustawione lub zostawione na domyślnych wartościach, model może powodować błędy maszyny symulacyjnej.
 		Występują wtedy ,,glitche'', czyli losowy ruch i obrót obiektu w różnych kierunkach. Model wpada w taki stan i leci w losowym kierunku. 
 		Taki efekt czasami występuje w grach komputerowych. Jest to spowodowane tym, że dochodzi do błędów obliczeń numerycznych z powodu za dużych różnic w parametrach obiektów
 		i obliczeń kolizji.
 		
 	\subsection{Model silników}
 		Platforma wyposażona jest w cztery niezależne serwomotory. 
-		Model takiego obiektu jest przegubem obrotowym, któremu należy nadawać odpowiednią prędkość, w zależności od odebranych pakietów.
+		Model takiego obiektu jest przegubem obrotowym, któremu można nadawać odpowiednią prędkość, w zależności od odebranych zadanych wartości.
 		Ponieważ każda maszyna symulacyjna fizyki inaczej interpretuje tę wartość, należy zwrócić szczególną uwagę na sposób nadawania prędkości obiektom.
 		
-		Przede wszystkim, prędkość jest zawsze reakcją na przyłożoną siłę lub moment obrotowy. W rzeczywistości nie istnieje sposób na natychmiastowe nadanie prędkości obiektowi.
+		Przede wszystkim, prędkość jest zawsze reakcją na przyłożoną siłę tarcia lub moment siły. 
+		W rzeczywistości nie istnieje sposób na natychmiastowe nadanie prędkości obiektowi, jak to jest możliwe w symulacji.
 		Pomimo że maszyna posiada wewnętrzną informację o aktualnej prędkości,
-		jej bezpośrednia modyfikacja może wprowadzać nietypowe zachowania. Przede wszystkim należy brać pod uwagę reakcję ze strony połączonego obiektu, w tym przypadku korpusu,
-		a także czasu nadania tej prędkości. Powinna być zsynchronizowana z krokami symulacji a nie częstotliwością odbioru wiadomości ze strumienia.
+		jej bezpośrednia modyfikacja może wprowadzać nietypowe zachowania. 
+		Przede wszystkim należy brać pod uwagę reakcję ze strony połączonego obiektu, w tym przypadku korpusu,
+		a także momentów ustawiania tej prędkości.
+		Ustawianie zadanej prędkości powinno być zsynchronizowane z krokami symulacji a nie częstotliwością odbioru wiadomości ze strumienia komunikacyjnego.
 		
 		Najlepsze efekty daje nie nadawanie prędkości obiektom, a nadanie docelowej prędkości i maksymalnego momentu obrotowego.
 		Maszyna symulacji fizyki wtedy odpowiednio zinterpretuje dane, obliczając również reakcję na obu końcach przegubu.
-		Jest także możliwość ustawienia algorytmu sterownika, na przykład PID, ale takiemu należy także nadać odpowiednie parametry do pracy.
+		Jest także możliwość ustawienia algorytmu sterownika, na przykład PID, ale takiemu należy określić odpowiednie parametry do pracy.
 		
 		W modelu odwołano się bezpośrednio do zmiennych maszyny symulacyjnej ODE za pomocą interfejsu symulatora Gazebo.
 		Jest to metoda wirtualna, implementowana do komunikacji z każdą maszyną symulacyjną osobno.
@@ -640,7 +645,7 @@ virtual bool SetParam (const std::string& key,
 		Ze względu na wiele ustawień elementów bazy, należy stworzyć bogaty interfejs.
 		W każdym cyklu symulacji, program sterujący modelem platformy nadaje wiadomości:
 		\begin{itemize}
-		\item \texttt{geometry\_msgs/PoseStamped} z aktualnym położeniem i orientacją platformy, oraz nagłówek z czasem i identyfikatorem.
+		\item \texttt{geometry\_msgs/PoseStamped} z aktualnym położeniem i orientacją platformy oraz nagłówek z czasem i identyfikatorem.
 		\item \texttt{geometry\_msgs/TwistStamped} z aktualną prędkością platformy i nagłówkiem.
 		\item \texttt{omnivelma\_msgs/EncodersStamped} z odczytaną ze stanu obiektów kół aktualną prędkością kątową i kątem obrotu, z nagłówkiem. 
 		To jest symulator enkoderów wbudowanych w silniki platformy.
@@ -703,16 +708,16 @@ virtual bool SetParam (const std::string& key,
 		W modelu warto zatem emitować osobne półproste, dla każdego pulsu lasera.
 
 		Można zauważyć tym samym, że model skanera wydaje się funkcjonalnie lepszym, niż rzeczywisty LiDAR.
-		W danej chwili, model emituje promień we wszystkich kierunkach w zakresie jednocześnie, podczas gdy skaner jednym pulsem może dokonać tylko jednego pomiaru,
+		W danej chwili model emituje promień we wszystkich kierunkach w zakresie jednocześnie, podczas gdy skaner jednym pulsem może dokonać tylko jednego pomiaru,
 		i tylko o kącie w którym aktualnie znajduje się lusterko.
-		Jednakże dyskretny sposób symulacji i sposób komunikacji urządzenia z odbiornikiem danych, powodują że w obu przypadkach dane są podawane w grupach.
+		Jednakże dyskretny sposób symulacji i sposób komunikacji urządzenia z odbiornikiem danych powodują że w obu przypadkach dane są podawane w zbiorach.
 		Sterownik skanera jest wstanie wysłać pakiet z danymi z ostatniego pomiaru, podczas gdy program modelujący skaner jest obsługiwany na zasadzie przerwań czasowych 
 		po każdym kroku symulacji i tylko wtedy może wywołać funkcje zwracające dane zasymulowanych pomiarów.
 		To oznacza, że interfejsy do ich obsługi zachowują się podobnie.
 
 		Drugą rzeczą, w której model przoduje, jest nieskończona (z punktu widzenia symulacji), odległość pomiaru.
 		Nie tylko jako najdalszy wykryty punkt, ale także i najbliższy. 
-		Skaner może pomijać pomiary przypadające za blisko krawędzi dozwolonego obszaru, gdyż znacznie spada w tych miejscach dokładność pomiaru, lub zwracać niedokładne dane.
+		Skaner może pomijać pomiary przypadające za blisko krawędzi dozwolonego obszaru, gdyż znacznie spada w tych miejscach dokładność pomiaru lub zwracać niedokładne dane.
 		Symulator ma całkowitą dowolność w ustawianiu progu, dla którego obcina pomiar.
 
 		Podobnie, jak w poprzednim przypadku, symulator posiada niezmienną w odległości dokładność pomiaru.
@@ -734,10 +739,8 @@ virtual bool SetParam (const std::string& key,
 			\item Czas pomiędzy tym, a poprzednim przebiegiem urządzenia.
 			\item Minimalny i maksymalny dystans mierzonego obiektu od skanera.
 			\item Dane odległości.
-			\item Dane jasności (jeśli czujnik posiada taką funkcjonalność).
+			\item Dane intensywności.
 		\end{itemize}
-
-		Identycznie, program podłączony bezpośrednio do skanera za pomocą jednego z interfejsów, także powinien generować takie same pakiety i udostępniać je w środowisku ROS.
 		
 	\subsection{Model w Gazebo}
 		Tak, jak w modelu platformy, należy stworzyć odpowiedni plik SDF. 
@@ -747,22 +750,20 @@ virtual bool SetParam (const std::string& key,
 		ale jednak aby były interpretowane w różny sposób (gdyż nadawcy danych muszą być rozróżnialni).
 
 		Model składa się z dwóch elementów: korpusu i samego ,,mechanizmu'' urządzenia.
-		Mechanizm przytwierdzony jest w odpowiednim miejscu korpusu platformy, za pomocą stałego przegubu (elementu \texttt{joint}).
+		Mechanizm przytwierdzony jest w odpowiednim miejscu korpusu platformy za pomocą stałego przegubu (elementu \texttt{joint}).
 
-		Korpus czujnika posiada siatkę trójkątów, reprezentującą uproszczony wygląd urządzenia, a także dwa elementy ustawiające walcowate kształty, odpowiedzialne za kolizje fizyczne.
-		Teoretycznie, lepiej było by, gdyby model posiadał jeden walec, reprezentujący kształt urządzenia, gdyż to przyspieszyłoby symulację. 
-		Jednakże, półproste emitowane ze środka obiektu, również się by z nim zderzały od wewnątrz, a co za tym idzie, nie opuszczałyby modelu czujnika.
+		Korpus czujnika posiada siatkę trójkątów, reprezentującą uproszczony wygląd urządzenia, a także dwa element ustawiający kształt walca, odpowiedzialny za kolizje fizyczne.
 		Element korpusu odpowiada także za przesunięcie samego lasera względem podstawy, na której całe urządzenie jest montowane, i 
 		pozwala na wygodną referencję z innego modelu, w celu utworzenia przegubu.
 		Jak już wcześniej wspomniano, model zawsze ma strukturę gwiazdową i przeguby po stronie robota nie mogą wskazywać na element \texttt{model} modelu skanera, a mogą
 		na obiekt korpusu.
-
+		
 		Główna część obiektu czujnika, skaner, posiada ozdobną siatkę trójkątów, udającą czarną szybkę LiDARa, oraz element SDF \texttt{sensor}, odpowiedzialny za sam czujnik.
 		W kolejnych podelementach zawierają się parametry urządzenia, takie jak ilość symulowanych laserów, ich zasięg, kąt pierwszego i ostatniego lasera, oraz współczynnik błędu pomiarowego. Ten element celowo nie ma fizycznego kształtu, aby nie blokować wychodzących półprostych. 
 		Nie wpływa to na symulację, gdyż w środowisku, w którym znajduje się robot, i tak nie powinno dochodzić do kolizji modeli czujników z jakimikolwiek innymi modelami.
 		Również czujniki nie są wstanie wykryć siebie nawzajem, gdyż zwrócone są do siebie martwymi kątami, a co za tym idzie nie muszą symulować nieprzezroczystych brył dla
 		innych sensorów.
-		W przeciwnym wypadku, element fizycznego kształtu pośrodku urządzenia byłby wymagany.
+		Półproste emitowane są z punktów leżących kilka centymetrów od środka skanera, aby symulator nie wykrył ich kolizji z samym korpusem skanera.
 
 		\subsubsection{Połączenie modeli}
 			Jak wcześniej wspomniano w sekcji \ref{sec:sdf},
@@ -860,7 +861,7 @@ virtual bool SetParam (const std::string& key,
 	wartości prędkości dla każdego obiektu. Zatem kwestia symulacji tego sensora polega na odczycie odpowiednich struktur z maszyny symulacji.
 	Wtyczka do Gazebo, zapisana podobnie do wtyczki czujnika laserowego, zbiera w każdym cyklu maszyny symulacyjnej dane i wysyła ja za pomocą pakietu ROSa.
 	
-	Na podstawie testu opisanego w sekcji \ref{sec:test_ang}, wyznaczono w tabeli \ref{tab:imu_noise} parametry dodatkowego szumu, dodawanego do odczytów w celu dokładniejszego zamodelowania błędów pomiarowych.
+	Na podstawie testu opisanego w sekcji \ref{sec:test_imu}, wyznaczono w tabeli \ref{tab:imu_noise} parametry dodatkowego szumu, dodawanego do odczytów w celu dokładniejszego zamodelowania błędów pomiarowych.
 	
 	\begin{table}
 		\centering
@@ -868,19 +869,19 @@ virtual bool SetParam (const std::string& key,
 		Opis & Wartość \\
 		\hline
 		Średnia					&	0 \\
-		Odchylenie standardowe	&	0,003 \si{\radian\per\second} \\
+		Odchylenie standardowe czujnika prędkości kątowej	&	0,003 \\
+		Odchylenie standardowe czujnika przyspieszenia liniowego	&	0,1 \\
 		\end{tabular}
-		\caption{Wartości szumu o rozkładzie Gaussa, zastosowanego w modelu czujnika prędkości kątowej.}
+		\caption{Wartości szumu o rozkładzie Gaussa, zastosowanego w modelu jednostki inercyjnej.}
 		\label{tab:imu_noise}
 	\end{table}
 	
 	Akcelerometr jest bardziej złożonym problemem, gdyż maszyna symulacji działa w czasie dyskretnym, co utrudnia różniczkowanie prędkości w celu otrzymania przyspieszenia.
 	Ta wartość nie jest także nigdzie indziej używana i musi być obliczona specjalnie dla symulacji tego czujnika.
-	Fakt, że małe odchylenia w zmianie prędkości powodują duże skoki danych przyspieszenia, wprowadza naturalny szum do generowanych danych.
-	W sekcji \ref{sec:test_imu}, opisane zostały te problemy dokładniej.
+	Fakt, że małe odchylenia w zmianie prędkości powodują duże skoki danych przyspieszenia wprowadza naturalny szum do generowanych danych.
 	
 	Pomimo, że odczytanie tych wartości jest tak samo proste, jak prędkości kątowej, to generowane dane różnią się jakością.
-	Szum jest większy, a co za tym idzie, potrzeba dodatkowego programu do odszumienia wygenerowanych wartości.
+	Szum jest większy, a co za tym idzie, potrzeba dodatkowego programu do filtracji wygenerowanych wartości.
 	Ten pakiet jest opisany w sekcji \ref{sec:odszumiacz}.
 	
 \section{Manualne sterowanie}
@@ -900,6 +901,10 @@ virtual bool SetParam (const std::string& key,
 		
 		Program stworzony jest jako maszyna stanów, która odpowiada za odpowiednią interpretację naciśniętych klawiszy, w zależności od trybu w jakim się znajduje.
 		Bloki instrukcji warunkowych rysują na ekranie odpowiedni interfejs w każdym cyklu rysowania.
+		
+		Program działa na dwóch wątkach.
+		Pierwszy z nich odpowiada za rysowanie danych na ekranie i obsługę wejścia, drugi odpowiada za komunikację ze strumieniem wiadomości.
+		W ten sposób opóźnienia spowodowane wysyłaniem sterowania do programu nie wpłyną na częstotliwość wysyłania wiadomości.
 	
 	\subsection{Komunikacja}
 		Program potrafi generować dwie typy wiadomości.
@@ -907,35 +912,32 @@ virtual bool SetParam (const std::string& key,
 		Pierwszą są prędkości kół \texttt{omnivelma\_msgs/Vels}, jakie w danej chwili platforma powinna przyjąć na sterowanie.
 		Pozwala to na dokładne przetestowanie zachowania się modelu platformy.
 		Można także wywołać takie prędkości, które nie powinny być używane przy rzeczywistym sterowaniu, gdyż wprowadzają duże nieścisłości ruchu na skutek poślizgów
-		(przykładowo, obracanie przednich i tylnych kół tak, aby ich wektory prędkości się znosiły, będzie nadawać niedeterministyczny ruch, spowodowany niedoskonałościami
+		(przykładowo, obracanie przednich i tylnych kół tak, aby ich wektory prędkości się znosiły będzie nadawać niedeterministyczny ruch, spowodowany niedoskonałościami
 		pojedynczych rolek).
 		
 		Drugi typ wiadomości, \texttt{geometry\_msgs/Twist}, to nadana prędkość względna platformy.
 		To intuicyjny sposób, w jaki użytkownik steruje platformą i w jaki sposób mógłby także sterować nią prosty program sterujący.
-		Jednak ponieważ model platformy, nie jest wstanie poruszać się bez informacji, jakimi kołami z jaką prędkością obracać,
-		ten typ wiadomości musi być jeszcze konwertowany przez pakiet modelu kinematyki odwrotnej, opisany w sekcji \ref{sec:transmutator}.
+		Jednak ponieważ model platformy nie jest wstanie poruszać się bez informacji, jakimi kołami z jaką prędkością obracać,
+		ten typ wiadomości musi być jeszcze konwertowany przez pakiet węzeł kinematyki odwrotnej, opisany w sekcji \ref{sec:transmutator}.
 		Program może być bezpośrednio podłączony do robota.
 		
 		Program opcjonalnie przyjmuje także wiadomość \texttt{omnivelma\_msgs/Vels}, aby wyświetlić dane enkoderów.
 		Należy zauważyć, że nie przyjmuje całej wiadomości \texttt{omnivelma\_msgs/EncodersStamped}, jaka jest generowany przez model platformy,
 		a jedynie mały jej wycinek, gdyż tylko te informacje jest w stanie wyświetlić i tylko takie potrzebuje.
 		Dzięki temu może być użyty niezależnie od innych pakietów i programów. Jednak może być wymagane użycie dodatkowego programu do 
-		wyłuskania tej informacji z większej wiadomości,
-		patrz \ref{sec:dziadzio}.
-		
+		wyłuskania tej informacji z większej wiadomości (patrz pakiet \ref{sec:dziadzio}).
 	
 \section{Generator sterowania}
-	Program \texttt{gramofon} wczytuje plik danych, w którym znajdują się rekordy, każdy opisuje:
+	Program wczytuje plik danych, w którym znajdują się rekordy, każdy opisuje:
 	\begin{itemize}
 		\item Prędkość liniową platformy w osi X.
 		\item Prędkość liniową platformy w osi Y.
-		\item Prędkość obrotu platformy wokół osi Z.
+		\item Prędkość kątową platformy wokół osi Z.
 		\item Czas $t$, przez który program ma generować wiadomość z podanymi wyżej danymi.
 	\end{itemize}
 	Program czyta także z argumentu okres $T$ odświeżania wiadomości.
 	
 	Korzystając z dwóch liczników systemowych, program generuje co $T$ sekund wiadomość typu \texttt{geometry\_msgs/Twist} z danymi aktualnie wykonywanej linii pliku.
-	Ta wiadomość powtarza się regularnie.
 	
 	Pierwszy licznik nadaje regularnie aktualne sterowanie, aby podtrzymać prędkość robota, drugi licznik asynchronicznie wywołuje się na zmiany sterowania i aktualizuje wysyłane dane.
 	
@@ -962,15 +964,16 @@ virtual bool SetParam (const std::string& key,
 	\centering
 	\includegraphics[width=\textwidth]{graphics/gramofon.pdf}
 	\caption{Czas odbioru pakietu, wysyłanego przez program działający z jednym z trzech okresów.}
+	\label{fig:gramofon}
 	\end{figure}
 	
+	Na rysunku \ref{fig:gramofon} przedstawiono czas odbioru wiadomości generowanej przez program z określonymi okresami czasu.
 	Działa to tak samo, jakby każdą wiadomość wysyłać z losowym opóźnieniem.
 	Gdy nadań jest za dużo (górny wykres), system zaczyna je buforować, a co za tym idzie, nadaje je w grupach o losowej wielkości.
-	Pakiet po nadaniu przechodzi przez wiele procesów, każdy może nadawać losowe opóźnienie dla wiadomości.
-	System operacyjny pod dużym obciążeniem przez inne procesy będzie opóźniał i buforował wiadomości o niższych częstotliwościach.
+	Wiadomość po nadaniu może być przekazywana przez wiele węzłów, każdy może nadawać losowe opóźnienie dla wiadomości.\
 	
 	Aby rozwiązać ten problem, należałoby uruchomić całe środowisko ROSa na systemie operacyjnym czasu rzeczywistego,
-	również z tym pakietem.
+	również z tym węzłem generującym dane.
 	
 \section{Podłoże o zmiennym współczynniku tarcia}
 	Robi się to wewnętrznie w identyczny sposób, jak w przypadku kół platformy, co zostało opisane w sekcji \ref{sec:friction}.
@@ -981,15 +984,16 @@ virtual bool SetParam (const std::string& key,
 	
 	
 \section{Algorytm usuwania szumu z danych jednostki inercyjnej}
-	Odczytuje nazwę nadajnika i odbiornika wiadomości typu \texttt{sensor\_msgs/Imu}, oraz wielkość bufora,
+	Odczytuje nazwę nadajnika i odbiornika wiadomości typu \texttt{sensor\_msgs/Imu} oraz wielkość bufora,
 	Używany jest w przeprowadzeniu testów w sekcji \ref{sec:test_imu}.
 	Program działa na zasadzie listy, do którego początku dodaje dane z nowych wiadomości, a z końca usuwa dane ze starych.
 	Z każdą otrzymaną wiadomością, liczy średnią z aktualnie przechowywanych wyników.
+	Na początku działania liczy średnią tylko z tej ilości danych, którą aktualnie posiada.
 	
 \section{Obserwator symulacji}
 	Wtyczka symulatora Gazebo, oblicza i zwraca ciąg danych, reprezentujący 
-	odległość i kąt pomiędzy modelem dynamicznym, a kinematycznym, wiadomość \texttt{omnivelma\_msgs/Relative}.
-	Te dane pozwalają sprawdzić, na ile symulacja fizyczna opóźnia się względem matematycznego modelu.
+	odległość i kąt pomiędzy modelem dynamiki, a kinematyki, wiadomość \texttt{omnivelma\_msgs/Relative}.
+	Te dane pozwalają sprawdzić, na ile symulacja fizyczna różni się względem matematycznego modelu.
 	
 	Ten program nie może być zaimplementowany jako zewnętrzny pakiet, gdyż wiadomości zawierające pozycje platform będą przychodzić asynchronicznie.
 	Nie da się w takim przypadku obliczyć dokładnych odległości pomiędzy platformami w danej chwili. 
@@ -1004,18 +1008,30 @@ virtual bool SetParam (const std::string& key,
 	Zaimplementowany jest w standardowy sposób typu akcja-reakcja.
 	Odbiera wiadomość z zadanymi prędkościami liniowymi i rotacją, a zwraca wiadomość z prędkościami kół.
 	
+	Używa wzoru przedstawionego w sekcji \ref{sec:transmutator}.
+	
 \section{Scena z symulacją}
+	Pakiet dostarcza trzy pliki opisujące symulację.
+
 	Plik typu \texttt{world} jest plikiem SDF, podobnym do tych, które służą do określenia wewnętrznej budowy robotów.
 	Posiada listę elementów \texttt{import} ze ścieżkami modeli, a także nazwy programów działających bez modelu, jak obserwator symulacji, opisany w sekcji \ref{sec:ocznica}.
+	
+	Ten pakiet nie posiada kodu wykonywalnego.
 
 \section{Rozdzielacz wiadomości}
 	Ten program wykonywalny pobiera i generuje wiadomości typu \texttt{omnivelma\_msgs/Vels}, zawierające prędkości kół.
 	Pozwala to na sterowanie kilkoma robotami o identycznym interfejsie ze wspólnego źródła.
 	W szczególności przydaje się to przy rozdzielaniu wartości prędkości kół dla modelu platformy dynamicznej i kinematycznej.
+	
+	Może być zastąpiony przez wbudowane narzędzie, lecz ten jest zaimplementowany w C++, a gotowe narzędzia korzystają z wolniejszego języka interpretowanego Python.
 
 \section{Prosty program sterujący}
-	Działanie programu oparte jest na zachowaniu akcja-reakcja.
-	Dane z czujników laserowych dzielone są, w zależności od kąta pomiaru, na cztery ćwiartki lokalnego układu współrzędnych.
+	Program porusza robotem równolegle do osi lokalnego układu współrzędnych.
+	Nie nadaje prędkości kątowej.
+	
+	Przyjmuje dane ze skanerów laserowych, a periodycznie generuje zadane sterowanie platformie.
+
+	Dane ze skanerów laserowych dzielone są, w zależności od kąta pomiaru, na cztery ćwiartki lokalnego układu współrzędnych.
 	Rozpatrywane są tylko te ćwiartki, w których kierunku porusza się platforma.
 	Jeśli pomiar wypadnie wystarczająco blisko platformy, kierunek jest obracany w odwrotnym do tej ćwiartki kierunku.
 	

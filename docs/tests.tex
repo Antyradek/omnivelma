@@ -12,7 +12,7 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 	W tym teście porównano działanie modelu dynamiki oraz jej enkoderów w stosunku do zadanego sterowania.
 	W tym celu uruchomiono scenę posiadającą dwa modele kinematyki i jeden dynamiki oraz obserwator symulacji, patrz rysunek \ref{uml:comparison}.
 	Jeden model kinematyki użyto do przekształcania zadanych prędkości kół do prędkości liniowej i kątowej platformy, którą to za pomocą symulatora scałkowano w celu określenia zadanej trasy robota. Drugi model, korzystając z enkoderów, realizował mechanikę odometrii, wyznaczał trasę na podstawie danych o obrotach kół.
-	Wiadomości, zawierające dane ich pozycje w czasie, były zapisywane do pliku.
+	Wiadomości, zawierające pozycje modeli w czasie, były zapisywane do pliku.
 	Dodatkowo, wtyczka symulatora, obserwator symulacji, generowała dane porównujące odległość i kąt obrotu modeli od siebie.
 	
 	\begin{figure}[h]
@@ -33,21 +33,21 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 		\end{enumerate}
 		Powyższe akcje wykonał czterokrotnie.
 		
-		\begin{figure}[h]
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=\textwidth]{plots/comparison_xy.pdf}
 				\caption{Trasa modelu platformy w teście porównującym modele. Różnica między zadaną trasą, a trasą wyznaczoną przez enkodery, jest niewielka.}
 			\label{plot:comparison_xy}
 		\end{figure}
 		
-		\begin{figure}[h]
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=\textwidth]{plots/comparison_xt.pdf}
 				\caption{Składowa pozycji modelu wzdłuż osi X w czasie.}
 			\label{plot:comparison_xt}
 		\end{figure}
 		
-		\begin{figure}[h]
+		\begin{figure}[H]
 			\centering
 			\includegraphics[width=\textwidth]{plots/comparison_yt.pdf}
 				\caption{Składowa pozycji modelu wzdłuż osi Y w czasie.}
@@ -121,8 +121,10 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 		\end{figure}
 		
 		Eksperyment pokazuje, że zależnie od prędkości przejazdu, mogą występować niedokładności ruchu. Dzieje się to głównie w kierunku Y, gdyż ruch
-		platformy w bok jest zawsze podobny. Im wolniej platforma się porusza, tym mniejszą odległość pokonuje w odpowiednio dłuższym czasie. 
-		 %TODO Dlaczego?
+		platformy w kierunku X jest zawsze podobny. Im wolniej platforma się porusza, tym mniejszą odległość pokonuje w odpowiednio dłuższym czasie. 
+		Tak jest na skutek wewnętrznego działania maszyny do symulacji fizyki. Potrzeba dokładniejszych testów, aby stwierdzić bezpośredni powód takiego zachowania.
+		
+		Kilkukrotne wykonanie tego samego eksperymentu pokazuje, że różnica tras pomiędzy przejazdami nie jest aż tak duża.
 		 
 \section{Porównanie modelu z robotem}
 	\subsection{Trasa bez rotacji}
@@ -180,11 +182,12 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 				Dodatkowo, pakiety sieciowe, zawierające wiadomości ROSa, przesyłane były przez sieć Ethernet, która nie gwarantuje przesyłu w deterministycznym czasie.
 				To powoduje, że obliczona trasa nie koniecznie pokrywa się z zadaną trasą. Co więcej, na skutek niedeterministycznego przekazywania wiadomości przez strumienie komunikacyjne w czasie symulacji, każdy model i platforma mogły otrzymać nieco inne sterowanie, a co za tym idzie, różnice pomiędzy ich położeniami mogły być spowodowane tym efektem.
 				\item[Odometria modelu] Jak wspomniano w sekcji \ref{sec:test_odometry}, trasa obliczona na jej podstawie niemal pokrywa się z zadaną trasą. 
-				Jednakże, w trakcie nagłej zmiany kierunku ruchu, tarcie kół spowodowało nieznaczną różnicę prędkości kół od zadanych wartości, co jest 
+				Jednakże, w trakcie nagłej zmiany kierunku ruchu, tarcie kół spowodowało nieznaczną różnicę prędkości kół w stosunku do zadanych wartości, co jest 
 				wykryte jako ścięcie wykresu w kierunku Y. W przypadku modelu jest ono bardzo niewielkie, ale w tym samym kierunku, jak obliczone przez odometrię robota.
 				To oznacza, że model enkoderów działa poprawnie, lecz być może jego parametry, czyli moment siły kół lub tarcie rolek nie są odpowiednio dobrane.
 				\item[Model dynamiki] wykazał bezwładność w trakcie ruchu, to znaczy, jego prędkość liniowa w kierunku osi Y nie wzrosła natychmiastowo,
 				lecz pod wpływem przyspieszenia, tak samo prędkość w kierunku X, która także nie spadła natychmiast.
+				Jest to widoczne jako zaokrąglenie na wykresie.
 				Opóźnienie w kierunku X było większe, niż przyspieszenie w kierunku Y, tzn. model szybciej wyhamował składową X prędkości liniowej, niż nadał zadaną składową Y prędkości liniowej, co się objawia jako wydłużenie trasy w danym kącie. Takie samo zachowanie wykazały trasy odometrii.
 				\item[Skaner laserowy] Ponieważ pomiar z tego czujnika jest obarczony dużym błędem oraz małą częstotliwością pomiarów, nie można jednoznacznie określić bezpośredniego zachowania platformy w trakcie skrętu.
 				\item[Odometria robota] Korzystając z enkoderów, program sterujący platformą obliczył jej pozycję. Nie jest to dokładna pozycja platformy, jaka jest określona przez skaner laserowy, lecz trasa wyznaczona tym sposobem jest zbliżona do zadanej trasy tak samo, jak trasa odometrii modelu. 
@@ -193,7 +196,9 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 			\end{description}
 
 	\subsection{Trasa z rotacją}
-		Sterowanie robotem odbyło się w sposób podobny do testu \ref{sec:test_velmobil}, z tą różnicą, że przy wcześniejszej zmianie kierunku prędkości liniowej obracano platformą o 90° wokół osi Z. To znaczy, że platforma poruszała się w prawo, a następnie obróciła i ponownie poruszała się w prawo.
+		\label{sec:test_velmobil_rot}
+		Sterowanie robotem odbyło się w sposób podobny do testu \ref{sec:test_velmobil}, z tą różnicą, że przy wcześniejszej zmianie kierunku prędkości liniowej obracano platformą o 90° wokół osi Z. To znaczy, że platforma poruszała się w prawo z prędkością 0,1 \si{\metre\per\second}, a następnie obróciła o 90° 
+		z prędkością kątową $\pi/20$ \si{\radian\per\second} i ponownie poruszała się w kierunku -X lokalnego układu współrzędnych.
 		Trasa takiego przejazdu została przedstawiona na wykresie \ref{plot:velmobil_rot_xy}.
 		Można na niej zauważyć poślizg przy ruszaniu platformy, który nadał jej losowy kąt obrotu.
 		
@@ -225,88 +230,124 @@ Używając skryptu w programie Gnuplot, narysowano wykresy w formacie PDF, któr
 			\label{plot:velmobil_rot_xy_s}
 		\end{figure}
 	
-	
-	
+		W tym przypadku nie ma informacji o odometrii wygenerowanej przez robota, gdyż nie obsługuje ona poprawnie rotacji platformy.
 		
-% \section{Jednostka inercyjna}
-% \label{sec:test_imu}
-% 	\begin{figure}[H]
-% 		\centering
-% 		\includegraphics[width=\textwidth]{uml/wewucho.pdf}
-% 		\caption{Połączenie pakietów dla testu jednostki inercyjnej.}
-% 		\label{uml:test_imu}
-% 	\end{figure}
-% 	\subsection{Akcelerometr}
-% 		Dane zostały zebrane w trakcie testu \ref{sec:test_pose}.
-% 		Połączenie pakietów w sposób pokazany na rysunku \ref{uml:test_imu}.
-% 		Dane wygenerowane przez ten czujnik są obarczone bardzo dużym błędem.
-% 		
-% 		\begin{figure}[H]
-% 			\centering
-% 			\includegraphics[width=\textwidth]{plots/wewucho.pdf}
-% 			\caption{Odczyt akcelerometra z jednostki inercyjnej i jej modelu.}
-% 			\label{plot:imu}
-% 		\end{figure}
-% 		
-% 		\subsubsection{Impulsy na wykresie modelu}
-% 			W trakcie testu następowały kolejne przyspieszenia i opóźnienia bazy w zadanych kierunkach, to widać jako impulsy na wykresie.
-% 			Na początku platforma zaczęła poruszać się w kierunku -X i w tą stronę zostało nadane pierwsze przyspieszenie.
-% 			Nie jest znana jego wielkość, gdyż było to wysłanie jednej wiadomości, bez płynnego narastania prędkości.
-% 			
-% 			Następnie zadziałało przyspieszenie zmieniające prędkość liniową platformy o 90°, co oznacza że impuls jest obrócony o 45° względem układu współrzędnych.
-% 			Impuls wystąpił w kierunku (X,-Y). 
-% 			
-% 			Podobna zmiana prędkości nastąpiła jeszcze dwa razy, generując kolejne, symetryczne impulsy.
-% 			
-% 			Platforma zatrzymała się, generując opóźnienie w kierunku -Y, co także widać na wykresie.
-% 			
-% 			Przeprowadzanie podobnych testów pokazuje, że nawet jeśli ustawić zaplanowane przyspieszenie modelu, to i tak czujnik nie zwraca poprawnych amplitud.
-% 			Jedyne, co wiadomo to to, że generuje proporcjonalnie większe wartości dla większych przyspieszeń.
-% 			Również istnieje korelacja pomiędzy osiami, na przykład natychmiastowe zatrzymanie się w jednym z kierunków powoduje inne przyspieszenie, niż w innym kierunku.
-% 			Co zresztą jest logiczne, gdyż osie kół stawiają większy opór, gdy działający na nie moment siły jest skierowany prostopadle do osi, niż równolegle. 
-% 			Zatem większe opóźnienie będzie przy hamowaniu z jazdy w bok, niż jazdy w przód.
-% 			
-% 			Szum spowodowany jest potrzebą różniczkowania prędkości obliczanej dyskretnie. Wartości mas i momentów inercji ogniw modelu mocno wpływają na kształt, kolerację
-% 			osi i szum na wykresie. Nie jest technologicznie możliwe zamodelować doskonałej jednostki inercyjnej ze względu na błędy numeryczne, algorytmy użyte w maszynie
-% 			symulującej fizykę i system operacyjny na którym pracuje symulator.
-% 			
-% 		\subsubsection{Wykres czujnika}
-% 			Porównując te dwa wykresy razem, nie widać zależności, jednak zastosowanie prostego uśrednienia pakietem opisanym w sekcji \ref{sec:odszumiacz} powoduje, że impulsy wygenerowane przez robota również są widoczne. Każda uśredniona wartość jest średnią z 40 poprzednich.
-% 			
-% 			Można zaobserwować jak każdy impuls ma kształt półksiężyca, na początku każdej zmiany prędkości opóźnienie ma kierunek równoległy do wektora prędkości, zatrzymując robota, następnie wolniejsze przyspieszenie
-% 			nadaje nowy kierunek, a potem następuje reakcja korpusu i gasnące drgania w nowym kierunku. Zamodelowanie tej własności mogłoby okazać się bardzo trudne, prawdopodobnie należałoby nadać dodatkowe ogniwa do robota i połączyć je więzami sprężynowymi.
-% 			
-% 			Aby użyć tego czujnika do obliczania pozycji, trzeba wpierw użyć zaawansowanego algorytmu odszumiającego i wyprowadzić eksperymentalnie zależności pomiędzy czujnikami
-% 			osi (macierz kowariancji).
-% 			Dopiero wtedy można wprowadzić dodatkowy szum do modelu jednostki inercyjnej w celu przybliżenia jej wyjścia do rzeczywistego urządzenia.
-% 
-% 			
-% \subsection{Żyroskop}
-% 		\label{sec:test_ang}
-% 		Czujnik prędkości kątowej korzysta z żyroskopu i zwraca prędkość kątową we wszystkich trzech osiach.
-% 		Ponieważ jednak platforma porusza się po płaskim terenie, wymagany jest jedynie czujnik mierzący obrót wokół osi Z, czyli w górę.
-% 		Drugą osią wykresu może być zatem czas nadania pakietu. Te dane zostały zebrane w trakcie testu \ref{sec:test_pose}.
-% 		
-% 		\begin{figure}[H]
-% 			\centering
-% 			\includegraphics[width=\textwidth]{plots/wewucho_ang.pdf}
-% 			\caption{Odczyt żyroskopu z jednostki inercyjnej i jej modelu.}
-% 			\label{plot:ang}
-% 		\end{figure}
-% 		
-% 		Ponieważ maszyna do symulacji fizyki wewnętrznie posiada informację o prędkościach obiektów, model tego czujnika po prostu zwraca gotowe dane. 
-% 		To powoduje, że praktycznie pozbawiony jest szumu. 
-% 		Aby zatem polepszyć jakość symulacji, dodano sztuczny szum do generowanych danych, zgodnie z tabelą \ref{tab:imu_noise}.
-% 		W ten sposób wykresy są do siebie bardziej zbliżone.
-% 		
-% 		Jednak niektórych własności czujnika nie da się zamodelować tak łatwo. Po pierwsze, szum czujnika nie do końca ma rozkład normalny.
-% 		Z wykresu można zobaczyć, że dane prawdopodobnie korelują z częstotliwościami obrotu kół.
-% 		Dodatkowo, nagła zmiana prędkości kątowej powoduje zauważalny skok na wykresie, co w symulatorze jest znacznie mniej widoczne.
-% 		Ta cecha wykresu zależy od ustawień mas i inercji ogniw modelu, lecz z kolei inne ustawienia inercji powodują większe błędy przy poruszaniu się platformy.
-% 		
-% 		
-% 		
-% 	
-% 	
+		Na przybliżeniu wykresu (rysunek \ref{plot:velmobil_rot_xy_s}) widać moment jak model dojechał do odpowiedniej pozycji i zaczął się obracać wokół osi Z. 
+		Wykres pokazuje, że obrót następował wokół punktu znajdującego się o około 0,5 \si{\centi\metre} na prawo od środka modelu platformy.
+		Nie jest wiadome, dlaczego tak się stało, gdyż model jest zdefiniowany symetrycznie, a środek układu współrzędnych, względem którego rysowany jest wykres, znajduje się 
+		na środku platformy.
+		Według enkoderów, punkt obrotu znajdował się z kolei na lewo od środka platformy.
+		Takie zachowanie może być spowodowane na przykład asymetrią siatki definiującej kształt platformy, kolejnością obliczeń wykonywanych przy symulowaniu ogniw 
+		obiektu lub innymi własnościami maszyny do symulacji fizyki.
+	
+\section{Jednostka inercyjna}
+	\label{sec:test_imu}
+	W trakcie powyższych testów zabrano również dane wygenerowane przez jednostkę inercyjną oraz jej model.
+	\subsection{Akcelerometr}
+		Ten czujnik zmierzył przyspieszenia modelu w trakcie testu \ref{sec:test_velmobil}.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/imu_xy.pdf}
+				\caption{Porównanie odczytów pomiaru przyspieszenia liniowego jednostki inercyjnej, jej modelu i filtra redukującego szum.}
+			\label{plot:imu_xy}
+		\end{figure}
+		
+		W trakcie testu następowały kolejne przyspieszenia i opóźnienia bazy w zadanych kierunkach, to widać jako impulsy na wykresie \ref{plot:imu_xy}.
+		Na początku platforma zaczęła poruszać się w kierunku -X i w tą stronę zostało nadane pierwsze przyspieszenie.
+		Nie jest znana jego dokładna wielkość, gdyż zadany kierunek prędkości zmienił się w ciągu jednej wiadomości.
+		
+		Drugi impuls został wygenerowany w trakcie pierwszego skrętu bazy.
+		Zadziałało przyspieszenie zmieniające kierunek prędkości liniowej platformy o 90°, co oznacza że impuls jest obrócony o 45° względem układu współrzędnych.
+		Impuls wystąpił w kierunku (X,-Y). 
+		Jest to wypadkowa przyspieszenia bazy w kierunku -Y i opóźnienia w kierunku poprzedniego kierunku jazdy, czyli -X.
+		
+		Podobna zmiana prędkości nastąpiła jeszcze dwa razy, generując kolejne, symetryczne impulsy.
+		
+		Na koniec platforma zatrzymała się, generując opóźnienie w kierunku Y, co także widać na wykresie w postaci przyspieszenia w przeciwnym kierunku.
+		
+		Porównując dane wygenerowane przez jednostkę inercyjną nie widać zależności, jednak zastosowanie prostego uśrednienia pakietem opisanym w sekcji \ref{sec:odszumiacz} powoduje, że impulsy wygenerowane przez robota również są widoczne. Każda uśredniona wartość jest średnią z 40 poprzednich.
+		
+		Po przefiltrowaniu danych z robota, można zaobserwować jak każdy impuls ma kształt półksiężyca, na początku każdej zmiany prędkości opóźnienie ma kierunek równoległy do wektora prędkości, zatrzymując robota, następnie wolniejsze przyspieszenie nadaje nowy kierunek, a potem następuje reakcja korpusu i gasnące drgania w nowym kierunku. 
+		Zamodelowanie tej własności mogłoby okazać się bardzo trudne, prawdopodobnie należałoby nadać dodatkowe ogniwa do robota i połączyć je więzami sprężynowymi.
+		
+		Szum, jakimi są obarczone zamodelowane dane spowodowany jest potrzebą różniczkowania prędkości liniowej modelu, obliczanej dyskretnie przez maszynę do symulacji fizyki. 
+		Wartości mas i momentów bezwładności ogniw modelu mocno wpływają na kształt impulsów, kolerację
+		osi i szum na wykresie. 
+		Nie jest technologicznie możliwe zamodelowanie jednostki inercyjnej pozbawionej szumu ze względu na błędy numeryczne, algorytmy użyte w maszynie
+		symulującej fizykę i system operacyjny na którym pracuje symulator.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/imu_xy_n.pdf}
+				\caption{Porównanie odczytów pomiaru przyspieszenia liniowego modeli jednostki inercyjnej z dodanym szumem i bez.}
+			\label{plot:imu_xy_n}
+		\end{figure}
+		
+		Na wykresie \ref{plot:imu_xy} widać szum generowany przez jednostkę inercji w trakcie ruchu jednostajnego. Jest on mniejszy od niedokładności generowanych
+		przez model. Jednakże, w trakcie działania przyspieszenia, model jednostki inercyjnej wygenerował większy impuls, niż urządzenie.
+		Do wykrycia kierunków impulsów nie potrzebna jest filtracja danych, ale taka filtracja okazała się niezbędna w przypadku danych zebranych z jednostki inercyjnej.
+		
+		Aby przybliżyć zachowanie się modelu jednostki inercyjnej w trakcie ruchu z prędkością jednostajną, do odczytów urządzenia, dodano dodatkowy szum o rozkładzie normalnym.
+		Jego parametry określone są w tabeli \ref{tab:imu_noise}.
+		Na rysunku \ref{plot:imu_xy_n} przedstawiono porównanie generowanych przez model danych z szumem i bez.
+		Można zauważyć silną korelację modelu jednostki inercyjnej w zależności od kierunku prędkości liniowej robota. 
+		Korelacja jest także silnie uzależniona od parametrów modelu dynamiki. Występują bazowe drgania w dwóch kierunkach.
+		Niestety, amplituda bazowych drgań w modelowanym czujniku jest większa niż amplituda szumu rzeczywistej jednostki, w dodatku występuje korelacja wzdłuż dwóch prostych.
+		Widać to na wykresach przebiegu czasowego \ref{plot:imu_yt} i \ref{plot:imu_xt}.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/imu_xt.pdf}
+				\caption{Porównanie składowej X pomiarów przyspieszenia liniowego jednostki inercyjnej, jej modelu i filtra redukującego szum.}
+			\label{plot:imu_xt}
+		\end{figure}
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/imu_yt.pdf}
+				\caption{Porównanie składowej Y pomiarów przyspieszenia liniowego jednostki inercyjnej, jej modelu i filtra redukującego szum.}
+			\label{plot:imu_yt}
+		\end{figure}
+		
+		Aby użyć tego czujnika do obliczania pozycji, trzeba wpierw użyć bardziej zaawansowanego algorytmu odszumiającego i wyprowadzić eksperymentalnie zależności pomiędzy czujnikami
+		osi (macierz kowariancji).
+		
+		Na wykresach \ref{plot:imu_xt} i \ref{plot:imu_yt} widać jak w około 15 sekundzie ruchu na platformę zadziałała nagła zmiana prędkości liniowej.
+		Wykres przebiegu trasy nie wskazuje, jakoby zdarzyła się tam nagła zmiana prędkości.
+	
+	\subsection{Żyroskop}
+		Czujnik prędkości kątowej korzysta z żyroskopu i zwraca prędkość kątową we wszystkich trzech osiach.
+		Ponieważ jednak platforma porusza się po płaskim terenie, wymagany jest jedynie czujnik mierzący obrót wokół osi Z, czyli w górę.
+		Drugą osią wykresu może być zatem czas nadania pakietu. Te dane zostały zebrane w trakcie testu \ref{sec:test_velmobil_rot}.
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=\textwidth]{plots/angimu_at.pdf}
+				\caption{Porównanie prędkości kątowej wokół osi Z, wygenerowanej przez jednostkę inercyjną i jej model.}
+			\label{plot:angimu_at}
+		\end{figure}
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\textwidth]{plots/angimu_at_w.pdf}
+				\caption{Porównanie danych wygenerowanych przez model jednostki inercyjnej i prędkości kątowej wokół osi Z modelu.}
+			\label{plot:angimu_at_w}
+		\end{figure}
+		
+		Ponieważ maszyna do symulacji fizyki wewnętrznie posiada informację o prędkościach obiektów, model tego czujnika po prostu zwraca gotowe dane. 
+		To powoduje, że praktycznie pozbawiony jest szumu, co można zauważyć na wykresie \ref{plot:angimu_at_w}.
+		Aby zatem polepszyć jakość symulacji, dodano sztuczny szum do generowanych danych, zgodnie z tabelą \ref{tab:imu_noise}.
+		W ten sposób wykresy są do siebie bardziej zbliżone.
+		
+		Jednak niektórych własności czujnika nie da się zamodelować tak łatwo. Po pierwsze, szum czujnika nie do końca ma rozkład normalny.
+		Z wykresu można zobaczyć, że dane prawdopodobnie korelują z częstotliwościami obrotu kół.
+		Dodatkowo, nagła zmiana prędkości kątowej powoduje zauważalny skok na wykresie, co w symulowanych danych jest znacznie mniej widoczne.
+		Może być to spowodowane drganiem robota przy nagłych zmianach prędkości kątowej, co nie jest uwzględnione w modelu.
+		
+		
+		
+	
+	
 
 %TODO różnica współczynników tracia w bok i do przodu
