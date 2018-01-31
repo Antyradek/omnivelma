@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <asset>
     <contributor>
-      <author>Antyradek</author>
-      <authoring_tool>Blender 2.78.0 commit date:2016-10-24, commit time:12:20, hash:e8299c8100</authoring_tool>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.79.0 commit date:2017-09-12, commit time:08:47, hash:8ef39d5c882</authoring_tool>
     </contributor>
-    <created>2017-01-24T15:58:05</created>
-    <modified>2017-01-24T15:58:05</modified>
+    <created>2018-01-31T19:58:29</created>
+    <modified>2018-01-31T19:58:29</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -15,9 +15,9 @@
     <geometry id="ov_front_001-mesh" name="ov_front.001">
       <mesh>
         <source id="ov_front_001-mesh-positions">
-          <float_array id="ov_front_001-mesh-positions-array" count="30">-0.3367558 -0.0927518 -0.07781875 -0.3367558 -0.0927518 0.08218115 -0.3367558 0.09786331 -0.07781875 0.3367558 -0.0927518 -0.07781875 0.3367558 -0.0927518 0.08218115 0.3367558 0.09786331 -0.07781875 -0.3367558 0.06786328 0.08218115 -0.3367558 0.09786331 0.05218112 0.3367558 0.09786331 0.05218112 0.3367558 0.06786328 0.08218115</float_array>
+          <float_array id="ov_front_001-mesh-positions-array" count="51">-0.3367558 -0.0927518 -0.07781875 -0.3367558 -0.0927518 0.08218115 -0.3367558 0.09786331 -0.07781875 0.3367558 -0.0927518 -0.07781875 0.3367558 -0.0927518 0.08218115 0.3367558 0.09786331 -0.07781875 -0.3367558 0.06786328 0.08218115 -0.3367558 0.09786331 0.05218112 0.3367558 0.09786331 0.05218112 0.3367558 0.06786328 0.08218115 0 0.002555727 -0.07781875 0.3367558 -1.66806e-4 -1.47871e-4 -0.3367558 -1.66804e-4 -1.47871e-4 0 -0.01244425 0.08218115 0 -0.0927518 0.002181172 0 0.09786325 -0.01281881 0 0.08286327 0.06718111</float_array>
           <technique_common>
-            <accessor source="#ov_front_001-mesh-positions-array" count="10" stride="3">
+            <accessor source="#ov_front_001-mesh-positions-array" count="17" stride="3">
               <param name="X" type="float"/>
               <param name="Y" type="float"/>
               <param name="Z" type="float"/>
@@ -25,9 +25,9 @@
           </technique_common>
         </source>
         <source id="ov_front_001-mesh-normals">
-          <float_array id="ov_front_001-mesh-normals-array" count="24">0 1 0 0 0 1 1 0 0 0 -1 0 0 0 -1 0 0.7071069 0.7071068 -1 0 0 1 -9.55202e-7 0</float_array>
+          <float_array id="ov_front_001-mesh-normals-array" count="78">1 0 -3.6199e-7 0 0 -1 -1 0 0 1 5.02956e-7 0 0 0 1 0 -1 0 0 1 0 0 0 -1 -1 -2.92319e-7 0 0 0.7071067 0.7071068 1 0 3.837e-7 1 -2.92319e-7 0 0 0 -1 0 0 -1 1 0 -1.98208e-7 -1 5.02956e-7 0 0 0 1 0 0 1 0 -1 0 0 -1 0 0 1 3.40378e-7 0 1 0 0 1 -3.40378e-7 0 0.707107 0.7071066 0 0.7071067 0.7071068 0 0.7071069 0.7071067</float_array>
           <technique_common>
-            <accessor source="#ov_front_001-mesh-normals-array" count="8" stride="3">
+            <accessor source="#ov_front_001-mesh-normals-array" count="26" stride="3">
               <param name="X" type="float"/>
               <param name="Y" type="float"/>
               <param name="Z" type="float"/>
@@ -37,12 +37,11 @@
         <vertices id="ov_front_001-mesh-vertices">
           <input semantic="POSITION" source="#ov_front_001-mesh-positions"/>
         </vertices>
-        <polylist count="16">
+        <triangles count="30">
           <input semantic="VERTEX" source="#ov_front_001-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#ov_front_001-mesh-normals" offset="1"/>
-          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
-          <p>8 0 2 0 7 0 1 1 9 1 6 1 9 2 3 2 5 2 1 3 3 3 4 3 3 4 2 4 5 4 9 5 7 5 6 5 6 6 2 6 0 6 8 0 5 0 2 0 1 1 4 1 9 1 5 7 8 7 9 7 9 2 4 2 3 2 1 3 0 3 3 3 3 4 0 4 2 4 9 5 8 5 7 5 0 6 1 6 6 6 6 6 7 6 2 6</p>
-        </polylist>
+          <p>9 0 4 0 11 0 0 1 2 1 10 1 6 2 7 2 12 2 4 3 3 3 11 3 1 4 4 4 13 4 1 5 0 5 14 5 8 6 5 6 15 6 5 7 3 7 10 7 7 8 2 8 12 8 9 9 8 9 16 9 3 10 5 10 11 10 5 11 8 11 11 11 2 12 5 12 10 12 2 2 0 2 12 2 3 13 0 13 10 13 8 14 9 14 11 14 0 15 1 15 12 15 1 2 6 2 12 2 4 16 9 16 13 16 9 4 6 4 13 4 6 17 1 17 13 17 0 18 3 18 14 18 3 19 4 19 14 19 4 18 1 18 14 18 5 20 2 20 15 20 2 21 7 21 15 21 7 22 8 22 15 22 8 23 7 23 16 23 7 24 6 24 16 24 6 25 9 25 16 25</p>
+        </triangles>
       </mesh>
     </geometry>
   </library_geometries>
