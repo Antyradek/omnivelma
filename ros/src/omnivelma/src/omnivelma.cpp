@@ -151,14 +151,14 @@ private:
 	void SetVelocities()
 	{
 		//nadaj poprzednie prędkości kół
-		if(!std::isnan(velRR))
-			motorRR -> SetParam("vel", 0, velRR);
-		if(!std::isnan(velRL))
-			motorRL -> SetParam("vel", 0, velRL);
 		if(!std::isnan(velFR))
 			motorFR -> SetParam("vel", 0, velFR);
 		if(!std::isnan(velFL))
 			motorFL -> SetParam("vel", 0, velFL);
+		if(!std::isnan(velRR))
+			motorRR -> SetParam("vel", 0, velRR);
+		if(!std::isnan(velRL))
+			motorRL -> SetParam("vel", 0, velRL);
 	}
 
 	///Funkcja podłączana do zdarzenia aktualizacji

@@ -77,7 +77,7 @@
 			</visual>
 		</link>
 		
-		<!-- Czujniki laserowe (TODO pozycje do dokładniejszego dopracowania)-->
+		<!-- Czujniki laserowe (TODO pozycje do dokładniejszego dopracowania) -->
 		<plugin name="omnivelma" filename="libmonokl_chain.so"/>
 		<include>
 			<uri>model://monokl</uri>
@@ -110,6 +110,71 @@
 		</joint>
 		
 		<!-- Koła wirtualne -->
+		<link name="wheel_fl">
+			<pose>-0.38 0.36 0 0 0 0</pose>
+			<collision name="wheel_fl_collision">
+				<geometry>
+					<sphere>
+						<radius>0.1016</radius>
+					</sphere>
+				</geometry>
+				<surface>
+					<friction>
+						<ode>
+							<mu>0.92</mu>
+							<mu2>0.05</mu2>
+							<fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
+							<slip1>0</slip1>
+							<slip2>0</slip2>
+						</ode>
+						<bullet>
+							<friction>1</friction>
+							<friction2>0</friction2>
+							<fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
+							<rolling_friction>0</rolling_friction>
+						</bullet>
+					</friction>
+				</surface>
+			</collision>
+			<inertial>
+				<mass>1.6</mass>
+				<inertia>
+					<ixx>0.008</ixx>
+					<ixy>0</ixy>
+					<ixz>0</ixz>
+					<iyy>0.004738485</iyy>
+					<iyz>0</iyz>
+					<izz>0.004738485</izz>
+				</inertia>
+			</inertial>
+			<visual name="wheel_fl_middle">
+				<geometry>
+					<mesh>
+						<uri>model://omnivelma/meshes/visual/wheel.dae</uri>
+					</mesh>
+				</geometry>
+				<material>
+					<script>
+						<uri>model://omnivelma/materials/omnivelma.material</uri>
+						<name>omnivelma/wheels</name>
+					</script>
+				</material>
+			</visual>
+			<visual name="wheel_fl_rollers">
+				<geometry>
+					<mesh>
+						<uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
+					</mesh>
+				</geometry>
+				<material>
+					<script>
+						<uri>model://omnivelma/materials/omnivelma.material</uri>
+						<name>omnivelma/rollers</name>
+					</script>
+				</material>
+			</visual>
+		</link>
+		
 		<link name="wheel_rr">
 			<pose>0.38 -0.36 0 0 0 0</pose>
 			<collision name="wheel_rr_collision">
@@ -121,8 +186,8 @@
 				<surface>
 					<friction>
 						<ode>
-							<mu>infinity</mu>
-							<mu2>0</mu2>
+							<mu>0.92</mu>
+							<mu2>0.05</mu2>
 							<fdir1>0.707106781186548 0.707106781186548 0</fdir1>
 							<slip1>0</slip1>
 							<slip2>0</slip2>
@@ -186,8 +251,8 @@
 				<surface>
 					<friction>
 						<ode>
-							<mu>infinity</mu>
-							<mu2>0</mu2>
+							<mu>0.92</mu>
+							<mu2>0.05</mu2>
 							<fdir1>-0.707106781186548 0.707106781186548 0</fdir1>
 							<slip1>0</slip1>
 							<slip2>0</slip2>
@@ -251,8 +316,8 @@
 				<surface>
 					<friction>
 						<ode>
-							<mu>infinity</mu>
-							<mu2>0</mu2>
+							<mu>0.92</mu>
+							<mu2>0.05</mu2>
 							<fdir1>0.707106781186548 -0.707106781186548 0</fdir1>
 							<slip1>0</slip1>
 							<slip2>0</slip2>
@@ -305,71 +370,6 @@
 			</visual>
 		</link>
 		
-		<link name="wheel_fl">
-			<pose>-0.38 0.36 0 0 0 0</pose>
-			<collision name="wheel_fl_collision">
-				<geometry>
-					<sphere>
-						<radius>0.1016</radius>
-					</sphere>
-				</geometry>
-				<surface>
-					<friction>
-						<ode>
-							<mu>infinity</mu>
-							<mu2>0</mu2>
-							<fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
-							<slip1>0</slip1>
-							<slip2>0</slip2>
-						</ode>
-						<bullet>
-							<friction>1</friction>
-							<friction2>0</friction2>
-							<fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
-							<rolling_friction>0</rolling_friction>
-						</bullet>
-					</friction>
-				</surface>
-			</collision>
-			<inertial>
-				<mass>1.6</mass>
-				<inertia>
-					<ixx>0.008</ixx>
-					<ixy>0</ixy>
-					<ixz>0</ixz>
-					<iyy>0.004738485</iyy>
-					<iyz>0</iyz>
-					<izz>0.004738485</izz>
-				</inertia>
-			</inertial>
-			<visual name="wheel_fl_middle">
-				<geometry>
-					<mesh>
-						<uri>model://omnivelma/meshes/visual/wheel.dae</uri>
-					</mesh>
-				</geometry>
-				<material>
-					<script>
-						<uri>model://omnivelma/materials/omnivelma.material</uri>
-						<name>omnivelma/wheels</name>
-					</script>
-				</material>
-			</visual>
-			<visual name="wheel_fl_rollers">
-				<geometry>
-					<mesh>
-						<uri>model://omnivelma/meshes/visual/wheel_l.dae</uri>
-					</mesh>
-				</geometry>
-				<material>
-					<script>
-						<uri>model://omnivelma/materials/omnivelma.material</uri>
-						<name>omnivelma/rollers</name>
-					</script>
-				</material>
-			</visual>
-		</link>
-		
 		<!-- Środkowy przegub (zawias) -->
 		<joint name="middle_joint" type="revolute">
 			<parent>base</parent>
@@ -382,6 +382,24 @@
 		</joint>
 		
 		<!-- Przeguby kół (motory) -->
+		<joint name="motor_fr" type="revolute">
+			<parent>front</parent>
+			<child>wheel_fr</child>
+			<pose>-0.036 0 0 0 0 0</pose>
+			<axis>
+				<xyz>-1 0 0</xyz>
+			</axis>
+		</joint>
+		
+		<joint name="motor_fl" type="revolute">
+			<parent>front</parent>
+			<child>wheel_fl</child>
+			<pose>0.036 0 0 0 0 0</pose>
+			<axis>
+				<xyz>-1 0 0</xyz>
+			</axis>
+		</joint>
+		
 		<joint name="motor_rr" type="revolute">
 			<parent>base</parent>
 			<child>wheel_rr</child>
@@ -400,22 +418,6 @@
 			</axis>
 		</joint>
 		
-		<joint name="motor_fr" type="revolute">
-			<parent>front</parent>
-			<child>wheel_fr</child>
-			<pose>-0.036 0 0 0 0 0</pose>
-			<axis>
-				<xyz>-1 0 0</xyz>
-			</axis>
-		</joint>
 		
-		<joint name="motor_fl" type="revolute">
-			<parent>front</parent>
-			<child>wheel_fl</child>
-			<pose>0.036 0 0 0 0 0</pose>
-			<axis>
-				<xyz>-1 0 0</xyz>
-			</axis>
-		</joint>
 	</model>
 </sdf>
