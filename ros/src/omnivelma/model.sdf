@@ -122,7 +122,7 @@
 					<friction>
 						<ode>
 							<mu>0.95</mu>
-							<mu2>0.3</mu2>
+							<mu2>0.5</mu2>
 							<fdir1>-0.707106781186548 -0.707106781186548 0</fdir1>
 							<slip1>0.001</slip1>
 							<slip2>0.1</slip2>
@@ -187,7 +187,7 @@
 					<friction>
 						<ode>
 							<mu>0.95</mu>
-							<mu2>0.3</mu2>
+							<mu2>0.5</mu2>
 							<fdir1>0.707106781186548 0.707106781186548 0</fdir1>
 							<slip1>0.001</slip1>
 							<slip2>0.1</slip2>
@@ -252,7 +252,7 @@
 					<friction>
 						<ode>
 							<mu>0.95</mu>
-							<mu2>0.3</mu2>
+							<mu2>0.5</mu2>
 							<fdir1>-0.707106781186548 0.707106781186548 0</fdir1>
 							<slip1>0.001</slip1>
 							<slip2>0.1</slip2>
@@ -317,7 +317,7 @@
 					<friction>
 						<ode>
 							<mu>0.95</mu>
-							<mu2>0.3</mu2>
+							<mu2>0.5</mu2>
 							<fdir1>0.707106781186548 -0.707106781186548 0</fdir1>
 							<slip1>0.001</slip1>
 							<slip2>0.1</slip2>
@@ -388,6 +388,10 @@
 			<pose>-0.036 0 0 0 0 0</pose>
 			<axis>
 				<xyz>-1 0 0</xyz>
+				<dynamics>
+					<damping>0.5</damping>
+					<friction>0.1</friction>
+				</dynamics>
 			</axis>
 		</joint>
 		
@@ -397,6 +401,10 @@
 			<pose>0.036 0 0 0 0 0</pose>
 			<axis>
 				<xyz>-1 0 0</xyz>
+				<dynamics>
+					<damping>0.5</damping>
+					<friction>0.1</friction>
+				</dynamics>
 			</axis>
 		</joint>
 		
@@ -406,6 +414,10 @@
 			<pose>-0.036 0 0 0 0 0</pose>
 			<axis>
 				<xyz>-1 0 0</xyz>
+				<dynamics>
+					<damping>0.5</damping>
+					<friction>0.1</friction>
+				</dynamics>
 			</axis>
 		</joint>
 		
@@ -415,6 +427,10 @@
 			<pose>0.036 0 0 0 0 0</pose>
 			<axis>
 				<xyz>-1 0 0</xyz>
+				<dynamics>
+					<damping>0.5</damping>
+					<friction>0.1</friction>
+				</dynamics>
 			</axis>
 		</joint>
 		

@@ -20,7 +20,7 @@
 #define AXIS_LENGTH 0.707106781186548
 #define CLIENT_NAME "gazebo_ros"
 #define MAP_TF "map"
-#define MAX_FORCE 5.0
+#define MAX_FORCE 2.0
 
 namespace gazebo
 {
