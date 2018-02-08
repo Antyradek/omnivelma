@@ -32,7 +32,7 @@
 	
 	\section{Problem}
 	\begin{frame}
-		\frametitle{Platforma mobilna}
+		\frametitle{Roboty}
 		\begin{columns}[c]
 			\column{0.5\textwidth}
 			\centering
@@ -51,7 +51,7 @@
 		\begin{itemize}
 			\item Pozwala na bezpieczne testowanie nowego oprogramowania.
 			\item Przyspiesza implementację i testowanie programu sterującego.
-			\item Ułatwia przeprowadzanie skomplikowanych i niebezpiecznych dla robota testów.
+			\item Pozwala na przeprowadzanie skomplikowanych i niebezpiecznych dla robota testów.
 			\item Daje możliwość modelowania czujników niezamontowanych w urządzeniu.
 		\end{itemize}
 		Wymagania:
@@ -77,17 +77,6 @@
 
 	\section{Platforma}
 	\begin{frame}
-		\frametitle{Budowa}
-		\centering
-		\includegraphics[width=0.4\textwidth]{graphics/base.pdf}
-		\begin{itemize}
-			\item Przegub o jednym stopniu swobody łączy dwie części platformy.
-			\item Koła ustawione są w kształt litery \emph{X}.
-			\item Oś rolki aktualnie znajdującej się u góry koła jest prostopadła do osi rolki kolidującej z podłożem.
-		\end{itemize}
-	\end{frame}
-
-	\begin{frame}
 		\frametitle{Koła Szwedzkie (Mecanum)}
 		\centering
 		\includegraphics[width=\textwidth]{graphics/wheel.pdf}
@@ -95,22 +84,24 @@
 			\item Każde koło ma 12 pasywnych rolek.
 			\item Rolka jest obrócona o 45° względem osi obrotu koła.
 			\item Punkt kontaktu rolki z podłożem powinien płynnie przechodzić z rolki na rolkę.
-			\item Koło pod wpływem momentu siły i siły tarcia o podłoże generuje wektor siły obrócony o 45° względem wektora siły standardowego koła.
+			\item Oś rolki aktualnie znajdującej się u góry koła jest prostopadła do osi rolki kolidującej z podłożem.
 		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
-		\frametitle{Obrócony wektor}
+		\frametitle{Budowa}
 		\centering
-		\includegraphics[width=\textwidth]{graphics/vectors.pdf} \\
-		Standardowe koło, używając tarcia, przekształca prędkość kątową na liniową w płaszczyźnie obrotu.
-		Specjalne koło Mecanum posiada pasywne rolki na obrzeżu, zatem prędkość wypadkowa jest obrócona o 45\textdegree.
+		\includegraphics[width=0.4\textwidth]{graphics/base.pdf}
+		\begin{itemize}
+			\item Koła ustawione są w kształt litery \emph{X}.
+			\item Przegub o jednym stopniu swobody łączy dwie części platformy.
+		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Kierunki ruchu}
 		\centering
-		\includegraphics[width=\textwidth]{graphics/dirs.pdf} \\
+		\includegraphics[width=\textwidth]{graphics/mecanum_dirs_vect.pdf} \\
 		Poprzez znoszenie się składowych wektorów sił, robot może poruszać się w kierunkach nieosiągalnych dla pojazdów o zwykłych kołach.
 	\end{frame}
 	
@@ -145,15 +136,15 @@
 		\begin{itemize}
 			\item Enkodery generują prędkość kątową i kąt obrotu koła.
 			\item Skanery laserowe zwracają przybliżony zarys obiektów wokół robota.
-			\item Jednostka inercji mierzy przyspieszenie liniowe i prędkość kątową platformy.
+			\item Jednostka inercyjna mierzy przyspieszenie liniowe i prędkość kątową platformy.
 		\end{itemize}
 	\end{frame}
 	
 	
 	
-	\section{Implementacja}
+	\section{Model}
 	\begin{frame}
-		\frametitle{Modele}
+		\frametitle{Składniki systemu}
 		\begin{columns}[c]
 			\column{0.4\textwidth}
 				\centering
@@ -190,7 +181,7 @@
 			\item Współczynniki tarcia i poślizgu kół.
 			\item Masy i momenty bezwładności ogniw.
 			\item Parametry przegubów.
-			\item Parametry silnika do symulacji fizyki.
+			\item Parametry symulatora.
 		\end{itemize}
 		Odpowiedni dobór parametrów pozwala na przybliżenie zachowania się modelu do platformy.
 
@@ -206,13 +197,6 @@
 	
 	
 	\section{Pomiary}
-	\begin{frame}
-		\frametitle{Testowanie ruchu modelu dynamiki platformy}
-		\centering
-		\includegraphics[width=\textwidth]{graphics/comparison.pdf} 
-		Konfiguracja środowiska przy przeprowadzaniu testów.
-	\end{frame}
-	
 	\begin{frame}
 		\frametitle{Sprzęt i wersje programów}
 		Eksperymenty przeprowadzono na dobrej jakości sprzęcie i możliwie najaktualniejszych wersjach programów.
@@ -245,7 +229,7 @@
 	\begin{frame}
 		\frametitle{Jednostka inercyjna}
 		\centering
-		\includegraphics[width=\textwidth]{graphics/imu_xy.pdf} \\
+		\includegraphics[width=\textwidth]{graphics/imu_xy.png} \\
 		Porównanie rzeczywistych danych z modelem.
 	\end{frame}
 	
@@ -267,7 +251,7 @@
 	
 	\begin{frame}
 		\frametitle{Pokaz}
-		Nagrany film lub pokaz na żywo.
+		Nagrany film.
 	\end{frame}
  
  

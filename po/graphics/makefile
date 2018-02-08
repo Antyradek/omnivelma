@@ -1,5 +1,5 @@
 INKSCAPE=inkscape
-PDFS=base.pdf
+PDFS=base.pdf mecanum_dirs_vect.pdf
 
 all: $(PDFS)
 
