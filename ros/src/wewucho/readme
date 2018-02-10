@@ -1,9 +1,6 @@
 WewUcho - czujnik inercji
 
-Komunikacja programu w formie:
-nazwa
-typ
-opis
+Model musi być zaimportowany do modelu platformy
 
 /wewucho/imu
 sensor_msgs/Imu

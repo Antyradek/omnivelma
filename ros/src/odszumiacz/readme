@@ -1,12 +1,8 @@
 Odszumiacz - Odszumiacz danych czujnika inercji.
-Użycie: odszumiacz TOPIC_IN TOPIC_OUT
+Użycie: odszumiacz TOPIC_IN TOPIC_OUT BUFFER
 
+Uśrednia od zera do BUFFER wiadomości, wyliczając średnią arytmetyczną z każdego pola osobno.
 Wejściowy topic i wyjściowy, oba typu sensor_msgs/Imu.
-
-Komunikacja programu w formie:
-nazwa
-typ
-opis
 
 TOPIC_IN
 sensor_msgs/Imu

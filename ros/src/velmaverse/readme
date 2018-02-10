@@ -5,5 +5,7 @@ Umieszcza na scenie platformy dynamiczną i kinematyczną w punkcie (0,0).
 Umieszcza Ocznicę.
 
 Solovelma:
-Umieszcza platformę dynamiczną.
+Umieszcza platformę dynamiki.
 
+Triplevelma:
+Umieszcza platformę dynamiki i dwie kinematyki.

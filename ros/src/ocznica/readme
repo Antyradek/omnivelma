@@ -1,9 +1,11 @@
-Ocznica - model obserwujący i porównywujący otoczenie
+Ocznica - model obserwujący i porównujący otoczenie
 
-Komunikacja programu w formie:
-nazwa
-typ
-opis
+Wymaga aby w elemencie w SDF zdefiniowane były nazwy celów do porównania.
+Na przykład:
+<plugin name="omnicznica" filename="libocznica.so">
+	<target1>pseudovelma</target1>
+	<target2>omnivelma</target2>
+</plugin>
 
 /ocznica/relative
 omnivelma_msgs/RelativeStamped

@@ -3,4 +3,3 @@ Użycie: widelnica TOPIC TOPIC TOPIC...
 
 Przyjmuje za argumenty listę topiców do nadawania.
 Wystawia odbiór typu omnivelma_msgs/Vels o nazwie /widelnica/vels
-

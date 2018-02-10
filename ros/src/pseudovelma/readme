@@ -1,9 +1,6 @@
 Pseudovelma - platforma kinematyczna
 
-Komunikacja programu w formie:
-nazwa
-typ
-opis
+Model może być użyty do wyznaczania zadanej trasy, jak też do realizowania odometrii.
 
 /pseudovelma/vels
 omnivelma_msgs/Vels
@@ -26,7 +23,7 @@ Zwraca aktualną prędkość
 nav_msgs/Odometry
 Wiadomość zawierająca obie powyższe wiadomości
 
-Ramki:
+Macierze przekształceń:
 map                         Środek układu współrzędnych, środek mapy w (0,0,0)
 pseudovelma                 Środek platformy kinematycznej
 map → pseudovelma           Nadawane przez pseudovelma.cpp

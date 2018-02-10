@@ -9,11 +9,6 @@ Przydatne, jeśli program do sterowania robota ma inaczej zdefiniowany przód, n
 Na przykład sterowanie RobotSteering z RQT, albo rp2_teleop zakłada, że przód jest w kierunku X+, a Omnivelma ma przód w kierunku Y+.
 Należy uruchomić więc Transmutator z argumentami '-r 90', żeby łatwo z nich sterować Omnivelmą.
 
-Komunikacja programu w formie:
-nazwa
-typ
-opis
-
 TOPIC
 omnivelma_msgs/Vels
 Zwraca prędkości kół do powyższych rostopic.

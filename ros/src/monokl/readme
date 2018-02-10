@@ -1,11 +1,10 @@
 Monokl - czujnik laserowy LiDAR SICK LMS100-1000
 
-Komunikacja programu w formie:
-nazwa
-typ
-opis
+Czujnik jest modelem, który musi być zaimportowany do modelu platformy.
+Potrzebne jest wysyłanie macierzy przekształceń (frames) o nazwach 
+monokl_l_heart i monokl_r_heart.
 
 /monokl_r/scan monokl_l/scan
 sensor_msgs/LaserScan
-Dane skanowania prawego, lub lewego czujnika
+Dane skanowania prawego lub lewego czujnika
 

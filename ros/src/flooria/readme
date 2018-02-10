@@ -1,10 +1,5 @@
 Flooria - podłoga ze zmiennym współczynnikiem tarcia
 
-Komunikacja programu w formie:
-nazwa
-typ
-opis
-
 /flooria/set_friction
 omnivelma_msgs/SetFriction
 Przyjmuje nowy współczynnik tarcia.

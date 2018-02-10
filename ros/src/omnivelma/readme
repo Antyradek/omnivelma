@@ -1,10 +1,7 @@
 Omnivelma - Platforma dynamiczna
 MonoklChain - Informator o pozycjach czujników
 
-Komunikacja programu w formie:
-nazwa
-typ
-opis
+Model dynamiki oraz połączenie go ze skanerami.
 
 /omnivelma/vels
 omnivelma_msgs/Vels
@@ -38,7 +35,7 @@ omnivelma_msgs/SetInertia
 Ustawia masę, środek ciężkości i moment bezwładności dla części składowych modelu.
 Każda składowa ma lokalny środek ciężkości w przybliżonym punkcie ciężkości.
 
-Ramki:
+Macierze przekształceń:
 map                         Środek układu współrzędnych, środek mapy w (0,0,0)
 omnivelma                   Środek platformy
 monokl_r_heart              Emiter lasera w prawym LiDARze
