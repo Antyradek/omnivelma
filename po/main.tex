@@ -28,63 +28,62 @@
 		\tableofcontents[currentsection]
 	\end{frame}
 	
-	
-	
 	\section{Problem}
+	\begin{frame}
+		\frametitle{Cel projektu}
+		Celem jest opracowanie modelu i środowiska symulacyjnego platformy na kołach szwedzkich.
+		\begin{itemize}
+			\item Model pozwala na bezpieczne testowanie nowego oprogramowania.
+			\item Przyspiesza implementację i testowanie programu sterującego.
+			\item Pozwala na przeprowadzanie skomplikowanych i~niebezpiecznych dla robota testów.
+			\item Daje możliwość modelowania czujników niezamontowanych w~robocie.
+		\end{itemize}
+	\end{frame}
+	
 	\begin{frame}
 		\frametitle{Roboty}
 		\begin{columns}[c]
 			\column{0.5\textwidth}
 			\centering
-			\includegraphics[width=0.8\textwidth]{graphics/velma.png} \\
-			Robot manipulacyjny Velma
-			\column{0.5\textwidth}
-			\centering
 			\includegraphics[width=\textwidth]{graphics/omnivelma.png} \\
 			Platforma na kołach Mecanum
+			\column{0.5\textwidth}
+			\centering
+			\includegraphics[width=0.8\textwidth]{graphics/velma.png} \\
+			Robot manipulacyjny Velma
 		\end{columns}
-	\end{frame}
-	
-	\begin{frame}
-		\frametitle{Cel projektu --- opracowanie modelu i środowiska symulacyjnego platformy}
-		Do czego przydatny jest model:
-		\begin{itemize}
-			\item Pozwala na bezpieczne testowanie nowego oprogramowania.
-			\item Przyspiesza implementację i testowanie programu sterującego.
-			\item Pozwala na przeprowadzanie skomplikowanych i niebezpiecznych dla robota testów.
-			\item Daje możliwość modelowania czujników niezamontowanych w urządzeniu.
-		\end{itemize}
-		Wymagania:
-		\begin{itemize}
-			\item Model reaguje na momenty siły i siły tarcia w sposób zbliżony do robota.
-			\item Przyjmuje taką samą postać sygnałów sterujących.
-			\item Generuje dane z czujników wirtualnych, zbliżone do rzeczywistych.
-		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Założenia}
 		\begin{itemize}
-			\item Ze względu na ograniczoną moc obliczeniową komputera, modele kół muszą być przybliżone.
-			\item Robot i model poruszają się tylko po płaszczyźnie.
+			\item Ze względu na dużą ilość obliczeń, modele kół muszą być przybliżone.
+			\item Ruch robota odbywa się po płaszczyźnie.
 			\item Odwzorować należy kinematykę, dynamikę i tarcie.
 			\item Mogą występować poślizgi kół.
-			\item Symulacja obarczona jest naturalnym numerycznym błędem liczb zmiennoprzecinkowych.
 		\end{itemize}
 	\end{frame}
-
+	
+	\begin{frame}
+		\frametitle{Wymagania}
+		\begin{itemize}
+			\item Model uwzględnia siły i momenty sił tarcia w sposób zbliżony do robota.
+			\item Przyjmuje taką samą postać sygnałów sterujących.
+			\item Generuje dane z czujników wirtualnych, zbliżone do rzeczywistych.
+		\end{itemize}
+	\end{frame}
 	
 
 	\section{Platforma}
 	\begin{frame}
-		\frametitle{Koła Szwedzkie (Mecanum)}
+		\frametitle{Koła szwedzkie (Mecanum)}
 		\centering
 		\includegraphics[width=\textwidth]{graphics/wheel.pdf}
 		\begin{itemize}
 			\item Każde koło ma 12 pasywnych rolek.
 			\item Rolka jest obrócona o 45° względem osi obrotu koła.
 			\item Punkt kontaktu rolki z podłożem powinien płynnie przechodzić z rolki na rolkę.
-			\item Oś rolki aktualnie znajdującej się u góry koła jest prostopadła do osi rolki kolidującej z podłożem.
+			\item Oś górnej rolki jest prostopadła do osi rolki kontaktującej z podłożem.
 		\end{itemize}
 	\end{frame}
 	
@@ -93,7 +92,7 @@
 		\centering
 		\includegraphics[width=0.4\textwidth]{graphics/base.pdf}
 		\begin{itemize}
-			\item Koła ustawione są w kształt litery \emph{X}.
+			\item Koła ustawione są w kształt litery \emph{X}, patrząc z góry.
 			\item Przegub o jednym stopniu swobody łączy dwie części platformy.
 		\end{itemize}
 	\end{frame}
@@ -102,7 +101,7 @@
 		\frametitle{Kierunki ruchu}
 		\centering
 		\includegraphics[width=\textwidth]{graphics/mecanum_dirs_vect.pdf} \\
-		Poprzez znoszenie się składowych wektorów sił, robot może poruszać się w kierunkach nieosiągalnych dla pojazdów o zwykłych kołach.
+		Dobierając odpowiednie prędkości kół, można nadać ruch platformie w dowolnym kierunku, bez zmiany orientacji.
 	\end{frame}
 	
 	\begin{frame}
@@ -134,8 +133,8 @@
 	\begin{frame}
 		\frametitle{Czujniki}
 		\begin{itemize}
-			\item Enkodery generują prędkość kątową i kąt obrotu koła.
-			\item Skanery laserowe zwracają przybliżony zarys obiektów wokół robota.
+			\item Enkodery pozwalają na wykrycie kąta obrotu i~prędkości kątowej kół.
+			\item Skanery laserowe pozwalają na odczyt odległości od~obiektów otoczenia i~ich jasności.
 			\item Jednostka inercyjna mierzy przyspieszenie liniowe i prędkość kątową platformy.
 		\end{itemize}
 	\end{frame}
@@ -145,37 +144,26 @@
 	\section{Model}
 	\begin{frame}
 		\frametitle{Składniki systemu}
-		\begin{columns}[c]
-			\column{0.4\textwidth}
 				\centering
-				\includegraphics[width=\textwidth]{graphics/model.png} \\
-				Model dynamiki platformy.
-			\column{0.6\textwidth}
+				\includegraphics[width=0.3\textwidth]{graphics/model.png} \\
 				\begin{itemize}
 					\item Uproszczony model dynamiki.
-					\item Matematycznie dokładne modele kinematyki.
+					\item Dokładne modele kinematyki.
 					\begin{itemize}
-						\item Model kinematyki prostej --- koła na prędkość.
-						\item Model kinematyki odwrotnej --- prędkość na koła.
+						\item Model kinematyki prostej --- prędkości kątowe kół na prędkość liniową i kątową platformy.
+						\item Model kinematyki odwrotnej --- prędkość liniowa i kątowa platformy na prędkości kątowe kół.
 					\end{itemize}
 					\item Modele czujników.
 					\begin{itemize}
 						\item Enkodery.
 						\item Skanery laserowe.
-						\item Jednostki inercji.
-					\end{itemize}
-					\item Pakiety wspomagające testowanie.
-					\begin{itemize}
-						\item Generujące dane.
-						\item Przyjmujące dane.
-						\item Filtrujące dane.
+						\item Jednostka inercji.
 					\end{itemize}
 				\end{itemize}
-		\end{columns}
 	\end{frame}
 	
 	\begin{frame}
-		\frametitle{Parametry modelu dynamiki}
+		\frametitle{Parametry modelu 3D}
 		\begin{itemize}
 			\item Sposób implementacji modelu.
 			\item Współczynniki tarcia i poślizgu kół.
@@ -183,7 +171,7 @@
 			\item Parametry przegubów.
 			\item Parametry symulatora.
 		\end{itemize}
-		Odpowiedni dobór parametrów pozwala na przybliżenie zachowania się modelu do platformy.
+		Odpowiedni dobór parametrów pozwala na uzyskanie zbliżonego zachowania modelu i platformy.
 
 	\end{frame}
 
@@ -191,27 +179,12 @@
 		\frametitle{Testowanie programu sterującego}
 		\centering
 		\includegraphics[width=\textwidth]{graphics/final.pdf} 
-		Sposób podłączenia programu sterującego do środowiska.
+		Struktura komunikacji między programami.
 	\end{frame}
 	
 	
 	
 	\section{Pomiary}
-	\begin{frame}
-		\frametitle{Sprzęt i wersje programów}
-		Eksperymenty przeprowadzono na dobrej jakości sprzęcie i możliwie najaktualniejszych wersjach programów.
-		\begin{itemize}
-			\item System operacyjny Ubuntu LTS 16.04 (Xenial Xerus)
-			\item ROS Kinetic Kame
-		\end{itemize}
-		\begin{itemize}
-			\item Intel i7-4720HQ 2.60GHz
-			\item 16 GiB RAM
-			\item Renderowanie na wbudowanej karcie graficznej
-		\end{itemize}
-		W czasie testów użycie procesora nigdy nie wyniosło 100\%.
-	\end{frame}
-	
 	\begin{frame}
 		\frametitle{Porównanie modelu z platformą}
 		\centering
@@ -270,20 +243,20 @@
 			\end{itemize}
 		\end{itemize}
 	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Koniec}
+		\centering
+		Dziękuję za uwagę.\\
+	\end{frame}
+	
 	\begin{frame}
 		\frametitle{Perspektywy rozwoju}
 		\begin{itemize}
-			\item Przeprowadzenie wielokrotnych i szczegółowych testów platformy.
 			\item Szczegółowa analiza modeli i symulatora oraz określenie przyczyn rozbieżności.
 			\item Dobranie współczynników modeli w zautomatyzowany sposób.
 			\item Badania nad zmianą implementacji modelu i symulatora.
 			\item Połączenie modeli platformy i robota Velma.
 		\end{itemize}
-	\end{frame}
-	\begin{frame}
-		\frametitle{Koniec}
-		\centering
-		Dziękuję za uwagę.\\
-		Projekt i ta prezentacja znajdują się na \url{https://github.com/Antyradek/omnivelma}.
 	\end{frame}
 \end{document}
